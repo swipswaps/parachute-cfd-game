@@ -1,0 +1,39 @@
++ set -euo pipefail
+++ pwd
++ REPO_ROOT=/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
++ echo '=== Applying fixes in: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game ==='
+=== Applying fixes in: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game ===
++ [[ ! -f README.md ]]
++ [[ ! -d scripts ]]
++ sudo -n true
++ grep -q Fedora /etc/fedora-release
++ run_step 'PKG-000 (add_openfoam_repo)' 'dnf repolist 2>/dev/null | grep -qi openfoam' 'sudo dnf copr enable -y openfoam/openfoam' 'dnf repolist 2>/dev/null | grep -qi openfoam'
++ local 'step_name=PKG-000 (add_openfoam_repo)'
++ local 'check_cmd=dnf repolist 2>/dev/null | grep -qi openfoam'
++ local 'apply_cmd=sudo dnf copr enable -y openfoam/openfoam'
++ local 'verify_cmd=dnf repolist 2>/dev/null | grep -qi openfoam'
++ echo '➤ Step: PKG-000 (add_openfoam_repo)'
+➤ Step: PKG-000 (add_openfoam_repo)
++ eval 'dnf repolist 2>/dev/null | grep -qi openfoam'
++ echo '  ✅ Already correct – skipping apply'
+  ✅ Already correct – skipping apply
++ return 0
++ run_step 'ENV-001 (source_openfoam_env)' 'grep -qxF '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' ~/.bashrc || grep -qxF '\''source /opt/openfoam*/etc/bashrc'\'' ~/.bashrc' 'if ! grep -qxF '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' ~/.bashrc; then echo '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' >> ~/.bashrc; fi' 'grep -q '\''openfoam'\'' ~/.bashrc'
++ local 'step_name=ENV-001 (source_openfoam_env)'
++ local 'check_cmd=grep -qxF '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' ~/.bashrc || grep -qxF '\''source /opt/openfoam*/etc/bashrc'\'' ~/.bashrc'
++ local 'apply_cmd=if ! grep -qxF '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' ~/.bashrc; then echo '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' >> ~/.bashrc; fi'
++ local 'verify_cmd=grep -q '\''openfoam'\'' ~/.bashrc'
++ echo '➤ Step: ENV-001 (source_openfoam_env)'
+➤ Step: ENV-001 (source_openfoam_env)
++ eval 'grep -qxF '\''source /usr/lib/openfoam/openfoam*/etc/bashrc'\'' ~/.bashrc || grep -qxF '\''source /opt/openfoam*/etc/bashrc'\'' ~/.bashrc'
++ echo '  ✅ Already correct – skipping apply'
+  ✅ Already correct – skipping apply
++ return 0
++ run_step 'PKG-001 (install_openfoam)' 'bash -c '\''source /usr/lib/openfoam/openfoam*/etc/bashrc 2>/dev/null || source /opt/openfoam*/etc/bashrc 2>/dev/null; command -v simpleFoam'\''' 'sudo dnf install -y openfoam' 'bash -c '\''source /usr/lib/openfoam/openfoam*/etc/bashrc 2>/dev/null || source /opt/openfoam*/etc/bashrc 2>/dev/null; simpleFoam -help 2>&1 | grep -qi openfoam'\'''
++ local 'step_name=PKG-001 (install_openfoam)'
++ local 'check_cmd=bash -c '\''source /usr/lib/openfoam/openfoam*/etc/bashrc 2>/dev/null || source /opt/openfoam*/etc/bashrc 2>/dev/null; command -v simpleFoam'\'''
++ local 'apply_cmd=sudo dnf install -y openfoam'
++ local 'verify_cmd=bash -c '\''source /usr/lib/openfoam/openfoam*/etc/bashrc 2>/dev/null || source /opt/openfoam*/etc/bashrc 2>/dev/null; simpleFoam -help 2>&1 | grep -qi openfoam'\'''
++ echo '➤ Step: PKG-001 (install_openfoam)'
+➤ Step: PKG-001 (install_openfoam)
++ eval 'bash -c '\''source /usr/lib/openfoam/openfoam*/etc/bashrc 2>/dev/null || source /opt/openfoam*/etc/bashrc 2>/dev/null; command -v simpleFoam'\'''

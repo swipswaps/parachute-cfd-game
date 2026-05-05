@@ -1,0 +1,504 @@
++ '[' -z '' ']'
++ case "$-" in
++ __lmod_vx=x
++ '[' -n x ']'
++ set +x
+Shell debugging temporarily silenced: export LMOD_SH_DBG_ON=1 for this output (/usr/share/lmod/lmod/init/bash)
+Shell debugging restarted
++ unset __lmod_vx
++ source /usr/lib/openfoam/openfoam2512/etc/bashrc
+++ export WM_PROJECT_VERSION=2512
+++ WM_PROJECT_VERSION=2512
+++ export WM_COMPILER_TYPE=system
+++ WM_COMPILER_TYPE=system
+++ export WM_COMPILER=Gcc
+++ WM_COMPILER=Gcc
+++ export WM_PRECISION_OPTION=DP
+++ WM_PRECISION_OPTION=DP
+++ export WM_LABEL_SIZE=32
+++ WM_LABEL_SIZE=32
+++ export WM_COMPILE_OPTION=Opt
+++ WM_COMPILE_OPTION=Opt
+++ export WM_MPLIB=SYSTEMOPENMPI
+++ WM_MPLIB=SYSTEMOPENMPI
+++ export WM_PROJECT=OpenFOAM
+++ WM_PROJECT=OpenFOAM
+++ :
+++ unset FOAM_EXTRA_CFLAGS FOAM_EXTRA_CXXFLAGS FOAM_EXTRA_LDFLAGS
+++ foamOldDirs='/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
+++ export WM_PROJECT_DIR=/usr/lib/openfoam/openfoam2512
+++ WM_PROJECT_DIR=/usr/lib/openfoam/openfoam2512
+++ export WM_PROJECT_USER_DIR=/home/owner/OpenFOAM/owner-2512
+++ WM_PROJECT_USER_DIR=/home/owner/OpenFOAM/owner-2512
+++ '[' -d /usr/lib/openfoam/openfoam2512 ']'
+++ '[' -n '' ']'
+++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/setup
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -show-api
++++ export FOAM_API=2512
++++ FOAM_API=2512
++++ _foamPrefixDir=/usr/lib/openfoam
++++ unset WM_SHELL_FUNCTIONS
++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/functions
+++++ '[' -z '' ']'
+++++ WM_SHELL_FUNCTIONS=loaded
+++++ foamClean=/usr/lib/openfoam/openfoam2512/bin/foamCleanPath
++++++ uname -s
+++++ _foam_uname_s=Linux
+++++ unset -f _foamClean
+++++ unset -f _foamEcho
+++++ unset -f _foamEtc
+++++ '[' -n '' ']'
+++++ unset -f _foamAddPath
+++++ unset -f _foamAddMan
+++++ unset -f _foamAddLib
+++++ '[' Linux = Darwin ']'
+++++ unset -f _foamAddLibAuto
+++++ unset MPI_ARCH_PATH
+++++ unset ADIOS_ARCH_PATH
+++++ unset ADIOS1_ARCH_PATH
+++++ unset ADIOS2_ARCH_PATH
+++++ unset BOOST_ARCH_PATH
+++++ unset CCMIO_ARCH_PATH
+++++ unset CGAL_ARCH_PATH
+++++ unset FFTW_ARCH_PATH
+++++ unset GPERFTOOLS_ARCH_PATH
+++++ unset GMP_ARCH_PATH
+++++ unset MPFR_ARCH_PATH
+++++ unset LLVM_ARCH_PATH
+++++ unset MESA_ARCH_PATH
+++++ unset METIS_ARCH_PATH
+++++ unset SCOTCH_ARCH_PATH
++++ export WM_THIRD_PARTY_DIR=
++++ WM_THIRD_PARTY_DIR=
++++ '[' -e /usr/lib/openfoam/openfoam2512/ThirdParty ']'
++++ WM_THIRD_PARTY_DIR=/usr/lib/openfoam/openfoam2512/ThirdParty
++++ '[' -z /usr/lib/openfoam/openfoam2512/ThirdParty ']'
++++ _foamEcho 'ThirdParty /usr/lib/openfoam/openfoam2512/ThirdParty'
++++ true
++++ _foamEtc -mode=o prefs.sh
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -mode=o prefs.sh
++++ eval ''
++++ unset configMode
++++ '[' -z '' ']'
++++ configMode=ug
++++ '[' -n ug ']'
++++ _foamEtc -mode=ug prefs.sh
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -mode=ug prefs.sh
++++ eval ''
++++ '[' 0 -gt 0 ']'
++++ unset FOAM_SETTINGS
++++ unset foamVar_eval
++++ '[' -n '' ']'
++++ unset FOAM_CONFIG_ETC
++++ export PATH MANPATH
++++ '[' Linux = Darwin ']'
++++ export LD_LIBRARY_PATH
++++ _foamClean PATH '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++ foamVar_name=PATH
++++ shift
+++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-env=PATH '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++ eval 'PATH="/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"'
+++++ PATH=/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++ unset foamVar_name
++++ _foamClean MANPATH '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++ foamVar_name=MANPATH
++++ shift
+++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-env=MANPATH '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++ eval 'MANPATH="/usr/share/lmod/lmod/share/man"'
+++++ MANPATH=/usr/share/lmod/lmod/share/man
++++ unset foamVar_name
++++ _foamClean -lib '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++ foamVar_name=-lib
++++ shift
+++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-env=-lib '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++ eval ''
++++ unset foamVar_name
++++ '[' Linux = Darwin ']'
++++ _foamEtc -config settings
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config settings
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/settings '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/settings
+++++++ uname -s
++++++ export WM_ARCH=Linux
++++++ WM_ARCH=Linux
++++++ archOption=64
++++++ unset WM_ARCH_OPTION
++++++ unset WM_COMPILER_ARCH
++++++ unset WM_COMPILER_LIB_ARCH
++++++ case "$WM_ARCH" in
++++++ WM_ARCH=linux
++++++ case "$(uname -m)" in
+++++++ uname -m
++++++ '[' 64 = 32 ']'
++++++ WM_ARCH=linux64
++++++ export WM_COMPILER_LIB_ARCH=64
++++++ WM_COMPILER_LIB_ARCH=64
++++++ export WM_DIR=/usr/lib/openfoam/openfoam2512/wmake
++++++ WM_DIR=/usr/lib/openfoam/openfoam2512/wmake
++++++ export WM_LABEL_OPTION=Int32
++++++ WM_LABEL_OPTION=Int32
++++++ export WM_OPTIONS=linux64GccDPInt32Opt
++++++ WM_OPTIONS=linux64GccDPInt32Opt
++++++ export FOAM_APPBIN=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin
++++++ FOAM_APPBIN=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin
++++++ export FOAM_LIBBIN=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib
++++++ FOAM_LIBBIN=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib
++++++ siteDir=/usr/lib/openfoam/openfoam2512/site
++++++ '[' -d '' ']'
++++++ unset WM_PROJECT_SITE
++++++ export FOAM_SITE_APPBIN=/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin
++++++ FOAM_SITE_APPBIN=/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin
++++++ export FOAM_SITE_LIBBIN=/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib
++++++ FOAM_SITE_LIBBIN=/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib
++++++ export FOAM_USER_APPBIN=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin
++++++ FOAM_USER_APPBIN=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin
++++++ export FOAM_USER_LIBBIN=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib
++++++ FOAM_USER_LIBBIN=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib
++++++ _foamFoundDir=/usr/lib/openfoam/openfoam2512/wmake
++++++ '[' -d /usr/lib/openfoam/openfoam2512/wmake ']'
++++++ '[' -d /usr/lib/openfoam/openfoam2512/wmake ']'
++++++ unset WM_DIR
++++++ export PATH=/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++++ PATH=/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++++ '[' -d /usr/lib/openfoam/openfoam2512/site/bin ']'
++++++ '[' -d /usr/lib/openfoam/openfoam2512/site/2512/bin ']'
++++++ _foamAddPath /home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin
++++++ case "$1" in
++++++ export PATH=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++++ PATH=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++++ _foamAddLib /usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++ case "$1" in
++++++ export LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++ LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++ '[' -d /usr/lib/openfoam/openfoam2512/ThirdParty ']'
++++++ export FOAM_EXT_LIBBIN=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib
++++++ FOAM_EXT_LIBBIN=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib
++++++ export FOAM_ETC=/usr/lib/openfoam/openfoam2512/etc
++++++ FOAM_ETC=/usr/lib/openfoam/openfoam2512/etc
++++++ export FOAM_APP=/usr/lib/openfoam/openfoam2512/applications
++++++ FOAM_APP=/usr/lib/openfoam/openfoam2512/applications
++++++ export FOAM_SRC=/usr/lib/openfoam/openfoam2512/src
++++++ FOAM_SRC=/usr/lib/openfoam/openfoam2512/src
++++++ export FOAM_TUTORIALS=/usr/lib/openfoam/openfoam2512/tutorials
++++++ FOAM_TUTORIALS=/usr/lib/openfoam/openfoam2512/tutorials
++++++ export FOAM_UTILITIES=/usr/lib/openfoam/openfoam2512/applications/utilities
++++++ FOAM_UTILITIES=/usr/lib/openfoam/openfoam2512/applications/utilities
++++++ export FOAM_SOLVERS=/usr/lib/openfoam/openfoam2512/applications/solvers
++++++ FOAM_SOLVERS=/usr/lib/openfoam/openfoam2512/applications/solvers
++++++ export FOAM_RUN=/home/owner/OpenFOAM/owner-2512/run
++++++ FOAM_RUN=/home/owner/OpenFOAM/owner-2512/run
++++++ : system
++++++ export WM_COMPILER_TYPE
++++++ case "$WM_COMPILER" in
++++++ unset gcc_version gmp_version mpfr_version mpc_version clang_version
++++++ unset GMP_ARCH_PATH MPFR_ARCH_PATH
++++++ _foamEtc -config compiler
+++++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config compiler
++++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/compiler '
+++++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/compiler
++++++++ case "$WM_COMPILER" in
++++++++ case "$WM_MPLIB" in
++++++++ case "$WM_COMPILER_TYPE" in
++++++++ unset default_gcc_version default_clang_version
++++++++ unset default_gmp_version default_mpfr_version default_mpc_version
++++++ archDir=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64
++++++ case "${WM_COMPILER_TYPE}/${WM_COMPILER}" in
++++++ unset archOption archDir siteDir _foamFoundDir
++++++ unset gcc_version gccDir
++++++ unset gmp_version gmpDir mpfr_version mpfrDir mpc_version mpcDir
++++++ unset clang_version clangDir
++++ _foamEtc -config mpi
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config mpi
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/mpi '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/mpi
++++++ unset MPI_ARCH_PATH MPI_HOME
++++++ export FOAM_MPI=dummy
++++++ FOAM_MPI=dummy
++++++ unset _foamMpiVersion
++++++ _foamMpiPrefixDir=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc
++++++ _foamMpiWarning='openfoam (etc/config.sh/mpi) => '
++++++ unset -f _foamMpiEmbedVersion
++++++ case "$WM_MPLIB" in
++++++ _foamMpiVersion=
++++++ _foamMpiVersion=
++++++ export FOAM_MPI=sys-openmpi
++++++ FOAM_MPI=sys-openmpi
++++++ export WM_MPLIB=SYSTEMOPENMPI
++++++ WM_MPLIB=SYSTEMOPENMPI
+++++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -env=OPAL_PREFIX '/usr/lib/openfoam/openfoam2512 /usr/lib/openfoam/openfoam2512/ThirdParty     /home/owner/OpenFOAM/owner               '
++++++ '[' -z '' ']'
++++++ unset OPAL_PREFIX
++++++ _foamEtc -config prefs.sys-openmpi
+++++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config prefs.sys-openmpi
++++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/prefs.sys-openmpi '
+++++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/prefs.sys-openmpi
++++++++ export MPI_ARCH_PATH=/usr/lib64/openmpi
++++++++ MPI_ARCH_PATH=/usr/lib64/openmpi
++++++ unset _foamFoundCmd
++++++ '[' -d /usr/lib64/openmpi ']'
++++++ _foamAddPath /usr/lib64/openmpi/bin
++++++ case "$1" in
++++++ export PATH=/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++++ PATH=/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++++ _foamAddLibAuto /usr/lib64/openmpi
++++++ foamVar_prefix=/usr/lib64/openmpi
++++++ foamVar_end=/usr/lib64/openmpi
++++++ '[' -z /usr/lib64/openmpi ']'
++++++ '[' /usr/lib64/openmpi = none ']'
++++++ '[' /usr/lib64/openmpi = system ']'
++++++ '[' -d /usr/lib64/openmpi ']'
++++++ for foamVar_end in lib$WM_COMPILER_LIB_ARCH lib
++++++ '[' -d /usr/lib64/openmpi/lib64 ']'
++++++ for foamVar_end in lib$WM_COMPILER_LIB_ARCH lib
++++++ '[' -d /usr/lib64/openmpi/lib ']'
++++++ _foamAddLib /usr/lib64/openmpi/lib
++++++ case "$1" in
++++++ export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++ LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++ unset foamVar_prefix foamVar_end
++++++ return 0
++++++ '[' -z /usr/lib64/openmpi ']'
++++++ '[' -z /usr/lib64/openmpi ']'
++++++ '[' -z /usr/lib64/openmpi ']'
++++++ '[' -z /usr/lib64/openmpi ']'
++++++ unset _foamFoundCmd _foamFoundDir
++++++ : sys-openmpi
++++++ export FOAM_MPI
++++++ '[' -n /usr/lib64/openmpi ']'
++++++ export MPI_ARCH_PATH
++++++ '[' -n '' ']'
++++++ unset _foamMpiPrefixDir _foamMpiVersion _foamMpiWarning
++++++ unset -f _foamMpiEmbedVersion
++++ _foamEtc -config paraview --
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config paraview --
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/paraview '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/paraview
++++++ ParaView_VERSION=system
++++++ ParaView_QT=qt-system
++++++ pv_api=auto
++++++ archDir=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc
+++++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-path /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ParaView- /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/qt-
++++++ eval 'PATH="/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"'
+++++++ PATH=/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+++++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-lib /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ParaView- /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/qt-
++++++ eval 'LD_LIBRARY_PATH="/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy"'
+++++++ LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++ case "$WM_ARCH" in
++++++ for i in "$@"
++++++ case "$i" in
++++++ for i in "$@"
++++++ case "$i" in
++++++ for i in "$@"
++++++ case "$i" in
++++++ case "$ParaView_VERSION" in
++++++ unset ParaView_DIR PV_PLUGIN_PATH
+++++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config paraview-system
++++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/paraview-system '
+++++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/paraview-system
++++++++ archDir=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc
+++++++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-path /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ParaView-
++++++++ eval 'PATH="/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"'
+++++++++ PATH=/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+++++++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-lib /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ParaView-
++++++++ eval 'LD_LIBRARY_PATH="/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy"'
+++++++++ LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++++++ case "$WM_ARCH" in
+++++++++ command -v paraview
++++++++ ParaView_DIR=/usr/bin/paraview
++++++++ unset PV_PLUGIN_PATH pv_plugin_dir
++++++++ '[' -n /usr/bin/paraview ']'
++++++++ ParaView_DIR=/usr/bin
++++++++ ParaView_DIR=/usr
+++++++++ paraview --version
+++++++++ sed -ne 's/^[^0-9]*\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/p'
++++++++ pv_api=6.0
++++++++ '[' -z 6.0 ']'
++++++++ case "$pv_api" in
++++++++ export ParaView_DIR
++++++++ pv_plugin_dir=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/paraview-6.0
++++++++ '[' -d /usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/paraview-6.0 ']'
++++++++ pv_plugin_dir='/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/paraview-6.0 (missing)'
++++++++ '[' -n '' ']'
++++++++ command -v _foamAddLib
++++++++ unset ParaView_VERSION
++++++++ unset archDir
++++++++ unset pv_api pv_plugin_dir
++++++ command -v _foamAddLib
++++++ unset ParaView_VERSION ParaView_QT
++++++ unset archDir libDir
++++++ unset pv_api pv_plugin_dir pv_libdirs pvLibDir pvPython qtDir
++++ _foamEtc -config vtk
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config vtk
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/vtk '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/vtk
++++++ vtk_version=VTK-8.2.0
++++++ mesa_version=mesa-17.1.1
++++++ mesa_llvm=none
++++++ export VTK_DIR=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/VTK-8.2.0
++++++ VTK_DIR=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/VTK-8.2.0
++++++ export MESA_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/mesa-17.1.1
++++++ MESA_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/mesa-17.1.1
++++++ export LLVM_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64/none
++++++ LLVM_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64/none
++++++ unset ParaView_MESA_DIR
++++++ '[' -n '' ']'
++++++ command -v _foamAddLib
++++++ '[' -d /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/VTK-8.2.0 ']'
++++++ unset VTK_DIR
++++++ '[' -d /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/mesa-17.1.1 ']'
++++++ unset LLVM_ARCH_PATH
++++++ unset MESA_ARCH_PATH
++++++ unset vtk_version mesa_version mesa_llvm
++++ _foamEtc -config adios2
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config adios2
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/adios2 '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/adios2
++++++ adios2_version=ADIOS2-2.10.1
++++++ export ADIOS2_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ADIOS2-2.10.1
++++++ ADIOS2_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ADIOS2-2.10.1
++++++ '[' -n '' ']'
++++++ command -v _foamAddLibAuto
++++++ _foamAddLibAuto /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ADIOS2-2.10.1
++++++ foamVar_prefix=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ADIOS2-2.10.1
++++++ foamVar_end=2.10.1
++++++ '[' -z /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ADIOS2-2.10.1 ']'
++++++ '[' 2.10.1 = none ']'
++++++ '[' 2.10.1 = system ']'
++++++ '[' -d /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/ADIOS2-2.10.1 ']'
++++++ foamVar_end=
++++++ '[' -n '' ']'
++++++ unset foamVar_prefix foamVar_end
++++++ return 1
++++++ unset adios2_version
++++ _foamEtc -config CGAL
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config CGAL
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/CGAL '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/CGAL
++++++ boost_version=boost-system
++++++ cgal_version=cgal-none
++++++ export BOOST_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/boost-system
++++++ BOOST_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/boost-system
++++++ export CGAL_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/cgal-none
++++++ CGAL_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/cgal-none
++++++ '[' -n '' ']'
++++++ command -v _foamAddLibAuto
++++++ _foamAddLibAuto /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/boost-system lib64
++++++ foamVar_prefix=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/boost-system
++++++ foamVar_end=system
++++++ '[' -z /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/boost-system ']'
++++++ '[' system = none ']'
++++++ '[' system = system ']'
++++++ unset foamVar_prefix foamVar_end
++++++ return 1
++++++ _foamAddLibAuto /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/cgal-none lib64
++++++ foamVar_prefix=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/cgal-none
++++++ foamVar_end=none
++++++ '[' -z /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/cgal-none ']'
++++++ '[' none = none ']'
++++++ unset foamVar_prefix foamVar_end
++++++ return 1
++++++ _foamAddLibAuto ''
++++++ foamVar_prefix=
++++++ foamVar_end=
++++++ '[' -z '' ']'
++++++ unset foamVar_prefix foamVar_end
++++++ return 1
++++++ _foamAddLibAuto ''
++++++ foamVar_prefix=
++++++ foamVar_end=
++++++ '[' -z '' ']'
++++++ unset foamVar_prefix foamVar_end
++++++ return 1
++++++ unset boost_version cgal_version
++++ _foamEtc -config scotch
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config scotch
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/scotch '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/scotch
++++++ SCOTCH_VERSION=scotch-system
++++++ export SCOTCH_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/scotch-system
++++++ SCOTCH_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/scotch-system
++++ _foamEtc -config FFTW
+++++ /usr/lib/openfoam/openfoam2512/bin/foamEtcFile -sh -config FFTW
++++ eval '. /usr/lib/openfoam/openfoam2512/etc/config.sh/FFTW '
+++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/FFTW
++++++ fftw_version=fftw-system
++++++ export FFTW_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/fftw-system
++++++ FFTW_ARCH_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/fftw-system
++++++ '[' -n '' ']'
++++++ command -v _foamAddLibAuto
++++++ _foamAddLibAuto /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/fftw-system lib64
++++++ foamVar_prefix=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/fftw-system
++++++ foamVar_end=system
++++++ '[' -z /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64Gcc/fftw-system ']'
++++++ '[' system = none ']'
++++++ '[' system = system ']'
++++++ unset foamVar_prefix foamVar_end
++++++ return 1
++++++ unset fftw_version
++++ '[' -n /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib ']'
++++ _foamAddLib /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib
++++ case "$1" in
++++ export LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ '[' sys-openmpi '!=' dummy ']'
++++ _foamAddLib /usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi
++++ case "$1" in
++++ export LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ _foamAddLib /usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib
++++ case "$1" in
++++ export LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ '[' sys-openmpi '!=' dummy ']'
++++ _foamAddLib /usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi
++++ case "$1" in
++++ export LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ _foamAddLib /usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib
++++ case "$1" in
++++ export LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ LD_LIBRARY_PATH=/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ _foamAddLib /home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib
++++ case "$1" in
++++ export LD_LIBRARY_PATH=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ LD_LIBRARY_PATH=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ '[' -d /usr/lib/openfoam/openfoam2512/doc/man1 ']'
++++ '[' -n '' ']'
++++ export PATH MANPATH
++++ '[' Linux = Darwin ']'
++++ export LD_LIBRARY_PATH
++++ _foamClean PATH
++++ foamVar_name=PATH
++++ shift
+++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-env=PATH
++++ eval 'PATH="/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"'
+++++ PATH=/usr/lib64/openmpi/bin:/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/bin:/usr/lib/openfoam/openfoam2512/bin:/home/owner/bin:/home/owner/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
++++ unset foamVar_name
++++ _foamClean MANPATH
++++ foamVar_name=MANPATH
++++ shift
+++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-env=MANPATH
++++ eval 'MANPATH="/usr/share/lmod/lmod/share/man"'
+++++ MANPATH=/usr/share/lmod/lmod/share/man
++++ unset foamVar_name
++++ _foamClean -lib
++++ foamVar_name=-lib
++++ shift
+++++ /usr/lib/openfoam/openfoam2512/bin/foamCleanPath -sh-env=-lib
++++ eval 'LD_LIBRARY_PATH="/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy"'
+++++ LD_LIBRARY_PATH=/home/owner/OpenFOAM/owner-2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/site/2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib/sys-openmpi:/usr/lib/openfoam/openfoam2512/ThirdParty/platforms/linux64GccDPInt32/lib:/usr/lib64/openmpi/lib:/usr/lib/openfoam/openfoam2512/platforms/linux64GccDPInt32Opt/lib/dummy
++++ unset foamVar_name
++++ '[' Linux = Darwin ']'
++++ '[' -n /usr/share/lmod/lmod/share/man ']'
++++ MANPATH=/usr/share/lmod/lmod/share/man:
++++ . /usr/lib/openfoam/openfoam2512/etc/config.sh/functions
+++++ '[' -z loaded ']'
+++++ unset -f _foamAddPath _foamAddMan _foamAddLib _foamAddLibAuto
+++++ unset -f _foamClean _foamEcho _foamEtc
+++++ unset foamClean
+++++ unset _foam_uname_s
+++++ unset WM_SHELL_FUNCTIONS
++++ unset cleaned foamOldDirs _foamFoundDir _foamPrefixDir
+++ unset foamOldDirs projectDir
++ echo SUCCESS
+SUCCESS

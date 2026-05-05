@@ -1,0 +1,20 @@
+FoamFile
+{ version 2.0; format ascii; class dictionary; object snappyHexMeshDict; }
+castellatedMesh true;
+snap true;
+addLayers false;
+geometry { terrain.stl { type triSurfaceMesh; name terrain; } }
+castellatedMeshControls
+{
+    maxLocalCells 1000000; maxGlobalCells 2000000; minRefinementCells 10;
+    nCellsBetweenLevels 3; features ();
+    refinementSurfaces { terrain { level (2 3); } }
+    refinementRegions {}
+    locationInMesh (150 150 100);
+    allowFreeStandingZoneFaces true;
+}
+snapControls { nSmoothPatch 3; tolerance 2.0; nSolveIter 30; nRelaxIter 5; }
+addLayersControls { relativeSizes true; layers {} expansionRatio 1.0; finalLayerThickness 0.3; minThickness 0.1; nGrow 0; }
+meshQualityControls { maxNonOrtho 65; maxBoundarySkewness 20; maxInternalSkewness 4; maxConcave 80; minFlatness 0.5; minVol 1e-13; minTetQuality 1e-15; minArea -1; minTwist 0.02; minDeterminant 0.001; minFaceWeight 0.02; minVolRatio 0.01; minTriangleTwist -1; nSmoothScale 4; errorReduction 0.75; }
+writeFlags (scalarLevels layerSets layerFields);
+mergeTolerance 1e-6;

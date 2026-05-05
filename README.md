@@ -111,7 +111,6 @@ python scripts/generate_terrain_kml.py \
     --output terrain_sf_downtown.kml
 
 # Download terrain tiles (requires API key)
-python scripts/download_terrain_tiles.py \
     --kml terrain_sf_downtown.kml \
     --api-key YOUR_GOOGLE_API_KEY \
     --output terrain/sf_downtown.dae
@@ -297,7 +296,6 @@ parachute-cfd-game/
 ├── requirements.txt
 ├── scripts/
 │ ├── generate_terrain_kml.py # KML generator for locations
-│ ├── download_terrain_tiles.py # Google Earth data fetcher
 │ ├── collada_to_stl.py # Terrain → STL converter
 │ ├── classify_geometry.py # Auto-detect buildings/trees
 │ ├── setup_openfoam_case.sh # CFD case generator

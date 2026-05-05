@@ -69,7 +69,7 @@ def collada_to_stl(input_dae, output_stl, simplify_ratio=0.5, z_offset=0.0):
         target_faces = int(original_faces * simplify_ratio)
         print(f"Simplifying to {target_faces} faces (ratio: {simplify_ratio})...")
         
-        mesh = mesh.simplify_quadric_decimation(target_faces)
+        mesh = mesh.simplify_quadric_decimation(target_reduction = 1 - simplify_ratio)
         
         print(f"Simplified mesh: {len(mesh.vertices)} vertices, {len(mesh.faces)} faces")
         print(f"Reduction: {100 * (1 - len(mesh.faces) / original_faces):.1f}%")
