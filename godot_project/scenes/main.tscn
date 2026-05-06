@@ -1,0 +1,10 @@
+
+[node name="skydive_deland" type="MeshInstance3D" parent="."]
+mesh = SubResource("godot_project/assets/terrain/skydive_deland.stl")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="./skydive_deland"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="./skydive_deland/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_terrain")
