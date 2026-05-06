@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/terrain.tscn" id="1_terrain"]
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 5)
+
+[node name="TerrainInstance" type="Node3D" parent="."]
+[node name="Terrain" parent="TerrainInstance" instance=ExtResource("1_terrain")]
