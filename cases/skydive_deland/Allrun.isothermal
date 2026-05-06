@@ -1,0 +1,13 @@
+#!/bin/sh
+# WHAT: Run isothermal wind simulation (no thermal effects)
+# WHY:  Faster convergence for testing, suitable for neutral stability
+# VERIFIES WITH: Case converges in < 1000 iterations
+
+cd "${0%/*}" || exit
+. "${WM_PROJECT_DIR:?}"/bin/tools/RunFunctions
+
+# Source (Tier 2): simpleFoam for steady incompressible turbulent flow
+# OpenFOAM v10 User Guide, section 7.2.1
+# https://www.openfoam.com/documentation/guides/latest/doc/guide-applications-solvers-incompressible-simpleFoam.html
+
+runApplication simpleFoam

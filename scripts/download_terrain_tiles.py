@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
 import sys
-print("ERROR: Automated terrain download not implemented.")
-print("Please export COLLADA manually from Google Earth Pro.")
+print("Use OSM pipeline in apply_fixlist_0060.sh instead.")
 sys.exit(1)

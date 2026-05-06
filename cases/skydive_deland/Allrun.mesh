@@ -1,0 +1,11 @@
+#!/bin/sh
+# WHAT: Mesh generation script for OpenFOAM case
+# WHY:  Automates blockMesh → snappyHexMesh workflow
+# VERIFIES WITH: constant/polyMesh/ directory created
+
+cd "${0%/*}" || exit
+. "${WM_PROJECT_DIR:?}"/bin/tools/RunFunctions
+
+runApplication blockMesh
+runApplication surfaceFeatureExtract
+runApplication snappyHexMesh -overwrite

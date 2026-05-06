@@ -1,0 +1,13 @@
+#!/bin/sh
+# WHAT: Run thermal buoyancy simulation (solar heating effects)
+# WHY:  Captures thermal lift over hot surfaces (parking lots, roofs)
+# VERIFIES WITH: Temperature field shows hot/cold zones
+
+cd "${0%/*}" || exit
+. "${WM_PROJECT_DIR:?}"/bin/tools/RunFunctions
+
+# Source (Tier 2): buoyantSimpleFoam for buoyancy-driven flows
+# OpenFOAM v10 User Guide, section 7.3.2
+# https://www.openfoam.com/documentation/guides/latest/doc/guide-applications-solvers-heatTransfer-buoyantSimpleFoam.html
+
+runApplication buoyantSimpleFoam
