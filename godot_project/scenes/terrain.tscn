@@ -2,6 +2,6 @@
 
 [ext_resource type="ArrayMesh" path="res://assets/terrain/skydive_deland.obj" id="1_mesh"]
 
-[node name="Terrain" type="MeshInstance3D" parent="."]
+[node name="Terrain" type="MeshInstance3D"]
 mesh = ExtResource("1_mesh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
