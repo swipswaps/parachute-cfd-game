@@ -1,45 +1,20 @@
-# OpenFOAM case files
-cases/*/constant/polyMesh/
-cases/*/constant/triSurface/*.eMesh
-cases/*/[0-9]*/
-cases/*/[0-9].[0-9]*/
-cases/*/postProcessing/
-cases/*/log.*
-cases/*/VTK/
-cases/*/*.foam
+# Large binary files
+*.tif
+*.raw
+*.png
+*.glb
+*.glb.import
+*.fbx
+bin/Godot_v4.6.2-stable_linux.x86_64
+*.blend
+*.blend1
+srtm_deland*.tif*
 
-# Python
+# Cache
+.godot/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-venv/
-ENV/
-*.egg-info/
 
-# Godot
-godot_project/.import/
-godot_project/export/
-godot_project/export_presets.cfg
-godot_project/.mono/
-godot_project/data_*/
-
-# Terrain data
-terrain/*.dae
-terrain/*.kml
-terrain/*.stl
-
-# Large JSON files
-game_data/*.json
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editor
-*.swp
-*.swo
-*~
-.vscode/
-.idea/
+# Temp
+/tmp/*
+*.log
