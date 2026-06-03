@@ -1,35 +1,12 @@
-; Engine configuration file.
-; It's best edited using the editor UI and not directly,
-; since the parameters that go here are not all obvious.
-;
-; Format:
-;   [section] ; section goes between []
-;   param=value ; assign values to parameters
-
 config_version=5
-
-[animation]
-
-compatibility/default_parent_skeleton_in_mesh_instance_3d=true
-
 [application]
-
-config/name="Parachute CFD Landing Game"
-config/description="Land accurately using real-time CFD wind visualization"
+config/name="Parachute Landing Pattern v313"
 run/main_scene="res://scenes/main.tscn"
-config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
-
-[display]
-
-window/size/viewport_width=1920
-window/size/viewport_height=1080
-window/size/mode=2
-
-[physics]
-
-3d/default_gravity=9.81
-
 [rendering]
+renderer/rendering_method="gl_compatibility"
 
-anti_aliasing/quality/msaa_3d=2
+[environment]
+defaults/default_environment=""
+ambient_light/color=Color(1, 1, 1, 1)
+ambient_light/energy=1.0
+defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
