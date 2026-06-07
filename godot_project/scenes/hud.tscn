@@ -1,0 +1,35 @@
+[gd_scene load_steps=0 format=3]
+
+[node name="HUD" type="Control"]
+script = "res://scripts/altimeter_hud.gd"
+anchors_preset = 15
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AltitudeLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 10.0
+text = "0000 ft"
+
+[node name="SpeedLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 30.0
+text = "00 m/s"
+
+[node name="GlideRatioLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 50.0
+text = "Glide: --"
+
+[node name="WindLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 70.0
+text = "Wind: 0.0 m/s H"
+
+[node name="ModeLabel" type="Label" parent="."]
+offset_left = 10.0
+offset_top = 90.0
+text = "CANOPY"
+
+[node name="DZArrow" type="Node2D" parent="."]
+position = Vector2(100, 100)

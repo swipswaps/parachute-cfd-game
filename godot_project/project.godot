@@ -1,12 +1,26 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
+
 [application]
+
 config/name="Parachute Landing Pattern v313"
 run/main_scene="res://scenes/main.tscn"
-[rendering]
-renderer/rendering_method="gl_compatibility"
+config/features=PackedStringArray("4.6")
 
 [environment]
+
 defaults/default_environment=""
 ambient_light/color=Color(1, 1, 1, 1)
 ambient_light/energy=1.0
 defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
