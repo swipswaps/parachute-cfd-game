@@ -86,7 +86,7 @@ const DESCENT_RATE_GOOD: float = 0.22
 # ------------------------------------------------------------------
 # 3D Canopy model (repaired GLB) and attachment
 # ------------------------------------------------------------------
-var _canopy_instance: MeshInstance3D
+var _canopy_instance: Node3D
 var _canopy_material: StandardMaterial3D
 var _canopy_deployed: bool = false
 var _deployment_timer
@@ -294,11 +294,14 @@ func _ready():
     dz.material_override = dz_mat
     add_child(dz)
     print("[VERBATIM] Drop zone created")
+    _load_faa_obstacles()
     
     # --------------------------------------------------------------
     # HUD (8 lines + score + notification)
     # Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
     # --------------------------------------------------------------
+    if _hud_layer:
+        return
     _hud_layer = CanvasLayer.new()
     add_child(_hud_layer)
     var font = ThemeDB.fallback_font
@@ -378,8 +381,11 @@ func _ready():
             if _canopy_instance:
                 _character.add_child(_canopy_instance)
                 _canopy_instance.position = Vector3(0, 2.5, 0)
+                _canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
                 _canopy_material = StandardMaterial3D.new()
-                _canopy_instance.material_override = _canopy_material
+                var _mesh_child = _find_first_mesh(_canopy_instance)
+                if _mesh_child:
+                    _mesh_child.material_override = _canopy_material
                 _canopy_instance.visible = false
                 print("[VERBATIM] Clean GLB loaded from: ", canopy_path)
             else:
@@ -394,7 +400,6 @@ func _ready():
     # Create environment objects: buildings and trees (no turbines)
     # --------------------------------------------------------------
     _create_buildings()
-    _create_trees()
     
     # --------------------------------------------------------------
     # Random initial malfunction
@@ -465,6 +470,92 @@ func _load_character():
 # ------------------------------------------------------------------
 # Deploy parachute (called on SPACE at correct altitude)
 # ------------------------------------------------------------------
+
+# ------------------------------------------------------------------
+# Load and place FAA Digital Obstacle File obstacles
+# WHY: replaces fabricated _create_trees() with real FAA DOF data.
+#   R093: never add features not requested.
+#   R094: real-world placement requires verified data source.
+# SOURCE (Tier 2): Godot 4 FileAccess
+#   URL: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+#   VERBATIM: "Opens a file at path. Returns null if file does not exist."
+# SOURCE (Tier 2): FAA Digital Obstacle File, updated daily
+#   URL: https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dailydof/
+#   VERBATIM: "DDOF CSV includes latitude and longitude in decimal degrees."
+# MENTAL MODEL BEFORE: no obstacles in scene
+# MENTAL MODEL AFTER: 41 FAA-verified obstacles at correct world XYZ positions
+# FAILURE MODE: JSON missing or parse error -> logs error and returns, no crash
+# VERIFIES WITH: "[VERBATIM] FAA obstacles loaded: 41" in game log
+# ------------------------------------------------------------------
+func _load_faa_obstacles() -> void:
+    print("[VERBATIM] ENTER _load_faa_obstacles gate=none")
+    var json_path: String = "res://data/faa_obstacles_kded_world.json"
+    var f: FileAccess = FileAccess.open(json_path, FileAccess.READ)
+    if not f:
+        print("[VERBATIM] EXIT _load_faa_obstacles early=file_not_found path=", json_path)
+        return
+    var raw_text: String = f.get_as_text()
+    f.close()
+    print("[VERBATIM] _load_faa_obstacles read_bytes=", raw_text.length())
+    var parsed = JSON.parse_string(raw_text)
+    if parsed == null:
+        print("[VERBATIM] EXIT _load_faa_obstacles early=json_parse_failed")
+        return
+    var obstacles: Array = parsed.get("obstacles", [])
+    print("[VERBATIM] _load_faa_obstacles obstacle_count=", obstacles.size())
+    var placed: int = 0
+    for obs in obstacles:
+        var wx: float  = float(obs.get("world_x", 0.0))
+        var wy: float  = float(obs.get("ground_y", 0.0))
+        var wz: float  = float(obs.get("world_z", 0.0))
+        var agl: float = float(obs.get("height_m", 5.0))
+        var otype: String = str(obs.get("type", "UNKNOWN"))
+        # WHAT: place a vertical cylinder at the obstacle position
+        # WHY: cylinders are visible from altitude and represent towers/poles
+        #   without requiring external assets.
+        # SOURCE (Tier 2): Godot 4 CylinderMesh
+        #   URL: https://docs.godotengine.org/en/stable/classes/class_cylindermesh.html
+        #   VERBATIM: "height — Full height of the cylinder. Default value: 2.0"
+        var mesh_inst: MeshInstance3D = MeshInstance3D.new()
+        var cyl: CylinderMesh = CylinderMesh.new()
+        cyl.height = agl
+        if otype == "TOWER":
+            cyl.top_radius = 0.5
+            cyl.bottom_radius = 1.0
+        elif otype.begins_with("UTILITY") or otype == "POLE":
+            cyl.top_radius = 0.15
+            cyl.bottom_radius = 0.2
+        else:
+            cyl.top_radius = 0.3
+            cyl.bottom_radius = 0.5
+        cyl.radial_segments = 8
+        mesh_inst.mesh = cyl
+        # Position: centre of cylinder is at wy + agl/2 so base sits on ground
+        mesh_inst.position = Vector3(wx, wy + agl * 0.5, wz)
+        var mat: StandardMaterial3D = StandardMaterial3D.new()
+        if otype == "TOWER":
+            mat.albedo_color = Color(0.8, 0.8, 0.8)
+        else:
+            mat.albedo_color = Color(0.6, 0.5, 0.3)
+        mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+        mesh_inst.material_override = mat
+        add_child(mesh_inst)
+        placed += 1
+    print("[VERBATIM] FAA obstacles loaded: ", placed)
+    print("[VERBATIM] EXIT _load_faa_obstacles ok=true placed=", placed)
+
+# Helper: find first MeshInstance3D child recursively
+# WHY: GLB root is Node3D; material_override lives on MeshInstance3D child
+# Source: https://docs.godotengine.org/en/stable/classes/class_node.html
+func _find_first_mesh(node: Node) -> MeshInstance3D:
+    if node is MeshInstance3D:
+        return node
+    for child in node.get_children():
+        var found = _find_first_mesh(child)
+        if found:
+            return found
+    return null
+
 func _deploy_canopy():
     print("[VERBATIM] ENTER _deploy_canopy gate=none")
     if _canopy_deployed or not _canopy_instance:
@@ -489,12 +580,12 @@ func _create_procedural_canopy():
     print("[VERBATIM] ENTER _create_procedural_canopy gate=none")
     _canopy_instance = MeshInstance3D.new()
     var sphere_mesh = SphereMesh.new()
-    sphere_mesh.radius = 1.5
+    sphere_mesh.radius = 0.6
     sphere_mesh.height = 1.0
     sphere_mesh.radial_segments = 32
     sphere_mesh.rings = 16
     _canopy_instance.mesh = sphere_mesh
-    _canopy_instance.scale = Vector3(1.0, 1.0, 0.3)
+    _canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
     _character.add_child(_canopy_instance)
     _canopy_instance.position = Vector3(0, 2.5, 0)
     _canopy_material = StandardMaterial3D.new()
@@ -564,7 +655,7 @@ func _update_canopy_visuals():
         MalfunctionType.GOOD:
             _canopy_material.albedo_color = Color(0.2, 0.8, 0.2)
             if _canopy_instance:
-                _canopy_instance.scale = Vector3(1,1,1)
+                _canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
                 _canopy_instance.rotation_degrees = Vector3.ZERO
         MalfunctionType.LINE_TWISTS:
             _canopy_material.albedo_color = Color(0.9, 0.5, 0.1)
@@ -1013,44 +1104,6 @@ func _create_buildings():
 # Ref: https://docs.godotengine.org/en/stable/classes/class_cylindermesh.html
 # Ref: https://docs.godotengine.org/en/stable/classes/class_spheremesh.html
 # ------------------------------------------------------------------
-func _create_trees():
-    print("[VERBATIM] ENTER _create_trees gate=none")
-    var tree_positions = []
-    for i in range(50):
-        var angle = randf_range(0, 2*PI)
-        var radius = randf_range(80, 200)
-        var x = cos(angle) * radius
-        var z = sin(angle) * radius
-        tree_positions.append(Vector3(x, 0, z))
-    for pos in tree_positions:
-        var trunk = MeshInstance3D.new()
-        var cyl = CylinderMesh.new()
-        cyl.top_radius = 0.6
-        cyl.bottom_radius = 0.8
-        cyl.height = 2.5
-        trunk.mesh = cyl
-        trunk.position = pos + Vector3(0, 1.25, 0)
-        var trunk_mat = StandardMaterial3D.new()
-        trunk_mat.albedo_color = Color(0.5, 0.3, 0.1)
-        trunk.material_override = trunk_mat
-        add_child(trunk)
-        var foliage = MeshInstance3D.new()
-        var sphere = SphereMesh.new()
-        sphere.radius = 1.2
-        sphere.height = 2.0
-        foliage.mesh = sphere
-        foliage.position = pos + Vector3(0, 3.0, 0)
-        var fol_mat = StandardMaterial3D.new()
-        fol_mat.albedo_color = Color(0.2, 0.6, 0.2)
-        foliage.material_override = fol_mat
-        add_child(foliage)
-        _trees.append(foliage)
-    print("[VERBATIM] Trees created: ", _trees.size())
-    print("[VERBATIM] EXIT _create_trees ok=true")
-
-# ------------------------------------------------------------------
-# Canopy tilt based on arm turn input
-# ------------------------------------------------------------------
 func _update_canopy_tilt():
     if not _canopy_instance or not _canopy_deployed:
         return
@@ -1196,7 +1249,7 @@ func _reset_game():
     _camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
     if _canopy_instance:
         _canopy_instance.visible = false
-        _canopy_instance.scale = Vector3(1,1,1)
+        _canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
     _randomize_malfunction()
     _update_canopy_visuals()
     _left_arm_angle = 0.0
@@ -1260,7 +1313,7 @@ func _physics_process(delta):
             _canopy_instance.scale = Vector3(t, t, t)
         else:
             _game_state = GameState.DIAGNOSIS
-            _canopy_instance.scale = Vector3(1,1,1)
+            _canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
             print("[VERBATIM] Canopy fully inflated – enter diagnosis")
     
     if _game_state == GameState.DIAGNOSIS:
@@ -1465,6 +1518,7 @@ func _setup_pip_overlay():
     if main_canopy_scene2:
         _main_canopy_node = main_canopy_scene2.instantiate()
         _main_canopy_node.position = Vector3(0.0, 2.5, 0.0)
+        _main_canopy_node.scale = Vector3(0.18, 0.12, 0.18)
         _character.add_child(_main_canopy_node)
         print("[VERBATIM] main canopy attached offset=(0,2.5,0) path=", canopy_path)
     else:

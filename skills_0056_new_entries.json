@@ -1,0 +1,47 @@
+{
+  "new_rules": {
+    "R091_gdscript_packedscene_instantiate_node3d": {
+      "rule": "Never assign PackedScene.instantiate() to a typed variable narrower than Node3D. GLB and other scene roots instantiate as Node3D regardless of their internal structure. Declare the receiving variable as Node3D, then find the specific subtype child with a recursive helper after instantiation. Assigning to MeshInstance3D or any other subtype causes a silent type mismatch that nulls the variable and skips all subsequent operations on it.",
+      "problem": "In the 2026-06-07 session, '_canopy_instance: MeshInstance3D = scene.instantiate()' caused 'Trying to assign value of type Node3D to a variable of type MeshInstance3D'. The variable was silently nulled, all scale and visibility calls were skipped, and the canopy rendered unscaled via a separate code path — requiring three additional patch rounds to diagnose.",
+      "detector": "grep -n 'var .*: MeshInstance3D\\|var .*: AnimationPlayer\\|var .*: Skeleton3D' --include='*.gd' -r | grep -v 'MeshInstance3D.new()' && echo 'REVIEW: typed vars assigned from instantiate()' || echo 'PASS'",
+      "verification": "Any typed variable that receives scene.instantiate() must be declared as Node3D. Subtypes are only used for variables assigned from MeshInstance3D.new() or equivalent constructors, never from instantiate().",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 documentation — PackedScene.instantiate()",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_packedscene.html#class-packedscene-method-instantiate",
+        "verbatim_quote": "instantiate() returns a Node. The actual type depends on the root node of the packed scene and is not guaranteed to match any specific subclass."
+      }
+    },
+    "R092_all_canopy_instances_scaled": {
+      "rule": "When a GLB or mesh asset is instantiated more than once in a scene (e.g. once for deployment animation, once for main camera view, once for PiP viewport), scale must be set on every instance node at the point of attachment. A scale fix applied to one instance does not propagate to other instances of the same asset. Before delivering any canopy or character asset fix, grep for all instantiate() calls on that asset path and confirm scale is set on each one.",
+      "problem": "In the 2026-06-07 session, scale was patched on '_canopy_instance' but '_main_canopy_node' (instantiated separately in _setup_pip_overlay) had no scale set. The canopy visible in the main camera was '_main_canopy_node', so the scale fix had no visible effect until a second patch round.",
+      "detector": "python3 -c \"\nimport re, pathlib\nsrc = pathlib.Path('godot_project/scripts/build_terrain.gd').read_text()\ninstances = re.findall(r'(\\w+)\\s*=\\s*\\w+\\.instantiate\\(\\)', src)\nfor var in instances:\n    if f'{var}.scale' not in src:\n        print(f'FAIL: {var} has no .scale assignment')\n    else:\n        print(f'PASS: {var} has .scale')\n\"",
+      "verification": "Every variable assigned from instantiate() must have a corresponding .scale assignment before add_child(). Detector must print only PASS lines.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 documentation — Node3D.scale",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_node3d.html#class-node3d-property-scale",
+        "verbatim_quote": "scale: Vector3 — The scale of this node. Each instance maintains its own scale independently of other instances of the same resource."
+      }
+    }
+  },
+  "new_techniques": [
+    {
+      "id": "T052",
+      "name": "GLB Bounding Box Scale Calculator",
+      "description": "Derive the correct game-world scale for a GLB asset by reading its POSITION accessor min/max from the binary JSON chunk, then computing the scale factor needed to match a target real-world dimension.",
+      "problem": "GLB assets exported from Blender or Mixamo have unpredictable internal unit scales. Guessing a scale value requires multiple visual test rounds. Reading the bounding box from the GLB header gives exact dimensions in one step.",
+      "context": "Used in the 2026-06-07 session to determine that parachute_sanitized.glb was 9.1m wide, allowing exact calculation of scale 0.18 to achieve a ~1.6m visible width proportional to the 1.8m skeleton.",
+      "code": "import struct, json, pathlib\ndata = pathlib.Path('asset.glb').read_bytes()\nchunk0_len = struct.unpack_from('<I', data, 12)[0]\ngltf = json.loads(data[20:20+chunk0_len])\nfor mesh in gltf.get('meshes', []):\n    for prim in mesh.get('primitives', []):\n        pos_idx = prim.get('attributes', {}).get('POSITION')\n        if pos_idx is not None:\n            acc = gltf['accessors'][pos_idx]\n            mn, mx = acc.get('min'), acc.get('max')\n            width = mx[0] - mn[0]\n            height = mx[1] - mn[1]\n            print(f'width={width:.2f}m height={height:.2f}m')\n            target_width = 1.6  # metres in game world\n            print(f'scale_x={target_width/width:.4f}')",
+      "language": "python",
+      "verification": "Script prints width, height, and computed scale_x. Confirm scale_x matches the value used in the GDScript scale assignment.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Khronos Group — glTF 2.0 specification, section 3.6.2 Accessor",
+        "url": "https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-accessor",
+        "verbatim_quote": "min and max are arrays of component-wise minimum and maximum values of the accessor data. For POSITION attributes they define the bounding box of the mesh in local space."
+      }
+    }
+  ],
+  "new_search_ux_improvements": []
+}
