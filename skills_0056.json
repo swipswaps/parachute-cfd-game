@@ -1888,6 +1888,54 @@
         "url": "",
         "verbatim_quote": "If any check fails, rewrite before delivering. Marking an item as passed without being able to quote the evidence is a Rule 0 violation."
       }
+    },
+    "R095_verify_url_reachable_before_citing": {
+      "rule": "Before citing any URL in a response or using any URL in code, verify it is reachable from the execution environment using curl -I or urllib HEAD. For Claude bash tool the allowed domain list is the hard constraint. aeronav.faa.gov, external-api.faa.gov, soa.faa.gov, overpass-api.de are NOT in the allowlist. Never propose a URL in code without a prior confirmed HEAD check returning HTTP 200 in the same session. If unreachable, state this and provide manual download instructions.",
+      "problem": "Three consecutive FAA URLs were proposed in code without verifying reachability: aeronav.faa.gov (403), soa.faa.gov (DNS fail), external-api.faa.gov (empty). Each required a full run-fail cycle before the correct manual download path was found.",
+      "detector": "grep -n 'urllib.request.urlopen\\|curl.*https' SCRIPT.py | while read line; do echo \"REVIEW: $line — was HEAD checked?\"; done",
+      "verification": "Every URL in code has a confirmed HTTP 200 HEAD check earlier in the same session log. 403 or DNS failure means URL must be removed.",
+      "citation": {
+        "tier": "Tier 1",
+        "source": "System prompt Rule 3 — VERIFY BEFORE ANSWERING",
+        "url": "",
+        "verbatim_quote": "Do not produce an answer and then hedge it. If uncertain about any component, state what is needed to verify it and ask for the confirming output before answering."
+      }
+    },
+    "R097_no_heredoc_over_30_lines": {
+      "rule": "Never deliver a script via shell heredoc longer than 30 lines. For scripts over 30 lines write to a temp file using python3 -c with Path.write_text(), or use python3 << with content that contains NO single quotes, or use cat >> append blocks of 20 lines each. Verify line count with wc -l before running.",
+      "problem": "Heredoc delivery failed three times this session: patch_canopy_hud.py and patch_screenshot_library.py twice. Each failure required a full re-delivery round. Root cause: paste truncation and quote interpretation inside heredocs.",
+      "detector": "wc -l /tmp/SCRIPT.py",
+      "verification": "wc -l shows expected count before python3 SCRIPT.py is called.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "bash(1) man page — Here Documents",
+        "url": "https://man7.org/linux/man-pages/man1/bash.1.html",
+        "verbatim_quote": "If any part of word is quoted, the delimiter is the result of quote removal on word, and the lines in the here-document are not expanded."
+      }
+    },
+    "R098_count_all_instances_before_scale_fix": {
+      "rule": "Before applying any scale, position, or visibility fix to an instantiated asset, grep for every instantiate() call on that asset path and confirm the fix applies to all of them. Gate command must appear in the patch script PREFLIGHT block: grep -c 'instantiate()' FILE.gd must equal count of .scale assignments in the patch.",
+      "problem": "Canopy scale required three patch rounds because _canopy_instance, _main_canopy_node, and PiP instance were discovered separately. R092 stated the rule but did not require a grep gate before delivery.",
+      "detector": "grep -c 'instantiate()' godot_project/scripts/build_terrain.gd",
+      "verification": "Count of instantiate() calls on the asset path matches count of .scale assignments in the delivered patch.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 docs — Node3D.scale",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_node3d.html#class-node3d-property-scale",
+        "verbatim_quote": "Each instance maintains its own scale independently of other instances of the same resource."
+      }
+    },
+    "R099_executed_fix_before_next_topic": {
+      "rule": "A fix that has been written but not executed does not exist. Before moving to any new topic, every fix written in the current topic must have been executed and its PASS or READ-BACK PASS output pasted. Signal: if IMPLEMENTATION COMPLETE does not appear in the session log for a fix, that fix is pending and must be completed first.",
+      "problem": "Screenshot library fix was written twice and executed zero times before the conversation moved to obstacles and FAA data. Two full re-delivery rounds wasted.",
+      "detector": "grep -c 'IMPLEMENTATION COMPLETE' SESSION_LOG.txt",
+      "verification": "Every fix block in session log has IMPLEMENTATION COMPLETE before the next fix block begins.",
+      "citation": {
+        "tier": "Tier 1",
+        "source": "System prompt Rule 13",
+        "url": "",
+        "verbatim_quote": "Never state that files have been presented, delivered, or are correct unless a visible, clickable download link is confirmed in the response."
+      }
     }
   },
   "implementation_order": {
@@ -1936,5 +1984,5 @@
       "verbatim_quote": "LLM assertions are never trusted; only mechanical checks with PASS/FAIL outcomes constitute evidence."
     }
   },
-  "last_backup": "2026-06-08T09:29:10.391159"
+  "last_backup": "2026-06-08T10:07:06.349702"
 }
