@@ -59,10 +59,11 @@ func _show_loading_screen() -> void:
         placeholder.add_child(label)
         _loading_layer.add_child(placeholder)
     else:
-        var tex: Texture2D = ResourceLoader.load(_screenshot_library[_current_index])
-        if tex:
-            _loading_texture_rect.texture = tex
-            _loading_layer.add_child(_loading_texture_rect)
+        var img_data: Image = Image.load_from_file(_screenshot_library[_current_index])
+        if img_data:
+                var tex: ImageTexture = ImageTexture.create_from_image(img_data)
+                _loading_texture_rect.texture = tex
+                _loading_layer.add_child(_loading_texture_rect)
         else:
             print("[VERBATIM] Failed to load screenshot: ", _screenshot_library[_current_index])
     get_tree().root.add_child.call_deferred(_loading_layer)
@@ -83,10 +84,11 @@ func cycle_screenshot() -> void:
         return
     _current_index = (_current_index + 1) % _screenshot_library.size()
     if _loading_layer and _loading_texture_rect:
-        var tex: Texture2D = ResourceLoader.load(_screenshot_library[_current_index])
-        if tex:
-            _loading_texture_rect.texture = tex
-            print("[VERBATIM] Loading screen updated to index ", _current_index) 
+        var img_data: Image = Image.load_from_file(_screenshot_library[_current_index])
+        if img_data:
+                var tex: ImageTexture = ImageTexture.create_from_image(img_data)
+                _loading_texture_rect.texture = tex
+                print("[VERBATIM] Loading screen updated to index ", _current_index) 
     print("[VERBATIM] EXIT cycle_screenshot ok new_index=", _current_index)
 
 func save_flight_screenshot() -> void:
