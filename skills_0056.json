@@ -1876,6 +1876,18 @@
         "url": "https://docs.godotengine.org/en/stable/classes/class_node3d.html#class-node3d-property-scale",
         "verbatim_quote": "scale: Vector3 — The scale of this node. Each instance maintains its own scale independently of other instances of the same resource."
       }
+    },
+    "R096_self_refusing_gate_at_entry": {
+      "rule": "Every script delivered to the user must contain a PREFLIGHT block as its first executable section that checks all preconditions and exits 1 with a clear message if any fail. Required gates: (1) VISUAL_TEST_CONFIRMED=False by default — script refuses git push until set True; (2) FEATURE_REQUESTED=False by default — script refuses to add any new feature until set True; (3) all file paths verified to exist before any write; (4) all URLs HEAD-checked before any download. A script without PREFLIGHT is not compliant.",
+      "problem": "git push suggested before visual test 3 times; fabricated trees added with no request; 3 unverified URLs put in code. All failures occurred because code had no self-refusing entry gate — the LLM self-check is run by the same model that produced the violation and cannot catch what it does not know it missed.",
+      "detector": "python3 -c \"import ast,sys; src=open('SCRIPT.py').read(); assert 'PREFLIGHT' in src and 'VISUAL_TEST_CONFIRMED' in src, 'GATE FAIL: no PREFLIGHT block'; print('PASS')\"",
+      "verification": "Every delivered script prints '[VERBATIM] PREFLIGHT PASS' before any action. Default flag values are False — user must explicitly set True to proceed.",
+      "citation": {
+        "tier": "Tier 1",
+        "source": "System prompt Rule 0 — SELF-CHECK BEFORE EVERY RESPONSE",
+        "url": "",
+        "verbatim_quote": "If any check fails, rewrite before delivering. Marking an item as passed without being able to quote the evidence is a Rule 0 violation."
+      }
     }
   },
   "implementation_order": {
@@ -1924,5 +1936,5 @@
       "verbatim_quote": "LLM assertions are never trusted; only mechanical checks with PASS/FAIL outcomes constitute evidence."
     }
   },
-  "last_backup": "2026-06-08T07:19:39.645224"
+  "last_backup": "2026-06-08T09:29:10.391159"
 }

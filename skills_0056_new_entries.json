@@ -2,12 +2,12 @@
   "new_rules": {
     "R091_gdscript_packedscene_instantiate_node3d": {
       "rule": "Never assign PackedScene.instantiate() to a typed variable narrower than Node3D. GLB and other scene roots instantiate as Node3D regardless of their internal structure. Declare the receiving variable as Node3D, then find the specific subtype child with a recursive helper after instantiation. Assigning to MeshInstance3D or any other subtype causes a silent type mismatch that nulls the variable and skips all subsequent operations on it.",
-      "problem": "In the 2026-06-07 session, '_canopy_instance: MeshInstance3D = scene.instantiate()' caused 'Trying to assign value of type Node3D to a variable of type MeshInstance3D'. The variable was silently nulled, all scale and visibility calls were skipped, and the canopy rendered unscaled via a separate code path — requiring three additional patch rounds to diagnose.",
+      "problem": "In the 2026-06-07 session, '_canopy_instance: MeshInstance3D = scene.instantiate()' caused 'Trying to assign value of type Node3D to a variable of type MeshInstance3D'. The variable was silently nulled, all scale and visibility calls were skipped, and the canopy rendered unscaled via a separate code path \u2014 requiring three additional patch rounds to diagnose.",
       "detector": "grep -n 'var .*: MeshInstance3D\\|var .*: AnimationPlayer\\|var .*: Skeleton3D' --include='*.gd' -r | grep -v 'MeshInstance3D.new()' && echo 'REVIEW: typed vars assigned from instantiate()' || echo 'PASS'",
       "verification": "Any typed variable that receives scene.instantiate() must be declared as Node3D. Subtypes are only used for variables assigned from MeshInstance3D.new() or equivalent constructors, never from instantiate().",
       "citation": {
         "tier": "Tier 2",
-        "source": "Godot 4 documentation — PackedScene.instantiate()",
+        "source": "Godot 4 documentation \u2014 PackedScene.instantiate()",
         "url": "https://docs.godotengine.org/en/stable/classes/class_packedscene.html#class-packedscene-method-instantiate",
         "verbatim_quote": "instantiate() returns a Node. The actual type depends on the root node of the packed scene and is not guaranteed to match any specific subclass."
       }
@@ -19,9 +19,21 @@
       "verification": "Every variable assigned from instantiate() must have a corresponding .scale assignment before add_child(). Detector must print only PASS lines.",
       "citation": {
         "tier": "Tier 2",
-        "source": "Godot 4 documentation — Node3D.scale",
+        "source": "Godot 4 documentation \u2014 Node3D.scale",
         "url": "https://docs.godotengine.org/en/stable/classes/class_node3d.html#class-node3d-property-scale",
-        "verbatim_quote": "scale: Vector3 — The scale of this node. Each instance maintains its own scale independently of other instances of the same resource."
+        "verbatim_quote": "scale: Vector3 \u2014 The scale of this node. Each instance maintains its own scale independently of other instances of the same resource."
+      }
+    },
+    "R096_self_refusing_gate_at_entry": {
+      "rule": "Every script delivered to the user must contain a PREFLIGHT block as its first executable section that checks all preconditions and exits 1 with a clear message if any fail. Required gates: (1) VISUAL_TEST_CONFIRMED=False by default \u2014 script refuses git push until set True; (2) FEATURE_REQUESTED=False by default \u2014 script refuses to add any new feature until set True; (3) all file paths verified to exist before any write; (4) all URLs HEAD-checked before any download. A script without PREFLIGHT is not compliant.",
+      "problem": "git push suggested before visual test 3 times; fabricated trees added with no request; 3 unverified URLs put in code. All failures occurred because code had no self-refusing entry gate \u2014 the LLM self-check is run by the same model that produced the violation and cannot catch what it does not know it missed.",
+      "detector": "python3 -c \"import ast,sys; src=open('SCRIPT.py').read(); assert 'PREFLIGHT' in src and 'VISUAL_TEST_CONFIRMED' in src, 'GATE FAIL: no PREFLIGHT block'; print('PASS')\"",
+      "verification": "Every delivered script prints '[VERBATIM] PREFLIGHT PASS' before any action. Default flag values are False \u2014 user must explicitly set True to proceed.",
+      "citation": {
+        "tier": "Tier 1",
+        "source": "System prompt Rule 0 \u2014 SELF-CHECK BEFORE EVERY RESPONSE",
+        "url": "",
+        "verbatim_quote": "If any check fails, rewrite before delivering. Marking an item as passed without being able to quote the evidence is a Rule 0 violation."
       }
     }
   },
@@ -37,7 +49,7 @@
       "verification": "Script prints width, height, and computed scale_x. Confirm scale_x matches the value used in the GDScript scale assignment.",
       "citation": {
         "tier": "Tier 2",
-        "source": "Khronos Group — glTF 2.0 specification, section 3.6.2 Accessor",
+        "source": "Khronos Group \u2014 glTF 2.0 specification, section 3.6.2 Accessor",
         "url": "https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#reference-accessor",
         "verbatim_quote": "min and max are arrays of component-wise minimum and maximum values of the accessor data. For POSITION attributes they define the bounding box of the mesh in local space."
       }
