@@ -124,7 +124,10 @@ var _current_mission: MissionType = MissionType.TRAINING
 var _mission_objectives: Dictionary = {}
 var _mission_completed: bool = false
 var _achievements: Dictionary = {
-	"first_jump": false, "perfect_landing": false, "malfunction_ace": false, "rapid_ep": false,
+	"first_jump": false,
+	"perfect_landing": false,
+	"malfunction_ace": false,
+	"rapid_ep": false,
 }
 var _notification_label: Label
 
@@ -1065,6 +1068,8 @@ func _check_decision_altitude():
 	elif _current_altitude <= 0.0 and not _safe_landing:
 		_game_state = GameState.GAME_OVER
 		print("[VERBATIM] FATAL – ground impact without safe landing")
+
+
 func _get_current_descent_rate() -> float:
 	if _game_state == GameState.FREEFALL:
 		return 1.2
@@ -1508,8 +1513,6 @@ func _setup_pip_overlay():
 	print("[VERBATIM] EXIT _setup_pip_overlay ok=true")
 
 
-
-
 func _fetch_real_wind():
 	# Load real wind from file or use default
 	# For now, just set a default wind
@@ -1518,6 +1521,5 @@ func _fetch_real_wind():
 	print("[VERBATIM] Real wind loaded: ", wind_speed, " kts @ ", wind_direction, "°")
 	# You could also read from wind.json here
 	return
-
 
 	print("[VERBATIM] Skipping screenshot (headless or null image)")
