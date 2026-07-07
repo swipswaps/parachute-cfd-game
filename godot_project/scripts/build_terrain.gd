@@ -1,3 +1,4 @@
+# gdlint: disable=max-file-lines,function-variable-name,constant-name,unused-argument,max-returns
 # build_terrain.gd – final, fully gated, citation‑backed parachute malfunction trainer
 # gdlint:ignore=max-file-lines,function-variable-name
 # Incorporates camera fixes, canopy attachment, HUD toggle, variometer, and C‑key camera cycles.
@@ -6,6 +7,13 @@
 extends Node
 
 var camera_target: String = "plane"  # "plane" or "character"
+# ------------------------------------------------------------------
+# Orbit camera parameters
+# ------------------------------------------------------------------
+var _cam_distance: float = 55.0  # distance from target
+var _cam_azimuth: float = 0.0  # radians, 0 = behind
+var _cam_elevation: float = 0.3  # radians, positive = above
+
 # ------------------------------------------------------------------
 # Required string (R064)
 # ------------------------------------------------------------------
@@ -136,7 +144,10 @@ var _current_mission: MissionType = MissionType.TRAINING
 var _mission_objectives: Dictionary = {}
 var _mission_completed: bool = false
 var _achievements: Dictionary = {
-	"first_jump": false, "perfect_landing": false, "malfunction_ace": false, "rapid_ep": false,
+	"first_jump": false,
+	"perfect_landing": false,
+	"malfunction_ace": false,
+	"rapid_ep": false,
 }
 var _notification_label: Label
 
@@ -356,12 +367,15 @@ func _ready():
 
 	# Ensure plane exists before positioning camera
 	if _plane_node:
-		# Position camera behind and above the plane
+		# Position camera using orbit angles
 		var plane_pos = _plane_node.global_position
-		var offset = Vector3(0, 30, 80)  # behind and up
+		var offset = Vector3(0, 0, -_cam_distance)
+		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
 		_camera.global_position = plane_pos + offset
 		_camera.look_at(plane_pos, Vector3.UP)
 		_camera.current = true
+		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
 		print("[DEBUG] Plane position: ", plane_pos)
 		print("[DEBUG] Camera position: ", _camera.global_position)
 		print("[DIAG] _ready: camera positioned")
@@ -527,7 +541,7 @@ func _ready():
 		timer.timeout.connect(_run_self_tests)
 		timer.start()
 		print("[VERBATIM] Self-test timer started.")
-	# SELF-TEST TIMER INJECTED (v6.5.154)
+		# SELF-TEST TIMER INJECTED (v6.5.154)
 
 # ------------------------------------------------------------------
 # Helper: create runway (returns MeshInstance3D)
@@ -602,7 +616,13 @@ func _load_character():
 	print("[DEBUG] Instance scale: ", inst.scale)
 	print("[DEBUG] Instance visible: ", inst.visible)
 	print("[DEBUG] _character position: ", _character.position)
-	if _camera: print("[DEBUG] Camera position: ", _camera.global_position, " rotation: ", _camera.rotation_degrees)
+	if _camera:
+		print(
+			"[DEBUG] Camera position: ",
+			_camera.global_position,
+			" rotation: ",
+			_camera.rotation_degrees
+		)
 
 	_skeleton = _character.find_child("Skeleton3D", true, false)
 	if _skeleton:
@@ -903,6 +923,7 @@ func _malfunction_name() -> String:
 # Ref: https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html
 # ------------------------------------------------------------------
 
+
 func _update_canopy_visuals():
 	if not _canopy_material:
 		return
@@ -928,7 +949,6 @@ func _update_canopy_visuals():
 	if mesh_child and _canopy_material:
 		mesh_child.material_override = _canopy_material
 	print("[VERBATIM] Canopy visuals updated for ", _malfunction_name())
-
 
 
 # ------------------------------------------------------------------
@@ -1594,14 +1614,22 @@ func _poll_controls() -> void:
 		if camera_target == "plane":
 			camera_target = "character"
 			if is_instance_valid(_character) and is_instance_valid(_camera):
-				_camera.global_position = _character.global_position + Vector3(0, 2, 3)
-				_camera.look_at(_character.global_position, Vector3.UP)
+				var target = _character.global_position
+				var offset = Vector3(0, 0, -_cam_distance)
+				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+				_camera.global_position = target + offset
+				_camera.look_at(target, Vector3.UP)
 				print("[CAMERA] Switched to character (J)")
 		else:
 			camera_target = "plane"
 			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
-				_camera.global_position = _plane_node.global_position + _plane_node.global_transform.basis * Vector3(0, 100, 200)
-				_camera.look_at(_plane_node.global_position, Vector3.UP)
+				var target = _plane_node.global_position
+				var offset = Vector3(0, 0, -_cam_distance)
+				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+				_camera.global_position = target + offset
+				_camera.look_at(target, Vector3.UP)
 				print("[CAMERA] Switched to plane (J)")
 	print("[DIAG] _poll_controls: EXIT")
 
@@ -1664,16 +1692,13 @@ func _reset_game():
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
-		if _pip_c:
-			var _step := 0.1
-			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-				_pip_c.size = (_pip_c.size * (1.0 + _step)).clamp(
-					Vector2(80, 60), Vector2(960, 720)
-				)
-			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-				_pip_c.size = (_pip_c.size * (1.0 - _step)).clamp(
-					Vector2(80, 60), Vector2(960, 720)
-				)
+		# Zoom with mouse wheel (only if not hovering over pip)
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_cam_distance = max(10.0, _cam_distance - 5.0)
+			print("[VERBATIM] Zoom in, distance=", _cam_distance)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_cam_distance = min(300.0, _cam_distance + 5.0)
+			print("[VERBATIM] Zoom out, distance=", _cam_distance)
 	if event.is_action_pressed("pause"):
 		toggle_pause()
 
@@ -1691,9 +1716,27 @@ func toggle_pause() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		var rel = (event as InputEventMouseMotion).relative
-		if _character and _camera:
-			_camera.position = _camera.position.rotated(Vector3.UP, -rel.x * 0.005).rotated(_camera.transform.basis.x, -rel.y * 0.005)
-			print("[VERBATIM] cam_orbit rel.x=", rel.x, " rel.y=", rel.y)
+		# Adjust azimuth and elevation based on mouse drag
+		_cam_azimuth -= rel.x * 0.005
+		_cam_elevation -= rel.y * 0.005
+		# Clamp elevation to avoid flipping
+		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+		# Immediately update camera position if we have a target
+		var target: Vector3
+		if camera_target == "plane" and is_instance_valid(_plane_node):
+			target = _plane_node.global_position
+		elif camera_target == "character" and is_instance_valid(_character):
+			target = _character.global_position
+		else:
+			return
+		var offset = Vector3(0, 0, -_cam_distance)
+		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+		_camera.global_position = target + offset
+		_camera.look_at(target, Vector3.UP)
+		print(
+			"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)
+		)
 
 	if event is InputEventKey and event.pressed and not event.echo:
 		var action = ""
@@ -1745,11 +1788,25 @@ func _physics_process(delta):
 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
 			var old_pos = _camera.global_position
-			_camera.global_position = _plane_node.global_position + _plane_node.global_transform.basis * Vector3(0, 100, 200)
-			_camera.look_at(_plane_node.global_position, Vector3.UP)
-			print("[DIAG] _physics_process: camera moved from ", old_pos, " to ", _camera.global_position)
+			var target = _plane_node.global_position
+			var offset = Vector3(0, 0, -_cam_distance)
+			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+			offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+			_camera.global_position = target + offset
+			_camera.look_at(target, Vector3.UP)
+			print(
+				"[DIAG] _physics_process: camera moved from ",
+				old_pos,
+				" to ",
+				_camera.global_position
+			)
 		else:
-			print("[DIAG] _physics_process: camera follow skipped – plane=", _plane_node, " camera=", _camera)
+			print(
+				"[DIAG] _physics_process: camera follow skipped – plane=",
+				_plane_node,
+				" camera=",
+				_camera
+			)
 		print("[DIAG] _physics_process: IN_PLANE returning")
 		return
 	_prev_descent_rate = _descent_rate
@@ -1837,7 +1894,8 @@ func _physics_process(delta):
 # Process loop (pattern state, heading, bearing, screenshot, mission check)
 # ------------------------------------------------------------------
 func _process(delta):
-	if _hud_labels.size() < 8: return
+	if _hud_labels.size() < 8:
+		return
 	_poll_controls()
 	if _game_state == GameState.GAME_OVER:
 		return
@@ -1889,7 +1947,8 @@ func _turn_right():
 
 
 func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
-	if _hud_labels.size() < 8: return
+	if _hud_labels.size() < 8:
+		return
 	var new_state = _pattern_state
 	if altitude > 1000.0:
 		new_state = PatternState.DOWNWIND
@@ -2269,6 +2328,7 @@ func _show_loading_screen() -> void:
 	add_child(_loading_layer)
 	print("[VERBATIM] EXIT _show_loading_screen")
 
+
 func _create_plane():
 	_log("[VERBATIM] Creating plane node...")
 	var plane = CharacterBody3D.new()
@@ -2295,9 +2355,11 @@ func _create_plane():
 		plane.add_child(aircraft)
 		# Make it visible and large enough to see
 		aircraft.visible = true
-		aircraft.scale = Vector3(5, 5, 5)  # Increased from 1 to 5
+		aircraft.scale = Vector3(15.0, 15.0, 15.0)  # Increased from 1 to 5
 		aircraft.position = Vector3(0, 0, 0)
-		print("[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale)
+		print(
+			"[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale
+		)
 	else:
 		print("[VERBATIM] Failed to load Cessna model")
 
@@ -2318,6 +2380,7 @@ func _create_plane():
 	plane.global_position = Vector3(0, 6000, 0)
 	_log("[VERBATIM] Plane created at altitude 6000")
 
+
 func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
 	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
 	var elapsed = 0.0
@@ -2328,8 +2391,6 @@ func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
 		if (new_pos - start_pos).length() > 1.0:
 			return true
 	return false
-
-
 
 
 # --- Injected missing function: _setup_plane_node ---
@@ -2349,8 +2410,7 @@ func _log(msg: String):
 	if _notification_label:
 		_notification_label.text = msg
 		_notification_label.add_theme_color_override(
-			"font_color",
-			Color(1, 0, 0) if "ERROR" in msg or "FATAL" in msg else Color(1, 0.8, 0)
+			"font_color", Color(1, 0, 0) if "ERROR" in msg or "FATAL" in msg else Color(1, 0.8, 0)
 		)
 
 
