@@ -10,15 +10,32 @@ config_version=5
 
 [application]
 
-config/name="Parachute Landing Pattern v313"
-run/main_scene="res://scenes/splash.tscn"
+config/name="Parachute Landing Pattern v314"
+run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.6")
 boot_splash="res://assets/boot_splash.png"
 boot_splash_bg_color=Color(0, 0, 0, 1)
 
 [autoload]
 
-ScreenshotLibrary="*res://scripts/screenshot_library.gd"
+SqliteDb="*res://scripts/SqliteDb.gd"
+DatabaseGuard="*res://scripts/DatabaseGuard.gd"
+ResourceThrottle="*res://scripts/ResourceThrottle.gd"
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+aero_units="*res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd"
+#Databaseinfrastructure-LOADFIRST#CoredatabaseSqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+#Monitoring(usesDatabaseGuardandResourceThrottle)#LoggingandutilitiesStructuredLogger="*res://scripts/StructuredLogger.gd"
+InputManager="*res://scripts/InputManager.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+#HUDandUIAltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+#PhysicsandenvironmentWindField="*res://scripts/wind_field.gd"
+AeroUnits="*uid://5vah4ayrdxci"
+
+[editor_plugins]
+
+plugins/godot-sqlite/plugin.cfg="*"
 
 [environment]
 
@@ -27,93 +44,228 @@ ambient_light/color=Color(1, 1, 1, 1)
 ambient_light/energy=1.0
 defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
 
-[input]
-pause={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194305,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-flightcheck={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":9,"physical_keycode":9,"key_label":0,"unicode":9,"location":0,"echo":false,"script":null)
-]
-}
-togglehud={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":72,"physical_keycode":72,"key_label":0,"unicode":104,"location":0,"echo":false,"script":null)
-]
-}
-cyclecamera={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":67,"physical_keycode":67,"key_label":0,"unicode":99,"location":0,"echo":false,"script":null)
-]
-}
-turnright={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":69,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
-]
-}
-turnleft={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":81,"physical_keycode":81,"key_label":0,"unicode":113,"location":0,"echo":false,"script":null)
-]
-}
+[gdextension]
 
-"events:[]}deploy"={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":32,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
-]
-}
-turn_left={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":81,"physical_keycode":81,"key_label":0,"unicode":113,"location":0,"echo":false,"script":null)
-]
-}
-turn_right={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":69,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
-]
-}
+path="res://addons/godot-sqlite/gdsqlite.gdextension"
+
+[input]
+
+ui_accept="key://Space"
+ui_down="key://Down"
 cutaway={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":88,"physical_keycode":88,"key_label":0,"unicode":120,"location":0,"echo":false,"script":null)
-]
-}
-reserve={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":86,"physical_keycode":86,"key_label":0,"unicode":118,"location":0,"echo":false,"script":null)
-]
-}
-flare={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":70,"physical_keycode":70,"key_label":0,"unicode":102,"location":0,"echo":false,"script":null)
-]
-}
-restart={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":82,"physical_keycode":82,"key_label":0,"unicode":114,"location":0,"echo":false,"script":null)
-]
+"events": [{
+"device": 0,
+"index": 0,
+"key": 88,
+"pressed": true,
+"type": "key"
+}]
 }
 cycle_camera={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":67,"physical_keycode":67,"key_label":0,"unicode":121,"location":0,"echo":false,"script":null)
-]
+"events": [{
+"device": 0,
+"index": 0,
+"key": 67,
+"pressed": true,
+"type": "key"
+}]
 }
-toggle_hud={
+deploy={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":72,"physical_keycode":72,"key_label":0,"unicode":104,"location":0,"echo":false,"script":null)
-]
+"events": [{
+"device": 0,
+"index": 0,
+"key": 32,
+"pressed": true,
+"type": "key"
+}]
+}
+flare={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 70,
+"pressed": true,
+"type": "key"
+}]
 }
 flight_check={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":67,"physical_keycode":67,"key_label":0,"unicode":121,"location":0,"echo":false,"script":null)
-]
+"events": [{
+"device": 0,
+"index": 0,
+"key": 290,
+"pressed": true,
+"type": "key"
+}]
 }
-check_arms={
+pause={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":80,"physical_keycode":80,"key_label":0,"unicode":112,"location":0,"echo":false,"script":null)
+"events": [{
+"device": 0,
+"index": 0,
+"key": 27,
+"pressed": true,
+"type": "key"
+}]
+}
+reserve={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 86,
+"pressed": true,
+"type": "key"
+}]
+}
+restart={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 82,
+"pressed": true,
+"type": "key"
+}]
+}
+toggle_hud={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 72,
+"pressed": true,
+"type": "key"
+}]
+}
+turn_left={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 81,
+"pressed": true,
+"type": "key"
+}]
+}
+turn_right={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 69,
+"pressed": true,
+"type": "key"
+}]
+}
+pitch_down={
+"deadzone": 0.5,
+"events": [{
+"keycode": 4194320,
+"type": "key"
+}]
+}
+pitch_up={
+"deadzone": 0.5,
+"events": [{
+"keycode": 4194318,
+"type": "key"
+}]
+}
+yaw_right={
+"deadzone": 0.5,
+"events": [{
+"keycode": 4194319,
+"type": "key"
+}]
+}
+yaw_left={
+"deadzone": 0.5,
+"events": [{
+"keycode": 4194317,
+"type": "key"
+}]
+}
+roll_right={
+"deadzone": 0.5,
+"events": [{
+"keycode": 101,
+"type": "key"
+}]
+}
+roll_left={
+"deadzone": 0.5,
+"events": [{
+"keycode": 113,
+"type": "key"
+}]
+}
+throttle_down={
+"deadzone": 0.5,
+"events": [{
+"keycode": 114,
+"type": "key"
+}]
+}
+throttle_up={
+"deadzone": 0.5,
+"events": [{
+"keycode": 102,
+"type": "key"
+}]
+}
+brake_up={
+"deadzone": 0.5,
+"events": [{
+"keycode": 98,
+"type": "key"
+}]
+}
+collective_down={
+"deadzone": 0.5,
+"events": [{
+"keycode": 99,
+"type": "key"
+}]
+}
+collective_up={
+"deadzone": 0.5,
+"events": [{
+"keycode": 118,
+"type": "key"
+}]
+}
+brake="key://B"
+camera_cycle="key://C"
+collective="key://Ctrl"
+cyclecamera="key://C"
+flightcheck="key://F"
+hud_toggle="key://H"
+pitch="key://Down"
+roll="key://E"
+throttle="key://S"
+togglehud="key://H"
+turnleft="key://A"
+turnright="key://D"
+yaw="key://Right"
+j={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":74,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
+r={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":82,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
+
+[layer_names]
+
+3d_physics/layer_15="Atmosphere Areas"
 
 [rendering]
 

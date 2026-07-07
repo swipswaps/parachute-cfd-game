@@ -1,5 +1,60 @@
-[gd_scene load_steps=2 format=3 uid="uid://main_v313"]
-[ext_resource type="Script" path="res://scripts/build_terrain.gd" id="1"]
-[node name="Main" type="Node3D"]
-[node name="Builder" type="Node" parent="."]
-script = ExtResource("1")
+[gd_scene load_steps=2 format=3 uid="uid://rnfag5lj5tvy"]
+
+[ext_resource type="Script" path="res://scripts/build_terrain.gd" id="1_build_terrain"]
+[ext_resource type="Environment" path="res://assets/terrain/black_env.tres" id="1_env"]
+
+[node name="Main" type="Node3D" unique_id=846803683]
+script = ExtResource("1_build_terrain")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_env")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866, 0.5, 0, -0.5, 0.866, 0, 100, 50)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1677647251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1200, 3048, 0)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Label0" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 400.0
+offset_bottom = 44.0
+text = "Label0"
+
+[node name="Label1" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 52.0
+offset_right = 400.0
+offset_bottom = 76.0
+text = "Label1"
+
+[node name="Label2" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 84.0
+offset_right = 400.0
+offset_bottom = 108.0
+text = "Label2"
+
+[node name="Label3" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 116.0
+offset_right = 400.0
+offset_bottom = 140.0
+text = "Label3"
+
+[node name="Label4" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 148.0
+offset_right = 400.0
+offset_bottom = 172.0
+text = "Label4"
+
+[node name="Label5" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 180.0
+offset_right = 400.0
+offset_bottom = 204.0
+text = "Label5"
