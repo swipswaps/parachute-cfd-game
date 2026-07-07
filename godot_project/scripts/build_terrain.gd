@@ -200,6 +200,8 @@ var _trees: Array = []
 var _cam_angle_idx: int = 0  # 0=behind,1=side,2=pilot-up,3=chase-close
 var _cam_cycle_held: bool = false
 var _hud_toggle_held: bool = false
+const CAMERA_SETTINGS_FILE: String = "user://camera_start.cfg"
+var _initial_paused: bool = true
 var _hud_visible: bool = true
 
 # Variometer: rate of change of descent_rate (positive = lift)
@@ -233,6 +235,10 @@ var _last_frame_keys = {
 # Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
 # ------------------------------------------------------------------
 func _ready():
+	_load_camera_settings()
+	get_tree().paused = true
+	process_mode = PROCESS_MODE_ALWAYS
+	print("[INIT] Press SPACE to start")
 	print("[DIAG] _ready: ENTER")
 	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _ready gate=none")
 	# Loading screen removed – it was blocking the view and useless.
@@ -1565,6 +1571,45 @@ func _poll_controls() -> void:
 
 		_turn_input = turn_input
 
+	# ----- Direct key checks (bypass Input Map) -----
+	# Deploy (SPACE)
+	if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
+		_deploy_canopy()
+	# Turn left (Q)
+	if Input.is_key_pressed(KEY_Q):
+		_turn_input = -1.0
+		if not _last_frame_keys["Q"]:
+			_rotate_arm(true)
+	elif Input.is_key_pressed(KEY_E):
+		_turn_input = 1.0
+		if not _last_frame_keys["E"]:
+			_rotate_arm(false)
+	else:
+		# Only reset turn input if no other turn action is active (actions already handled elsewhere)
+		# but we need to avoid resetting if action-based turn is active.
+		# We'll let the existing turn_input logic handle it; we just set _turn_input here.
+		# To avoid conflict, we only set if not already set by actions.
+		if _turn_input == 0.0:
+			pass  # already zero
+	# Flight control check (C)
+	if Input.is_key_just_pressed(KEY_C):
+		_flight_control_check()
+	# Cutaway (X)
+	if Input.is_key_just_pressed(KEY_X):
+		_do_cutaway()
+	# Reserve (V)
+	if Input.is_key_just_pressed(KEY_V):
+		_do_reserve()
+	# Flare (F)
+	if Input.is_key_just_pressed(KEY_F):
+		_do_flare()
+	# Toggle HUD (H)
+	if Input.is_key_just_pressed(KEY_H):
+		_toggle_hud()
+	# Save camera settings (S)
+	if Input.is_key_just_pressed(KEY_S):
+		_save_camera_settings()
+		print("[CAMERA] Settings saved manually (from _poll_controls)")
 	if Input.is_action_just_pressed("cycle_camera"):
 		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
 		_cycle_camera()
@@ -1695,10 +1740,25 @@ func _unhandled_input(event: InputEvent) -> void:
 		# Zoom with mouse wheel (only if not hovering over pip)
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_cam_distance = max(10.0, _cam_distance - 5.0)
+			_update_camera_position()
 			print("[VERBATIM] Zoom in, distance=", _cam_distance)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_cam_distance = min(300.0, _cam_distance + 5.0)
+			_update_camera_position()
 			print("[VERBATIM] Zoom out, distance=", _cam_distance)
+	# Start game from initial paused state
+	if (
+		get_tree().paused
+		and _initial_paused
+		and event is InputEventKey
+		and event.pressed
+		and event.keycode == KEY_SPACE
+	):
+		get_tree().paused = false
+		_initial_paused = false
+		_save_camera_settings()
+		print("[INIT] Game started")
+		return
 	if event.is_action_pressed("pause"):
 		toggle_pause()
 
@@ -1714,6 +1774,7 @@ func toggle_pause() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	print("[DEBUG] _input (build_terrain) called, event=", event)
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		var rel = (event as InputEventMouseMotion).relative
 		# Adjust azimuth and elevation based on mouse drag
@@ -1721,6 +1782,7 @@ func _input(event: InputEvent) -> void:
 		_cam_elevation -= rel.y * 0.005
 		# Clamp elevation to avoid flipping
 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+		_update_camera_position()
 		# Immediately update camera position if we have a target
 		var target: Vector3
 		if camera_target == "plane" and is_instance_valid(_plane_node):
@@ -1762,6 +1824,11 @@ func _input(event: InputEvent) -> void:
 			print("[VERBATIM] INPUT: action=", action)
 	if event.is_action_pressed("pause"):
 		toggle_pause()
+
+	# Manual save key (S)
+	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+		_save_camera_settings()
+		print("[CAMERA] Settings saved manually")
 
 
 func _physics_process(delta):
@@ -2476,3 +2543,58 @@ func _run_self_tests():
 	print("[VERBATIM] Self-tests complete. Quitting...")
 	OS.delay_msec(100)  # Allow output flush
 	get_tree().quit()
+
+
+func _save_camera_settings() -> void:
+	var config = ConfigFile.new()
+	config.set_value("camera", "distance", _cam_distance)
+	config.set_value("camera", "azimuth", _cam_azimuth)
+	config.set_value("camera", "elevation", _cam_elevation)
+	config.save(CAMERA_SETTINGS_FILE)
+	print(
+		"[CAMERA] Settings saved: distance=",
+		_cam_distance,
+		" az=",
+		rad_to_deg(_cam_azimuth),
+		" el=",
+		rad_to_deg(_cam_elevation)
+	)
+
+
+func _load_camera_settings() -> void:
+	var config = ConfigFile.new()
+	if config.load(CAMERA_SETTINGS_FILE) == OK:
+		_cam_distance = config.get_value("camera", "distance", 55.0)
+		_cam_azimuth = config.get_value("camera", "azimuth", 0.0)
+		_cam_elevation = config.get_value("camera", "elevation", 0.3)
+		print(
+			"[CAMERA] Settings loaded: distance=",
+			_cam_distance,
+			" az=",
+			rad_to_deg(_cam_azimuth),
+			" el=",
+			rad_to_deg(_cam_elevation)
+		)
+	else:
+		print("[CAMERA] No saved settings, using defaults")
+
+
+func _update_camera_position() -> void:
+	if not is_instance_valid(_camera):
+		return
+	var target: Vector3
+	if camera_target == "plane" and is_instance_valid(_plane_node):
+		target = _plane_node.global_position
+	elif camera_target == "character" and is_instance_valid(_character):
+		target = _character.global_position
+	else:
+		if is_instance_valid(_plane_node):
+			target = _plane_node.global_position
+		else:
+			return
+	var offset = Vector3(0, 0, _cam_distance)
+	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
+	_camera.global_position = target + rot * offset
+	_camera.look_at(target, Vector3.UP)
+	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
+	_save_camera_settings()
