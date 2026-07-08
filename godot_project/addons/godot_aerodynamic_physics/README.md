@@ -1,0 +1,33 @@
+# Godot Aerodynamic Physics
+<img src="icon.png" alt="drawing" height="256"/>
+
+## Installation
+- Download/Install from the [Godot Asset Library](https://godotengine.org/asset-library/asset/2580) (Preferred)
+- Enable plugin in project settings `Project > Project Settings > Plugins`
+
+> [Advanced installation](docs/advanced_install.md)
+
+
+## Basic Usage
+- Add an ![AeroBody3D icon](icons/AeroBody3D.svg) AeroBody to your scene, and add one or more ![AeroInfluencer3D icon](icons/AeroInfluencer3D.svg) AeroInfluencer3D derived classes as children, adjust settings to change the characteristics.
+
+> [Getting Started](docs/getting_started/getting_started.md)
+
+## Development Direction
+> The [C++ port](https://github.com/addmix/godot_aerodynamic_physics/tree/new-cpp) is currently functional, but further testing and automation is necessary before it's ready for a full release: [C++ port branch](https://github.com/addmix/godot_aerodynamic_physics/tree/new-cpp)
+
+1. Usability, stability, and performance.
+2. More AeroInfluencer3D derived nodes (Dynamic rotor systems, primitive shapes).
+3. Aerofoil profiles for AeroSurfaces.
+4. Energy–maneuverability graphs and aircraft performance profiling.
+5. And [More](CONTRIBUTING.md/#future-features)
+
+> [How to contribute](CONTRIBUTING.md)
+
+## Helpful documentation
+
+- [Getting Started](docs/getting_started/getting_started.md)
+- [Getting Familiar with Aero Nodes](docs/getting_started/getting_familiar_with_aero_nodes.md)
+- [Aerodynamic Design](docs/advanced_concepts/aerodynamic_design.md)
+- [Using Atmospheres](docs/getting_started/using_atmospheres.md)
+- [Control Theory](docs/advanced_concepts/control_theory.md)

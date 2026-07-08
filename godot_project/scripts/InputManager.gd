@@ -32,18 +32,18 @@ func _unhandled_input(event):
 		get_tree().reload_current_scene()
 		return
 
-	# FALLBACK: direct keycode check for Space (deploy)
-	if event is InputEventKey and event.pressed and event.keycode == 32:
-		print(
-			(
-				Time.get_datetime_string_from_system()
-				+ " [INFO] InputManager: FALLBACK - Space key pressed, deploying canopy"
-			)
-		)
-		var plane = get_node_or_null("/root/Main/FlyingPlane")
-		if plane and plane.has_method("jump_from_plane"):
-			plane.jump_from_plane()
-		return
+#	# FALLBACK: direct keycode check for Space (deploy)
+#	if event is InputEventKey and event.pressed and event.keycode == 32:
+#		print(
+#			(
+#				Time.get_datetime_string_from_system()
+#				+ " [INFO] InputManager: FALLBACK - Space key pressed, deploying canopy"
+#			)
+#		)
+#		var plane = get_node_or_null("/root/Main/FlyingPlane")
+#		if plane and plane.has_method("jump_from_plane"):
+#			plane.jump_from_plane()
+#		return
 	# This is the key pattern: catch all key events at the root level.
 	# Pattern from: github.com/fbcosentino/godot-simplified-flightsim
 	if event is InputEventKey and event.pressed:

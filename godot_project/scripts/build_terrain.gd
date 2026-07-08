@@ -811,7 +811,7 @@ func _deploy_canopy():
 	_canopy_deployed = true
 	_canopy_instance.visible = true
 	_canopy_instance.scale = Vector3.ZERO
-	_deployment_timer = DEPLOY_TIME
+	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
 	_game_state = GameState.OPENING_ANIM
 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
 
@@ -1573,7 +1573,7 @@ func _poll_controls() -> void:
 
 	# ----- Direct key checks (bypass Input Map) -----
 	# Deploy (SPACE)
-	if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
+	#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
 		_deploy_canopy()
 	# Turn left (Q)
 	if Input.is_key_pressed(KEY_Q):
@@ -1592,24 +1592,78 @@ func _poll_controls() -> void:
 		if _turn_input == 0.0:
 			pass  # already zero
 	# Flight control check (C)
-	if Input.is_key_just_pressed(KEY_C):
+	#if Input.is_key_just_pressed(KEY_C):
 		_flight_control_check()
 	# Cutaway (X)
-	if Input.is_key_just_pressed(KEY_X):
+	#if Input.is_key_just_pressed(KEY_X):
 		_do_cutaway()
 	# Reserve (V)
-	if Input.is_key_just_pressed(KEY_V):
+	#if Input.is_key_just_pressed(KEY_V):
 		_do_reserve()
 	# Flare (F)
-	if Input.is_key_just_pressed(KEY_F):
+	#if Input.is_key_just_pressed(KEY_F):
 		_do_flare()
 	# Toggle HUD (H)
-	if Input.is_key_just_pressed(KEY_H):
+	#if Input.is_key_just_pressed(KEY_H):
 		_toggle_hud()
 	# Save camera settings (S)
-	if Input.is_key_just_pressed(KEY_S):
+	#if Input.is_key_just_pressed(KEY_S):
 		_save_camera_settings()
 		print("[CAMERA] Settings saved manually (from _poll_controls)")
+	# ----- Direct key checks (bypass Input Map) -----
+	# Deploy (SPACE)
+	# SPACE: toggle canopy in plane, deploy in freefall
+	if Input.is_key_pressed(KEY_SPACE) and not _last_frame_keys.get("SPACE", false):
+		if _game_state == GameState.IN_PLANE:
+			if _canopy_deployed:
+				_canopy_deployed = false
+				_canopy_instance.visible = false
+				_show_notification("Canopy closed – safe to jump")
+			else:
+				_canopy_deployed = true
+				_canopy_instance.visible = true
+				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+				_show_notification("WARNING: Canopy deployed inside aircraft! DO NOT jump (J)")
+		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+			_deploy_canopy()
+	_last_frame_keys["SPACE"] = Input.is_key_pressed(KEY_SPACE)
+	# Turn left (Q)
+	if Input.is_key_pressed(KEY_Q):
+		_turn_input = -1.0
+		if not _last_frame_keys.get("Q", false):
+			_rotate_arm(true)
+	elif Input.is_key_pressed(KEY_E):
+		_turn_input = 1.0
+		if not _last_frame_keys.get("E", false):
+			_rotate_arm(false)
+	else:
+		if _turn_input == 0.0:
+			pass
+	# Flight control check (C)
+	if Input.is_key_pressed(KEY_C) and not _last_frame_keys.get("C", false):
+		_flight_control_check()
+	_last_frame_keys["C"] = Input.is_key_pressed(KEY_C)
+	# Cutaway (X)
+	if Input.is_key_pressed(KEY_X) and not _last_frame_keys.get("X", false):
+		_do_cutaway()
+	_last_frame_keys["X"] = Input.is_key_pressed(KEY_X)
+	# Reserve (V)
+	if Input.is_key_pressed(KEY_V) and not _last_frame_keys.get("V", false):
+		_do_reserve()
+	_last_frame_keys["V"] = Input.is_key_pressed(KEY_V)
+	# Flare (F)
+	if Input.is_key_pressed(KEY_F) and not _last_frame_keys.get("F", false):
+		_do_flare()
+	_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
+	# Toggle HUD (H)
+	if Input.is_key_pressed(KEY_H) and not _last_frame_keys.get("H", false):
+		_toggle_hud()
+	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+	# Save camera settings (S)
+	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
+		_save_camera_settings()
+		print("[CAMERA] Settings saved manually (from _poll_controls)")
+	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
 	if Input.is_action_just_pressed("cycle_camera"):
 		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
 		_cycle_camera()
