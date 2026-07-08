@@ -1,6 +1,6 @@
 # From https://github.com/addmix/godot_utils
 
-@tool,
+@tool
 extends MeshInstance3D
 class_name AeroDebugVector3D
 
@@ -15,14 +15,14 @@ class_name AeroDebugVector3D
 			#reset rotation
 			basis = Basis()
 			return
-		
+
 		var up = Vector3(0, 1, 0)
 		var dot := value.dot(up)
 		var dot_squared := dot * dot
-		
+
 		if is_equal_approx(dot_squared, length_squared):
 			up = Vector3(1, 0, 0)
-		
+
 		transform.basis = transform.basis.looking_at(value, up)
 @export var color := Color(1, 1, 1):
 	set(x):
@@ -39,12 +39,19 @@ class_name AeroDebugVector3D
 
 var material := ShaderMaterial.new
 
-var _mesh : Array[Vector3] = [Vector3(0, -1, 0), Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(1, 0, 0)]
-var _verticies : Array[Vector3] = [Vector3(0, -1, 0), #index 0 bottom point
-#go clockwise from -z position
-Vector3(0, 0, -1), Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(-1, 0, 0), #index 1-4 side poitns
-#top
-Vector3(0, 1, 0)] #index 5 top point
+var _mesh: Array[Vector3] = [
+	Vector3(0, -1, 0), Vector3(-1, 0, 0), Vector3(0, 1, 0), Vector3(1, 0, 0)
+]
+var _verticies: Array[Vector3] = [
+	Vector3(0, -1, 0),  #index 0 bottom point
+	#go clockwise from -z position
+	Vector3(0, 0, -1),
+	Vector3(1, 0, 0),
+	Vector3(0, 0, 1),
+	Vector3(-1, 0, 0),  #index 1-4 side poitns
+	#top
+	Vector3(0, 1, 0)
+]  #index 5 top point
 
 #   5
 #
@@ -66,10 +73,13 @@ Vector3(0, 1, 0)] #index 5 top point
 #534
 #541
 
-func _init(_color : Color = Color(), _width : float = 0.1, _checker : bool = false, render_priority : int = 0) -> void:
+
+func _init(
+	_color: Color = Color(), _width: float = 0.1, _checker: bool = false, render_priority: int = 0
+) -> void:
 	material.shader = preload("./vector_3d.gdshader")
 	material.render_priority = render_priority
-	
+
 	color = _color
 	width = _width
 	checker = _checker
@@ -114,5 +124,5 @@ func _init(_color : Color = Color(), _width : float = 0.1, _checker : bool = fal
 
 	st.generate_normals()
 	mesh = st.commit()
-	
+
 	custom_aabb = AABB(Vector3.ZERO, Vector3(100, 100, 100))
