@@ -3,6 +3,20 @@
 
 extends Node
 
+const ACTIONS: Dictionary = {
+	"deploy": KEY_SPACE,
+	"turnleft": KEY_Q,
+	"turnright": KEY_E,
+	"cyclecamera": KEY_C,
+	"togglehud": KEY_H,
+	"flightcheck": KEY_TAB,
+	"cutaway": KEY_X,
+	"reserve": KEY_V,
+	"flare": KEY_F,
+	"restart": KEY_R,
+	"pause": KEY_ESCAPE,
+}
+
 
 func _ready():
 	print(Time.get_datetime_string_from_system() + " [INFO] InputManager ready")
@@ -11,6 +25,14 @@ func _ready():
 		InputMap.has_action("restart"),
 	)
 	# Ensure all actions exist - now handled by project.godot
+
+	# Headless auto‑start: simulate SPACE press
+	if OS.get_environment("GODOT_HEADLESS") == "1":
+		# Wait a frame to ensure everything is ready
+		await get_tree().process_frame
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] InputManager auto‑start triggered.")
 
 
 func _unhandled_input(event):
@@ -90,21 +112,21 @@ func _unhandled_input(event):
 				+ " [INFO] InputManager: action 'turn_right' pressed"
 			)
 		)
-	if event.is_action_pressed("cycle_camera"):
+	if event.is_action_pressed("camera_cycle"):
 		print(
 			(
 				Time.get_datetime_string_from_system()
 				+ " [INFO] InputManager: action 'cycle_camera' pressed"
 			)
 		)
-	if event.is_action_pressed("toggle_hud"):
+	if event.is_action_pressed("togglehud"):
 		print(
 			(
 				Time.get_datetime_string_from_system()
 				+ " [INFO] InputManager: action 'toggle_hud' pressed"
 			)
 		)
-	if event.is_action_pressed("flight_check"):
+	if event.is_action_pressed("flightcheck"):
 		print(
 			(
 				Time.get_datetime_string_from_system()

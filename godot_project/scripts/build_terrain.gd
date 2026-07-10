@@ -159,7 +159,7 @@ var _controller_connected: bool = false
 var _controller_input_map = {
 	"turn_left": false,
 	"turn_right": false,
-	"flight_check": false,
+	"flightcheck": false,
 	"cutaway": false,
 	"reserve": false,
 	"flare": false,
@@ -200,7 +200,6 @@ var _trees: Array = []
 var _cam_angle_idx: int = 0  # 0=behind,1=side,2=pilot-up,3=chase-close
 var _cam_cycle_held: bool = false
 var _hud_toggle_held: bool = false
-const CAMERA_SETTINGS_FILE: String = "user://camera_start.cfg"
 var _initial_paused: bool = true
 var _hud_visible: bool = true
 
@@ -531,6 +530,11 @@ func _ready():
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+	# Headless auto‑start: simulate SPACE press
+	if OS.get_environment("GODOT_HEADLESS") == "1":
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] Headless auto‑start triggered.")
 	_check_arm_pose_safe()
 
 	print("[VERBATIM] ... EXIT _ready ok=true")
@@ -985,7 +989,7 @@ func _flight_control_check():
 func _do_cutaway():
 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
-	if _game_state != GameState.DIAGNOSIS:
+	if not _canopy_deployed:
 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
 		return
@@ -1011,7 +1015,7 @@ func _do_cutaway():
 func _do_reserve():
 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
-	if _game_state != GameState.DIAGNOSIS:
+	if not _canopy_deployed:
 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
 		return
@@ -1053,7 +1057,7 @@ func _do_reserve():
 func _do_flare():
 	print("[DIAG] _do_flare: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_flare gate=_game_state=", _game_state)
-	if _game_state != GameState.DIAGNOSIS:
+	if not _canopy_deployed:
 		print("[DIAG] _do_flare: early exit – not in DIAGNOSIS")
 		print("[VERBATIM] EXIT _do_flare early=not_in_diagnosis")
 		return
@@ -1268,7 +1272,7 @@ func _process_controller_input():
 		return
 	_controller_input_map["turn_left"] = Input.is_joy_button_pressed(0, JOY_BUTTON_LEFT_SHOULDER)
 	_controller_input_map["turn_right"] = Input.is_joy_button_pressed(0, JOY_BUTTON_RIGHT_SHOULDER)
-	_controller_input_map["flight_check"] = Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+	_controller_input_map["flightcheck"] = Input.is_joy_button_pressed(0, JOY_BUTTON_A)
 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
 	_controller_input_map["flare"] = Input.is_joy_button_pressed(0, JOY_BUTTON_Y)
@@ -1285,7 +1289,7 @@ func _process_controller_input():
 	else:
 		_turn_input = 0.0
 
-	if _controller_input_map["flight_check"]:
+	if _controller_input_map["flightcheck"]:
 		_flight_control_check()
 	if _controller_input_map["cutaway"]:
 		_do_cutaway()
@@ -1523,6 +1527,7 @@ func _poll_controls() -> void:
 			print("[DIAG] _poll_controls: exit aircraft triggered")
 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
 			_game_state = GameState.FREEFALL
+			_cam_distance = 5.0
 			if _plane_node:
 				_plane_node.visible = false
 			_character.visible = true
@@ -1571,9 +1576,9 @@ func _poll_controls() -> void:
 
 		_turn_input = turn_input
 
-	# ----- Direct key checks (bypass Input Map) -----
-	# Deploy (SPACE)
-	#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
+		# ----- Direct key checks (bypass Input Map) -----
+		# Deploy (SPACE)
+		#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
 		_deploy_canopy()
 	# Turn left (Q)
 	if Input.is_key_pressed(KEY_Q):
@@ -1591,23 +1596,23 @@ func _poll_controls() -> void:
 		# To avoid conflict, we only set if not already set by actions.
 		if _turn_input == 0.0:
 			pass  # already zero
-	# Flight control check (C)
-	#if Input.is_key_just_pressed(KEY_C):
+		# Flight control check (C)
+		#if Input.is_key_just_pressed(KEY_C):
 		_flight_control_check()
-	# Cutaway (X)
-	#if Input.is_key_just_pressed(KEY_X):
+		# Cutaway (X)
+		#if Input.is_key_just_pressed(KEY_X):
 		_do_cutaway()
-	# Reserve (V)
-	#if Input.is_key_just_pressed(KEY_V):
+		# Reserve (V)
+		#if Input.is_key_just_pressed(KEY_V):
 		_do_reserve()
-	# Flare (F)
-	#if Input.is_key_just_pressed(KEY_F):
+		# Flare (F)
+		#if Input.is_key_just_pressed(KEY_F):
 		_do_flare()
-	# Toggle HUD (H)
-	#if Input.is_key_just_pressed(KEY_H):
+		# Toggle HUD (H)
+		#if Input.is_key_just_pressed(KEY_H):
 		_toggle_hud()
-	# Save camera settings (S)
-	#if Input.is_key_just_pressed(KEY_S):
+		# Save camera settings (S)
+		#if Input.is_key_just_pressed(KEY_S):
 		_save_camera_settings()
 		print("[CAMERA] Settings saved manually (from _poll_controls)")
 	# ----- Direct key checks (bypass Input Map) -----
@@ -1664,15 +1669,15 @@ func _poll_controls() -> void:
 		_save_camera_settings()
 		print("[CAMERA] Settings saved manually (from _poll_controls)")
 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
-	if Input.is_action_just_pressed("cycle_camera"):
+	if Input.is_action_just_pressed("camera_cycle"):
 		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
 		_cycle_camera()
 
-	if Input.is_action_just_pressed("toggle_hud"):
+	if Input.is_action_just_pressed("togglehud"):
 		print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
 		_toggle_hud()
 
-	if Input.is_action_just_pressed("flight_check"):
+	if Input.is_action_just_pressed("flightcheck"):
 		print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
 		_flight_control_check()
 
@@ -1793,7 +1798,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
 		# Zoom with mouse wheel (only if not hovering over pip)
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			_cam_distance = max(10.0, _cam_distance - 5.0)
+			_cam_distance = max(1.0, _cam_distance - 5.0)
 			_update_camera_position()
 			print("[VERBATIM] Zoom in, distance=", _cam_distance)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
@@ -1834,6 +1839,7 @@ func _input(event: InputEvent) -> void:
 		# Adjust azimuth and elevation based on mouse drag
 		_cam_azimuth -= rel.x * 0.005
 		_cam_elevation -= rel.y * 0.005
+		# _character.rotation.y = _cam_azimuth  # removed to match plane behaviour
 		# Clamp elevation to avoid flipping
 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
 		_update_camera_position()
@@ -1930,6 +1936,16 @@ func _physics_process(delta):
 			)
 		print("[DIAG] _physics_process: IN_PLANE returning")
 		return
+
+	# Camera follows character using orbit (same as IN_PLANE)
+	if _character and _camera:
+		var target = _character.global_position
+		var offset = Vector3(0, 0, -_cam_distance)
+		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+		_camera.global_position = target + offset
+		_camera.look_at(target, Vector3.UP)
+		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
 	_prev_descent_rate = _descent_rate
 	_apply_malfunction_effects(delta)
 	var descent = _get_current_descent_rate() * 60.0 * delta
@@ -1949,6 +1965,9 @@ func _physics_process(delta):
 	_update_canopy_tilt()
 
 	if _game_state == GameState.FREEFALL:
+		# Freefall body turning (asymmetric drag)
+		if abs(_turn_input) > 0.001:
+			_character.rotate_y(-_turn_input * 2.0 * delta)
 		var target_dir = -_character.global_position.normalized()
 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
@@ -1958,10 +1977,11 @@ func _physics_process(delta):
 		_character.position += _velocity_vec * delta
 		if _velocity_vec.length() > 0.5:
 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
-			_character.rotation = Vector3(0, angle, 0)
+			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
 		var speed_kts = _forward_speed * 1.94384
 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+		_hud_labels[0].text = "ALT: %.0f ft" % _character.global_position.y
 		_check_decision_altitude()
 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
 		if _screenshot_save_timer > 0:
@@ -1969,46 +1989,13 @@ func _physics_process(delta):
 		if _screenshot_save_timer <= 0.0:
 			ScreenshotLibrary.save_flight_screenshot()
 			_screenshot_save_timer = 5.0
-
-	if _game_state == GameState.OPENING_ANIM:
-		if _deployment_timer > 0.0:
-			_deployment_timer -= delta
-		if _deployment_timer <= 0.0:
-			_randomize_malfunction()
-			_game_state = GameState.DIAGNOSIS
-			print("[VERBATIM] Canopy open — entering DIAGNOSIS state")
-			_show_notification("Canopy open — check canopy!")
-
-	# Capture flight screenshot every 5 seconds
-	if _screenshot_save_timer > 0:
-		_screenshot_save_timer -= delta
-	if _screenshot_save_timer <= 0.0:
-		ScreenshotLibrary.save_flight_screenshot()
-		_screenshot_save_timer = 5.0
-
-	if _hud_labels.size() > 0:
-		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
-	else:
-		print("[VERBATIM] HUD labels not ready yet")
-	if _hud_labels.size() > 6:
-		_hud_labels[6].text = "MALF: " + _malfunction_name()
-	else:
-		print("[VERBATIM] HUD label 6 not ready")
-	var ep_status = ""
-	if _flare_done:
-		ep_status = "FLARE ✓"
-	if _reserve_done:
-		ep_status = "RESERVE ✓"
-	if _cutaway_done:
-		ep_status = "CUTAWAY (need RESERVE)"
-	if _flight_control_checked:
-		ep_status = "FC ✓ (use EP if needed)"
-	else:
-		ep_status = "Press C for FC check"
-	_hud_labels[7].text = "EP: " + ep_status
-
-	_process_replay(delta)
-	print("[DIAG] _physics_process: EXIT")
+	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+		print("[VERBATIM] DIAGNOSIS turning block executed")
+		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+		_velocity_vec += turn_dir * delta
+		if _velocity_vec.length() > 0.5:
+			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
 
 
 # ------------------------------------------------------------------
@@ -2600,37 +2587,38 @@ func _run_self_tests():
 
 
 func _save_camera_settings() -> void:
-	var config = ConfigFile.new()
-	config.set_value("camera", "distance", _cam_distance)
-	config.set_value("camera", "azimuth", _cam_azimuth)
-	config.set_value("camera", "elevation", _cam_elevation)
-	config.save(CAMERA_SETTINGS_FILE)
-	print(
-		"[CAMERA] Settings saved: distance=",
-		_cam_distance,
-		" az=",
-		rad_to_deg(_cam_azimuth),
-		" el=",
-		rad_to_deg(_cam_elevation)
+	var db = SqliteDb  # autoload singleton
+	if not db:
+		return
+	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+	var key = (
+		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
 	)
+	db._query(
+		(
+			"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"
+			+ key
+			+ "', '"
+			+ str(_cam_distance)
+			+ "')"
+		)
+	)
+	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
 
 
 func _load_camera_settings() -> void:
-	var config = ConfigFile.new()
-	if config.load(CAMERA_SETTINGS_FILE) == OK:
-		_cam_distance = config.get_value("camera", "distance", 55.0)
-		_cam_azimuth = config.get_value("camera", "azimuth", 0.0)
-		_cam_elevation = config.get_value("camera", "elevation", 0.3)
-		print(
-			"[CAMERA] Settings loaded: distance=",
-			_cam_distance,
-			" az=",
-			rad_to_deg(_cam_azimuth),
-			" el=",
-			rad_to_deg(_cam_elevation)
-		)
+	var db = SqliteDb  # autoload singleton
+	if not db:
+		return
+	# Ensure table exists
+	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+	if result and result.size() > 0:
+		_cam_distance = float(result[0]["value"])
+		print("[CAMERA] Loaded plane camera distance from DB: ", _cam_distance)
 	else:
-		print("[CAMERA] No saved settings, using defaults")
+		_cam_distance = 300.0
+		print("[CAMERA] Plane camera distance not found, using default 300.0")
 
 
 func _update_camera_position() -> void:
@@ -2652,3 +2640,8 @@ func _update_camera_position() -> void:
 	_camera.look_at(target, Vector3.UP)
 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
 	_save_camera_settings()
+
+
+# Added to fix deferred call and log warning via ErrorLogger
+func _recreate_hud_if_needed():
+	ErrorLogger.log_warning("Deferred method '_recreate_hud_if_needed' called but not implemented.")

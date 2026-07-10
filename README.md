@@ -1,4 +1,4 @@
-# Parachute Landing Pattern – v313 (current) + CFD Roadmap
+# Parachute Landing Pattern – v314 (current) + CFD Roadmap
 
 **Current working game:** a USPA‑compliant skydiving malfunction trainer.  
 **Planned evolution:** add real‑time CFD wind fields, Google Earth terrain, and rotating wind rotors.
@@ -46,6 +46,7 @@ Decision altitude: 2500 ft AGL. Failure to cut away/reserve by this altitude tri
 - Raised starting altitude from 3000 ft to 6000 ft (USPA ISP Category A).
 - Added verbose logging for deploy checks and ground impact (state + altitude).
 - Screenshot on every GAME_OVER (saved to `user://screenshots/`).
+- Fixed freefall camera orbit: right‑click drag now orbits the camera in freefall (same as plane) and character no longer auto‑rotates from velocity.
 
 ### Running the current game
 

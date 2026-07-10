@@ -5,7 +5,10 @@ signal jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)
 
 func _ready():
 	print(
-		Time.get_datetime_string_from_system() + " [INFO] plane.gd: InputMap.has_action('deploy') = ",
+		(
+			Time.get_datetime_string_from_system()
+			+ " [INFO] plane.gd: InputMap.has_action('deploy') = "
+		),
 		InputMap.has_action("deploy"),
 	)
 
@@ -17,13 +20,13 @@ func _process(_delta):
 	if Input.is_action_just_pressed("deploy"):
 		print("[VERBATIM] Plane: deploy action detected")
 		emit_signal("jumped_from_plane", global_position, velocity)
+
+
 # IMPLEMENTATION COMPLETE
 
 
 func _unhandled_input(event: InputEvent):
-	print("[INPUT] plane.gd:23 _input/_unhandled_input triggered")
-	print("[INPUT] plane.gd:23 _input/_unhandled_input triggered")
-	print("[INPUT] plane.gd:23 _input/_unhandled_input triggered")
+	print("[INPUT] plane: 3 occurrences collapsed")
 	print("[INPUT] plane.gd:17 _input/_unhandled_input triggered")
 	print("[INPUT] plane.gd:17 _input/_unhandled_input triggered")
 	print("[INPUT] plane.gd:17 _input/_unhandled_input triggered")
@@ -36,9 +39,15 @@ func _unhandled_input(event: InputEvent):
 func test_plane_process():
 	print("[VERBATIM] plane.gd: test_plane_process called")
 
+
 # IMPLEMENTATION COMPLETE
 
 
 func jump_from_plane():
-	print(Time.get_datetime_string_from_system() + " [INFO] plane.gd: jump_from_plane called, emitting signal")
+	print(
+		(
+			Time.get_datetime_string_from_system()
+			+ " [INFO] plane.gd: jump_from_plane called, emitting signal"
+		)
+	)
 	emit_signal("jumped_from_plane", global_position, velocity)

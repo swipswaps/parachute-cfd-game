@@ -9,7 +9,6 @@ var check_counter: int = 0
 var checks_before_auto: int = 5
 var repair_patterns: Dictionary = {}
 
-
 # SCOPE (R130):
 # - green terrain override: COVERED
 # - plane signal connection: COVERED
@@ -20,7 +19,9 @@ var repair_patterns: Dictionary = {}
 func _ready():
 	var version_info = Engine.get_version_info()
 	if version_info.major < 4 or (version_info.major == 4 and version_info.minor < 6):
-		log_verbatim("[VERBATIM] WARNING: Godot version 4.6+ recommended. Some APIs may be missing.")
+		log_verbatim(
+			"[VERBATIM] WARNING: Godot version 4.6+ recommended. Some APIs may be missing."
+		)
 
 	repair_patterns = {
 		"build_terrain.gd": _repair_build_terrain,
@@ -45,6 +46,8 @@ func _ready():
 
 func _exit_tree():
 	_flush_log()
+
+
 # IMPLEMENTATION COMPLETE
 
 
@@ -67,11 +70,14 @@ func check_and_repair() -> void:
 			errors += 1
 
 	for path in critical_files:
-		if not syntax_check(path):
+		if not ("backups" in path or "removed_repair_scripts" in path) and not syntax_check(path):
 			errors += 1
 			if auto_repair(path):
 				log_verbatim("Auto‑repair applied to " + path)
-				if syntax_check(path):
+				if (
+					not ("backups" in path or "removed_repair_scripts" in path)
+					and syntax_check(path)
+				):
 					log_verbatim("Auto‑repair succeeded for " + path)
 				else:
 					errors += 1
@@ -84,7 +90,9 @@ func check_and_repair() -> void:
 				log_verbatim("No repair pattern for " + path)
 
 	integrity_check_completed.emit(errors == 0, get_log_path())
-	log_verbatim("Integrity check complete – " + ("PASS" if errors == 0 else str(errors) + " errors remain"))
+	log_verbatim(
+		"Integrity check complete – " + ("PASS" if errors == 0 else str(errors) + " errors remain")
+	)
 
 
 func backup_file(res_path: String) -> bool:
@@ -216,8 +224,13 @@ func _repair_build_terrain(content: String) -> String:
 		new_lines.append(line)
 	var result = "\n".join(new_lines)
 	if "vertex_color_use_as_albedo = true" not in result:
-		result = result.replace("var terrain_mat = StandardMaterial3D.new()",
-								"var terrain_mat = StandardMaterial3D.new()\n\tterrain_mat.vertex_color_use_as_albedo = true")
+		result = (
+			result
+			. replace(
+				"var terrain_mat = StandardMaterial3D.new()",
+				"var terrain_mat = StandardMaterial3D.new()\n\tterrain_mat.vertex_color_use_as_albedo = true"
+			)
+		)
 		changed = true
 	var marker = "# GREEN_TERRAIN_FIX"
 	if marker not in result and changed:
@@ -237,34 +250,42 @@ func _repair_parachute_controller(content: String) -> String:
 			new_lines.append(l)
 			if l.strip_edges() == "func _ready():" and "extends CharacterBody3D" in lines[0]:
 				new_lines.append("\t# Auto‑repair: connect plane signal")
-				new_lines.append("\tvar planes = get_tree().get_nodes_in_group(\"plane\")")
+				new_lines.append('\tvar planes = get_tree().get_nodes_in_group("plane")')
 				new_lines.append("\tif planes.size() == 0:")
-				new_lines.append("\t\tlog_verbatim(\"[VERBATIM] ERROR: No plane node in group 'plane'.\")")
+				new_lines.append(
+					"\t\tlog_verbatim(\"[VERBATIM] ERROR: No plane node in group 'plane'.\")"
+				)
 				new_lines.append("\telif planes.size() > 1:")
-				new_lines.append("\t\tlog_verbatim(\"[VERBATIM] WARNING: Multiple planes. Using first.\")")
+				new_lines.append(
+					'\t\tlog_verbatim("[VERBATIM] WARNING: Multiple planes. Using first.")'
+				)
 				new_lines.append("\t\tplanes[0].jumped_from_plane.connect(_on_jumped_from_plane)")
 				new_lines.append("\telse:")
 				new_lines.append("\t\tplanes[0].jumped_from_plane.connect(_on_jumped_from_plane)")
-				new_lines.append("\t\tlog_verbatim(\"[VERBATIM] Plane signal connected\")")
+				new_lines.append('\t\tlog_verbatim("[VERBATIM] Plane signal connected")')
 		content = "\n".join(new_lines)
 
 	if "canopy.visible = true" not in content:
-		content = content.replace(
-			"func _on_jumped_from_plane(pos: Vector3, vel: Vector3):",
-			"func _on_jumped_from_plane(pos: Vector3, vel: Vector3):\n\tvar canopies = get_tree().get_nodes_in_group(\"canopy\")\n\tif canopies.size() == 0:\n\t\tlog_verbatim(\"[VERBATIM] ERROR: No canopy node in group 'canopy'.\")\n\telif canopies.size() > 1:\n\t\tlog_verbatim(\"[VERBATIM] WARNING: Multiple canopies. Using first.\")\n\t\tcanopies[0].visible = true\n\telse:\n\t\tcanopies[0].visible = true")
+		content = (
+			content
+			. replace(
+				"func _on_jumped_from_plane(pos: Vector3, vel: Vector3):",
+				'func _on_jumped_from_plane(pos: Vector3, vel: Vector3):\n\tvar canopies = get_tree().get_nodes_in_group("canopy")\n\tif canopies.size() == 0:\n\t\tlog_verbatim("[VERBATIM] ERROR: No canopy node in group \'canopy\'.")\n\telif canopies.size() > 1:\n\t\tlog_verbatim("[VERBATIM] WARNING: Multiple canopies. Using first.")\n\t\tcanopies[0].visible = true\n\telse:\n\t\tcanopies[0].visible = true'
+			)
+		)
 	return marker + "\n" + content
 
 
 func _repair_audit_gd(content: String) -> String:
 	var old = "var device = DisplayServer.get_display_name(0)"
-	var new_line = "var device = DisplayServer.get_display_name(0) if DisplayServer.get_display_name(0) else \"Unknown\""
+	var new_line = 'var device = DisplayServer.get_display_name(0) if DisplayServer.get_display_name(0) else "Unknown"'
 	return content.replace(old, new_line)
 
 
 func _repair_plane(content: String) -> String:
 	if "extends CharacterBody3D" in content and "signal jumped_from_plane" in content:
 		return content
-	return "# PLANE_FIX_MARKER\nextends CharacterBody3D\nsignal jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)\nfunc _ready():\n\tglobal_position = Vector3(0, 6000, 0)\nfunc _input(event: InputEvent):\n\tif event.is_action_pressed(\"jump\"):\n\t\temit_signal(\"jumped_from_plane\", global_position, velocity)\n# IMPLEMENTATION COMPLETE"
+	return '# PLANE_FIX_MARKER\nextends CharacterBody3D\nsignal jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)\nfunc _ready():\n\tglobal_position = Vector3(0, 6000, 0)\nfunc _input(event: InputEvent):\n\tif event.is_action_pressed("jump"):\n\t\temit_signal("jumped_from_plane", global_position, velocity)\n# IMPLEMENTATION COMPLETE'
 
 
 func _get_all_scripts() -> Array[String]:

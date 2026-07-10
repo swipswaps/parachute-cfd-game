@@ -1,40 +1,57 @@
-# Large binary data files (not for version control)
-*.stl
-*.stl.bak
-*.obj
-*.obj.import
-*.glb
-*.glb.import
-*.tif
-*.tif.aux.xml
-*.npz
-*.png
-*.jpg
-*.raw
-*.blend
-*.blend1
-*.extendedFeatureEdgeMesh
-*.eMesh
-*.mtl
-
-# Godot cache & imports
-godot_project/.godot/
-
-# Binaries
-bin/
-
-# Logs
-*.log
-
+# Godot 4+ generated folders
+.godot/
+.import/
+# Backup and temporary files
+*.backup_*
+*.tmp
 # Python cache
 __pycache__/
 *.pyc
-
-# Screen captures
-audit_logs/screenshots/
-
-# Mesh data (large files)
-cfd_mesh/
-terrain/
-*.mesh
-srtm_deland*.tif*
+# Local databases (unless game data)
+*.db
+# Godot script UID files (optional)
+*.gd.uid
+# Editor-specific (optional)
+.vscode/
+.idea/
+# Logs and audit outputs
+*.log
+audit_logs/
+# Temporary and backup files
+*.backup_*
+*.tmp
+*.bak
+*.orig
+*.swp
+# Python scripts that are not core tools
+*.pyc
+__pycache__/
+*.sh
+*.py
+!controlled_edit.py
+!prepare_repo.py
+!backup_and_clean.py
+# Godot editor and cache
+.godot/
+.import/
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+parachute_mutations.db
+# Godot script UID files
+*.gd.uid
+# Editor-specific
+.vscode/
+.idea/
+# Godot 4+ generated folders (observed in git status)
+# Backup and temporary files (present in >10,000 untracked items)
+# Python cache and virtual environments (from git status: .venv/, __pycache__/)
+.venv/
+venv/
+# Local databases (parachute_mutations.db, .db-shm, .db-wal)
+# Godot script UID files (optional – seen in git status)
+# Editor-specific (seen in untracked files)
+# OS metadata
+.DS_Store
+Thumbs.db

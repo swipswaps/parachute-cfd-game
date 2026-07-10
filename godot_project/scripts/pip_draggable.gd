@@ -11,9 +11,7 @@ func _ready():
 
 
 func _input(event):
-	print("[INPUT] pip_draggable.gd:13 _input/_unhandled_input triggered")
-	print("[INPUT] pip_draggable.gd:13 _input/_unhandled_input triggered")
-	print("[INPUT] pip_draggable.gd:13 _input/_unhandled_input triggered")
+	print("[INPUT] pip_draggable: 3 occurrences collapsed")
 	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")
 	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")
 	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")

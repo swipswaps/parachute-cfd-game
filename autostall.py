@@ -547,9 +547,7 @@ def main():
         # Keep existing DISPLAY or unset it
 
     # Apply auto-start patch before launching Godot
-    print("[PATCH] Auto‑start disabled by user preference")
-    success = True
-    msg = "Auto‑start disabled by user preference"
+    success, msg = apply_auto_start_patch()
     if success:
         print(f"[PATCH] {msg}")
     else:

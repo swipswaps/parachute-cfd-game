@@ -1,216 +1,205 @@
 #!/usr/bin/env python3
 """
-controlled_edit.py – Guarded, controlled edits to source files.
+controlled_edit.py — Guarded, structured file edit with transparency.
 
-This script applies a set of predefined replacements to specified files.
-It strictly enforces that each old text matches exactly once before replacing,
-aborts if not, and provides a dry-run mode showing line numbers, context,
-and unified diffs.
+Supports:
+  --dry-run          Print context, diff, and backup info without writing.
+  --apply            Actually apply the change (after confirmation, unless -y used).
 
-Design by Contract: every replacement is guarded by `text.count(old) == 1`.
-Read-after-write consistency verifies the change landed.
-Timestamped backups are created before any write.
+This script targets the rotation line in build_terrain.gd:
+  _character.rotation.y = _cam_azimuth
+and replaces it with a commented-out version to match plane behaviour.
 
-Usage:
-    python3 controlled_edit.py --dry-run   # preview changes
-    python3 controlled_edit.py             # apply changes
-    python3 controlled_edit.py --help      # full help
+All edits are guarded by DESIGN BY CONTRACT: exactly one occurrence must exist,
+otherwise the script aborts with a clear message.
 
-Configuration: Edit the EDITS list below to define the operations.
-Each entry is a dict with keys:
-    file   : path to the target file
-    old    : exact string to replace (must occur exactly once)
-    new    : replacement string
-
-The script is self-contained, stdlib only.
+Read-after-write consistency and verification (grep) are performed when applying.
 """
 
-import os
 import sys
-import re
+import os
 import shutil
-import argparse
+import subprocess
 import difflib
-from datetime import datetime
-from pathlib import Path
+import datetime
 
 # ----------------------------------------------------------------------
-# CONFIGURATION: Define the edits to apply.
-# Each operation must have `old` occur exactly once in the file.
+# Configuration: what to change, where, and how.
 # ----------------------------------------------------------------------
-EDITS = [
-    {
-        "file": "godot_project/scripts/build_terrain.gd",
-        "old": (
-            "\t# Camera follows character for all other states\n"
-            "\tif is_instance_valid(_character) and is_instance_valid(_camera):\n"
-            "\t\tvar target = _character.global_position\n"
-            "\t\tvar offset = Vector3(0, 0, -_cam_distance)\n"
-            "\t\toffset = offset.rotated(Vector3.UP, _cam_azimuth)\n"
-            "\t\toffset = offset.rotated(Vector3.RIGHT, _cam_elevation)\n"
-            "\t\t_camera.global_position = target + offset\n"
-            "\t\t_camera.look_at(target, Vector3.UP)\n"
-        ),
-        "new": (
-            "\t# Camera follows character for all post‑plane states\n"
-            "\tif _game_state != GameState.IN_PLANE and _character and _camera:\n"
-            "\t\t_camera.global_position = _character.global_position + Vector3(0, 10, -15)\n"
-            "\t\t_camera.look_at(_character.global_position, Vector3.UP)\n"
-            "\t\tprint(\"[DIAG] _physics_process: camera target set to character (state: \", _game_state, \")\")\n"
-        ),
-    },
-    {
-        "file": "godot_project/scripts/build_terrain.gd",
-        "old": (
-            "\t\t_hud_labels[4].text = \"TURN: %d\" % (_turn_input * 100)\n"
-        ),
-        "new": (
-            "\t\t_hud_labels[4].text = \"TURN: %d\" % (_turn_input * 100)\n"
-            "\t\t_hud_labels[0].text = \"ALT: %.0f ft\" % _character.global_position.y\n"
-        ),
-    },
-]
+TARGET_FILE = "godot_project/scripts/build_terrain.gd"
+OLD_LINE = "_character.rotation.y = _cam_azimuth"
+NEW_LINE = "# _character.rotation.y = _cam_azimuth  # removed to match plane behaviour"
+CONTEXT_LINES = 5          # lines before/after for display
+BACKUP_SUFFIX = ".bak"     # will be appended with timestamp
+
 
 # ----------------------------------------------------------------------
-# Helper: find line number of a substring in a file content.
+# Helper: create a timestamped backup of the file.
 # ----------------------------------------------------------------------
-def find_line_number(content, substring):
-    """Return the 1-based line number of the first occurrence of substring,
-    or None if not found."""
-    lines = content.splitlines(keepends=True)
-    for idx, line in enumerate(lines, start=1):
-        if substring in line:
-            return idx
-    return None
-
-# ----------------------------------------------------------------------
-# Helper: print context (3 lines before/after) for a match.
-# ----------------------------------------------------------------------
-def print_context(content, substring, context_lines=3):
-    """Print lines around the match with line numbers."""
-    lines = content.splitlines(keepends=True)
-    line_no = None
-    for idx, line in enumerate(lines, start=1):
-        if substring in line:
-            line_no = idx
-            break
-    if line_no is None:
-        print("[CONTEXT] Substring not found in content.")
-        return
-    start = max(0, line_no - context_lines - 1)
-    end = min(len(lines), line_no + context_lines)
-    print(f"[CONTEXT] Lines {start+1} to {end} (match at line {line_no}):")
-    for i in range(start, end):
-        prefix = ">" if i == line_no - 1 else " "
-        print(f"{prefix}{i+1:4d}: {lines[i].rstrip()}")
-
-# ----------------------------------------------------------------------
-# Core function: apply a single guarded edit.
-# ----------------------------------------------------------------------
-def apply_edit(file_path, old_text, new_text, dry_run=False):
-    """
-    Apply a replacement to the file, ensuring old_text occurs exactly once.
-    Returns (success, message, diff_lines).
-    """
-    if not os.path.isfile(file_path):
-        return False, f"File not found: {file_path}", []
-
-    # Read the file
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    # Guard: count occurrences
-    count = content.count(old_text)
-    if count != 1:
-        return False, f"Guard failed: old text appears {count} times (expected 1) in {file_path}", []
-
-    # If dry-run, show context and diff without writing
-    if dry_run:
-        print(f"\n[DRY RUN] Edit for {file_path}:")
-        print_context(content, old_text)
-        # Generate unified diff
-        new_content = content.replace(old_text, new_text, 1)
-        diff = difflib.unified_diff(
-            content.splitlines(keepends=True),
-            new_content.splitlines(keepends=True),
-            fromfile=file_path,
-            tofile=file_path + " (new)"
-        )
-        diff_lines = list(diff)
-        print("Unified diff:")
-        sys.stdout.writelines(diff_lines)
-        return True, "Dry-run completed", diff_lines
-
-    # ---- Actual write ----
-    # Create timestamped backup
-    backup_path = f"{file_path}.backup_{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+def create_backup(file_path: str) -> str:
+    """Create a backup of file_path with a timestamp, return backup path."""
+    if not os.path.exists(file_path):
+        return None
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_path = file_path + BACKUP_SUFFIX + "_" + timestamp
     shutil.copy2(file_path, backup_path)
-    print(f"Backup created: {backup_path}")
+    return backup_path
 
-    # Perform replacement
-    new_content = content.replace(old_text, new_text, 1)
-
-    # Write new content
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(new_content)
-
-    # Read-after-write consistency check
-    with open(file_path, 'r', encoding='utf-8') as f:
-        written = f.read()
-    if written != new_content:
-        # Restore backup
-        shutil.copy2(backup_path, file_path)
-        return False, "Read-after-write mismatch; rolled back", []
-
-    # Generate diff for reporting
-    diff = difflib.unified_diff(
-        content.splitlines(keepends=True),
-        new_content.splitlines(keepends=True),
-        fromfile=file_path,
-        tofile=file_path + " (new)"
-    )
-    diff_lines = list(diff)
-
-    print(f"Applied edit to {file_path}")
-    return True, "Edit applied successfully", diff_lines
 
 # ----------------------------------------------------------------------
-# Main: process all edits.
+# Helper: show context around a specific line number.
+# ----------------------------------------------------------------------
+def show_context(lines: list, line_num: int, context: int = CONTEXT_LINES) -> None:
+    """Print CONTEXT_LINES lines before and after the given line number (0-based)."""
+    start = max(0, line_num - context)
+    end = min(len(lines), line_num + context + 1)
+    print(f"--- Context (lines {start+1}–{end}):")
+    for i in range(start, end):
+        marker = ">" if i == line_num else " "
+        print(f"{marker}{i+1:4d}: {lines[i]}")
+    print()
+
+
+# ----------------------------------------------------------------------
+# Helper: show unified diff between old and new content.
+# ----------------------------------------------------------------------
+def show_diff(old_content: str, new_content: str, file_path: str) -> None:
+    """Print a unified diff of the change."""
+    diff = difflib.unified_diff(
+        old_content.splitlines(keepends=True),
+        new_content.splitlines(keepends=True),
+        fromfile="a/" + file_path,
+        tofile="b/" + file_path,
+        n=3
+    )
+    print("--- Unified diff:")
+    print("".join(diff))
+    print()
+
+
+# ----------------------------------------------------------------------
+# Helper: verify that the old line no longer appears (grep check).
+# ----------------------------------------------------------------------
+def verify_old_line_gone(file_path: str, old_line: str) -> bool:
+    """Run grep -n on the file to see if old_line still exists."""
+    try:
+        result = subprocess.run(
+            ["grep", "-n", old_line, file_path],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            print(f"VERIFICATION FAILED: old line still present:\n{result.stdout}")
+            return False
+        else:
+            print("VERIFICATION PASSED: old line no longer found in file.")
+            return True
+    except Exception as e:
+        print(f"VERIFICATION ERROR: grep failed: {e}")
+        return False
+
+
+# ----------------------------------------------------------------------
+# Main function: process the file with dry-run or apply.
 # ----------------------------------------------------------------------
 def main():
-    parser = argparse.ArgumentParser(
-        description="Apply guarded controlled edits to source files."
-    )
-    parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help="Preview changes without writing any files."
-    )
-    args = parser.parse_args()
-
-    all_success = True
-    for edit in EDITS:
-        file_path = edit.get("file")
-        old_text = edit.get("old")
-        new_text = edit.get("new")
-
-        if not file_path or old_text is None or new_text is None:
-            print(f"Skipping invalid edit entry: {edit}")
-            continue
-
-        success, msg, diff_lines = apply_edit(file_path, old_text, new_text, args.dry_run)
-        if not success:
-            print(f"ERROR: {msg}")
-            all_success = False
-
-    if not all_success:
-        print("One or more edits failed. No changes were applied (dry-run?)")
+    # Parse arguments: --dry-run or --apply
+    if len(sys.argv) != 2 or sys.argv[1] not in ("--dry-run", "--apply"):
+        print("Usage: python3 controlled_edit.py --dry-run | --apply")
+        print("  --dry-run  : Show context, diff, backup info, but do NOT write.")
+        print("  --apply    : Apply the change (after confirmation).")
         sys.exit(1)
 
-    if args.dry_run:
-        print("Dry-run completed. No files were changed.")
+    dry_run = (sys.argv[1] == "--dry-run")
+    apply_mode = (sys.argv[1] == "--apply")
+
+    # Resolve full path for transparency
+    full_path = os.path.abspath(TARGET_FILE)
+    print(f"Target file: {full_path}")
+
+    # Check file existence
+    if not os.path.exists(full_path):
+        print(f"ERROR: File not found: {full_path}")
+        sys.exit(1)
+
+    # Read current content
+    with open(full_path, "r") as f:
+        old_content = f.read()
+
+    # Guard: exactly one occurrence of the old line.
+    count = old_content.count(OLD_LINE)
+    if count != 1:
+        print(f"PRECONDITION VIOLATION: Expected exactly 1 occurrence of:")
+        print(f"  {OLD_LINE!r}")
+        print(f"Found {count} occurrences. Refusing to proceed.")
+        sys.exit(1)
+
+    # Find the line number (0-based) of the first occurrence.
+    lines = old_content.splitlines()
+    line_num = None
+    for idx, line in enumerate(lines):
+        if line.strip() == OLD_LINE:
+            line_num = idx
+            break
+    if line_num is None:
+        print("INTERNAL ERROR: Could not locate line number despite count==1.")
+        sys.exit(1)
+
+    # Show context and diff
+    show_context(lines, line_num)
+    new_content = old_content.replace(OLD_LINE, NEW_LINE, 1)
+    show_diff(old_content, new_content, TARGET_FILE)
+
+    # If dry-run, stop here.
+    if dry_run:
+        print("--dry-run: No changes written. Backup would be created at:")
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        print(f"  {full_path}{BACKUP_SUFFIX}_{timestamp}")
+        print("Exiting.")
+        sys.exit(0)
+
+    # Apply mode: ask for confirmation unless we add a -y flag later.
+    print("\nDo you want to apply this change? (y/n): ", end="")
+    response = sys.stdin.readline().strip().lower()
+    if response != 'y':
+        print("Aborted by user.")
+        sys.exit(0)
+
+    # Create backup
+    backup_path = create_backup(full_path)
+    if backup_path:
+        print(f"Backup created: {backup_path}")
+
+    # Write the new content
+    try:
+        with open(full_path, "w") as f:
+            f.write(new_content)
+        print("Write completed.")
+    except Exception as e:
+        print(f"ERROR: Failed to write file: {e}")
+        sys.exit(1)
+
+    # Read-after-write consistency check
+    with open(full_path, "r") as f:
+        written_content = f.read()
+    if written_content != new_content:
+        print("READ-AFTER-WRITE FAILURE: written content does not match expected.")
+        print("Attempting to restore from backup...")
+        if backup_path and os.path.exists(backup_path):
+            shutil.copy2(backup_path, full_path)
+            print("Restored from backup.")
+        sys.exit(1)
     else:
-        print("All edits applied successfully. Backups are available.")
+        print("Read-after-write consistency: OK.")
+
+    # Verification: grep for the old line (should be gone)
+    if verify_old_line_gone(full_path, OLD_LINE):
+        print("SUCCESS: Change applied and verified.")
+    else:
+        print("WARNING: Verification failed — old line still appears.")
+        print("You may need to inspect the file manually.")
+        sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
