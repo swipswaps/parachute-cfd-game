@@ -50,6 +50,15 @@ Decision altitude: 2500 ft AGL. Failure to cut away/reserve by this altitude tri
 
 ### Running the current game
 
+## Setup from a fresh clone
+
+After cloning the repository, run the setup script to install dependencies and configure pre-commit hooks:
+
+    ./setup.py
+
+The script will guide you through the setup interactively. For non-interactive use (e.g., CI), use `./setup.py --yes`.
+
+
 Use the debug wrapper script to auto‑focus the window and stream logs:
 
     cd /path/to/parachute-cfd-game
