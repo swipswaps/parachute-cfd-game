@@ -1892,6 +1892,13 @@ func _input(event: InputEvent) -> void:
 
 
 func _physics_process(delta):
+	# Forced turn input from Q/E keys
+	_turn_input = 0.0
+	if Input.is_key_pressed(KEY_Q):
+		_turn_input = -1.0
+	elif Input.is_key_pressed(KEY_E):
+		_turn_input = 1.0
+	# (This overrides any earlier assignments)
 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
 	if _game_state == GameState.IN_PLANE:
 		print("[DIAG] _physics_process: IN_PLANE branch entered")
