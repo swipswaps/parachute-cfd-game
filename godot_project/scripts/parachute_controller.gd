@@ -25,10 +25,10 @@ var parachute_mass: float = 100.0  # kg (jumper + equipment)
 var steering_input: Vector2 = Vector2.ZERO  # x: turn, y: brake
 
 # Wind field reference
-@onready var wind_field = get_node("/root/Main/WindField")
+@onready var wind_field := get_node("/root/Main/WindField")
 
 
-func _ready():
+func _ready() -> void:
 	"""
 	Initialize parachute physics.
 
@@ -38,7 +38,7 @@ func _ready():
 	"""
 
 
-func _physics_process(delta):
+func _physics_process(delta) -> void:
 	"""
 	Update parachute physics each frame.
 
@@ -106,7 +106,7 @@ func _physics_process(delta):
 	move_and_slide()
 
 
-func apply_steering(turn: float, brake: float):
+func apply_steering(turn: float, brake: float) -> void:
 	"""
 	Apply control inputs from player.
 

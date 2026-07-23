@@ -21,7 +21,7 @@ func create_throttle_control_config() -> AeroInfluencerControlConfig:
 @export_group("Simulation Parameters")
 @export var max_thrust_force : float = 10000.0
 
-func _ready():
+func _ready() -> void:
 	super._ready()
 	if not Engine.is_editor_hint:
 		if throttle_control_config:

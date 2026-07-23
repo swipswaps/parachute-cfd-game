@@ -18,7 +18,35 @@ const ACTIONS: Dictionary = {
 }
 
 
-func _ready():
+func _ready() -> void:
+	if not InputMap.has_action("ui_accept"):
+		pass
+
+
+# ------------------------------------------------------------------
+# FILTERED INPUT HANDLING
+# ------------------------------------------------------------------
+# Only processes input events that are relevant to the game.
+# Reduces spam and improves performance.
+# Ref: https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html
+# ------------------------------------------------------------------
+func _input(event: InputEvent) -> void:
+	# Filter: only process key presses and mouse button events
+	if not (event is InputEventKey or event is InputEventMouseButton):
+		return
+
+	# Only log if the event is a press (not release)
+	if event is InputEventKey and event.pressed:
+		# Check for known actions
+		if InputMap.has_action("ui_accept") and event.is_action_pressed("ui_accept"):
+			print("[INPUT] ui_accept pressed")
+		elif InputMap.has_action("ui_cancel") and event.is_action_pressed("ui_cancel"):
+			print("[INPUT] ui_cancel pressed")
+		elif InputMap.has_action("restart") and event.is_action_pressed("restart"):
+			print("[INPUT] restart pressed")
+		# Add more actions as needed
+		# You can also handle unhandled events separately
+		ErrorLogger._forward_error("Input action missing", {"action": "ui_accept"})
 	print(Time.get_datetime_string_from_system() + " [INFO] InputManager ready")
 	print(
 		Time.get_datetime_string_from_system() + " [INFO] InputMap.has_action('restart') = ",
@@ -35,7 +63,7 @@ func _ready():
 		print("[VERBATIM] InputManager auto‑start triggered.")
 
 
-func _unhandled_input(event):
+func _unhandled_input(event) -> void:
 	print("[INPUT] InputManager.gd:16 _input/_unhandled_input triggered")
 	print("[INPUT] InputManager.gd:16 _input/_unhandled_input triggered")
 	print("[INPUT] InputManager.gd:16 _input/_unhandled_input triggered")

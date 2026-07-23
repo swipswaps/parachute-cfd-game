@@ -10,7 +10,7 @@ var _db: Node = null
 var _initialized: bool = false
 
 
-func _ready():
+func _ready() -> void:
 	print("[VERBATIM] ResourceThrottle.gd _ready() called")
 	_db = get_node_or_null("/root/SqliteDb")
 	_ensure_table()
@@ -18,12 +18,12 @@ func _ready():
 	print("[VERBATIM] ResourceThrottle: _ready ok=true")
 
 
-func _ensure_table():
+func _ensure_table() -> void:
 	if not _db:
 		print("[VERBATIM] ResourceThrottle: SqliteDb not available")
 		return
 
-	var sql = """
+	var sql := """
 		CREATE TABLE IF NOT EXISTS throttle_log (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			operation TEXT NOT NULL UNIQUE,
@@ -44,16 +44,16 @@ func can_attempt(operation: String) -> bool:
 	if not _db:
 		return true  # Allow if DB not available
 
-	var sql = "SELECT attempt_count, backoff_seconds, last_attempt, locked FROM throttle_log WHERE operation = ?"
+	var sql := "SELECT attempt_count, backoff_seconds, last_attempt, locked FROM throttle_log WHERE operation = ?"
 	var result = _db._query(sql, [operation])
 
 	if result.is_empty():
 		return true
 
 	var row = result[0]
-	var attempt_count = int(row[0])
+	int(row[0])
 	var backoff_seconds = int(row[1])
-	var last_attempt = str(row[2])
+	str(row[2])
 	var locked = int(row[3])
 
 	if locked == 1:
@@ -61,27 +61,27 @@ func can_attempt(operation: String) -> bool:
 		return false
 
 	pass
-	var last_time = {}  # FIXME: replaced with empty dict
+	var last_time := {}  # FIXME: replaced with empty dict
 	var now = Time.get_datetime_dict_from_system()
-	var elapsed = _datetime_diff_seconds(last_time, now)
+	var elapsed := _datetime_diff_seconds(last_time, now)
 	if elapsed < backoff_seconds:
 		pass
 
 	return true
 
 
-func record_attempt(operation: String, success: bool, error_msg: String = ""):
+func record_attempt(operation: String, success: bool, error_msg: String = "") -> void:
 	if not _db:
 		return
 
 	# Get current state
-	var sql = "SELECT attempt_count, backoff_seconds, failure_count, locked FROM throttle_log WHERE operation = ?"
+	var sql := "SELECT attempt_count, backoff_seconds, failure_count, locked FROM throttle_log WHERE operation = ?"
 	var result = _db._query(sql, [operation])
 
-	var attempt_count = 1
-	var backoff_seconds = 30
-	var failure_count = 0
-	var locked = 0
+	var attempt_count := 1
+	var backoff_seconds := 30
+	var failure_count := 0
+	var locked := 0
 
 	if not result.is_empty():
 		var row = result[0]
@@ -130,10 +130,10 @@ func record_attempt(operation: String, success: bool, error_msg: String = ""):
 	])
 
 
-func unlock(operation: String):
+func unlock(operation: String) -> void:
 	if not _db:
 		return
-	var sql = "UPDATE throttle_log SET locked = 0 WHERE operation = ?"
+	var sql := "UPDATE throttle_log SET locked = 0 WHERE operation = ?"
 	_db._query(sql, [operation])
 	print("[VERBATIM] ResourceThrottle: operation '%s' unlocked" % operation)
 
@@ -143,7 +143,7 @@ func get_status(operation: String) -> Dictionary:
 	if not _db:
 		return {}
 
-	var sql = "SELECT attempt_count, backoff_seconds, last_attempt, locked, failure_count FROM throttle_log WHERE operation = ?"
+	var sql := "SELECT attempt_count, backoff_seconds, last_attempt, locked, failure_count FROM throttle_log WHERE operation = ?"
 	var result = _db._query(sql, [operation])
 
 	if result.is_empty():

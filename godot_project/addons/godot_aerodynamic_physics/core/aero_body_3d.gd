@@ -475,7 +475,7 @@ func calculate_forces(delta : float) -> PackedVector3Array:
 		#linear inertia calcs
 		var pre_kinetic_energy : float = 0.5 * mass * linear_velocity.length_squared()
 		var velocity_change : Vector3 = (current_force * delta) / mass
-		var velocity_change_length : float = velocity_change.length()
+		velocity_change.length()
 		var post_kinetic_energy : float = 0.5 * mass * (linear_velocity + velocity_change).length_squared()
 		
 		#angular inertia calcs
@@ -483,7 +483,7 @@ func calculate_forces(delta : float) -> PackedVector3Array:
 		var inertia_around_angular_velocity_axis : float = (real_inertia * angular_velocity.normalized()).dot(angular_velocity.normalized())
 		var pre_rotational_kinetic_energy : float = 0.5 * inertia_around_angular_velocity_axis * angular_velocity.length_squared()
 		var angular_velocity_change : Vector3 = get_inverse_inertia_tensor() * (current_torque * delta)
-		var angular_velocity_change_length : float = angular_velocity_change.length()
+		angular_velocity_change.length()
 		var post_rotational_kinetic_energy : float = 0.5 * inertia_around_angular_velocity_axis * (angular_velocity + angular_velocity_change).length_squared()
 		
 		#kinetic energy is clamped, to avoid integration errors when forces are too high.
@@ -607,7 +607,7 @@ func _update_debug() -> void:
 		var original_angular_velocity := angular_velocity
 		linear_velocity = debug_linear_velocity
 		angular_velocity = debug_angular_velocity
-		var last_force_and_torque := calculate_forces(substep_delta)
+		calculate_forces(substep_delta)
 		
 		linear_velocity = original_linear_velocity
 		angular_velocity = original_angular_velocity

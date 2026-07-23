@@ -12,10 +12,9 @@ var _db_ok = null
 const DB_PATH := "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db"
 
 var db = null
-var db_ok: bool = false
 
 
-func _ready():
+func _ready() -> void:
 	print("[VERBATIM] SqliteDb.gd _ready() called")
 	print("[VERBATIM] SqliteDb.gd _ready() called")
 	print("[VERBATIM] SqliteDb.gd _ready() called")
@@ -38,7 +37,7 @@ func _ready():
 	print("[VERBATIM] SqliteDb: _ready completed")
 
 
-func _exit_tree():
+func _exit_tree() -> void:
 	if _db_ok and _db:
 		_db.close_db()
 	print("[VERBATIM] DB CLOSED")
@@ -54,7 +53,7 @@ func _query(sql: String, args: Array = []) -> Array:
 	return _db.query_result
 
 
-func _create_tables():
+func _create_tables() -> void:
 	_query(
 		"CREATE TABLE IF NOT EXISTS issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0)"
 	)
@@ -67,7 +66,7 @@ func _create_tables():
 	print("[VERBATIM] DB tables ensured")
 
 
-func insert_issue(symptom: String, root_cause: String, fix_applied: String, verified: int = 0):
+func insert_issue(symptom: String, root_cause: String, fix_applied: String, verified: int = 0) -> void:
 	_query(
 		"INSERT INTO issues (symptom, root_cause, fix_applied, verified) VALUES (?,?,?,?)",
 		[symptom, root_cause, fix_applied, verified]
@@ -81,12 +80,12 @@ func get_issues(only_open: bool = false) -> Array:
 	return _query("SELECT * FROM issues ORDER BY id DESC")
 
 
-func mark_verified(id: int):
+func mark_verified(id: int) -> void:
 	_query("UPDATE issues SET verified=1 WHERE id=?", [id])
 	print("[VERBATIM] DB issue ", id, " marked verified")
 
 
-func insert_screenshot(filename: String, path: String):
+func insert_screenshot(filename: String, path: String) -> void:
 	_query("INSERT OR REPLACE INTO screenshots (filename, path) VALUES (?,?)", [filename, path])
 	print("[VERBATIM] DB screenshot logged: ", filename)
 
@@ -111,7 +110,7 @@ func get_parse_errors(only_pending: bool = false) -> Array:
 	return _query("SELECT * FROM parse_errors ORDER BY id DESC")
 
 
-func mark_parse_error_fixed(id: int):
+func mark_parse_error_fixed(id: int) -> void:
 	_query("UPDATE parse_errors SET fix_result='fixed' WHERE id=?", [id])
 	print("[VERBATIM] DB parse_error ", id, " marked fixed")
 

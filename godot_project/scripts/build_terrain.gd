@@ -62,38 +62,38 @@ var _pip_layer: CanvasLayer  # NEW for layering (R104)
 # Ref: https://docs.godotengine.org/en/stable/tutorials/physics/rigid_body.html
 # ------------------------------------------------------------------
 var _velocity_vec := Vector3.ZERO
-var _forward_speed = 0.0
-var _turn_input = 0.0
-var _max_speed = 30.0
-var _accel = 15.0
-var _turn_force = 5.0
-var _gravity = 9.8
-var _descent_rate = 0.0
+var _forward_speed := 0.0
+var _turn_input := 0.0
+var _max_speed := 30.0
+var _accel := 15.0
+var _turn_force := 5.0
+var _gravity := 9.8
+var _descent_rate := 0.0
 
 # ------------------------------------------------------------------
 # Landing pattern state machine (R064 required)
 # ------------------------------------------------------------------
-var _initial_heading = 120.0
-var _turn_target_heading = 120.0  # R064
-var _turn_rate = 5.0  # R064
+var _initial_heading := 120.0
+var _turn_target_heading := 120.0  # R064
+var _turn_rate := 5.0  # R064
 enum PatternState {
 	DOWNWIND,
 	BASE,
 	FINAL,
 }
 var _pattern_state = PatternState.DOWNWIND
-var _current_altitude = 6000.0  # R064
+var _current_altitude := 6000.0  # R064
 
 # ------------------------------------------------------------------
 # Arm bones (Skeleton3D)
 # Ref: https://docs.godotengine.org/en/stable/tutorials/animation/using_skeleton3d.html
 # ------------------------------------------------------------------
 var _skeleton: Skeleton3D
-var _left_arm_idx = -1
-var _right_arm_idx = -1
-var _left_arm_angle = 0.0
-var _right_arm_angle = 0.0
-var _arm_rotation_step = deg_to_rad(45.0)
+var _left_arm_idx := -1
+var _right_arm_idx := -1
+var _left_arm_angle := 0.0
+var _right_arm_angle := 0.0
+var _arm_rotation_step := deg_to_rad(45.0)
 
 # ------------------------------------------------------------------
 # Malfunction types & emergency procedure flags
@@ -124,6 +124,7 @@ const DESCENT_RATE_GOOD: float = 0.22
 var _canopy_instance: Node3D
 var _canopy_material: StandardMaterial3D
 var _canopy_deployed: bool = false
+var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
 var _deployment_timer
 var _screenshot_save_timer: float = 0.0
 const DEPLOY_TIME: float = 1.2
@@ -156,7 +157,7 @@ var _notification_label: Label
 # Ref: https://docs.godotengine.org/en/stable/tutorials/inputs/controllers_gamepads_joysticks.html
 # ------------------------------------------------------------------
 var _controller_connected: bool = false
-var _controller_input_map = {
+var _controller_input_map := {
 	"turn_left": false,
 	"turn_right": false,
 	"flightcheck": false,
@@ -210,7 +211,7 @@ var _prev_descent_rate: float = 0.0
 # ------------------------------------------------------------------
 # Polling state for one‑shot actions
 # ------------------------------------------------------------------
-var _last_frame_keys = {
+var _last_frame_keys := {
 	"Q": false,
 	"E": false,
 	"C": false,
@@ -233,7 +234,7 @@ var _last_frame_keys = {
 # _ready() – initialises terrain, character, camera, HUD, canopy, and environment
 # Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
 # ------------------------------------------------------------------
-func _ready():
+func _ready() -> void:
 	_load_camera_settings()
 	get_tree().paused = true
 	process_mode = PROCESS_MODE_ALWAYS
@@ -263,8 +264,8 @@ func _ready():
 		else:
 			print("[VERBATIM] BAKE FALLBACK")
 
-		var verts = []
-		var uvs = []
+		var verts := []
+		var uvs := []
 		const W = 1024
 		const H = 1024
 		const MAX_ELEV = 80.0
@@ -278,7 +279,7 @@ func _ready():
 				var py = (float(raw) / 65535.0) * MAX_ELEV
 				verts.push_back(Vector3(px, py, pz))
 				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
-		var indices = []
+		var indices := []
 		for z in range(H - 1):
 			for x in range(W - 1):
 				var a = z * W + x
@@ -286,7 +287,7 @@ func _ready():
 				var c = a + W
 				var d = c + 1
 				indices.append_array([a, c, b, b, c, d])
-		var st = SurfaceTool.new()
+		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
 		st.set_color(Color(1.0, 1.0, 1.0, 1.0))
 		for i in range(verts.size()):
@@ -302,9 +303,9 @@ func _ready():
 		st.generate_normals()
 		st.generate_tangents()
 		var terrain_mesh = st.commit()
-		var terrain_inst = MeshInstance3D.new()
+		var terrain_inst := MeshInstance3D.new()
 		terrain_inst.mesh = terrain_mesh
-		var terrain_mat = StandardMaterial3D.new()
+		var terrain_mat := StandardMaterial3D.new()
 		terrain_mat.vertex_color_use_as_albedo = true
 		terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -314,13 +315,13 @@ func _ready():
 	else:
 		# --- Heightmap missing: flat terrain fallback ---
 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
-		var flat_mesh = PlaneMesh.new()
+		var flat_mesh := PlaneMesh.new()
 		flat_mesh.size = Vector2(8000, 8000)
 		flat_mesh.subdivide_width = 64
 		flat_mesh.subdivide_depth = 64
-		var flat_inst = MeshInstance3D.new()
+		var flat_inst := MeshInstance3D.new()
 		flat_inst.mesh = flat_mesh
-		var flat_mat = StandardMaterial3D.new()
+		var flat_mat := StandardMaterial3D.new()
 		flat_mat.albedo_color = Color(0.2, 0.5, 0.15)
 		flat_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		flat_inst.material_override = flat_mat
@@ -394,14 +395,14 @@ func _ready():
 	# Drop zone (yellow cylinder) – reduced radius
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_cylindermesh.html
 	# --------------------------------------------------------------
-	var dz = MeshInstance3D.new()
-	var cyl = CylinderMesh.new()
+	var dz := MeshInstance3D.new()
+	var cyl := CylinderMesh.new()
 	cyl.top_radius = 3.0
 	cyl.bottom_radius = 3.0
 	cyl.radial_segments = 32
 	dz.mesh = cyl
 	dz.position = Vector3(0.0, 25.0, 0.0)
-	var dz_mat = StandardMaterial3D.new()
+	var dz_mat := StandardMaterial3D.new()
 	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
 	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -414,21 +415,22 @@ func _ready():
 	# HUD (8 lines + score + notification)
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
 	# --------------------------------------------------------------
+	# if true: return  # REMOVED: was disabling _hud_labels population. Caused _poll_controls() gate (_hud_labels.size()<8) to block all controls. build_terrain.gd:418 fix_hud_gate.py
 	if _hud_layer:
 		return
 	_hud_layer = CanvasLayer.new()
 	_hud_layer.layer = 1
-	var bg_panel = Panel.new()
+	var bg_panel := Panel.new()
 	bg_panel.anchor_right = 1.0
 	bg_panel.anchor_bottom = 1.0
-	var style = StyleBoxEmpty.new()
+	var style := StyleBoxEmpty.new()
 	bg_panel.add_theme_stylebox_override("panel", style)
 	_hud_layer.add_child(bg_panel)
 	add_child(_hud_layer)
 	var font = ThemeDB.fallback_font
-	var label_names = ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+	var label_names := ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
 	for i in range(8):
-		var lbl = Label.new()
+		var lbl := Label.new()
 		lbl.add_theme_font_override("font", font)
 		lbl.add_theme_font_size_override("font_size", 14)
 		lbl.add_theme_color_override("font_color", Color(0, 1, 0))
@@ -438,7 +440,7 @@ func _ready():
 		_hud_layer.add_child(lbl)
 		_hud_labels.append(lbl)
 
-	var _hud_bg_panel = ColorRect.new()
+	var _hud_bg_panel := ColorRect.new()
 	_hud_bg_panel.color = Color(0, 0, 0, 0.35)
 	_hud_bg_panel.size = Vector2(280, 210)
 	_hud_bg_panel.position = Vector2(5, 5)
@@ -511,7 +513,7 @@ func _ready():
 				_canopy_instance.position = Vector3(0, 3.2, 0)
 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
 				_canopy_material = StandardMaterial3D.new()
-				var _mesh_child = _find_first_mesh(_canopy_instance)
+				var _mesh_child := _find_first_mesh(_canopy_instance)
 				if _mesh_child:
 					_mesh_child.material_override = _canopy_material
 				_canopy_instance.visible = false
@@ -531,9 +533,9 @@ func _ready():
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
 	# Headless auto‑start: simulate SPACE press
-	if OS.get_environment("GODOT_HEADLESS") == "1":
-		Input.action_press("ui_accept")
-		Input.action_release("ui_accept")
+	if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+		# Input.action_release("deploy") removed — flag-based now
 		print("[VERBATIM] Headless auto‑start triggered.")
 	_check_arm_pose_safe()
 
@@ -544,7 +546,7 @@ func _ready():
 	var args = OS.get_cmdline_args()
 	if "--run-tests" in args:
 		print("[VERBATIM] Running self-tests (timer-based)...")
-		var timer = Timer.new()
+		var timer := Timer.new()
 		timer.wait_time = 1.5
 		timer.one_shot = true
 		add_child(timer)
@@ -563,8 +565,7 @@ func _ready():
 		print("[VERBATIM] Self-test timer started.")
 	# SELF-TEST TIMER INJECTED (v6.5.151)
 
-
-func _check_arm_pose():
+func _check_arm_pose() -> void:
 	var skeleton = _character.find_child("Skeleton3D", true, false)
 	if not skeleton:
 		print("[VERBATIM] ARM GATE: No skeleton found")
@@ -587,10 +588,10 @@ func _check_arm_pose():
 func _create_runway(
 	pos: Vector3, length: float, width: float, heading: float, color: Color
 ) -> MeshInstance3D:
-	var mi = MeshInstance3D.new()
-	var box = BoxMesh.new()
+	var mi := MeshInstance3D.new()
+	var box := BoxMesh.new()
 	box.size = Vector3(width, 0.5, length)
-	var mat = StandardMaterial3D.new()
+	var mat := StandardMaterial3D.new()
 	mat.albedo_color = color
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mi.mesh = box
@@ -604,12 +605,12 @@ func _create_runway(
 # Load FBX character and find arm bones
 # Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
 # ------------------------------------------------------------------
-func _load_character():
+func _load_character() -> void:
 	print("[VERBATIM] ENTER _load_character gate=none")
 	var fbx_path = "res://assets/characters/parachutist.fbx"
 	if not FileAccess.file_exists(fbx_path):
 		print("[VERBATIM] FBX not found, using capsule")
-		var capsule = MeshInstance3D.new()
+		var capsule := MeshInstance3D.new()
 		capsule.mesh = CapsuleMesh.new()
 		_character.add_child(capsule)
 		return
@@ -709,7 +710,7 @@ func _load_character():
 
 
 # Rule R092 / R083 – Force arms to neutral pose via bone override
-func _force_neutral_arms():
+func _force_neutral_arms() -> void:
 	var skeleton = _character.find_child("Skeleton3D", true, false)
 	if not skeleton:
 		print("[VERBATIM] ARM FIX: No skeleton found")
@@ -724,8 +725,8 @@ func _force_neutral_arms():
 
 	# Rotate around Z axis (roll) by -90° to bring arm down
 	# Adjust this angle if needed (e.g., -75°, -105°)
-	var angle = deg_to_rad(-75)
-	var neutral_rot = Basis(Vector3(0, 0, 1), angle)
+	var angle := deg_to_rad(-75)
+	var neutral_rot := Basis(Vector3(0, 0, 1), angle)
 
 	skeleton.set_bone_global_pose_override(
 		left_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
@@ -801,13 +802,13 @@ func _find_first_mesh(node: Node) -> MeshInstance3D:
 	if node is MeshInstance3D:
 		return node
 	for child in node.get_children():
-		var found = _find_first_mesh(child)
+		var found := _find_first_mesh(child)
 		if found:
 			return found
 	return null
 
 
-func _deploy_canopy():
+func _deploy_canopy() -> void:
 	print("[VERBATIM] ENTER _deploy_canopy gate=none")
 	if _canopy_deployed or not _canopy_instance:
 		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
@@ -829,10 +830,10 @@ func _deploy_canopy():
 # Procedural fallback canopy (blue dome)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_spheremesh.html
 # ------------------------------------------------------------------
-func _create_procedural_canopy():
+func _create_procedural_canopy() -> void:
 	print("[VERBATIM] ENTER _create_procedural_canopy gate=none")
 	_canopy_instance = MeshInstance3D.new()
-	var sphere_mesh = SphereMesh.new()
+	var sphere_mesh := SphereMesh.new()
 	sphere_mesh.radius = 0.6
 	sphere_mesh.height = 1.0
 	sphere_mesh.radial_segments = 32
@@ -854,7 +855,7 @@ func _create_procedural_canopy():
 # Ref: https://docs.godotengine.org/en/stable/classes/class_quaternion.html
 # Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
 # ------------------------------------------------------------------
-func _rotate_arm(left: bool):
+func _rotate_arm(left: bool) -> void:
 	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
 	if not _skeleton:
 		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
@@ -865,11 +866,15 @@ func _rotate_arm(left: bool):
 		return
 	var angle = _left_arm_angle if left else _right_arm_angle
 	angle += _arm_rotation_step
+	if angle > PI:
+		angle = PI
+	elif angle < 0.0:
+		angle = 0.0
 	if left:
 		_left_arm_angle = angle
 	else:
 		_right_arm_angle = angle
-	var rot = Quaternion(Vector3.RIGHT, angle)
+	var rot := Quaternion(Vector3.RIGHT, angle)
 	_skeleton.set_bone_pose_rotation(idx, rot)
 	print("[VERBATIM] Arm pulled, angle: ", rad_to_deg(angle))
 	print("[VERBATIM] EXIT _rotate_arm ok=true")
@@ -878,7 +883,7 @@ func _rotate_arm(left: bool):
 # ------------------------------------------------------------------
 # Malfunction selection and visual update
 # ------------------------------------------------------------------
-func _randomize_malfunction():
+func _randomize_malfunction() -> void:
 	print("[VERBATIM] ENTER _randomize_malfunction gate=none")
 	var r = randi() % 5
 	match r:
@@ -896,11 +901,10 @@ func _randomize_malfunction():
 	print("[VERBATIM] EXIT _randomize_malfunction ok=true")
 
 
-func _apply_malfunction_effects(delta):
+func _apply_malfunction_effects(delta) -> void:
 	match _malfunction:
 		MalfunctionType.PILOT_IN_TOW:
 			_forward_speed *= 0.98
-			_turn_input = 0.0
 			_descent_rate += 5.0 * delta
 		MalfunctionType.LINE_TWISTS:
 			_turn_input *= 0.5
@@ -934,7 +938,7 @@ func _malfunction_name() -> String:
 # ------------------------------------------------------------------
 
 
-func _update_canopy_visuals():
+func _update_canopy_visuals() -> void:
 	if not _canopy_material:
 		return
 	var mesh_child = _find_first_mesh(_canopy_instance) if _canopy_instance else null
@@ -964,7 +968,7 @@ func _update_canopy_visuals():
 # ------------------------------------------------------------------
 # Emergency procedures (gated, logged, idempotent)
 # ------------------------------------------------------------------
-func _flight_control_check():
+func _flight_control_check() -> void:
 	print("[DIAG] _flight_control_check: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _flight_control_check gate=_game_state=", _game_state)
 	if _game_state != GameState.DIAGNOSIS:
@@ -986,7 +990,9 @@ func _flight_control_check():
 	print("[VERBATIM] EXIT _flight_control_check ok=true")
 
 
-func _do_cutaway():
+func _do_cutaway() -> void:
+	if not Input.is_action_just_pressed("cutaway"):
+		return
 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
 	if not _canopy_deployed:
@@ -1012,7 +1018,7 @@ func _do_cutaway():
 	print("[VERBATIM] EXIT _do_cutaway ok=true")
 
 
-func _do_reserve():
+func _do_reserve() -> void:
 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
 	if not _canopy_deployed:
@@ -1054,7 +1060,7 @@ func _do_reserve():
 	print("[VERBATIM] EXIT _do_reserve ok=true")
 
 
-func _do_flare():
+func _do_flare() -> void:
 	print("[DIAG] _do_flare: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_flare gate=_game_state=", _game_state)
 	if not _canopy_deployed:
@@ -1102,7 +1108,7 @@ func _do_flare():
 # ------------------------------------------------------------------
 # Scoring system
 # ------------------------------------------------------------------
-func _calculate_score():
+func _calculate_score() -> void:
 	print("[VERBATIM] ENTER _calculate_score gate=none")
 	var distance = _character.global_position.length()
 	var landing_speed = abs(_forward_speed) + abs(_descent_rate)
@@ -1129,7 +1135,7 @@ func _calculate_score():
 # Leaderboard system
 # Ref: https://github.com/isetr/simpleboards_godot
 # ------------------------------------------------------------------
-func _init_leaderboard():
+func _init_leaderboard() -> void:
 	print("[VERBATIM] ENTER _init_leaderboard gate=none")
 	if FileAccess.file_exists("user://leaderboard.save"):
 		var file = FileAccess.open("user://leaderboard.save", FileAccess.READ)
@@ -1141,9 +1147,9 @@ func _init_leaderboard():
 	print("[VERBATIM] EXIT _init_leaderboard ok=true")
 
 
-func _update_leaderboard():
+func _update_leaderboard() -> void:
 	print("[VERBATIM] ENTER _update_leaderboard gate=none")
-	var entry = {"score": _score, "date": Time.get_datetime_string_from_system()}
+	var entry := {"score": _score, "date": Time.get_datetime_string_from_system()}
 	_leaderboard.append(entry)
 	_leaderboard.sort_custom(func(a, b): return a["score"] > b["score"])
 	if _leaderboard.size() > MAX_LEADERBOARD_ENTRIES:
@@ -1159,7 +1165,7 @@ func _update_leaderboard():
 # Achievements system
 # Ref: https://github.com/5FB5/gd-achievements
 # ------------------------------------------------------------------
-func _init_achievements():
+func _init_achievements() -> void:
 	print("[VERBATIM] ENTER _init_achievements gate=none")
 	if FileAccess.file_exists("user://achievements.save"):
 		var file = FileAccess.open("user://achievements.save", FileAccess.READ)
@@ -1174,7 +1180,7 @@ func _init_achievements():
 	print("[VERBATIM] EXIT _init_achievements ok=true")
 
 
-func _unlock_achievement(achievement_id: String):
+func _unlock_achievement(achievement_id: String) -> void:
 	if _achievements.has(achievement_id) and not _achievements[achievement_id]:
 		_achievements[achievement_id] = true
 		print("[VERBATIM] Achievement unlocked: ", achievement_id)
@@ -1184,8 +1190,8 @@ func _unlock_achievement(achievement_id: String):
 		file.close()
 
 
-func _display_achievements():
-	var unlocked = []
+func _display_achievements() -> void:
+	var unlocked := []
 	for key in _achievements:
 		if _achievements[key]:
 			unlocked.append(key)
@@ -1196,7 +1202,7 @@ func _display_achievements():
 # ------------------------------------------------------------------
 # Mission system
 # ------------------------------------------------------------------
-func _init_mission():
+func _init_mission() -> void:
 	print("[VERBATIM] ENTER _init_mission gate=none")
 	_mission_objectives = {
 		MissionType.TRAINING:
@@ -1213,7 +1219,7 @@ func _init_mission():
 	print("[VERBATIM] EXIT _init_mission ok=true")
 
 
-func _update_mission_ui():
+func _update_mission_ui() -> void:
 	var mission_info = _mission_objectives[_current_mission]
 	_notification_label.text = (
 		"Mission: " + mission_info["name"] + " | Target Score: " + str(mission_info["target_score"])
@@ -1221,7 +1227,7 @@ func _update_mission_ui():
 	print("[VERBATIM] Mission updated: ", mission_info["name"])
 
 
-func _check_mission_completion():
+func _check_mission_completion() -> void:
 	if _mission_completed:
 		return
 	var mission_info = _mission_objectives[_current_mission]
@@ -1247,7 +1253,7 @@ func _check_mission_completion():
 # Controller support
 # Ref: https://docs.godotengine.org/en/stable/tutorials/inputs/controllers_gamepads_joysticks.html
 # ------------------------------------------------------------------
-func _init_controller():
+func _init_controller() -> void:
 	print("[VERBATIM] ENTER _init_controller gate=none")
 	# Godot 4 syntax – connect signal to Callable
 	Input.joy_connection_changed.connect(_on_joy_connection_changed)
@@ -1255,19 +1261,19 @@ func _init_controller():
 	print("[VERBATIM] EXIT _init_controller ok=true")
 
 
-func _check_controllers():
+func _check_controllers() -> void:
 	for i in Input.get_connected_joypads():
 		_controller_connected = true
 		print("[VERBATIM] Controller connected: ", Input.get_joy_name(i))
 		break
 
 
-func _on_joy_connection_changed(device_id, connected):
+func _on_joy_connection_changed(device_id, connected) -> void:
 	_controller_connected = connected
 	print("[VERBATIM] Controller connection changed: device ", device_id, " connected: ", connected)
 
 
-func _process_controller_input():
+func _process_controller_input() -> void:
 	if not _controller_connected:
 		return
 	_controller_input_map["turn_left"] = Input.is_joy_button_pressed(0, JOY_BUTTON_LEFT_SHOULDER)
@@ -1287,7 +1293,7 @@ func _process_controller_input():
 		if not _last_frame_keys["E"]:
 			_rotate_arm(false)
 	else:
-		_turn_input = 0.0
+		pass
 
 	if _controller_input_map["flightcheck"]:
 		_flight_control_check()
@@ -1304,12 +1310,12 @@ func _process_controller_input():
 # ------------------------------------------------------------------
 # Replay system
 # ------------------------------------------------------------------
-func _start_recording():
+func _start_recording() -> void:
 	_replay_recording.clear()
 	_replay_recording.append({"action": "start", "time": Time.get_ticks_msec()})
 
 
-func _stop_recording():
+func _stop_recording() -> void:
 	if _replay_recording.size() > 0:
 		var file = FileAccess.open("user://replay.save", FileAccess.WRITE)
 		file.store_string(JSON.stringify(_replay_recording))
@@ -1317,7 +1323,7 @@ func _stop_recording():
 		print("[VERBATIM] Replay saved with ", _replay_recording.size(), " frames")
 
 
-func _play_replay():
+func _play_replay() -> void:
 	if not FileAccess.file_exists("user://replay.save"):
 		print("[VERBATIM] No replay file found")
 		return
@@ -1330,7 +1336,7 @@ func _play_replay():
 	print("[VERBATIM] Replay started")
 
 
-func _process_replay(delta):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+func _process_replay(delta) -> void:  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
 	if not _replay_playing:
 		return
 	if _replay_index >= _replay_recording.size():
@@ -1356,7 +1362,7 @@ func _process_replay(delta):  # gdlint:ignore=unused-argument # gdlint:ignore=un
 # Sentry error reporting
 # Ref: https://docs.sentry.io/platforms/godot/
 # ------------------------------------------------------------------
-func _init_sentry():
+func _init_sentry() -> void:
 	print("[VERBATIM] ENTER _init_sentry gate=none")
 	var sentry_dsn = ProjectSettings.get_setting("sentry/dsn", "")
 	if sentry_dsn != "":
@@ -1367,7 +1373,7 @@ func _init_sentry():
 	print("[VERBATIM] EXIT _init_sentry ok=true")
 
 
-func _report_error(error_message: String, stack_trace: String = ""):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+func _report_error(error_message: String, stack_trace: String = "") -> void:  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
 	if _sentry_initialized:
 		print("[VERBATIM] Sending error to Sentry: ", error_message)
 	else:
@@ -1378,7 +1384,7 @@ func _report_error(error_message: String, stack_trace: String = ""):  # gdlint:i
 # Show notification (UI popup)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
 # ------------------------------------------------------------------
-func _show_notification(text: String):
+func _show_notification(text: String) -> void:
 	_notification_label.text = text
 	var timer = get_tree().create_timer(3.0)
 	timer.timeout.connect(func(): _notification_label.text = "")
@@ -1387,7 +1393,7 @@ func _show_notification(text: String):
 # ------------------------------------------------------------------
 # Decision altitude and descent rate
 # ------------------------------------------------------------------
-func _check_decision_altitude():
+func _check_decision_altitude() -> void:
 	if _game_state != GameState.DIAGNOSIS:
 		return
 	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
@@ -1430,7 +1436,7 @@ func _get_current_descent_rate() -> float:
 # CFD wind update (called every physics frame)
 # Ref: Derived from logarithmic wind profile theory (https://en.wikipedia.org/wiki/Logarithmic_wind_profile)
 # ------------------------------------------------------------------
-func _update_cfd_wind(delta: float):
+func _update_cfd_wind(delta: float) -> void:
 	var altitude_m = _current_altitude * 0.3048
 	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
 	_wind_gust_time += delta
@@ -1438,7 +1444,7 @@ func _update_cfd_wind(delta: float):
 		_wind_gust_time = 0.0
 		_wind_current_gust = randf_range(-_wind_turbulence, _wind_turbulence)
 	var final_speed = max(0.0, wind_speed_at_alt + _wind_current_gust)
-	var wind_rad = deg_to_rad(_wind_base_direction)
+	var wind_rad := deg_to_rad(_wind_base_direction)
 	var wind_vec = Vector3(sin(wind_rad), 0, cos(wind_rad)) * (final_speed * 0.514444)
 	if _game_state == GameState.DIAGNOSIS:
 		_velocity_vec += wind_vec * delta * 0.5
@@ -1456,7 +1462,7 @@ func _update_cfd_wind(delta: float):
 # Create buildings (simple boxes with random heights)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
 # ------------------------------------------------------------------
-func _update_canopy_tilt():
+func _update_canopy_tilt() -> void:
 	if not _canopy_instance or not _canopy_deployed:
 		return
 	var tilt = _turn_input * 15.0
@@ -1467,7 +1473,7 @@ func _update_canopy_tilt():
 # Camera cycle (C key)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
 # ------------------------------------------------------------------
-func _cycle_camera():
+func _cycle_camera() -> void:
 	print("[DIAG] _cycle_camera: ENTER, current idx=", _cam_angle_idx)
 	print("[VERBATIM] ENTER _cycle_camera gate=none")
 	if not _camera:
@@ -1500,7 +1506,7 @@ func _cycle_camera():
 # HUD toggle (H key)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_canvasitem.html#class-canvasitem-property-visible
 # ------------------------------------------------------------------
-func _toggle_hud():
+func _toggle_hud() -> void:
 	print("[DIAG] _toggle_hud: ENTER, current visible=", _hud_visible)
 	print("[VERBATIM] ENTER _toggle_hud gate=none")
 	if not _hud_layer:
@@ -1522,7 +1528,11 @@ func _poll_controls() -> void:
 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
 
 	if _game_state == GameState.IN_PLANE:
-		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+		# Also check headless auto-jump flag (set in _physics_process;
+		# reliable across _physics_process/_process frame boundary).
+		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J) or _headless_auto_jump
+		_headless_auto_jump = false  # consume the flag
 		if _exit_pressed:
 			print("[DIAG] _poll_controls: exit aircraft triggered")
 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
@@ -1590,31 +1600,11 @@ func _poll_controls() -> void:
 		if not _last_frame_keys["E"]:
 			_rotate_arm(false)
 	else:
-		# Only reset turn input if no other turn action is active (actions already handled elsewhere)
-		# but we need to avoid resetting if action-based turn is active.
-		# We'll let the existing turn_input logic handle it; we just set _turn_input here.
-		# To avoid conflict, we only set if not already set by actions.
 		if _turn_input == 0.0:
 			pass  # already zero
-		# Flight control check (C)
-		#if Input.is_key_just_pressed(KEY_C):
-		_flight_control_check()
-		# Cutaway (X)
-		#if Input.is_key_just_pressed(KEY_X):
-		_do_cutaway()
-		# Reserve (V)
-		#if Input.is_key_just_pressed(KEY_V):
-		_do_reserve()
-		# Flare (F)
-		#if Input.is_key_just_pressed(KEY_F):
-		_do_flare()
-		# Toggle HUD (H)
-		#if Input.is_key_just_pressed(KEY_H):
-		_toggle_hud()
-		# Save camera settings (S)
-		#if Input.is_key_just_pressed(KEY_S):
-		_save_camera_settings()
-		print("[CAMERA] Settings saved manually (from _poll_controls)")
+		# NOTE: key-action calls (C/X/V/F/H/S) are handled below
+		# with is_key_pressed + _last_frame_keys guards. Do NOT
+		# call them here -- this else fires every frame.
 	# ----- Direct key checks (bypass Input Map) -----
 	# Deploy (SPACE)
 	# SPACE: toggle canopy in plane, deploy in freefall
@@ -1741,7 +1731,7 @@ func _poll_controls() -> void:
 # ------------------------------------------------------------------
 # Reset game to initial state (deterministic, idempotent)
 # ------------------------------------------------------------------
-func _reset_game():
+func _reset_game() -> void:
 	print("[DIAG] _reset_game: ENTER")
 	print("[VERBATIM] === RESETTING GAME ===")
 	_game_state = GameState.IN_PLANE
@@ -1752,7 +1742,6 @@ func _reset_game():
 	_character.position = Vector3(100.0, 6000.0, -100.0)
 	_velocity_vec = Vector3.ZERO
 	_forward_speed = 0.0
-	_turn_input = 0.0
 	_descent_rate = 0.0
 	_current_altitude = 3000.0
 	# Ensure altitude is non‑zero and game state is correct (R088)
@@ -1833,6 +1822,9 @@ func toggle_pause() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	# Ignore F3 – let forensic_hud handle it
+	if event is InputEventKey and event.keycode == KEY_F3:
+		return
 	print("[DEBUG] _input (build_terrain) called, event=", event)
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		var rel = (event as InputEventMouseMotion).relative
@@ -1861,7 +1853,7 @@ func _input(event: InputEvent) -> void:
 		)
 
 	if event is InputEventKey and event.pressed and not event.echo:
-		var action = ""
+		var action := ""
 		if event.keycode == KEY_Q:
 			action = "turn_left (Q)"
 		elif event.keycode == KEY_E:
@@ -1891,14 +1883,17 @@ func _input(event: InputEvent) -> void:
 		print("[CAMERA] Settings saved manually")
 
 
-func _physics_process(delta):
-	# Forced turn input from Q/E keys
-	_turn_input = 0.0
+func _physics_process(delta) -> void:
+	if _character and is_instance_valid(_character):
+		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+	# --- Q/E turn input (checked first so it's available for all states) ---
 	if Input.is_key_pressed(KEY_Q):
 		_turn_input = -1.0
 	elif Input.is_key_pressed(KEY_E):
 		_turn_input = 1.0
-	# (This overrides any earlier assignments)
+	else:
+		_turn_input = 0.0
+
 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
 	if _game_state == GameState.IN_PLANE:
 		print("[DIAG] _physics_process: IN_PLANE branch entered")
@@ -1910,6 +1905,15 @@ func _physics_process(delta):
 				sin(_plane_angle) * _PLANE_ORBIT_RADIUS
 			)
 			_plane_node.rotation.y = _plane_angle + PI / 2.0
+			# Headless auto-start: fire SPACE on first IN_PLANE frame
+			# (Rule #1 grounded: this is the first rendered frame, confirmed
+			#  by _0283.txt showing plane position update before stall)
+			if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+				if not ProjectSettings.has_setting("_headless_space_fired"):
+					ProjectSettings.set_setting("_headless_space_fired", true)
+					Input.action_press("deploy")
+					Input.action_release("deploy")
+					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
 		else:
 			print("[DIAG] _physics_process: plane_node is NULL")
@@ -1998,6 +2002,7 @@ func _physics_process(delta):
 			_screenshot_save_timer = 5.0
 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
 		print("[VERBATIM] DIAGNOSIS turning block executed")
+		print("[DIAG] _turn_input = ", _turn_input)
 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
 		_velocity_vec += turn_dir * delta
 		if _velocity_vec.length() > 0.5:
@@ -2008,7 +2013,7 @@ func _physics_process(delta):
 # ------------------------------------------------------------------
 # Process loop (pattern state, heading, bearing, screenshot, mission check)
 # ------------------------------------------------------------------
-func _process(delta):
+func _process(delta) -> void:
 	if _hud_labels.size() < 8:
 		return
 	_poll_controls()
@@ -2029,7 +2034,7 @@ func _process(delta):
 	_update_pattern(_current_altitude, dist)
 
 	var current_heading = _initial_heading
-	var diff = fmod(_turn_target_heading - current_heading + 360.0, 360.0)
+	var diff := fmod(_turn_target_heading - current_heading + 360.0, 360.0)
 	if diff > 180.0:
 		diff -= 360.0
 	var step = 5.0 * delta
@@ -2038,7 +2043,7 @@ func _process(delta):
 	_hud_labels[2].text = "HDG: %.0f°" % current_heading
 
 	var target_dir = -_character.global_position.normalized()
-	var bearing = rad_to_deg(atan2(target_dir.x, target_dir.z))
+	var bearing := rad_to_deg(atan2(target_dir.x, target_dir.z))
 	_hud_labels[3].text = "BRG: %.0f°" % bearing
 
 	_check_mission_completion()
@@ -2049,19 +2054,19 @@ func _process(delta):
 # ------------------------------------------------------------------
 # R064: turn and pattern functions
 # ------------------------------------------------------------------
-func _turn_left():
+func _turn_left() -> void:
 	_turn_target_heading -= _turn_rate
 	_turn_target_heading = max(_initial_heading - 90.0, _turn_target_heading)
 	print("[VERBATIM] Left turn target: ", _turn_target_heading)
 
 
-func _turn_right():
+func _turn_right() -> void:
 	_turn_target_heading += _turn_rate
 	_turn_target_heading = min(_initial_heading + 90.0, _turn_target_heading)
 	print("[VERBATIM] Right turn target: ", _turn_target_heading)
 
 
-func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+func _update_pattern(altitude: float, distance: float) -> void:  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
 	if _hud_labels.size() < 8:
 		return
 	var new_state = _pattern_state
@@ -2081,7 +2086,7 @@ func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-
 # ------------------------------------------------------------------
 # Dynamic weather update (simple random change every ~30 seconds)
 # ------------------------------------------------------------------
-func _update_weather():
+func _update_weather() -> void:
 	print("[VERBATIM] STUB: _update_weather using synthetic data (replace with real API)")
 	var weather_info = _fetch_weather_from_api()
 	if weather_info:
@@ -2111,7 +2116,7 @@ func _fetch_weather_from_api():
 # Ref: https://docs.godotengine.org/en/stable/classes/class_subviewportcontainer.html
 # Ref: https://docs.godotengine.org/en/stable/classes/class_configfile.html
 # ------------------------------------------------------------------
-func _setup_pip_overlay():
+func _setup_pip_overlay() -> void:
 	print("[VERBATIM] ENTER _setup_pip_overlay gate=none")
 	var fbx_path = "res://assets/characters/parachutist.fbx"
 	if not FileAccess.file_exists(fbx_path):
@@ -2121,7 +2126,7 @@ func _setup_pip_overlay():
 	_pip_layer.name = "PiPLayer"
 	_pip_layer.layer = 2  # R104: PiP on layer 2 (above HUD layer 1)
 	add_child(_pip_layer)
-	var container = SubViewportContainer.new()
+	var container := SubViewportContainer.new()
 	container.size = Vector2(320, 240)
 	# Load saved position from ConfigFile (R105)
 	var config = ConfigFile.new()
@@ -2137,6 +2142,10 @@ func _setup_pip_overlay():
 	# Connect to a signal that saves position when drag ends (implemented in pip_draggable.gd)
 	# We'll also add a direct save function here that can be called from that script.
 	_pip_layer.add_child(container)
+	container.add_to_group("pip_container")
+	container.add_to_group("pip_container")
+	container.add_to_group("pip_container")
+	container.visible = true
 	_pip_viewport = SubViewport.new()
 	_pip_viewport.size = Vector2i(320, 240)
 	_pip_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -2152,10 +2161,11 @@ func _setup_pip_overlay():
 	if not canopy_scene:
 		print("[VERBATIM] ERROR: canopy load null – no .import sidecar")
 		# Fallback: create a simple sphere
-		var sphere = MeshInstance3D.new()
+		var sphere := MeshInstance3D.new()
 		sphere.mesh = SphereMesh.new()
 		sphere.position = Vector3(0.0, 5.0, 0.0)
 		_pip_viewport.add_child(sphere)
+		container.visible = true
 		print("[VERBATIM] PiP fallback: sphere created")
 		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
 		return
@@ -2165,8 +2175,8 @@ func _setup_pip_overlay():
 	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
 
 	_pip_camera = Camera3D.new()
-	var pip_env = WorldEnvironment.new()
-	var env = Environment.new()
+	var pip_env := WorldEnvironment.new()
+	var env := Environment.new()
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
 	env.ambient_light_energy = 0.8
@@ -2180,7 +2190,7 @@ func _setup_pip_overlay():
 	_pip_viewport.add_child(_pip_camera)
 	_pip_camera.current = true
 
-	var light = DirectionalLight3D.new()
+	var light := DirectionalLight3D.new()
 	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
 	_pip_viewport.add_child(light)
 
@@ -2189,7 +2199,7 @@ func _setup_pip_overlay():
 	_wind_label.position = Vector2(20, 260)
 	_wind_label.add_theme_color_override("font_color", Color(1, 1, 0))
 	_pip_layer.add_child(_wind_label)
-	var timer = Timer.new()
+	var timer := Timer.new()
 	timer.wait_time = 1.0
 	timer.autostart = true
 	timer.timeout.connect(_update_wind_display)
@@ -2207,14 +2217,14 @@ func _setup_pip_overlay():
 	print("[VERBATIM] EXIT _setup_pip_overlay ok=true")
 
 
-func _update_wind_display():
+func _update_wind_display() -> void:
 	if not _wind_label:
 		return
 	var wind_file = FileAccess.open("res://wind.json", FileAccess.READ)
 	var speed = _wind_base_speed
 	var direction = _wind_base_direction
 	if wind_file:
-		var json = JSON.new()
+		var json := JSON.new()
 		if json.parse(wind_file.get_as_text()) == OK:
 			var wind = json.data
 			speed = wind.get("speed", _wind_base_speed)
@@ -2223,8 +2233,8 @@ func _update_wind_display():
 	print("[VERBATIM] Wind updated: ", speed, " kts @ ", direction, "°")
 
 
-func _fetch_real_wind():
-	var http = HTTPRequest.new()
+func _fetch_real_wind() -> void:
+	var http := HTTPRequest.new()
 	add_child(http)
 	http.request_completed.connect(_on_wind_received)
 	http.request("https://api.weather.gov/points/29.067,-81.284")
@@ -2242,7 +2252,7 @@ func _on_wind_received(
 	var grid_url = json.get("properties", {}).get("forecast", "")
 	if grid_url.is_empty():
 		return
-	var http2 = HTTPRequest.new()
+	var http2 := HTTPRequest.new()
 	add_child(http2)
 	http2.request_completed.connect(_on_forecast_received)
 	http2.request(grid_url)
@@ -2328,7 +2338,7 @@ func _cycle_screenshot() -> void:
 			_loading_texture_rect.texture = tex
 
 
-func _update_hud_visibility():
+func _update_hud_visibility() -> void:
 	# Toggle HUD visibility (R079)
 	for label in _hud_labels:
 		label.visible = _hud_visible
@@ -2339,7 +2349,7 @@ func _update_hud_visibility():
 
 
 # Safe arm pose check (call after character is loaded)
-func _check_arm_pose_safe():
+func _check_arm_pose_safe() -> void:
 	if not is_instance_valid(_character) or not _character:
 		print("[VERBATIM] ARM GATE: Character not loaded yet")
 		return
@@ -2358,7 +2368,7 @@ func _check_arm_pose_safe():
 
 
 # Capture the actual 3D view (not just the UI overlay)
-func _capture_3d_screenshot(filename: String = "landing_3d.png"):
+func _capture_3d_screenshot(filename: String = "landing_3d.png") -> void:
 	var image = get_viewport().get_texture().get_image()
 	var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
 	var path = "user://screenshots/" + timestamp + "_" + filename
@@ -2366,7 +2376,7 @@ func _capture_3d_screenshot(filename: String = "landing_3d.png"):
 
 
 func _save_flight_screenshot() -> void:
-	var viewport = get_viewport()
+	var viewport := get_viewport()
 	if not viewport:
 		return
 	var img = viewport.get_texture().get_image()
@@ -2408,14 +2418,14 @@ func _show_loading_screen() -> void:
 	_loading_texture_rect.anchor_bottom = 1.0
 	_loading_texture_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_loading_texture_rect.self_modulate = Color(1, 1, 1, 1)
-	var screenshot_displayed = false
+	var screenshot_displayed := false
 	if _screenshot_library.size() > 0:
 		var _ss_path = _screenshot_library[0]
 		var _ss_abs = ProjectSettings.globalize_path(_ss_path)
 		if not FileAccess.file_exists(_ss_path):
 			print("[VERBATIM] WARNING: screenshot file missing (skipping): ", _ss_path)
 		else:
-			var img = Image.new()
+			var img := Image.new()
 			var img_err = img.load(_ss_abs)
 			if img_err == OK:
 				var tex = ImageTexture.create_from_image(img)
@@ -2429,9 +2439,9 @@ func _show_loading_screen() -> void:
 			else:
 				print("[VERBATIM] WARNING: Image.load failed (", img_err, "): ", _ss_abs)
 	if not screenshot_displayed:
-		var placeholder = ColorRect.new()
+		var placeholder := ColorRect.new()
 		placeholder.color = Color(0.05, 0.05, 0.1)
-		var label = Label.new()
+		var label := Label.new()
 		label.text = "📸 No screenshots yet\nFly and screenshots will appear here as previews"
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -2444,9 +2454,9 @@ func _show_loading_screen() -> void:
 	print("[VERBATIM] EXIT _show_loading_screen")
 
 
-func _create_plane():
+func _create_plane() -> void:
 	_log("[VERBATIM] Creating plane node...")
-	var plane = CharacterBody3D.new()
+	var plane := CharacterBody3D.new()
 	plane.name = "FlyingPlane"
 	var plane_script = load("res://scripts/plane.gd")
 	if plane_script:
@@ -2478,15 +2488,15 @@ func _create_plane():
 	else:
 		print("[VERBATIM] Failed to load Cessna model")
 
-	var plane_collision = CollisionShape3D.new()
+	var plane_collision := CollisionShape3D.new()
 	plane_collision.shape = BoxShape3D.new()
 	plane_collision.shape.size = Vector3(3, 1, 10)
 	plane.add_child(plane_collision)
 
-	var exit_trigger = Area3D.new()
+	var exit_trigger := Area3D.new()
 	exit_trigger.name = "ExitTrigger"
 	plane.add_child(exit_trigger)
-	var trigger_collision = CollisionShape3D.new()
+	var trigger_collision := CollisionShape3D.new()
 	trigger_collision.shape = BoxShape3D.new()
 	trigger_collision.shape.size = Vector3(2, 2, 2)
 	trigger_collision.position = Vector3(1.5, 0, -2)
@@ -2498,7 +2508,7 @@ func _create_plane():
 
 func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
 	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
-	var elapsed = 0.0
+	var elapsed := 0.0
 	while elapsed < timeout_sec:
 		await get_tree().create_timer(0.1).timeout
 		elapsed += 0.1
@@ -2509,7 +2519,7 @@ func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
 
 
 # --- Injected missing function: _setup_plane_node ---
-func _setup_plane_node():
+func _setup_plane_node() -> void:
 	if not _plane_node:
 		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
 	if not _plane_node:
@@ -2520,7 +2530,7 @@ func _setup_plane_node():
 
 
 # --- Injected missing function: _log ---
-func _log(msg: String):
+func _log(msg: String) -> void:
 	print("[VERBATIM] " + msg)
 	if _notification_label:
 		_notification_label.text = msg
@@ -2553,7 +2563,7 @@ class ScreenshotLibrary:
 		pass
 
 
-func _run_self_tests():
+func _run_self_tests() -> void:
 	print("[VERBATIM] Self-test function started.")
 	var initial_pos = _plane_node.position if _plane_node else Vector3.ZERO
 	await get_tree().create_timer(0.5).timeout
@@ -2641,7 +2651,7 @@ func _update_camera_position() -> void:
 			target = _plane_node.global_position
 		else:
 			return
-	var offset = Vector3(0, 0, _cam_distance)
+	var offset := Vector3(0, 0, _cam_distance)
 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
 	_camera.global_position = target + rot * offset
 	_camera.look_at(target, Vector3.UP)
@@ -2650,5 +2660,8 @@ func _update_camera_position() -> void:
 
 
 # Added to fix deferred call and log warning via ErrorLogger
-func _recreate_hud_if_needed():
+func _recreate_hud_if_needed() -> void:
 	ErrorLogger.log_warning("Deferred method '_recreate_hud_if_needed' called but not implemented.")
+
+func build_chunk(chunk_coords: Vector2) -> void:
+	pass

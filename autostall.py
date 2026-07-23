@@ -9,6 +9,8 @@ autostall.py – Adaptive self‑healing for Godot simulations with automatic di
 """
 
 import subprocess
+from gamification.logbook import init_db, start_flight, end_flight, record_fix_category
+from modules.pattern_learner import learn_indentation, get_indentation_style
 import sys
 import time
 import os
@@ -32,6 +34,7 @@ STALL_THRESHOLD = 30.0
 HEARTBEAT_INTERVAL = 30.0
 DB_PATH = "parachute_mutations.db"
 CONTEXT_LINES = 3
+GODOT_SOURCE_DIR = "godot_source"  # local clone of Godot engine source
 TOOL_TIMEOUT = 2.0
 FIX_LIST_PATH = "fix_list.json"
 GRACE_PERIOD = 3.0
@@ -125,6 +128,7 @@ def get_error_table() -> str:
 # ------------------------------------------------------------------
 # Auto‑extract file/line from output buffer (handles both at: and backtraces)
 # ------------------------------------------------------------------
+
 def extract_last_gd_error(output_buffer: List[str]) -> Tuple[Optional[str], Optional[int]]:
     for line in reversed(output_buffer):
         if "at:" in line and ".gd" in line:
@@ -201,8 +205,7 @@ def apply_auto_start_patch() -> Tuple[bool, str]:
     indent = re.match(r'^[ \t]*', lines[ready_line_idx]).group(0)
 
     # Create backup
-    backup_path = p.with_suffix(p.suffix + ".bak")
-    shutil.copy2(p, backup_path)
+    backup_path = make_timestamped_backup(p)
 
     # Insert auto-start block right after the message
     auto_start_block = [
@@ -220,39 +223,67 @@ def apply_auto_start_patch() -> Tuple[bool, str]:
 
     return True, f"Auto‑start patch applied. Backup at {backup_path}"
 
+def make_timestamped_backup(p) -> object:
+    """Rule #21: creates a NEW backup file every call — never
+    overwrites a prior one. Microsecond precision so multiple
+    auto-fixes on the same file within the same run still each
+    get their own distinct backup."""
+    ts = datetime.now().strftime("%Y%m%d%H%M%S%f")
+    backup_path = p.with_suffix(p.suffix + f".bak.{ts}")
+    shutil.copy2(p, backup_path)
+    return backup_path
+
 # ------------------------------------------------------------------
 # Auto‑fix: indentation error
 # ------------------------------------------------------------------
-def auto_fix_indent_error(file_path: str, line_num: int, reference_line: int = 1505) -> Tuple[bool, str]:
+def auto_fix_indent_error(file_path: str, line_num: int) -> Tuple[bool, str]:
+    """
+    Fix an indentation error by checking the prevailing style in the
+    script's directory (learned from the codebase). Replaces the entire
+    line's leading whitespace with the correct number of tabs or spaces.
+    """
     try:
         p = Path(file_path)
         if not p.exists():
-            return False, "File not found"
+            return False, f"File not found: {file_path}"
         with open(p, 'r') as f:
             lines = f.readlines()
         if line_num < 1 or line_num > len(lines):
             return False, "Line number out of range"
-        ref_line = lines[reference_line - 1] if 1 <= reference_line <= len(lines) else None
-        if not ref_line:
-            return False, "Reference line out of range"
-        ref_indent = re.match(r'^[ \t]*', ref_line).group(0)
-        offending_line = lines[line_num - 1]
-        stripped = offending_line.lstrip()
-        new_line = ref_indent + stripped
-        if new_line == offending_line:
-            return False, "No change needed (indentation already matches)"
-        backup_path = p.with_suffix(p.suffix + ".bak")
-        shutil.copy2(p, backup_path)
+        offending = lines[line_num - 1]
+        stripped = offending.lstrip()
+        if not stripped:
+            return False, "Empty line - cannot fix"
+
+        # Determine the relative directory of this script
+        rel_dir = os.path.relpath(os.path.dirname(file_path), os.path.join(PROJECT_DIR, "scripts"))
+        if rel_dir == ".":
+            rel_dir = ""
+
+        style = get_indentation_style(rel_dir)
+        # Count current leading whitespace characters
+        leading = len(offending) - len(stripped)
+        if style == "tab":
+            # Assume 4 spaces = 1 tab for conversion
+            new_leading = "\t" * (leading // 4)
+        else:
+            new_leading = "    " * (leading // 4)   # space style
+        new_line = new_leading + stripped
+        # Ensure trailing newline
+        if not new_line.endswith("\n"):
+            new_line += "\n"
+
+        if new_line == offending:
+            return False, "No change needed (indentation already matches dominant style)"
+
+        backup_path = make_timestamped_backup(p)
         lines[line_num - 1] = new_line
         with open(p, 'w') as f:
             f.writelines(lines)
-        return True, f"Indentation corrected. Backup at {backup_path}"
+        return True, f"Indentation corrected to {style} style. Backup at {backup_path}"
     except Exception as e:
         return False, f"Error: {e}"
 
-# ------------------------------------------------------------------
-# Auto‑fix: null texture error – remove the entire screenshot block (no capture)
-# ------------------------------------------------------------------
 def auto_fix_null_texture(file_path: str, line_num: int) -> Tuple[bool, str]:
     try:
         p = Path(file_path)
@@ -284,8 +315,7 @@ def auto_fix_null_texture(file_path: str, line_num: int) -> Tuple[bool, str]:
         if end_idx is None:
             end_idx = len(lines) - 1
 
-        backup_path = p.with_suffix(p.suffix + ".bak")
-        shutil.copy2(p, backup_path)
+        backup_path = make_timestamped_backup(p)
 
         # Replace with a comment and a print (no screenshot capture)
         new_block = [
@@ -303,13 +333,46 @@ def auto_fix_null_texture(file_path: str, line_num: int) -> Tuple[bool, str]:
 # ------------------------------------------------------------------
 # Rollback function
 # ------------------------------------------------------------------
+
+def auto_fix_trailing_dot(file_path: str, line_num: int) -> Tuple[bool, str]:
+    """
+    If line `line_num` of `file_path` is a short line ending with a dot (like "dir."),
+    remove it completely. Returns (success, message).
+    """
+    try:
+        p = Path(file_path)
+        if not p.exists():
+            return False, f"File not found: {file_path}"
+        with open(p, 'r') as f:
+            original_lines = f.readlines()
+        if line_num < 1 or line_num > len(original_lines):
+            return False, "Line number out of range"
+        target = original_lines[line_num - 1].strip()
+        if target.endswith('.') and len(target) < 10:
+            # Create backup
+            backup_path = make_timestamped_backup(p)
+            # Remove the line
+            new_lines = original_lines[:line_num - 1] + original_lines[line_num:]
+            with open(p, 'w') as f:
+                f.writelines(new_lines)
+            return True, f"Removed stray dot line {line_num}: {target}"
+        else:
+            return False, "Line does not match stray‑dot pattern"
+    except Exception as e:
+        return False, f"Error: {e}"
+
+
 def rollback_file(file_path: str) -> bool:
+    """Restores from the MOST RECENT timestamped backup (Rule #21).
+    Filename format sorts lexicographically == chronologically, so
+    max() over the glob finds the latest one without parsing it."""
     p = Path(file_path)
-    backup_path = p.with_suffix(p.suffix + ".bak")
-    if backup_path.exists():
-        shutil.copy2(backup_path, p)
-        return True
-    return False
+    candidates = sorted(p.parent.glob(f"{p.name}.bak.*"))
+    if not candidates:
+        return False
+    latest_backup = candidates[-1]
+    shutil.copy2(latest_backup, p)
+    return True
 
 # ------------------------------------------------------------------
 # Source block printer (dynamic)
@@ -562,7 +625,7 @@ def main():
     print("[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)")
     print("="*72)
 
-    # Do NOT use --headless – we want rendering to work with the display
+    # Do NOT use  – we want rendering to work with the display
     cmd = [GODOT_BIN, "--path", PROJECT_DIR, "--verbose"]
     # If we have a display, we can also add --display-driver x11 (optional)
     # but Godot will auto-detect.
@@ -628,6 +691,8 @@ def main():
                 stall_reported = False
                 stall_handled = False
                 output_buffer.append(line)
+                # Immediate diagnostic: print file/line/source if SCRIPT ERROR detected
+                _diag_if_error(line)
                 if len(output_buffer) > 1000:
                     output_buffer.pop(0)
 
@@ -666,6 +731,10 @@ def main():
                 if godot_pid:
                     gd_file, gd_line = extract_last_gd_error(output_buffer)
                     if gd_file and gd_line:
+                        # show the broken code
+                        print(f"\n[DIAG] Error in {gd_file} at line {gd_line}:")
+                        print_source_block(gd_file, gd_line)
+                        # end diagnostic
                         print(f"\n[STALL #1] quiet {elapsed_since_output:.1f}s — stepping through in-flight code:")
                         print_source_block(gd_file, gd_line)
                         store_error(gd_file, gd_line, f"Parse error at {gd_file}:{gd_line}")
@@ -686,10 +755,11 @@ def main():
                                 print("[FIX] Already attempted fix for this error; skipping to avoid loop.")
                             else:
                                 print("[FIX] Attempting to correct indentation automatically...")
-                                success, msg = auto_fix_indent_error(gd_file, gd_line, reference_line=1505)
+                                success, msg = auto_fix_indent_error(gd_file, gd_line)
                                 if success:
                                     print(f"[FIX] {msg}")
                                     store_error(gd_file, gd_line, f"Fix attempted at {gd_file}:{gd_line}", status="fix_attempted")
+                                    record_fix_category(_pilot_name, "Indent")
                                     fix_attempted_this_run = True
                                     fix_applied = True
                                 else:
@@ -710,6 +780,31 @@ def main():
                             else:
                                 print("[FIX] Attempting to remove screenshot block entirely (no capture)...")
                                 success, msg = auto_fix_null_texture(gd_file, gd_line)
+                                if success:
+                                    print(f"[FIX] {msg}")
+                                    store_error(gd_file, gd_line, f"Fix attempted at {gd_file}:{gd_line}", status="fix_attempted")
+                                    record_fix_category(_pilot_name, "NullTexture")
+                                    fix_attempted_this_run = True
+                                    fix_applied = True
+                                else:
+                                    print(f"[FIX] Auto‑fix failed: {msg}")
+                                    store_error(gd_file, gd_line, f"Fix failed: {msg}", status="fix_failed")
+
+                        elif "Expected identifier after" in error_context and not fix_attempted_this_run:
+                            conn = sqlite3.connect(DB_PATH)
+                            cursor = conn.cursor()
+                            query = f"""
+                                SELECT status FROM {error_table}
+                                WHERE file_path=? AND line_number=? AND error_text LIKE ?
+                                ORDER BY id DESC LIMIT 1
+                            """
+                            cursor.execute(query, (gd_file, gd_line, "%Expected identifier after%"))
+                            row = cursor.fetchone()
+                            if row and row[0] in ('fix_attempted', 'fix_failed'):
+                                print("[FIX] Already attempted fix for this stray-dot error; skipping.")
+                            else:
+                                print("[FIX] Attempting to remove stray dot line...")
+                                success, msg = auto_fix_trailing_dot(gd_file, gd_line)
                                 if success:
                                     print(f"[FIX] {msg}")
                                     store_error(gd_file, gd_line, f"Fix attempted at {gd_file}:{gd_line}", status="fix_attempted")
@@ -763,6 +858,10 @@ def main():
                                 if not row:
                                     print("[FIX] Error resolved! Marking as fixed.")
                                     store_error(gd_file, gd_line, "Fixed successfully", status="fixed")
+                        # -- Diagnostic: show file/line context --
+                        print(f"\n[ERROR] {gd_file}:{gd_line}")
+                        print_source_block(gd_file, gd_line)
+                        # -- End diagnostic --
                     else:
                         print(f"\n[STALL #1] quiet {elapsed_since_output:.1f}s — no .gd error found in log.")
                     # Run diagnostics only once
@@ -817,6 +916,115 @@ def main():
     print(f"[SUMMARY] Runtime: {summary['runtime']:.1f}s")
     print("[SUMMARY] Diagnostics data preserved in stall_report.json")
     print("="*72)
+
+    # -- Gamification start --
+    init_db()
+    learn_indentation()
+    _flight_id = start_flight()
+    _pilot_name = 'default'
+    _fixes_attempted = 0
+    # -- Gamification end --
+    # -- Gamification flight end --
+    if _flight_id is not None:
+        outcome = "landed" if game_completed else ("aborted" if proc.returncode == 0 else "crashed")
+        bugs_encountered = sum(1 for l in output_buffer if "SCRIPT ERROR" in l or "ERROR:" in l)
+        end_flight(_flight_id, outcome, bugs_encountered=bugs_encountered,
+                   bugs_fixed=fix_attempted_this_run,
+                   notes=f"fix_attempted={fix_attempted_this_run}")
+    # -- End gamification --
+def _diag_if_error(line: str):
+    """Print diagnostic for any Godot error line that mentions a source file.
+       - .gd files: full source context (3‑5 lines).
+       - engine files: reads from local GODOT_SOURCE_DIR clone."""
+    import os
+
+    # 1. .gd files via robust extractor
+    gd_file, gd_line = extract_last_gd_error([line])
+    if gd_file and gd_line:
+        print(f"\n[DIAG] Error in {gd_file} at line {gd_line}:")
+        print_source_block(gd_file, gd_line)
+        return
+
+    # 2. Engine files referenced via "at:"
+    if "at:" in line:
+        start = line.find('(', line.find('at:') + 3)
+        if start != -1:
+            end = line.find(')', start)
+            if end != -1:
+                file_ref = line[start+1:end].strip()
+                if file_ref and ':' in file_ref:
+                    parts = file_ref.rsplit(':', 1)
+                    file_path = parts[0]
+                    line_num = int(parts[1]) if parts[1].isdigit() else None
+                    if line_num and not file_path.endswith('.gd'):
+                        local_path = os.path.join(GODOT_SOURCE_DIR, file_path)
+                        if os.path.exists(local_path):
+                            print(f"\n[DIAG] Engine error in {file_path} at line {line_num}:")
+                            # print context same way as print_source_block
+                            with open(local_path, "r", encoding="utf-8", errors="replace") as f:
+                                engine_lines = f.readlines()
+                            total = len(engine_lines)
+                            if 1 <= line_num <= total:
+                                start_idx = max(0, line_num - CONTEXT_LINES - 1)
+                                end_idx = min(total, line_num + CONTEXT_LINES)
+                                print(f"      [ENGINE SOURCE] {file_path} lines {start_idx+1}-{end_idx} (line {line_num}):")
+                                for i in range(start_idx, end_idx):
+                                    prefix = ">> " if i == line_num - 1 else "   "
+                                    print(f"      {prefix}{i+1:4d}: {engine_lines[i].rstrip()}")
+                            return
+                        else:
+                            print(f"\n[DIAG] Engine error in {file_path} at line {line_num} (source not found locally)")
+                            return
+                    elif line_num:
+                        # .gd file missed by extractor, try print_source_block anyway
+                        print(f"\n[DIAG] Error in {file_path} at line {line_num}:")
+                        print_source_block(file_path, line_num)
+                        return
+
+    # 3b. GDScript backtrace lines: "[N] func_name (res://path.gd:LINE)"
+    #     Always show source context — these carry exact file+line.
+    import re as _re
+    _bt = _re.match(r'\s*\[\d+\]\s+\S+\s+\((.+\.gd):(\d+)\)', line)
+    if _bt:
+        _f, _l = _bt.group(1), int(_bt.group(2))
+        _fp = _f.replace("res://", "godot_project/")
+        print(f"\n[DIAG] Backtrace: {_f} at line {_l}:")
+        print_source_block(_fp, _l)
+        return
+
+    # 3c. Engine-level "ERROR:" (HTTPRequest, physics, etc.)
+    if line.startswith("ERROR:") and ".gd" in line:
+        _parts = line.split(".gd")
+        if len(_parts) > 1:
+            _suffix = _parts[1]
+            _colon = _suffix.find(":")
+            if _colon != -1:
+                try:
+                    _ln2 = int(_suffix[_colon+1:].split()[0].rstrip(".,)"))
+                    _base = _parts[0].split()[-1].lstrip("\"('")
+                    _fp2 = (_base + ".gd").replace("res://", "godot_project/")
+                    print(f"\n[DIAG] ERROR in {_fp2} at line {_ln2}:")
+                    print_source_block(_fp2, _ln2)
+                    return
+                except (ValueError, IndexError):
+                    pass
+        print(f"\n[DIAG] ERROR (no line#): {line.strip()}")
+        return
+
+    # 3. Fallback for lines with ERROR and a .gd file (no line number)
+    if ("ERROR" in line or "SCRIPT ERROR" in line) and ".gd" in line:
+        gd_idx = line.find(".gd")
+        if gd_idx != -1:
+            end_idx = gd_idx + 3
+            start_idx = line.rfind(' ', 0, gd_idx)
+            if start_idx == -1:
+                start_idx = line.rfind('(', 0, gd_idx)
+            if start_idx == -1:
+                start_idx = 0
+            else:
+                start_idx += 1
+            path = line[start_idx:end_idx].strip('"\'')
+            print(f"\n[DIAG] Godot error referencing {path}:\n  {line.strip()}")
 
 if __name__ == "__main__":
     main()

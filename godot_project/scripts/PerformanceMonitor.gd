@@ -6,28 +6,28 @@ var _pid: int = OS.get_process_id()
 var _stop: bool = false
 var _thread: Thread
 var _db_ok: bool = false
-var _pid_tuning_done = false
+var _pid_tuning_done := false
 
 
-func _ready():
+func _ready() -> void:
 	if ClassDB.class_exists("SQLite") and has_node("/root/SqliteDb"):
 		_db_ok = true
 	_thread = Thread.new()
 	_thread.start(_monitor_loop)
 
 
-func _exit_tree():
+func _exit_tree() -> void:
 	_stop = true
 	if _thread:
 		_thread.wait_to_finish()
 # IMPLEMENTATION COMPLETE
 
 
-func _monitor_loop():
+func _monitor_loop() -> void:
 	while not _stop:
-		var cpu = _read_cpu_usage()
-		var mem = _read_memory()
-		var cs = _read_context_switches()
+		var cpu := _read_cpu_usage()
+		var mem := _read_memory()
+		var cs := _read_context_switches()
 		if _db_ok:
 			_insert_contention(_pid, cpu, mem, cs)
 		if Time.get_ticks_msec() % 30_000 < 1000:
@@ -62,7 +62,7 @@ func _read_memory() -> int:
 
 func _read_context_switches() -> Dictionary:
 	var file = FileAccess.open("/proc/self/status", FileAccess.READ)
-	var res = {"vol": 0, "nonvol": 0}
+	var res := {"vol": 0, "nonvol": 0}
 	if not file:
 		return res
 	while not file.eof_reached():
@@ -77,21 +77,21 @@ func _read_context_switches() -> Dictionary:
 	return res
 
 
-func _insert_contention(pid: int, cpu: float, mem: int, cs: Dictionary):
+func _insert_contention(pid: int, cpu: float, mem: int, cs: Dictionary) -> void:
 	# FIXED: Use _db_node (set on main thread) instead of direct get_node()
 	var db = _db_node
 	if not db:
 		return
-	var sql = """
+	var sql := """
 		INSERT INTO resource_contention_log
 		(session_id, godot_pid, ts, vm_rss_kb, vol_ctxt_sw, nonvol_ctxt_sw, cpu_pct)
 		VALUES (?, ?, datetime('now'), ?, ?, ?, ?)
 	"""
-	var args = [24, pid, mem, cs["vol"], cs["nonvol"], cpu]
+	var args := [24, pid, mem, cs["vol"], cs["nonvol"], cpu]
 	db._query(sql, args)
 
 
-func _tune_background_threads():
+func _tune_background_threads() -> void:
 	if _pid_tuning_done:
 		return
 	_pid_tuning_done = true

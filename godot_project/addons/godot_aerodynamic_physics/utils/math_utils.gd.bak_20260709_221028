@@ -90,24 +90,24 @@ static func identity_matrix(n: int) -> Array:
 static func inverse(a: Array) -> Array:
 	var n := a.size()
 	var am := a.duplicate(true)
-	var idx := identity_matrix(n)
+	var I = identity_matrix(n)
 	var im = I.duplicate(true)
 
 	for fd in range(n):
-		var fd_scaler: float = 1.0 / am[fd][fd]
+		var fdScaler: float = 1.0 / am[fd][fd]
 
 		for j in range(n):
-			am[fd][j] *= fd_scaler
-			im[fd][j] *= fd_scaler
+			am[fd][j] *= fdScaler
+			im[fd][j] *= fdScaler
 
 		for i in range(n):
 			if i == fd:
 				continue
 
-			var cr_scaler: float = am[i][fd]
+			var crScaler: float = am[i][fd]
 			for j in range(n):
-				am[i][j] = am[i][j] - cr_scaler * am[fd][j]
-				im[i][j] = im[i][j] - cr_scaler * im[fd][j]
+				am[i][j] = am[i][j] - crScaler * am[fd][j]
+				im[i][j] = im[i][j] - crScaler * im[fd][j]
 
 	return im
 
@@ -127,7 +127,7 @@ static func multiply(a: Array, b: Array) -> Array:
 static func ray_plane_intersection(
 	p1: Vector3, n1: Vector3, p2: Vector3, n2: Vector3, p0: Vector3
 ) -> Array[Vector3]:
-	var m := [
+	var M := [
 		[2, 0, 0, n1.x, n2.x],
 		[0, 2, 0, n1.y, n2.y],
 		[0, 0, 2, n1.z, n2.z],
@@ -141,22 +141,22 @@ static func ray_plane_intersection(
 	var b4 := bx.x + bx.y + bx.z
 	var b5 := by.x + by.y + by.z
 
-	var b := [[2 * p0.x][2 * p0.y][2 * p0.z][b4][b5]]
+	var b = [[2 * p0.x][2 * p0.y][2 * p0.z][b4][b5]]
 
 # warning-ignore:unused_variable
 	var x := multiply(inverse(M), b)
-	var p := Vector3(x[0][0], x[0][1], x[0][2])
+	var p = Vector3(x[0][0], x[0][1], x[0][2])
 	var n = n1.cross(n2)
 	return [p, n]
 
 
 #matrix multiplication funcs
 #https://godotengine.org/qa/41768/matrix-matrix-vector-multiplication
-static func zero_matrix(n_x: int, n_y: int) -> Array:
+static func zero_matrix(nX: int, nY: int) -> Array:
 	var matrix := []
-	for x in range(n_x):
+	for x in range(nX):
 		matrix.append([])
 # warning-ignore:unused_variable
-		for y in range(n_y):
+		for y in range(nY):
 			matrix[x].append(0)
 	return matrix

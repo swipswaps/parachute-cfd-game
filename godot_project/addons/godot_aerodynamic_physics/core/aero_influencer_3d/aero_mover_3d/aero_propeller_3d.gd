@@ -47,7 +47,7 @@ func _init():
 	show_lift = false
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	super._ready()
 	update_configuration_warnings()
 	update_propeller_amount()

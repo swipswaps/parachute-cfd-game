@@ -35,7 +35,7 @@ const aero_thruster_3d = preload("./core/aero_influencer_3d/aero_thruster_3d/aer
 const aero_jet_thruster_3d = preload("./core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd")
 const flight_assist = preload("./core/flight_assist.gd")
 
-func _enter_tree():
+func _enter_tree() -> void:
 	ifndef("physics/aerodynamics/substeps", 1)
 	ifndef("physics/aerodynamics/atmosphere_area_collision_layer", 15)
 	if ProjectSettings.get_setting("layer_names/3d_physics/layer_15") == "":
@@ -58,7 +58,7 @@ func _enter_tree():
 	add_custom_type("AeroJetThruster3D", "Node3D", aero_jet_thruster_3d, aerothruster3d_icon)
 	add_custom_type("FlightAssist", "Resource", flight_assist, object_icon)
 
-func _exit_tree():
+func _exit_tree() -> void:
 	remove_custom_type("AeroBody3D")
 	remove_custom_type("AeroInfluencer3D")
 	remove_custom_type("AeroMover3D")

@@ -19,24 +19,30 @@ boot_splash_bg_color=Color(0, 0, 0, 1)
 [autoload]
 
 SqliteDb="*res://scripts/SqliteDb.gd"
+HealthChecker="*res://autoloads/HealthChecker.gd"
+HubManager="*res://scripts/HubManager.gd"
 DatabaseGuard="*res://scripts/DatabaseGuard.gd"
 ResourceThrottle="*res://scripts/ResourceThrottle.gd"
 PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
 aero_units="*res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd"
-#Databaseinfrastructure-LOADFIRST#CoredatabaseSqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
-#Monitoring(usesDatabaseGuardandResourceThrottle)#LoggingandutilitiesStructuredLogger="*res://scripts/StructuredLogger.gd"
+SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+StructuredLogger="*res://scripts/StructuredLogger.gd"
 InputManager="*res://scripts/InputManager.gd"
 GameIntegrity="*res://scripts/GameIntegrity.gd"
-#HUDandUIAltimeterHUD="*res://scripts/altimeter_hud.gd"
+AltimeterHUD="*res://scripts/altimeter_hud.gd"
 ForensicHUD="*res://scripts/forensic_hud.gd"
 Audit="*res://scripts/audit.gd"
-#PhysicsandenvironmentWindField="*res://scripts/wind_field.gd"
-AeroUnits="*uid://5vah4ayrdxci"
-
+WindField="*res://scripts/wind_field.gd"
 ErrorLogger="*res://autoloads/ErrorLogger.gd"
 CursorManager="*res://autoloads/CursorManager.gd"
 Gamification="*res://autoloads/Gamification.gd"
 ErrorBus="*res://autoloads/ErrorBus.gd"
+ForensicPanel="*res://autoloads/forensic_panel.gd"
+
+[display]
+
+pip=true
+
 [editor_plugins]
 
 plugins/godot-sqlite/plugin.cfg="*"
@@ -53,30 +59,98 @@ defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
 path="res://addons/godot-sqlite/gdsqlite.gdextension"
 
 [input]
-deploy = { "deadzone": 0.5, "events": [ { "key": 32, "pressed": true, "type": "key" } ] }
-turnleft = { "deadzone": 0.5, "events": [ { "key": 81, "pressed": true, "type": "key" } ] }
-turnright = { "deadzone": 0.5, "events": [ { "key": 69, "pressed": true, "type": "key" } ] }
-cyclecamera = { "deadzone": 0.5, "events": [ { "key": 67, "pressed": true, "type": "key" } ] }
-togglehud = { "deadzone": 0.5, "events": [ { "key": 72, "pressed": true, "type": "key" } ] }
-flightcheck = { "deadzone": 0.5, "events": [ { "key": 16777218, "pressed": true, "type": "key" } ] }
-cutaway = { "deadzone": 0.5, "events": [ { "key": 88, "pressed": true, "type": "key" } ] }
-reserve = { "deadzone": 0.5, "events": [ { "key": 86, "pressed": true, "type": "key" } ] }
-flare = { "deadzone": 0.5, "events": [ { "key": 70, "pressed": true, "type": "key" } ] }
-restart = { "deadzone": 0.5, "events": [ { "key": 82, "pressed": true, "type": "key" } ] }
-pause = { "deadzone": 0.5, "events": [ { "key": 16777217, "pressed": true, "type": "key" } ] }
 
 ui_accept="key://Space"
 ui_down="key://Down"
+deploy={
 "deadzone": 0.5,
 "events": [{
-"device": 0,
-"index": 0,
+"key": 32,
+"pressed": true,
+"type": "key"
+}]
+}
+turnleft={
+"deadzone": 0.5,
+"events": [{
+"key": 81,
+"pressed": true,
+"type": "key"
+}]
+}
+turnright={
+"deadzone": 0.5,
+"events": [{
+"key": 69,
+"pressed": true,
+"type": "key"
+}]
+}
+cyclecamera={
+"deadzone": 0.5,
+"events": [{
+"key": 67,
+"pressed": true,
+"type": "key"
+}]
+}
+togglehud={
+"deadzone": 0.5,
+"events": [{
+"key": 72,
+"pressed": true,
+"type": "key"
+}]
+}
+flightcheck={
+"deadzone": 0.5,
+"events": [{
+"key": 16777218,
+"pressed": true,
+"type": "key"
+}]
+}
+cutaway={
+"deadzone": 0.5,
+"events": [{
 "key": 88,
 "pressed": true,
 "type": "key"
 }]
 }
-cycle_camera={
+reserve={
+"deadzone": 0.5,
+"events": [{
+"key": 86,
+"pressed": true,
+"type": "key"
+}]
+}
+flare={
+"deadzone": 0.5,
+"events": [{
+"key": 70,
+"pressed": true,
+"type": "key"
+}]
+}
+restart={
+"deadzone": 0.5,
+"events": [{
+"key": 82,
+"pressed": true,
+"type": "key"
+}]
+}
+pause={
+"deadzone": 0.5,
+"events": [{
+"key": 16777217,
+"pressed": true,
+"type": "key"
+}]
+}
+"key}]}cycle_camera"={
 "deadzone": 0.5,
 "events": [{
 "device": 0,
@@ -86,25 +160,7 @@ cycle_camera={
 "type": "key"
 }]
 }
-"deadzone": 0.5,
-"events": [{
-"device": 0,
-"index": 0,
-"key": 32,
-"pressed": true,
-"type": "key"
-}]
-}
-"deadzone": 0.5,
-"events": [{
-"device": 0,
-"index": 0,
-"key": 70,
-"pressed": true,
-"type": "key"
-}]
-}
-flight_check={
+"key}]}flight_check"={
 "deadzone": 0.5,
 "events": [{
 "device": 0,
@@ -114,34 +170,7 @@ flight_check={
 "type": "key"
 }]
 }
-"deadzone": 0.5,
-"events": [{
-"device": 0,
-"index": 0,
-"key": 27,
-"pressed": true,
-"type": "key"
-}]
-}
-"deadzone": 0.5,
-"events": [{
-"device": 0,
-"index": 0,
-"key": 86,
-"pressed": true,
-"type": "key"
-}]
-}
-"deadzone": 0.5,
-"events": [{
-"device": 0,
-"index": 0,
-"key": 82,
-"pressed": true,
-"type": "key"
-}]
-}
-toggle_hud={
+"key}]}toggle_hud"={
 "deadzone": 0.5,
 "events": [{
 "device": 0,

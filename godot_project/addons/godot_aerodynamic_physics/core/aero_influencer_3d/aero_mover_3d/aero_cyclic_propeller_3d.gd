@@ -23,7 +23,6 @@ func _ready() -> void:
 func _update_control_transform(substep_delta : float) -> void:
 	super._update_control_transform(substep_delta)
 	
-	var cyclic_value := Vector3.ZERO
 	if cyclic_control_config:
 		cyclic_value = cyclic_control_config.update(self, substep_delta)
 		

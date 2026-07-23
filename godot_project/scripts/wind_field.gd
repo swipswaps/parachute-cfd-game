@@ -23,7 +23,7 @@ var source_case: String = ""
 var time_step: String = ""
 
 
-func _ready():
+func _ready() -> void:
 	# Load wind field on startup
 	load_wind_field("res://data/wind_field.json")
 
@@ -48,7 +48,7 @@ func load_wind_field(json_path: String) -> bool:
 	var json_string = file.get_as_text()
 	file.close()
 
-	var json = JSON.new()
+	var json := JSON.new()
 	var parse_result = json.parse(json_string)
 
 	if parse_result != OK:
@@ -73,7 +73,7 @@ func load_wind_field(json_path: String) -> bool:
 	# Source: Same order as Python export script uses
 	velocities.clear()
 	for v in data["velocities"]:
-		var vel = Vector3(v["vel"][0], v["vel"][1], v["vel"][2])
+		var vel := Vector3(v["vel"][0], v["vel"][1], v["vel"][2])
 		velocities.append(vel)
 
 	print("Wind field loaded:")

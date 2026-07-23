@@ -59,22 +59,22 @@ func get_bounds(key : String) -> Array:
 	return [min, max]
 
 #points are added dynamically during _init()
-var temperature_at_altitude_curve = Curve.new()
+var temperature_at_altitude_curve := Curve.new()
 func get_temp_at_altitude(altitude : float) -> float:
 	return temperature_at_altitude_curve.sample_baked(altitude)
 
 #points are added dynamically during _init()
-var pressure_at_altitude_curve = Curve.new()
+var pressure_at_altitude_curve := Curve.new()
 func get_pressure_at_altitude(altitude : float) -> float:
 	return pressure_at_altitude_curve.sample_baked(altitude)
 
 #points are added dynamically during _init()
-var density_at_altitude_curve = Curve.new()
+var density_at_altitude_curve := Curve.new()
 func get_density_at_altitude(altitude : float) -> float:
 	return density_at_altitude_curve.sample_baked(altitude)
 
 #points are added dynamically during _init()
-var mach_at_altitude_curve = Curve.new()
+var mach_at_altitude_curve := Curve.new()
 func get_mach_at_altitude(altitude : float) -> float:
 	return mach_at_altitude_curve.sample_baked(altitude)
 

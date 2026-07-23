@@ -3,7 +3,7 @@ extends Node
 # Safe version – skips if SqliteDb not available.:
 
 
-func _ready():
+func _ready() -> void:
 	print("[VERBATIM] SqliteWatchdog.gd _ready() called")
 	print("[VERBATIM] SqliteWatchdog.gd _ready() called")
 	print("[VERBATIM] SqliteWatchdog.gd _ready() called")
@@ -11,7 +11,7 @@ func _ready():
 	if not has_node("/root/SqliteDb"):
 		print("[VERBATIM] Watchdog: SqliteDb not available; skipping scan.")
 		return
-	var sqlite = get_node("/root/SqliteDb")
+	var sqlite := get_node("/root/SqliteDb")
 	if not sqlite._db_ok:
 		print("[VERBATIM] Watchdog: SqliteDb not ready; skipping scan.")
 		return

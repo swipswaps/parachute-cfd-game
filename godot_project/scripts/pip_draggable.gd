@@ -1,33 +1,37 @@
 extends SubViewportContainer
+# pip_draggable.gd – only drags when clicked directly on the PiP.
+# Uses _gui_input so it only responds to events that hit this Control.
 
-var dragging = false
-var drag_offset = Vector2()
+var _dragging: bool = false
+var _drag_offset: Vector2 = Vector2.ZERO
 
+func _ready() -> void:
+	position = Vector2(10, 10)
+	visible = true
+	mouse_filter = MOUSE_FILTER_STOP
+	size = Vector2(320, 240)
+	if get_child_count() > 0 and get_child(0) is SubViewport:
+		get_child(0).size = Vector2i(320, 240)
+	print("[PIP] _ready: size=", size, " position=", position)
 
-func _ready():
-	# Load saved position from ConfigFile (already loaded by _setup_pip_overlay)
-	# The parent script will call save_pip_position after drag ends.
-	pass
-
-
-func _input(event):
-	print("[INPUT] pip_draggable: 3 occurrences collapsed")
-	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")
-	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")
-	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")
-	print("[INPUT] pip_draggable.gd:11 _input/_unhandled_input triggered")
+func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			dragging = true
-			drag_offset = get_global_mouse_position() - position
-			get_viewport().set_input_as_handled()
+			_dragging = true
+			_drag_offset = event.position
+			accept_event()
+			print("[PIP] drag start offset=", _drag_offset)
 		else:
-			dragging = false
-			# Save position via the main script's function
-			var main = get_tree().current_scene
-			if main.has_method("save_pip_position"):
-				main.save_pip_position(position)
-			get_viewport().set_input_as_handled()
-	elif event is InputEventMouseMotion and dragging:
-		position = get_global_mouse_position() - drag_offset
-		get_viewport().set_input_as_handled()
+			_dragging = false
+			accept_event()
+			print("[PIP] drag end position=", position)
+			_save_position()
+	elif event is InputEventMouseMotion and _dragging:
+		position += event.relative
+		accept_event()
+
+func _save_position() -> void:
+	var main = get_tree().current_scene
+	if main and main.has_method("save_pip_position"):
+		main.save_pip_position(position)
+		print("[PIP] position saved: ", position)

@@ -327,7 +327,7 @@ func get_centrifugal_offset() -> Vector3:
 	return position
 
 func get_linear_acceleration() -> Vector3:
-	var position_in_global_rotation : Vector3 = get_parent().global_basis * position
+	get_parent().global_basis * position
 	
 	var centrifugal_offset : Vector3 = get_parent().global_basis * get_centrifugal_offset()
 	

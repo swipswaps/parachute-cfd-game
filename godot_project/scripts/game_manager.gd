@@ -25,7 +25,7 @@ var target_radius: float = 10.0  # meters
 @onready var wind_field = $WindField
 
 
-func _ready():
+func _ready() -> void:
 	"""
 	Initialize game manager.
 
@@ -36,7 +36,7 @@ func _ready():
 	set_state(GameState.MENU)
 
 
-func _process(_delta):
+func _process(_delta) -> void:
 	"""
 	Update game state each frame.
 
@@ -50,7 +50,7 @@ func _process(_delta):
 		check_landing()
 
 
-func set_state(new_state: GameState):
+func set_state(new_state: GameState) -> void:
 	"""Change game state and trigger appropriate actions."""
 	current_state = new_state
 
@@ -69,7 +69,7 @@ func set_state(new_state: GameState):
 			pass
 
 
-func spawn_parachute():
+func spawn_parachute() -> void:
 	"""
 	Place parachute at starting altitude.
 
@@ -77,14 +77,14 @@ func spawn_parachute():
 	FAILURE MODE: Start position outside wind field → no wind data
 	VERIFIES WITH: Parachute visible, controllable, descending
 	"""
-	var start_altitude = 500.0  # meters AGL
+	var start_altitude := 500.0  # meters AGL
 	parachute.global_transform.origin = target_position + Vector3.UP * start_altitude
 	parachute.velocity = Vector3.ZERO
 
 	print("Parachute deployed at altitude: %.0f m" % start_altitude)
 
 
-func update_hud():
+func update_hud() -> void:
 	"""
 	Update HUD with current flight data.
 
@@ -116,7 +116,7 @@ func update_hud():
 		hud.get_node("WindLabel").text = "Wind: %.1f m/s" % wind_speed
 
 
-func check_landing():
+func check_landing() -> void:
 	"""
 	Detect when parachute touches ground.
 
@@ -137,7 +137,7 @@ func check_landing():
 		set_state(GameState.LANDED)
 
 
-func calculate_score():
+func calculate_score() -> void:
 	"""
 	Calculate final score based on accuracy and technique.
 
@@ -156,13 +156,13 @@ func calculate_score():
 
 	# Calculate penalties
 	var distance_penalty = int(distance * 10.0)
-	var speed_penalty = 0
+	var speed_penalty := 0
 	if landing_speed > 3.0:
 		speed_penalty = int((landing_speed - 3.0) * 5.0)
 
 	# Calculate bonuses
 	var flight_time = Time.get_ticks_msec() / 1000.0  # Simplified
-	var time_bonus = 0  # TODO: Track actual flight time
+	var time_bonus := 0  # TODO: Track actual flight time
 
 	final_score = base_score - distance_penalty - speed_penalty + time_bonus
 	final_score = max(0, final_score)  # Clamp to non-negative
@@ -176,7 +176,7 @@ func calculate_score():
 	set_state(GameState.GAME_OVER)
 
 
-func _input(_event):
+func _input(_event) -> void:
 	"""
 	Handle player input for parachute control.
 
