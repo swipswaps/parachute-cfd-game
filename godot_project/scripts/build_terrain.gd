@@ -568,6 +568,7 @@ func _ready() -> void:
 		print("[VERBATIM] Self-test timer started.")
 	# SELF-TEST TIMER INJECTED (v6.5.151)
 
+
 func _check_arm_pose() -> void:
 	var skeleton = _character.find_child("Skeleton3D", true, false)
 	if not skeleton:
@@ -1534,7 +1535,11 @@ func _poll_controls() -> void:
 		# Also check headless auto-jump flag (set in _physics_process;
 		# reliable across _physics_process/_process frame boundary).
 		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
-		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J) or _headless_auto_jump
+		var _exit_pressed = (
+			Input.is_action_just_pressed("deploy")
+			or Input.is_key_pressed(KEY_J)
+			or _headless_auto_jump
+		)
 		_headless_auto_jump = false  # consume the flag
 		if _exit_pressed:
 			print("[DIAG] _poll_controls: exit aircraft triggered")
@@ -2671,6 +2676,7 @@ func _update_camera_position() -> void:
 # Added to fix deferred call and log warning via ErrorLogger
 func _recreate_hud_if_needed() -> void:
 	ErrorLogger.log_warning("Deferred method '_recreate_hud_if_needed' called but not implemented.")
+
 
 func build_chunk(chunk_coords: Vector2) -> void:
 	pass
