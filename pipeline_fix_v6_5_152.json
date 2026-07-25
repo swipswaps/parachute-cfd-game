@@ -1,0 +1,230 @@
+{
+  "prompt_id": "pipeline_fix_v6_5_152",
+  "title": "Idempotent deterministic pipeline – all patches applied exactly once, recoverable, self-test passes even without PiP",
+  "version": "6.5.152",
+  "deliverable": "run_pipeline_v6_5_152.py (complete, self-contained)",
+  "principles": {
+    "idempotence": {
+      "definition": "An operation that can be applied multiple times without changing the result beyond the initial application.",
+      "citation": "RFC 7231, Section 4.2.2 – 'A request method is considered \"idempotent\" if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request.' URL: https://www.rfc-editor.org/rfc/rfc7231#section-4.2.2"
+    },
+    "automation": {
+      "definition": "Every repeatable action must be scripted; no manual steps.",
+      "citation": "Jose J Melendez, 2026 – 'If it can be typed, it MUST be scripted!' (© all rights reserved)."
+    },
+    "defensive_programming": {
+      "definition": "Designing code to anticipate and handle exceptional conditions.",
+      "citation": "Wikipedia – Defensive programming: '...intended to ensure the continuing function of a piece of software under unforeseen circumstances.' URL: https://en.wikipedia.org/wiki/Defensive_programming"
+    },
+    "single_source_of_truth": {
+      "definition": "Every piece of knowledge must have a single, unambiguous, authoritative representation.",
+      "citation": "Hunt, A. & Thomas, D. (1999). The Pragmatic Programmer. Addison‑Wesley. Chapter 3, p.27 – 'Every piece of knowledge must have a single, unambiguous, authoritative representation within a system.' ISBN: 0-201-61622-X."
+    },
+    "fail_fast": {
+      "definition": "Detect corruption or errors at the point of occurrence rather than propagating them.",
+      "citation": "Shore, J. (2004). 'Fail Fast.' IEEE Software, 21(5), p.21 – 'The Fail Fast principle states that a system should detect failures as early as possible and stop executing.' (paraphrase; the paper is the canonical source). DOI: 10.1109/MS.2004.1331296. URL: https://doi.org/10.1109/MS.2004.1331296"
+    },
+    "observability": {
+      "definition": "The ability to collect data about programs' execution, modules' internal states, and the communication between components.",
+      "citation": "Wikipedia – Observability (software): 'In software engineering, observability is the ability to collect data about programs' execution, modules' internal states, and the communication between components.' URL: https://en.wikipedia.org/wiki/Observability_(software)"
+    },
+    "determinism": {
+      "definition": "A system is deterministic if its next state is completely determined by its current state and inputs.",
+      "citation": "Wikipedia – Deterministic algorithm: 'An algorithm is deterministic if its behavior is completely determined by its inputs and the initial state.' URL: https://en.wikipedia.org/wiki/Deterministic_algorithm"
+    }
+  },
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "skill_rule": "R046 – Verbatim logging",
+      "description": "Logs must not be summarised or filtered. All tool outputs and diagnostic messages must be printed in full with `flush=True`.",
+      "cs_principle": "Observability",
+      "citation": "Wikipedia – Observability.",
+      "verification": "grep -c 'flush=True' > 0; no summary lines like '[N warnings found]'."
+    },
+    {
+      "id": "REQ-002",
+      "skill_rule": "R060 – Verbatim logging enforcement",
+      "description": "Command outputs (stdout/stderr) from subprocesses must be printed line‑by‑line, not truncated.",
+      "cs_principle": "Observability",
+      "citation": "Wikipedia – Observability.",
+      "verification": "Every subprocess.run() output is iterated and printed; no `[:500]` truncation."
+    },
+    {
+      "id": "REQ-003",
+      "skill_rule": "R063 – Stub responses",
+      "description": "Code must not contain `# TODO`, bare `pass`, or `...`. Every function must be fully implemented.",
+      "cs_principle": "Automation",
+      "citation": "Jose J Melendez, 2026 – 'If it can be typed, it MUST be scripted!'",
+      "verification": "grep -E '# TODO|pass\\s*#|\\s\\.\\.\\.\\s*$' returns 0."
+    },
+    {
+      "id": "REQ-004",
+      "skill_rule": "R069 – Continuation marker",
+      "description": "The file must end with the exact line: `# IMPLEMENTATION COMPLETE — run_pipeline_v6_5_152.py`.",
+      "cs_principle": "Complete Delivery (R101)",
+      "citation": "Evasion list – R069.",
+      "verification": "tail -1 matches exactly."
+    },
+    {
+      "id": "REQ-005",
+      "skill_rule": "R070 – Retry context",
+      "description": "Retries must be structured (e.g., for‑loop with max iterations) and log each attempt, not just 'try again'.",
+      "cs_principle": "Defensive Programming",
+      "citation": "Wikipedia – Defensive programming.",
+      "verification": "self_heal() has a for loop with explicit iteration count and logs each iteration."
+    },
+    {
+      "id": "REQ-006",
+      "skill_rule": "R076 – Asset cleaning fabrication",
+      "description": "Do not invent 'sanitising' steps without engine error evidence. Only act on concrete errors.",
+      "cs_principle": "Defensive Programming",
+      "citation": "Wikipedia – Defensive programming.",
+      "verification": "No hardcoded 'sanitise' commands; all patches based on gdlint/gdparse output."
+    },
+    {
+      "id": "REQ-007",
+      "skill_rule": "R081 – Game state reset",
+      "description": "Pipeline must start with a clean game state (e.g., kill orphan Godot processes).",
+      "cs_principle": "Idempotence",
+      "citation": "RFC 7231, Section 4.2.2.",
+      "verification": "kill_orphan_godot_processes() called before any Godot launch."
+    },
+    {
+      "id": "REQ-008",
+      "skill_rule": "R082 – Read‑back verification",
+      "description": "Every `write_text()` must be followed by a sha256 read‑back check (`_r082_verify()`).",
+      "cs_principle": "Fail‑Fast",
+      "citation": "Shore 2004 – Fail Fast.",
+      "verification": "grep -c '_r082_verify' after every write_text; count matches."
+    },
+    {
+      "id": "REQ-009",
+      "skill_rule": "R086 – No inferred variant",
+      "description": "Do not use `:=` with Variant‑returning functions in GDScript patches. Use explicit assignment.",
+      "cs_principle": "Defensive Programming",
+      "citation": "Wikipedia – Defensive programming.",
+      "verification": "No `:=` in GDScript patches (verified by code review)."
+    },
+    {
+      "id": "REQ-010",
+      "skill_rule": "R091 – PackedScene.instantiate assignment",
+      "description": "Ensure instantiated objects are assigned to correct type (e.g., MeshInstance3D).",
+      "cs_principle": "Defensive Programming",
+      "citation": "Wikipedia – Defensive programming.",
+      "verification": "GDScript patches avoid wrong type assignments (checked via gdparse)."
+    },
+    {
+      "id": "REQ-011",
+      "skill_rule": "R092 – All canopy instances scaled",
+      "description": "Ensure scale is applied to all canopy instances, not just one.",
+      "cs_principle": "Defensive Programming",
+      "citation": "Wikipedia – Defensive programming.",
+      "verification": "No hardcoded single‑instance scaling; patches apply uniformly."
+    },
+    {
+      "id": "REQ-012",
+      "skill_rule": "R097 – No heredoc over 30 lines",
+      "description": "No multi‑line string literal exceeds 30 lines.",
+      "cs_principle": "Complete Delivery (R101)",
+      "citation": "Evasion list – R097.",
+      "verification": "AST check: no string constant with count('\\n') > 30."
+    },
+    {
+      "id": "REQ-013",
+      "skill_rule": "R100 – Sequential list processing",
+      "description": "All numbered patch steps (bt_A..bt_J) must be processed in order; none skipped.",
+      "cs_principle": "Idempotence",
+      "citation": "RFC 7231, Section 4.2.2.",
+      "verification": "Log shows [PROGRESS 1/8] ... [PROGRESS 8/8] for all patches."
+    },
+    {
+      "id": "REQ-014",
+      "skill_rule": "R101 – Complete file delivery",
+      "description": "Deliver a single, complete, code‑fenced file with all code; no snippets.",
+      "cs_principle": "Complete Delivery",
+      "citation": "Evasion list – R101.",
+      "verification": "The delivered file is a single code fence with no '...' or 'rest of file unchanged'."
+    },
+    {
+      "id": "REQ-015",
+      "skill_rule": "R114 – Heredoc line count gate",
+      "description": "Enforce R097 by actually counting lines in heredocs before delivery.",
+      "cs_principle": "Complete Delivery",
+      "citation": "Evasion list – R114.",
+      "verification": "AST check passes; no string > 30 lines."
+    },
+    {
+      "id": "REQ-016",
+      "skill_rule": "R147 – Automated code context extraction",
+      "description": "On any pattern‑count failure (count != 1), print surrounding lines of the pattern.",
+      "cs_principle": "Observability / Fail‑Fast",
+      "citation": "Kernighan, B. & Pike, R. (1999). The Practice of Programming. Addison‑Wesley. Chapter 5, p.119 – 'Print the context of an error message.' (paraphrase).",
+      "verification": "Every count!=1 path calls `_r147_context()` and prints it."
+    },
+    {
+      "id": "REQ-017",
+      "category": "Database Hardening",
+      "description": "Insert `gd_patch_registry` into `table_defs` inside `ensure_database()` with schema (patch_id, file, run_id, content_hash_before, content_hash_after, applied_at, skipped_reason).",
+      "cs_principle": "Single Source of Truth",
+      "citation": "Hunt & Thomas 1999, The Pragmatic Programmer, ch.3 p.27.",
+      "verification": "grep 'gd_patch_registry' in table_defs block; SELECT name FROM sqlite_master returns it."
+    },
+    {
+      "id": "REQ-018",
+      "category": "Self‑Healing",
+      "description": "`_db_patch_gate()` must catch `sqlite3.OperationalError` and call `ensure_database()` to auto‑create the table if missing.",
+      "cs_principle": "Defensive Programming",
+      "citation": "Wikipedia – Defensive programming.",
+      "verification": "grep -A5 'def _db_patch_gate' shows 'except OperationalError'."
+    },
+    {
+      "id": "REQ-019",
+      "category": "Automation",
+      "description": "No manual steps; all actions are scripted. The pipeline must run from scratch and complete successfully.",
+      "cs_principle": "Automation",
+      "citation": "Jose J Melendez, 2026 – 'If it can be typed, it MUST be scripted!'",
+      "verification": "No interactive prompts; all dependencies auto‑installed via pipeline_init."
+    },
+    {
+      "id": "REQ-020",
+      "category": "Observability",
+      "description": "Every patch application or skip must be recorded in the database (`gd_patch_registry` and `auto_heal_actions`).",
+      "cs_principle": "Observability",
+      "citation": "Wikipedia – Observability.",
+      "verification": "After run, SELECT COUNT(*) FROM gd_patch_registry and auto_heal_actions shows records."
+    },
+    {
+      "id": "REQ-021",
+      "category": "Tool Execution & Auto‑Fix",
+      "description": "The pipeline must run a battery of tools: gdparse, gdlint, gdformat, gdmetrics (and optionally gdstyle, GDShrapt). It must auto‑fix errors (e.g., via gdformat, regex patches) and iterate until all pass or max iterations reached.",
+      "cs_principle": "Automation / Defensive Programming",
+      "citation": "Jose J Melendez, 2026 – 'If it can be typed, it MUST be scripted!'",
+      "verification": "self_heal() includes calls to gdparse, gdlint, gdformat, etc., with iteration loop."
+    },
+    {
+      "id": "REQ-022",
+      "category": "Record Keeping",
+      "description": "All auto‑heal actions (tool failures, fix attempts, applied patches) must be recorded in the `auto_heal_actions` table.",
+      "cs_principle": "Observability",
+      "citation": "Wikipedia – Observability.",
+      "verification": "After each fix or skip, an INSERT into auto_heal_actions is executed."
+    },
+    {
+      "id": "REQ-023",
+      "category": "Dependency Management",
+      "description": "The script must check for required tools (gdparse, gdformat, gdlint, cargo, etc.) and install them automatically if possible, or alert the user if not.",
+      "cs_principle": "Automation",
+      "citation": "Jose J Melendez, 2026 – 'If it can be typed, it MUST be scripted!'",
+      "verification": "ensure_dependencies() runs pipeline_init_0001.sh with NONINTERACTIVE=1."
+    },
+    {
+      "id": "REQ-024",
+      "category": "Idempotent Determinism",
+      "description": "Every patch must be applied in a deterministic, idempotent manner. The patch functions must first check if the target content already contains the patch (using a robust anchor). If the patch is already applied, skip it and record as such. If not, apply it exactly once and verify the resulting file has the expected change. The patch must not rely on fragile assumptions (e.g., a marker that may not exist). For the missing function `_setup_plane_node`, if the function definition is absent, it must be inserted at the end of the file before the last `class` or at the end of the file, and then verify it exists.",
+      "cs_principle": "Determinism / Idempotence",
+      "citation": "Wikipedia – Deterministic algorithm; RFC 7231 idempotence.",
+      "verification": "After running the pipeline twice, the file content must be identical (confirmed by sha256), and no errors occur."
+    }
+  ]
+}

@@ -1,4 +1,9 @@
 extends Node
+var http_request: HTTPRequest = null
+
+var dragging: bool = false
+var drag_offset: Vector2 = Vector2.ZERO
+
 # ==========================================================================
 # forensic_hud.gd  (autoload as ForensicHUD)
 #
@@ -16,12 +21,12 @@ extends Node
 #     coords == CanvasLayer coords, since _layer has no transform).
 #     Without the hit-test, every left-click in the game would be
 #     swallowed by set_input_as_handled(), breaking the PiP drag too.
-#   * F3 toggles _layer.visible (toggling the root's visibility does not
+#   * backtick (`) toggles _layer.visible (toggling the root's visibility does not
 #     hide CanvasLayer children).
 #   * No per-mouse-event print() calls: those flooded the log and
 #     triggered autostall.py [STALL SOURCE] warnings previously.
 #
-# Controls: F3 toggles the panel. Left-click + drag anywhere on the panel
+# Controls: backtick (`) toggles the panel. Left-click + drag anywhere on the panel
 # to move it. Position persists to user://forensic_hud.cfg. Each citation
 # card has a [+]/[-] toggle; URL rows open via OS.shell_open.
 # ==========================================================================
@@ -59,6 +64,7 @@ var _slow_timer: Timer
 
 var _dragging: bool = false
 var _drag_offset: Vector2 = Vector2.ZERO
+var _toggle_latch: bool = false  # edge-detect for _process()-based backtick toggle
 var _citations_loaded: bool = false
 var _card_expanded: Dictionary = {}
 
@@ -91,11 +97,48 @@ func _panel_rect() -> Rect2:
 		sz = PANEL_MIN_SIZE
 	return Rect2(_panel.position, sz)
 
+# WORKAROUND (this session): _input()/_gui_input() confirmed never firing
+# for this node across multiple captures despite is_processing_input()=true
+# at boot (session_20260723_185609.txt:118). Root cause undetermined after
+# exhaustive audit of every autoload, project.godot order, and input map.
+# Bypasses the broken path: polls in _process(), same pattern already
+# proven to fire reliably every frame for forensic_panel.gd's toggle and
+# build_terrain.gd's _physics_process() Q/E turn input on this system.
+# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-process
+# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html#class-input-method-is-key-pressed
+# Renamed from _process() (this session): Godot never invoked _process()
+# on this autoload despite is_processing_input()=true/is_inside_tree()=true
+# at _ready() — root cause undetermined after exhaustive audit. Called
+# explicitly from build_terrain.gd's _physics_process() instead.
+func poll_forensic_hud() -> void:
+	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
+	if backtick_pressed and not _toggle_latch:
+		_toggle_latch = true
+		if _layer != null:
+			_layer.visible = not _layer.visible
+			print("[FHUD_PROCESS] toggled visible=", _layer.visible)
+	elif not backtick_pressed:
+		_toggle_latch = false
+
+	if _layer == null or not _layer.visible or _panel == null:
+		_dragging = false
+		return
+
+	var mouse_pos := get_viewport().get_mouse_position()
+	var mouse_down := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+		_dragging = true
+		_drag_offset = mouse_pos - _panel.position
+	elif not mouse_down:
+		_dragging = false
+	if _dragging:
+		_panel.position = mouse_pos - _drag_offset
+
 func _input(event: InputEvent) -> void:
 	print("[FHUD DEBUG] _input called with event: %s" % event)
-	
+
 	print("[HUD_DIAG] _input called")
-# F3 toggle – safe with null check
+# backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_QUOTELEFT:
 			if _layer != null:
@@ -180,9 +223,26 @@ func _exit_tree() -> void:
 	_save_position()
 
 func _ready() -> void:
+	# Initialize HTTP request node for hub data
+	if http_request == null:
+		http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.request_completed.connect(_on_hub_data_received)
+	# Fetch data after a short delay to allow hub to be ready
+	await get_tree().create_timer(0.5).timeout
+	_fetch_hub_data()
+
 	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
-	
+
 	print("[HUD_DIAG] _ready called")
+	# DIAGNOSTIC (this session, not a fix): report actual engine-side
+	# input registration state directly, instead of inferring it from
+	# the absence of a print in _input().
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-is-processing-input
+	print("[HUD_DIAG] is_processing_input()=", is_processing_input(),
+		" is_inside_tree()=", is_inside_tree(),
+		" frame=", Engine.get_process_frames(),
+		" process_mode=", process_mode)
 	_hub_url = _resolve_hub_url()
 	_build_ui()
 
@@ -217,6 +277,13 @@ func _ready() -> void:
 
 	_poll_fast()
 	_poll_slow()
+	# Ensure HUD is visible and label is at a safe position
+	var label = find_child("HubDataLabel", true, false)
+	if label != null:
+		label.position = Vector2(10, 10)
+		label.visible = true
+
+	_setup_hud_label()
 
 func _poll_fast() -> void:
 	var err_a := _stats_req.request(_hub_url + STATS_PATH)
@@ -377,7 +444,7 @@ func _add_citation_card(cite: Dictionary) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
-	
+
 	print("[HUD_DIAG] _gui_input called")
 	print("[HUD] _gui_input called: ", event)
 	# Only process if panel is visible
@@ -397,3 +464,61 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and _dragging:
 		_panel.position = event.position - _drag_offset
 		get_viewport().set_input_as_handled()
+
+func _fetch_hub_data():
+	# Fetch gamification data from the hub
+	if http_request == null:
+		print("[HUD] HTTPRequest not initialized")
+		return
+	var url = "http://127.0.0.1:8765/api/gamification"
+	var error = http_request.request(url)
+	if error != OK:
+		print("[HUD] Failed to request hub data: ", error)
+
+func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+	# Handle the HTTP response
+	if response_code != 200:
+		print("[HUD] Hub request failed with code: ", response_code)
+		return
+	var json = JSON.new()
+	var parse_result = json.parse(body.get_string_from_utf8())
+	if parse_result != OK:
+		print("[HUD] Failed to parse JSON: ", json.get_error_message())
+		return
+	var data = json.data
+	# Update a label (assume we have a label with text "Hub Data:" or a specific name)
+	# Try to find a label by name or by text
+	var label = find_child("HubDataLabel", true, false) if has_method("find_child") else null
+	if label == null:
+		# Try to find any Label that contains 'Hub' in text
+		var children = get_children()
+		for child in children:
+			if child is Label and "Hub" in child.text:
+				label = child
+				break
+	if label != null:
+		label.text = "Hub Data: Level %d | XP: %d | Streak: %d" % [data.get("level", 0), data.get("xp", 0), data.get("streak", 0)]
+	else:
+		print("[HUD] No label found to display hub data")
+		# As fallback, print to console
+		print("[HUD] Hub data: ", data)
+
+
+func _setup_hud_label():
+	# CanvasLayer draws its children on top of the scene tree
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+	var layer = CanvasLayer.new()
+	add_child(layer)
+	var label = Label.new()
+	label.name = "HubDataLabel"
+	label.text = "Hub Data: loading..."
+	label.position = Vector2(10, 10)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(label)
+	# Ensure HTTPRequest node exists for subsequent _fetch_hub_data calls
+	if not has_node("HTTPRequest"):
+		var http = HTTPRequest.new()
+		http.name = "HTTPRequest"
+		add_child(http)
+		http.request_completed.connect(_on_hub_data_received)
+	_fetch_hub_data()

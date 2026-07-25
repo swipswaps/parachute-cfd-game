@@ -1,0 +1,5 @@
+{
+  "schema": "prf.fixlist.v1",
+  "description": "Complete self-healing fix list for the Parachute CFD Landing Game. v112: fixes unbound STL variable in HEAL-DB-001 apply string by escaping $ inside double-quoted Python heredoc.",
+  "compliance_basis": "augment-rules-v6_12.json, deepseek-rules-v6_16.json (post-syntax-repair), v111‑terminal‑crash (unbound STL)"
+}

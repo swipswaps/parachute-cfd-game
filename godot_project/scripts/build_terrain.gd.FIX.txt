@@ -1,0 +1,15 @@
+ 1457		if _game_state == GameState.IN_PLANE:
+  1458			var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+  1459			if _exit_pressed:
+  1460				print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+  1461				_game_state = GameState.FREEFALL
+  1462				if _plane_node:
+  1463					_plane_node.visible = false
+  1464				_character.visible = true
+  1465				if _plane_node:
+  1466					_character.position = _plane_node.position + Vector3(0, -2.0, 0)
+  1467				else:
+  1468					_character.position = Vector3(100, 6000, -100)
+  1469				_show_notification("Jumped! Deploy parachute (SPACE) above 2000 ft AGL")
+  1470			return
+  

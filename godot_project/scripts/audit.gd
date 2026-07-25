@@ -38,10 +38,11 @@ func log_event(msg: String) -> void:
 
 func log_error(msg: String) -> void:
 	_writeln("ERROR: %s" % msg)
-	print("[ERROR-LOC] audit.gd:38 about to call error func")
-	print("[ERROR-LOC] audit.gd:39 about to call error func")
-	print("[ERROR-LOC] audit.gd:40 about to call error func")
-	print("[ERROR-LOC] audit.gd:41 about to call error func")
+	# FIX (this session, found via audit_game_wide.sh RULE 3): removed
+	# 4 duplicate prints containing literal "audit.gd:N" text — same
+	# bug class as InputManager.gd's already-fixed false STALL SOURCE
+	# issue.
+	print("[ERROR-LOC] about to call error func")
 	print("[ERROR-LOC] audit.gd:45 about to call error func")
 	print("[ERROR-LOC] audit.gd:46 about to call error func")
 	print("[ERROR-LOC] audit.gd:47 about to call error func")

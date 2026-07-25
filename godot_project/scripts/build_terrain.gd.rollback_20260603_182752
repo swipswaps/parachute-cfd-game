@@ -1,0 +1,314 @@
+extends Node
+
+var _camera: Camera3D
+var _move_speed = 2000.0
+var _udp := PacketPeerUDP.new()
+var _pattern = [
+	Vector3(500.0, 400.0, -800.0), Vector3(500.0, 400.0, 800.0),
+	Vector3(200.0, 300.0, 800.0), Vector3(-50.0, 200.0, 200.0),
+	Vector3(-50.0, 24.0, 0.0), Vector3(0.0, 0.0, 0.0)
+]
+var _current_point = 0
+var _altitude = 400.0
+var _character: Node3D
+var _toggle_animator: Node
+var _hud_labels := []
+var _hud_layer: CanvasLayer
+var _focus_label: Label
+var _frame_count := 0
+
+# PiP variables – stored references avoid absolute paths
+var _pip_viewport: SubViewport
+var _pip_camera: Camera3D
+var _pip_canopy_node: Node3D
+var _main_canopy_node: Node3D
+var _wind_label: Label
+
+func _ready():
+	print("[v313] Parachute Landing Pattern Trainer")
+	print("[v313] IMPORT RETRY ACTIVE – OBJ fallback for character")
+	
+	# Terrain
+	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+	if not file:
+		print("[ERROR] heightmap_512.raw not found")
+		return
+	var data = file.get_buffer(file.get_length())
+	file.close()
+	
+	var _baked := PackedByteArray()
+	var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+	if _bf:
+		_baked = _bf.get_buffer(3145728)
+		_bf.close()
+		print("[v314] BAKED: ", _baked.size(), " bytes loaded")
+		print("[v314] BAKED first pixel: RGB(", _baked[0], ",", _baked[1], ",", _baked[2], ")")
+	else:
+		print("[v314] BAKE FALLBACK: file missing, using elevation colour")
+	
+	var verts = []; var uvs = []
+	const W = 1024; const H = 1024; const MAX_ELEV = 80.0; const SCALE_XZ = 4000.0
+	for z in range(H):
+		for x in range(W):
+			var px = (float(x)/float(W-1)-0.5)*SCALE_XZ
+			var pz = (float(z)/float(H-1)-0.5)*SCALE_XZ
+			var idx = (z*W+x)*2
+			var raw = data.decode_u16(idx) if idx+1 < data.size() else 0
+			var py = (float(raw)/65535.0)*MAX_ELEV
+			verts.push_back(Vector3(px,py,pz))
+			uvs.push_back(Vector2(float(x)/float(W-1), float(z)/float(H-1)))
+	var indices = []
+	for z in range(H-1):
+		for x in range(W-1):
+			var a=z*W+x; var b=a+1; var c=a+W; var d=c+1
+			indices.append_array([a,c,b, b,c,d])
+	var st = SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.set_color(Color(1.0, 1.0, 1.0, 1.0))  # registers colour format
+	for i in range(verts.size()):
+		var ci = i * 3
+		var cr = float(_baked[ci]) / 255.0
+		var cg = float(_baked[ci + 1]) / 255.0
+		var cb = float(_baked[ci + 2]) / 255.0
+		st.set_color(Color(cr, cg, cb, 1.0))
+		st.set_uv(uvs[i]); st.add_vertex(verts[i])
+	for idx in indices: st.add_index(idx)
+	st.generate_normals()
+	st.generate_tangents()   # fixes vertical lines
+	var terrain_mesh = st.commit()
+	var terrain_inst = MeshInstance3D.new()
+	terrain_inst.mesh = terrain_mesh
+	var terrain_mat = StandardMaterial3D.new()
+	terrain_mat.vertex_color_use_as_albedo = true
+	terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	terrain_inst.material_override = terrain_mat
+	add_child(terrain_inst)
+	print("[v313] TERRAIN: ", verts.size(), " verts")
+	
+	# Runways
+	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+	add_child(_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+	add_child(_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35)))
+	
+	# Camera
+	_camera = Camera3D.new()
+	_camera.transform = Transform3D(
+		Basis(Vector3(1.0, 0.0, 0.0), Vector3(0.0, 0.0, -1.0), Vector3(0.0, 1.0, 0.0)),
+		Vector3(0.0, 3000.0, 0.0)
+	)
+	_camera.fov = 75.0
+	_camera.near = 0.1
+	_camera.far = 10000.0
+	add_child(_camera)
+	print("[v313] CAMERA: Top-down Y=3000")
+	
+	# Character
+	_character = Node3D.new()
+	add_child(_character)
+	_load_character()
+	
+	# Drop zone marker
+	var dz = MeshInstance3D.new()
+	var cyl = CylinderMesh.new()
+	cyl.height = 0.5
+	cyl.top_radius = 80.0
+	cyl.bottom_radius = 80.0
+	cyl.radial_segments = 32
+	dz.mesh = cyl
+	dz.position = Vector3(0.0, 25.0, 0.0)
+	var dz_mat = StandardMaterial3D.new()
+	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	dz.material_override = dz_mat
+	add_child(dz)
+	print("[v314] DROP ZONE: circle at (0,25,0) radius=80")
+	
+	# UDP
+	_udp.set_dest_address("127.0.0.1", 9999)
+	
+	# HUD
+	_hud_layer = CanvasLayer.new()
+	add_child(_hud_layer)
+	var font = ThemeDB.fallback_font
+	var labels = ["ALT", "SPD", "HDG", "LEFT", "RIGHT"]
+	for i in range(5):
+		var lbl = Label.new()
+		lbl.add_theme_font_override("font", font)
+		lbl.add_theme_font_size_override("font_size", 14)
+		lbl.add_theme_color_override("font_color", Color(0,1,0))
+		lbl.position = Vector2(10, 10 + i*20)
+		_hud_layer.add_child(lbl)
+		_hud_labels.append(lbl)
+	
+	_focus_label = Label.new()
+	_focus_label.text = ">>> CLICK WINDOW TO ENABLE CONTROLS <<<"
+	_focus_label.add_theme_font_override("font", font)
+	_focus_label.add_theme_font_size_override("font_size", 16)
+	_focus_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.0, 1.0))
+	_focus_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_focus_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_focus_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_hud_layer.add_child(_focus_label)
+	
+	# PiP overlay
+	_setup_pip_overlay()
+
+func _load_character():
+	var fbx_path = "res://assets/characters/parachutist.fbx"
+	var loaded_scene = null
+	if FileAccess.file_exists(fbx_path):
+		print("[v314] Trying FBX...")
+		var res = load(fbx_path)
+		if res and res is PackedScene:
+			var inst = res.instantiate()
+			if inst:
+				_character.add_child(inst)
+				print("[v314] FBX loaded and instantiated")
+				loaded_scene = res
+			else:
+				print("[v314] FBX instantiate failed")
+		else:
+			print("[v314] FBX load failed res=", res)
+	else:
+		print("[v314] FBX file not found: ", fbx_path)
+	if loaded_scene == null:
+		print("[v314] FALLBACK: Capsule")
+		var capsule = MeshInstance3D.new()
+		capsule.mesh = CapsuleMesh.new()
+		_character.add_child(capsule)
+	_main_canopy_node = _character.get_child(0)
+
+func _create_runway(pos: Vector3, length: float, width: float, heading: float, color: Color) -> MeshInstance3D:
+	var mi = MeshInstance3D.new()
+	var box = BoxMesh.new()
+	box.size = Vector3(width, 0.5, length)
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = color
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mi.mesh = box
+	mi.material_override = mat
+	mi.position = pos
+	mi.rotation_degrees.y = heading
+	return mi
+
+func _input(event):
+	# Zoom with mouse wheel
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_camera.position.y = max(500.0, _camera.position.y - 200.0)
+			print("[VERBATIM] Zoom in: camera Y=", _camera.position.y)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_camera.position.y = min(5000.0, _camera.position.y + 200.0)
+			print("[VERBATIM] Zoom out: camera Y=", _camera.position.y)
+		else:
+			_focus_label.visible = false
+	# Keyboard movement
+	if event is InputEventKey and event.pressed:
+		var move_step = 100.0
+		if event.keycode in [KEY_UP, KEY_W]:
+			_camera.position.z -= move_step
+		elif event.keycode in [KEY_DOWN, KEY_S]:
+			_camera.position.z += move_step
+		elif event.keycode in [KEY_LEFT, KEY_A]:
+			_camera.position.x -= move_step
+		elif event.keycode in [KEY_RIGHT, KEY_D]:
+			_camera.position.x += move_step
+		# Arm toggles (Q/E)
+		elif event.keycode == KEY_Q:
+			_toggle_left_arm()
+			print("[VERBATIM] Left arm toggled")
+		elif event.keycode == KEY_E:
+			_toggle_right_arm()
+			print("[VERBATIM] Right arm toggled")
+		# Clamp camera
+		_camera.position.x = clamp(_camera.position.x, -2000.0, 2000.0)
+		_camera.position.z = clamp(_camera.position.z, -2000.0, 2000.0)
+
+func _toggle_left_arm():
+	var bone_name = "LeftArm"
+	for node in [_main_canopy_node, _pip_canopy_node]:
+		if node and node.has_node(bone_name):
+			var bone = node.get_node(bone_name)
+			bone.rotation.z += deg_to_rad(30.0)
+			print("[VERBATIM] Left arm rotated")
+
+func _toggle_right_arm():
+	var bone_name = "RightArm"
+	for node in [_main_canopy_node, _pip_canopy_node]:
+		if node and node.has_node(bone_name):
+			var bone = node.get_node(bone_name)
+			bone.rotation.z += deg_to_rad(30.0)
+
+func _setup_pip_overlay():
+	var fbx_path = "res://assets/characters/parachutist.fbx"
+	if not FileAccess.file_exists(fbx_path):
+		print("[VERBATIM] ERROR: FBX not found")
+		return
+	var layer = CanvasLayer.new()
+	layer.name = "PiPLayer"
+	add_child(layer)
+	var container = SubViewportContainer.new()
+	container.size = Vector2(320, 240)
+	container.position = Vector2(20, 20)
+	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(container)
+	_pip_viewport = SubViewport.new()
+	_pip_viewport.size = Vector2i(320, 240)
+	_pip_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	container.add_child(_pip_viewport)
+	var fbx_scene = load(fbx_path)
+	if not fbx_scene:
+		print("[VERBATIM] ERROR: Failed to load FBX scene")
+		return
+	_pip_canopy_node = fbx_scene.instantiate()
+	_pip_viewport.add_child(_pip_canopy_node)
+	_pip_canopy_node.position = Vector3(0, -0.5, 0)
+	_pip_camera = Camera3D.new()
+	_pip_camera.position = Vector3(0, 1.2, 1.5)
+	_pip_camera.look_at_from_position(_pip_camera.position, Vector3(0, 0.5, 0))
+	_pip_viewport.add_child(_pip_camera)
+	_pip_viewport.world_3d = get_viewport().world_3d
+	_pip_camera.current = true
+	var light = DirectionalLight3D.new()
+	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+	_pip_viewport.add_child(light)
+	# Wind label (member variable)
+	_wind_label = Label.new()
+	_wind_label.name = "WindLabel"
+	_wind_label.position = Vector2(20, 260)
+	_wind_label.add_theme_color_override("font_color", Color(1,1,0))
+	layer.add_child(_wind_label)
+	var timer = Timer.new()
+	timer.wait_time = 1.0
+	timer.autostart = true
+	timer.timeout.connect(_update_wind_display)
+	layer.add_child(timer)
+	_main_canopy_node = _character
+	print("[VERBATIM] Live FBX PiP overlay created")
+
+func _update_wind_display():
+	if not _wind_label:
+		print("[VERBATIM] ERROR: WindLabel missing")
+		return
+	var wind_file = FileAccess.open("res://wind.json", FileAccess.READ)
+	var speed = 8.0
+	var direction = 120
+	if wind_file:
+		var json = JSON.new()
+		if json.parse(wind_file.get_as_text()) == OK:
+			var wind = json.data
+			speed = wind.get("speed", 8.0)
+			direction = wind.get("direction", 120)
+	_wind_label.text = "WIND: %.1f kts @ %d°" % [speed, direction]
+	print("[VERBATIM] Wind updated")
+
+func _process(delta):
+	_frame_count += 1
+	if _frame_count == 2:
+		var ts = Time.get_datetime_string_from_system().replace(':', '').replace('-', '')
+		var spath = ProjectSettings.globalize_path("res://") + "../audit_logs/screenshots/v314_" + ts + ".png"
+		get_viewport().get_texture().get_image().save_png(spath)
+		print("[v314] SCREENSHOT: ", spath)
+
+# EOF

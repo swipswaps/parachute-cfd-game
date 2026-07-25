@@ -1,0 +1,781 @@
+extends Node
+
+const LegLabel = "LEG"
+
+enum GameState { FREEFALL, OPENING_ANIM, DIAGNOSIS, LANDED, GAME_OVER }
+var _game_state: GameState = GameState.FREEFALL
+
+var _camera: Camera3D
+var _character: Node3D
+var _hud_labels := []
+var _hud_layer: CanvasLayer
+var _focus_label: Label
+var _frame_count := 0
+
+var _pip_viewport: SubViewport
+var _pip_camera: Camera3D
+var _pip_canopy_node: Node3D
+var _main_canopy_node: Node3D
+var _wind_label: Label
+
+var _velocity_vec := Vector3.ZERO
+var _forward_speed = 0.0
+var _turn_input = 0.0
+var _max_speed = 30.0
+var _accel = 15.0
+var _turn_force = 5.0
+var _gravity = 9.8
+var _descent_rate = 0.0
+
+var _initial_heading = 120.0
+var _turn_target_heading = 120.0
+var _turn_rate = 5.0
+enum PatternState { DOWNWIND, BASE, FINAL }
+var _pattern_state = PatternState.DOWNWIND
+var _current_altitude = 3000.0
+
+var _skeleton: Skeleton3D
+var _left_arm_idx = -1
+var _right_arm_idx = -1
+var _left_arm_angle = 0.0
+var _right_arm_angle = 0.0
+var _arm_rotation_step = deg_to_rad(25.0)
+
+enum MalfunctionType { GOOD, LINE_TWISTS, BAG_LOCK, LINE_OVER, PILOT_IN_TOW }
+var _malfunction: MalfunctionType = MalfunctionType.GOOD
+var _flight_control_checked: bool = false
+var _cutaway_done: bool = false
+var _reserve_done: bool = false
+var _flare_done: bool = false
+var _safe_landing: bool = false
+var _decision_altitude_warning_shown: bool = false
+
+const DESCENT_RATE_NORMAL: float = 0.44
+const DESCENT_RATE_BAGLOCK: float = 0.98
+const DESCENT_RATE_GOOD: float = 0.22
+
+var _canopy_instance: MeshInstance3D
+var _canopy_material: StandardMaterial3D
+
+# Parachute deployment animation
+var _canopy_deployed: bool = false
+var _deployment_timer: float = 0.0
+const DEPLOY_TIME: float = 1.2   # seconds for scale‑up
+
+# Polling state for one‑shot actions
+var _last_frame_keys = {
+	"Q": false, "E": false, "C": false, "X": false, "V": false, "F": false, "R": false,
+	"UP": false, "DOWN": false, "LEFT": false, "RIGHT": false,
+	"W": false, "S": false, "A": false, "D": false
+}
+
+func _ready():
+	print("[v313] Parachute Landing Pattern Trainer + Malfunction Trainer + 3D Canopy")
+	
+	# --- Terrain (full) ---
+	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+	if not file:
+		print("[ERROR] heightmap_512.raw not found")
+		return
+	var data = file.get_buffer(file.get_length())
+	file.close()
+	
+	var _baked := PackedByteArray()
+	var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+	if _bf:
+		_baked = _bf.get_buffer(3145728)
+		_bf.close()
+		print("[v314] BAKED: ", _baked.size(), " bytes loaded")
+		print("[v314] BAKED first pixel: RGB(", _baked[0], ",", _baked[1], ",", _baked[2], ")")
+	else:
+		print("[v314] BAKE FALLBACK")
+	
+	var verts = []; var uvs = []
+	const W = 1024; const H = 1024; const MAX_ELEV = 80.0; const SCALE_XZ = 4000.0
+	for z in range(H):
+		for x in range(W):
+			var px = (float(x)/float(W-1)-0.5)*SCALE_XZ
+			var pz = (float(z)/float(H-1)-0.5)*SCALE_XZ
+			var idx = (z*W+x)*2
+			var raw = data.decode_u16(idx) if idx+1 < data.size() else 0
+			var py = (float(raw)/65535.0)*MAX_ELEV
+			verts.push_back(Vector3(px,py,pz))
+			uvs.push_back(Vector2(float(x)/float(W-1), float(z)/float(H-1)))
+	var indices = []
+	for z in range(H-1):
+		for x in range(W-1):
+			var a=z*W+x; var b=a+1; var c=a+W; var d=c+1
+			indices.append_array([a,c,b, b,c,d])
+	var st = SurfaceTool.new(); st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.set_color(Color(1.0, 1.0, 1.0, 1.0))
+	for i in range(verts.size()):
+		var ci = i * 3
+		var cr = float(_baked[ci]) / 255.0
+		var cg = float(_baked[ci + 1]) / 255.0
+		var cb = float(_baked[ci + 2]) / 255.0
+		st.set_color(Color(cr, cg, cb, 1.0))
+		st.set_uv(uvs[i]); st.add_vertex(verts[i])
+	for idx in indices: st.add_index(idx)
+	st.generate_normals()
+	st.generate_tangents()
+	var terrain_mesh = st.commit()
+	var terrain_inst = MeshInstance3D.new()
+	terrain_inst.mesh = terrain_mesh
+	var terrain_mat = StandardMaterial3D.new()
+	terrain_mat.vertex_color_use_as_albedo = true
+	terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	terrain_inst.material_override = terrain_mat
+	add_child(terrain_inst)
+	print("[v313] TERRAIN: ", verts.size(), " verts")
+	
+	# Runways
+	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+	add_child(_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+	add_child(_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35)))
+	
+	# Character
+	_character = Node3D.new()
+	add_child(_character)
+	_character.position.y = 3525.0   # 3500 ft AGL (ground = 25)
+	_descent_rate = 0.0
+	_load_character()
+	
+	# Camera
+	_camera = Camera3D.new()
+	_camera.transform = Transform3D(Basis(Vector3(1,0,0), Vector3(0,0,-1), Vector3(0,1,0)), Vector3(0,500,-500))
+	_camera.fov = 75.0
+	_camera.near = 0.1
+	_camera.far = 10000.0
+	_character.add_child(_camera)
+	_camera.look_at(Vector3.ZERO)
+	print("[v313] CAMERA: attached")
+	
+	# Drop zone
+	var dz = MeshInstance3D.new()
+	var cyl = CylinderMesh.new()
+	cyl.height = 0.5
+	cyl.top_radius = 80.0
+	cyl.bottom_radius = 80.0
+	cyl.radial_segments = 32
+	dz.mesh = cyl
+	dz.position = Vector3(0.0, 25.0, 0.0)
+	var dz_mat = StandardMaterial3D.new()
+	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	dz.material_override = dz_mat
+	add_child(dz)
+	print("[v314] DROP ZONE: circle at (0,25,0) radius=80")
+	
+	# HUD – 8 lines
+	_hud_layer = CanvasLayer.new()
+	add_child(_hud_layer)
+	var font = ThemeDB.fallback_font
+	var labels = ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+	for i in range(8):
+		var lbl = Label.new()
+		lbl.add_theme_font_override("font", font)
+		lbl.add_theme_font_size_override("font_size", 14)
+		lbl.add_theme_color_override("font_color", Color(0,1,0))
+		lbl.position = Vector2(10, 10 + i*20)
+		_hud_layer.add_child(lbl)
+		_hud_labels.append(lbl)
+	
+	_focus_label = Label.new()
+	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart <<<"
+	_focus_label.add_theme_font_override("font", font)
+	_focus_label.add_theme_font_size_override("font_size", 16)
+	_focus_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.0, 1.0))
+	_focus_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_focus_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_focus_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	_hud_layer.add_child(_focus_label)
+	
+	# Initial heading
+	var heading_text = _hud_labels[2].text
+	var parts = heading_text.split("°")
+	var heading_val = _initial_heading
+	if parts.size() > 0:
+		var sub = parts[0].split(":")
+		if sub.size() > 1:
+			heading_val = float(sub[1].strip_edges())
+	_initial_heading = heading_val
+	_turn_target_heading = _initial_heading
+	print("[VERBATIM] Initial heading set to ", _initial_heading)
+	
+	_fetch_real_wind()
+	_setup_pip_overlay()
+	
+	# Load canopy – try OBJ first (more reliable), then FBX as fallback
+	_load_canopy_model()
+
+func _load_canopy_model():
+	if not _character:
+		print("[VERBATIM] No character – cannot load canopy")
+		return
+	
+	# Prefer OBJ because Godot loads it reliably
+	var model_paths = [
+	"res://assets/canopy/clean.glb",
+	"res://assets/canopy/clean.glb",
+		"res://assets/canopy/parachute.obj",
+		"res://assets/canopy/parachute.fbx"
+	]
+	var loaded = false
+	for path in model_paths:
+		if FileAccess.file_exists(path):
+			var scene = load(path)
+			if scene:
+				_canopy_instance = scene.instantiate()
+				if _canopy_instance:
+					_character.add_child(_canopy_instance)
+					_canopy_instance.position = Vector3(0, 2.5, 0)
+					_canopy_material = StandardMaterial3D.new()
+					_canopy_instance.material_override = _canopy_material
+					_canopy_instance.visible = false   # hidden until deployment
+					print("[VERBATIM] Canopy loaded from: ", path)
+					loaded = true
+					break
+				else:
+					print("[VERBATIM] Failed to instantiate canopy from: ", path)
+			else:
+				print("[VERBATIM] Failed to load scene from: ", path)
+		else:
+			print("[VERBATIM] File not found: ", path)
+	
+	if not loaded:
+		_create_fallback_canopy()
+
+func _create_fallback_canopy():
+	if not _character:
+		return
+	_canopy_instance = MeshInstance3D.new()
+	var box_mesh = BoxMesh.new()
+	box_mesh.size = Vector3(2.0, 0.2, 2.0)
+	_canopy_instance.mesh = box_mesh
+	_character.add_child(_canopy_instance)
+	_canopy_instance.position = Vector3(0, 2.5, 0)
+	_canopy_material = StandardMaterial3D.new()
+	_canopy_instance.material_override = _canopy_material
+	_canopy_instance.visible = false
+	print("[VERBATIM] Fallback cube canopy created – place parachute.obj for real model")
+
+func _deploy_canopy():
+	if _canopy_deployed or not _canopy_instance:
+		return
+	_canopy_deployed = true
+	_canopy_instance.visible = true
+	_canopy_instance.scale = Vector3.ZERO
+	_deployment_timer = DEPLOY_TIME
+	print("[VERBATIM] Parachute deployment started")
+
+func _load_character():
+	var fbx_path = "res://assets/characters/parachutist.fbx"
+	if not FileAccess.file_exists(fbx_path):
+		print("[v314] FBX not found, using capsule")
+		var capsule = MeshInstance3D.new()
+		capsule.mesh = CapsuleMesh.new()
+		_character.add_child(capsule)
+		return
+	var fbx_scene = load(fbx_path)
+	if not fbx_scene:
+		print("[v314] Failed to load FBX")
+		return
+	var inst = fbx_scene.instantiate()
+	_character.add_child(inst)
+	print("[v314] FBX loaded")
+	
+	_skeleton = _character.find_child("Skeleton3D", true, false)
+	if _skeleton:
+		for i in _skeleton.get_bone_count():
+			var name = _skeleton.get_bone_name(i)
+			if name == "mixamorig_LeftArm":
+				_left_arm_idx = i
+				print("[VERBATIM] Left arm bone found (index ", i, ")")
+			elif name == "mixamorig_RightArm":
+				_right_arm_idx = i
+				print("[VERBATIM] Right arm bone found (index ", i, ")")
+		if _left_arm_idx == -1:
+			print("[VERBATIM] WARNING: Left arm bone not found")
+		if _right_arm_idx == -1:
+			print("[VERBATIM] WARNING: Right arm bone not found")
+	else:
+		print("[VERBATIM] No skeleton found")
+
+func _create_runway(pos: Vector3, length: float, width: float, heading: float, color: Color) -> MeshInstance3D:
+	var mi = MeshInstance3D.new()
+	var box = BoxMesh.new()
+	box.size = Vector3(width, 0.5, length)
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = color
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mi.mesh = box
+	mi.material_override = mat
+	mi.position = pos
+	mi.rotation_degrees.y = heading
+	return mi
+
+func _rotate_arm(left: bool):
+	if not _skeleton:
+		print("[VERBATIM] No skeleton – cannot rotate arm")
+		return
+	var idx = _left_arm_idx if left else _right_arm_idx
+	if idx == -1:
+		print("[VERBATIM] Arm bone index invalid – cannot rotate")
+		return
+	
+	var angle = _left_arm_angle if left else _right_arm_angle
+	angle += _arm_rotation_step
+	if left:
+		_left_arm_angle = angle
+	else:
+		_right_arm_angle = angle
+	
+	var rot_z = Quaternion(Vector3.FORWARD, angle)
+	var rot_y = Quaternion(Vector3.UP, -angle * 0.5)
+	var new_rot = rot_z * rot_y
+	_skeleton.set_bone_pose_rotation(idx, new_rot)
+	print("[VERBATIM] Arm pulled (angle: ", rad_to_deg(angle), "°)")
+
+func _randomize_malfunction():
+	var r = randi() % 5
+	match r:
+		0: _malfunction = MalfunctionType.GOOD
+		1: _malfunction = MalfunctionType.LINE_TWISTS
+		2: _malfunction = MalfunctionType.BAG_LOCK
+		3: _malfunction = MalfunctionType.LINE_OVER
+		4: _malfunction = MalfunctionType.PILOT_IN_TOW
+	_update_canopy_visuals()
+
+func _malfunction_name() -> String:
+	match _malfunction:
+		MalfunctionType.GOOD: return "GOOD"
+		MalfunctionType.LINE_TWISTS: return "LINE TWISTS"
+		MalfunctionType.BAG_LOCK: return "BAG LOCK"
+		MalfunctionType.LINE_OVER: return "LINE OVER"
+		MalfunctionType.PILOT_IN_TOW: return "PILOT IN TOW"
+	return "UNKNOWN"
+
+func _flight_control_check():
+	if _game_state != GameState.DIAGNOSIS:
+		return
+	if _flight_control_checked:
+		print("[VERBATIM] FC check already done")
+		return
+	_flight_control_checked = true
+	if _malfunction == MalfunctionType.GOOD:
+		print("[VERBATIM] FC ✓ – canopy is GOOD. Press F to flare.")
+	else:
+		print("[VERBATIM] FC ✗ – NULL SET → EMERGENCY PROCEDURES required (X then V).")
+
+func _do_cutaway():
+	if _game_state != GameState.DIAGNOSIS:
+		return
+	if _cutaway_done:
+		print("[VERBATIM] Cutaway already done")
+		return
+	if _malfunction == MalfunctionType.GOOD:
+		print("[VERBATIM] GOOD canopy – no cutaway needed. Press F to flare.")
+		return
+	_cutaway_done = true
+	print("[VERBATIM] CUTAWAY executed. Now deploy RESERVE (V).")
+
+func _do_reserve():
+	if _game_state != GameState.DIAGNOSIS:
+		return
+	if _reserve_done:
+		print("[VERBATIM] Reserve already deployed")
+		return
+	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+		print("[VERBATIM] Reserve not allowed – must cutaway first (X).")
+		return
+	_reserve_done = true
+	_safe_landing = true
+	_game_state = GameState.LANDED
+	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+	_update_canopy_visuals()
+
+func _do_flare():
+	if _game_state != GameState.DIAGNOSIS:
+		return
+	if _flare_done:
+		return
+	if _malfunction != MalfunctionType.GOOD:
+		print("[VERBATIM] Cannot flare – malfunction present. Use EP (X then V).")
+		return
+	if not _flight_control_checked:
+		print("[VERBATIM] Perform Flight Control Check (C) before flaring.")
+		return
+	_flare_done = true
+	_safe_landing = true
+	_game_state = GameState.LANDED
+	print("[VERBATIM] FLARE executed – GOOD canopy landing.")
+	_update_canopy_visuals()
+
+func _check_decision_altitude():
+	if _game_state != GameState.DIAGNOSIS:
+		return
+	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+		_decision_altitude_warning_shown = true
+		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+			_game_state = GameState.GAME_OVER
+			print("[VERBATIM] FATAL – decision altitude violation without reserve.")
+	elif _current_altitude <= 0.0 and not _safe_landing:
+		_game_state = GameState.GAME_OVER
+		print("[VERBATIM] FATAL – ground impact without safe landing.")
+
+func _get_current_descent_rate() -> float:
+	if _game_state == GameState.FREEFALL:
+		return 1.2   # fast terminal descent
+	elif _game_state == GameState.OPENING_ANIM:
+		return 0.3   # slow during deployment
+	elif _game_state != GameState.DIAGNOSIS:
+		return 0.0
+	if _reserve_done or _flare_done:
+		return DESCENT_RATE_GOOD
+	match _malfunction:
+		MalfunctionType.BAG_LOCK:
+			return DESCENT_RATE_BAGLOCK
+		MalfunctionType.GOOD:
+			return DESCENT_RATE_GOOD
+		_:
+			return DESCENT_RATE_NORMAL
+
+func _update_canopy_visuals():
+	if not _canopy_material:
+		return
+	match _malfunction:
+		MalfunctionType.GOOD:
+			_canopy_material.albedo_color = Color(0.2, 0.8, 0.2)
+			if _canopy_instance:
+				_canopy_instance.scale = Vector3(1,1,1)
+				_canopy_instance.rotation_degrees = Vector3.ZERO
+		MalfunctionType.LINE_TWISTS:
+			_canopy_material.albedo_color = Color(0.9, 0.5, 0.1)
+			if _canopy_instance:
+				_canopy_instance.rotation_degrees.z = 15
+		MalfunctionType.BAG_LOCK:
+			_canopy_material.albedo_color = Color(0.9, 0.2, 0.2)
+			if _canopy_instance:
+				_canopy_instance.scale = Vector3(0.5, 0.5, 0.5)
+		MalfunctionType.LINE_OVER:
+			_canopy_material.albedo_color = Color(0.9, 0.6, 0.0)
+		MalfunctionType.PILOT_IN_TOW:
+			_canopy_material.albedo_color = Color(0.7, 0.2, 0.7)
+	print("[VERBATIM] Canopy visuals updated for: ", _malfunction_name())
+
+func _poll_controls():
+	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+		if Input.is_key_pressed(KEY_R):
+			_reset_game()
+		return
+	
+	# Only allow turn input after deployment and in diagnosis or freefall? In freefall, Q/E not relevant.
+	# But we keep them for completeness; they will affect turn_input only when _game_state is DIAGNOSIS.
+	if _game_state == GameState.DIAGNOSIS:
+		var left_turn = Input.is_key_pressed(KEY_Q)
+		var right_turn = Input.is_key_pressed(KEY_E)
+		if left_turn and not right_turn:
+			_turn_input = -1.0
+			if not _last_frame_keys["Q"]:
+				_rotate_arm(true)
+		elif right_turn and not left_turn:
+			_turn_input = 1.0
+			if not _last_frame_keys["E"]:
+				_rotate_arm(false)
+		else:
+			_turn_input = 0.0
+	
+	# One-shot actions (trigger only on rising edge)
+	if Input.is_key_pressed(KEY_C) and not _last_frame_keys["C"]:
+		_flight_control_check()
+	if Input.is_key_pressed(KEY_X) and not _last_frame_keys["X"]:
+		_do_cutaway()
+	if Input.is_key_pressed(KEY_V) and not _last_frame_keys["V"]:
+		_do_reserve()
+	if Input.is_key_pressed(KEY_F) and not _last_frame_keys["F"]:
+		_do_flare()
+	if Input.is_key_pressed(KEY_R) and not _last_frame_keys["R"]:
+		_reset_game()
+	
+	# Camera movement (continuous) – always allowed
+	var cam_move = Vector3.ZERO
+	if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+		cam_move.z -= 1.0
+	if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+		cam_move.z += 1.0
+	if Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A):
+		cam_move.x -= 1.0
+	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D):
+		cam_move.x += 1.0
+	if cam_move.length() > 0:
+		cam_move = cam_move.normalized() * 100.0
+		_camera.position += cam_move
+	
+	# Update last frame keys
+	_last_frame_keys["Q"] = Input.is_key_pressed(KEY_Q)
+	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+	_last_frame_keys["C"] = Input.is_key_pressed(KEY_C)
+	_last_frame_keys["X"] = Input.is_key_pressed(KEY_X)
+	_last_frame_keys["V"] = Input.is_key_pressed(KEY_V)
+	_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
+	_last_frame_keys["R"] = Input.is_key_pressed(KEY_R)
+
+func _reset_game():
+	print("[VERBATIM] === RESETTING GAME ===")
+	_game_state = GameState.FREEFALL
+	_character.position.y = 3525.0
+	_velocity_vec = Vector3.ZERO
+	_forward_speed = 0.0
+	_turn_input = 0.0
+	_descent_rate = 0.0
+	_current_altitude = 3500.0
+	_flight_control_checked = false
+	_cutaway_done = false
+	_reserve_done = false
+	_flare_done = false
+	_safe_landing = false
+	_decision_altitude_warning_shown = false
+	_canopy_deployed = false
+	_deployment_timer = 0.0
+	if _canopy_instance:
+		_canopy_instance.visible = false
+		_canopy_instance.scale = Vector3(1,1,1)
+	_randomize_malfunction()
+	_update_canopy_visuals()
+	_left_arm_angle = 0.0
+	_right_arm_angle = 0.0
+	if _skeleton and _left_arm_idx != -1:
+		_skeleton.set_bone_pose_rotation(_left_arm_idx, Quaternion.IDENTITY)
+	if _skeleton and _right_arm_idx != -1:
+		_skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion.IDENTITY)
+	print("[VERBATIM] Reset complete. New malfunction: ", _malfunction_name())
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_camera.position.y = max(200.0, _camera.position.y - 50.0)
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_camera.position.y = min(2000.0, _camera.position.y + 50.0)
+		else:
+			_focus_label.visible = false
+	
+	# Pull rip cord (Space) – only in freefall and at correct altitude
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_SPACE and _game_state == GameState.FREEFALL:
+			if _current_altitude <= 4300 and _current_altitude >= 1500:
+				_deploy_canopy()
+				_game_state = GameState.OPENING_ANIM
+				print("[VERBATIM] Rip cord pulled – parachute deploying")
+			else:
+				print("[VERBATIM] Pulled at wrong altitude: ", _current_altitude)
+
+func _physics_process(delta):
+	# Update altitude based on current state
+	var descent = _get_current_descent_rate() * 60.0 * delta
+	_character.position.y -= descent
+	if _character.position.y < 25.0:
+		_character.position.y = 25.0
+		if not _safe_landing:
+			_game_state = GameState.GAME_OVER
+			print("[VERBATIM] Ground impact – fatal.")
+	
+	_current_altitude = _character.position.y - 25.0
+	
+	# Handle parachute deployment animation
+	if _game_state == GameState.OPENING_ANIM and _canopy_deployed:
+		if _deployment_timer > 0:
+			_deployment_timer -= delta
+			var t = 1.0 - (_deployment_timer / DEPLOY_TIME)
+			_canopy_instance.scale = Vector3(t, t, t)
+		else:
+			# Animation finished – enter diagnosis state
+			_game_state = GameState.DIAGNOSIS
+			_canopy_instance.scale = Vector3(1,1,1)
+			print("[VERBATIM] Canopy fully inflated – diagnose malfunction")
+	
+	# Only process flight physics in diagnosis state (after deployment)
+	if _game_state == GameState.DIAGNOSIS:
+		_poll_controls()
+		
+		var target_dir = -_character.global_position.normalized()
+		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
+		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+		_velocity_vec += turn_dir * delta
+		var forward_vec = target_dir * _forward_speed
+		_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)
+		
+		_character.position += _velocity_vec * delta
+		if _velocity_vec.length() > 0.5:
+			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+			_character.rotation = Vector3(0, angle, 0)
+		
+		var speed_kts = _forward_speed * 1.94384
+		_hud_labels[1].text = "SPD: %.0f kts" % speed_kts
+		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+		
+		_check_decision_altitude()
+	
+	# Update HUD always
+	_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+	_hud_labels[6].text = "MALF: " + _malfunction_name()
+	var ep_status = ""
+	if _flare_done:
+		ep_status = "FLARE ✓"
+	elif _reserve_done:
+		ep_status = "RESERVE ✓"
+	elif _cutaway_done:
+		ep_status = "CUTAWAY (need RESERVE)"
+	elif _flight_control_checked:
+		ep_status = "FC ✓ (use EP if needed)"
+	else:
+		ep_status = "Press C for FC check"
+	_hud_labels[7].text = "EP: " + ep_status
+
+func _process(delta):
+	if _game_state == GameState.GAME_OVER:
+		return
+	_frame_count += 1
+	if _frame_count == 2:
+		var ts = Time.get_datetime_string_from_system().replace(':', '').replace('-', '')
+		var spath = ProjectSettings.globalize_path("res://") + "../audit_logs/screenshots/v314_" + ts + ".png"
+		get_viewport().get_texture().get_image().save_png(spath)
+		print("[v314] SCREENSHOT: ", spath)
+	
+	var dist = _character.global_position.length()
+	_update_pattern(_current_altitude, dist)
+	
+	var current_heading = _initial_heading
+	var diff = fmod(_turn_target_heading - current_heading + 360.0, 360.0)
+	if diff > 180.0: diff -= 360.0
+	var step = 5.0 * delta
+	current_heading += clamp(diff, -step, step)
+	current_heading = fmod(current_heading + 360.0, 360.0)
+	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+	
+	var target_dir = -_character.global_position.normalized()
+	var bearing = rad_to_deg(atan2(target_dir.x, target_dir.z))
+	_hud_labels[3].text = "BRG: %.0f°" % bearing
+
+func _turn_left():
+	_turn_target_heading -= _turn_rate
+	_turn_target_heading = max(_initial_heading - 90.0, _turn_target_heading)
+
+func _turn_right():
+	_turn_target_heading += _turn_rate
+	_turn_target_heading = min(_initial_heading + 90.0, _turn_target_heading)
+
+func _update_pattern(altitude: float, distance: float):
+	var new_state = _pattern_state
+	if altitude > 1000.0:
+		new_state = PatternState.DOWNWIND
+	elif altitude > 500.0:
+		new_state = PatternState.BASE
+	else:
+		new_state = PatternState.FINAL
+	if new_state != _pattern_state:
+		_pattern_state = new_state
+		var leg_name = ["DOWNWIND", "BASE", "FINAL"][_pattern_state]
+		_hud_labels[5].text = "LEG: " + leg_name
+		print("[VERBATIM] Entering ", leg_name)
+
+func _setup_pip_overlay():
+	var fbx_path = "res://assets/characters/parachutist.fbx"
+	if not FileAccess.file_exists(fbx_path):
+		print("[VERBATIM] ERROR: FBX not found for PiP")
+		return
+	var layer = CanvasLayer.new()
+	layer.name = "PiPLayer"
+	add_child(layer)
+	var container = SubViewportContainer.new()
+	container.size = Vector2(320, 240)
+	container.position = Vector2(20, 20)
+	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(container)
+	_pip_viewport = SubViewport.new()
+	_pip_viewport.size = Vector2i(320, 240)
+	_pip_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	container.add_child(_pip_viewport)
+	var fbx_scene = load(fbx_path)
+	if not fbx_scene:
+		print("[VERBATIM] ERROR: Failed to load FBX scene")
+		return
+	_pip_canopy_node = fbx_scene.instantiate()
+	_pip_viewport.add_child(_pip_canopy_node)
+	_pip_canopy_node.position = Vector3(0, -0.5, 0)
+	_pip_camera = Camera3D.new()
+	_pip_camera.position = Vector3(0, 1.2, 1.5)
+	_pip_camera.look_at_from_position(_pip_camera.position, Vector3(0, 0.5, 0))
+	_pip_viewport.add_child(_pip_camera)
+	_pip_viewport.world_3d = get_viewport().world_3d
+	_pip_camera.current = true
+	var light = DirectionalLight3D.new()
+	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+	_pip_viewport.add_child(light)
+	_wind_label = Label.new()
+	_wind_label.name = "WindLabel"
+	_wind_label.position = Vector2(20, 260)
+	_wind_label.add_theme_color_override("font_color", Color(1,1,0))
+	layer.add_child(_wind_label)
+	var timer = Timer.new()
+	timer.wait_time = 1.0
+	timer.autostart = true
+	timer.timeout.connect(_update_wind_display)
+	layer.add_child(timer)
+	_main_canopy_node = _character
+	print("[VERBATIM] Live FBX PiP overlay created")
+
+func _update_wind_display():
+	if not _wind_label:
+		return
+	var wind_file = FileAccess.open("res://wind.json", FileAccess.READ)
+	var speed = 8.0
+	var direction = 120
+	if wind_file:
+		var json = JSON.new()
+		if json.parse(wind_file.get_as_text()) == OK:
+			var wind = json.data
+			speed = wind.get("speed", 8.0)
+			direction = wind.get("direction", 120)
+	_wind_label.text = "WIND: %.1f kts @ %d°" % [speed, direction]
+	print("[VERBATIM] Wind updated")
+
+func _fetch_real_wind():
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(_on_wind_received)
+	http.request("https://api.weather.gov/points/29.067,-81.284")
+
+func _on_wind_received(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray):
+	if response_code != 200:
+		print("[VERBATIM] Real wind request failed")
+		return
+	var json = JSON.parse_string(body.get_string_from_utf8())
+	if not json:
+		return
+	var grid_url = json.get("properties", {}).get("forecast", "")
+	if grid_url.is_empty():
+		return
+	var http2 = HTTPRequest.new()
+	add_child(http2)
+	http2.request_completed.connect(_on_forecast_received)
+	http2.request(grid_url)
+
+func _on_forecast_received(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray):
+	if response_code != 200:
+		return
+	var data = JSON.parse_string(body.get_string_from_utf8())
+	if not data:
+		return
+	var periods = data.get("properties", {}).get("periods", [])
+	if periods.is_empty():
+		return
+	var wind_speed = periods[0].get("windSpeed", "8 mph")
+	var wind_dir = periods[0].get("windDirection", "120")
+	var speed_kts = wind_speed.to_float() * 0.868976
+	_wind_label.text = "WIND: %.1f kts @ %s°" % [speed_kts, wind_dir]
+	print("[VERBATIM] Real wind loaded: ", wind_dir, " ", speed_kts, " kts")
+
+# EOF

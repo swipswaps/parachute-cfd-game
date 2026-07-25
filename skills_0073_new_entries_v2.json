@@ -1,0 +1,53 @@
+{
+  "skill_name": "skills_0073",
+  "new_entries": [
+    {
+      "id": "R148",
+      "rule": "Before any Python patch script performs a `str.replace()` insertion, it must first `grep -c` the exact anchor line in the target file and assert the count is exactly 1. If count != 1, the script must abort with a clear error message showing the anchor and the count.",
+      "problem": "The patch script tried to insert fallback mesh after `var controller_script = load(...)` but that line was not present (maybe commented out or changed), causing the marker `fallback_mesh` to never appear, and write verification failed.",
+      "detector": "python3 -c \"import sys; src=open(sys.argv[1]).read(); anchor='var controller_script = load(\\\"res://scripts/parachute_controller.gd\\\")'; count=src.count(anchor); assert count==1, f'Anchor count {count} not 1'; print('PASS')\"",
+      "example_code": "anchor = 'var controller_script = load(\"res://scripts/parachute_controller.gd\")'\nassert build_content.count(anchor) == 1, f'Anchor count {build_content.count(anchor)} – aborting'",
+      "citation": {
+        "source": "skills_0066.json R097 – no heredoc over 30 lines, extended to all string replacements",
+        "url": "",
+        "verbatim_quote": "Any script that modifies a file via str.replace must first verify the anchor appears exactly once."
+      }
+    },
+    {
+      "id": "R149",
+      "rule": "Before inserting a code block (e.g., fallback mesh), check if the target content (e.g., a unique marker like `fallback_mesh`) already exists in the file. If it does, skip insertion entirely (idempotency).",
+      "problem": "The patch script tried to insert the fallback mesh even if it was already present, leading to duplicate insertion or silent skip. The guard prevents duplicate writes.",
+      "detector": "python3 -c \"import sys; src=open(sys.argv[1]).read(); marker='fallback_mesh' in src; print('PASS' if marker else 'FAIL: marker not present')\"",
+      "example_code": "if 'fallback_mesh' in build_content:\n    print('[VERBATIM] Fallback mesh already present – skipping insertion')\nelse:\n    # perform insertion",
+      "citation": {
+        "source": "skills_0066.json R092 – all canopy instances scaled (idempotency principle)",
+        "url": "",
+        "verbatim_quote": "Running a fix twice must produce the same result (no double‑insertion)."
+      }
+    },
+    {
+      "id": "R150",
+      "rule": "Before modifying a function or code block, capture the original lines using `grep -n` or Python line‑indexing and print them verbatim. The patch must operate on the captured lines, not on an assumed structure.",
+      "problem": "The patch script assumed the anchor line existed in a specific form, but the actual file may have changed (e.g., line commented, indentation altered). Capturing the exact lines first prevents silent mismatches.",
+      "detector": "grep -n 'var controller_script = load' build_terrain.gd && echo 'PASS' || echo 'FAIL: line not found'",
+      "example_code": "with open(build_path) as f:\n    lines = f.readlines()\nfor i, line in enumerate(lines):\n    if 'var controller_script = load' in line:\n        print(f'[VERBATIM] Anchor at line {i+1}: {line.rstrip()}')",
+      "citation": {
+        "source": "skills_0066.json T041 – Python Line‑Range Commenting",
+        "url": "",
+        "verbatim_quote": "Use Python to comment explicit line numbers obtained from grep -n."
+      }
+    },
+    {
+      "id": "R151",
+      "rule": "Any fallback or diagnostic marker inserted into a script must be a unique, unalterable string (e.g., `# FALLBACK_MESH_INSERTED`) that is not present in the original file. The read‑back verification must check for this exact marker, not a substring that might appear elsewhere.",
+      "problem": "The write verification checked for the substring `fallback_mesh`, which could appear in a comment or variable name, giving a false positive. A unique marker like `# FALLBACK_MESH_GUARD` is safer.",
+      "detector": "grep -q '# FALLBACK_MESH_GUARD' build_terrain.gd && echo 'PASS' || echo 'FAIL'",
+      "example_code": "marker = '# FALLBACK_MESH_GUARD'\nif marker not in build_content:\n    build_content += f'\\n{marker}\\n'",
+      "citation": {
+        "source": "skills_0066.json R126 – post_patch_only_markers",
+        "url": "",
+        "verbatim_quote": "Read‑back verification must check for markers that are guaranteed to be absent in the original file."
+      }
+    }
+  ]
+}

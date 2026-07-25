@@ -1,0 +1,69 @@
+======================================================================
+Checking 15 candidates for _build_ui / _on_hub_reply
+======================================================================
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719084340  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719163527  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719164201  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719174637  [build_ui=0] [hub_reply=0]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719175647  [build_ui=0] [hub_reply=0]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719183506  [build_ui=0] [hub_reply=0]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.20260719_173915.bak  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.20260719_180215.bak  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718162836  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718163408  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718174413  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718174716  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718175011  [build_ui=1] [hub_reply=1]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260719170823  [build_ui=0] [hub_reply=0]
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260719205746  [build_ui=1] [hub_reply=1]
+
+======================================================================
+SUMMARY: candidates with _build_ui: 11, with _on_hub_reply: 11
+======================================================================
+[2026-07-19T23:13:29Z] [SUCCESS] check_locate_candidates: build_ui in 11 file(s), hub_reply in 11 file(s)
+
+=== Showing full matching function bodies for review ===
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719084340 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719084340 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719163527 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719163527 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719164201 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/backups/forensic_panel.gd.bak.20260719164201 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.20260719_173915.bak ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.20260719_173915.bak ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.20260719_180215.bak ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.20260719_180215.bak ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718162836 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718162836 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718163408 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718163408 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718174413 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718174413 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718174716 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718174716 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718175011 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260718175011 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+--- _build_ui in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260719205746 ---
+func _build_ui() -> void:
+--- _on_hub_reply in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/forensic_panel.gd.bak.20260719205746 ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:

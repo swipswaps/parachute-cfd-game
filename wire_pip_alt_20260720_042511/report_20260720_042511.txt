@@ -1,0 +1,203 @@
+=== wire_pip_and_altimeter.sh v8 started Mon Jul 20 04:25:11 AM UTC 2026 ===
+[2026-07-20T04:25:11Z] [SUCCESS] dep_check: environment OK; target godot_project/scripts/build_terrain.gd
+Backup: godot_project/scripts/build_terrain.gd.bak.20260720042511
+[2026-07-20T04:25:11Z] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260720042511
+############################################################
+## PHASE A: COMPLETE pip evidence from LIVE build_terrain.gd
+############################################################
+--- all 62 pip-referencing lines ---
+   53: var _pip_viewport: SubViewport  # Ref: https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+   54: var _pip_camera: Camera3D
+   55: var _pip_canopy_node: Node3D
+   58: var _pip_layer: CanvasLayer  # NEW for layering (R104)
+  487: 	# Real‑time wind and PiP overlay
+  490: 	_setup_pip_overlay()
+ 1782: 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+ 1783: 		# Zoom with mouse wheel (only if not hovering over pip)
+ 2099: # PiP overlay, real‑time wind (initial fetch), and ConfigFile position save/load
+ 2103: func _setup_pip_overlay() -> void:
+ 2104: 	print("[VERBATIM] ENTER _setup_pip_overlay gate=none")
+ 2107: 		print("[VERBATIM] WARN FBX not found — PiP will use canopy GLB only")
+ 2109: 	_pip_layer = CanvasLayer.new()
+ 2110: 	_pip_layer.name = "PiPLayer"
+ 2111: 	_pip_layer.layer = 2  # R104: PiP on layer 2 (above HUD layer 1)
+ 2112: 	add_child(_pip_layer)
+ 2117: 	if config.load("user://pip_settings.cfg") == OK:
+ 2118: 		var pos_x = config.get_value("pip", "position_x", 20.0)
+ 2119: 		var pos_y = config.get_value("pip", "position_y", 20.0)
+ 2125: 	container.set_script(load("res://scripts/pip_draggable.gd"))
+ 2126: 	# Connect to a signal that saves position when drag ends (implemented in pip_draggable.gd)
+ 2128: 	_pip_layer.add_child(container)
+ 2129: 	container.add_to_group("pip_container")
+ 2130: 	container.add_to_group("pip_container")
+ 2131: 	container.add_to_group("pip_container")
+ 2133: 	_pip_viewport = SubViewport.new()
+ 2134: 	_pip_viewport.size = Vector2i(320, 240)
+ 2135: 	_pip_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+ 2136: 	container.add_child(_pip_viewport)
+ 2143: 	print("[VERBATIM] PiP canopy path=", canopy_path)
+ 2151: 		_pip_viewport.add_child(sphere)
+ 2153: 		print("[VERBATIM] PiP fallback: sphere created")
+ 2154: 		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
+ 2157: 	_pip_canopy_node = canopy_scene.instantiate()
+ 2158: 	_pip_viewport.add_child(_pip_canopy_node)
+ 2159: 	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+ 2161: 	_pip_camera = Camera3D.new()
+ 2162: 	var pip_env := WorldEnvironment.new()
+ 2167: 	pip_env.environment = env
+ 2168: 	_pip_viewport.add_child(pip_env)
+ 2169: 	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+ 2170: 	_pip_camera.look_at_from_position(
+ 2173: 	_pip_camera.fov = 110.0
+ 2174: 	_pip_viewport.add_child(_pip_camera)
+ 2175: 	_pip_camera.current = true
+ 2179: 	_pip_viewport.add_child(light)
+ 2185: 	_pip_layer.add_child(_wind_label)
+ 2190: 	_pip_layer.add_child(timer)
+ 2201: 	print("[VERBATIM] EXIT _setup_pip_overlay ok=true")
+ 2384: # Function to save PiP position using ConfigFile (called from pip_draggable.gd)
+ 2386: func save_pip_position(pos: Vector2) -> void:
+ 2388: 	config.set_value("pip", "position_x", pos.x)
+ 2389: 	config.set_value("pip", "position_y", pos.y)
+ 2390: 	config.save("user://pip_settings.cfg")
+ 2391: 	print("[VERBATIM] PiP position saved: ", pos)
+ 2559: 	# ZOOM test: check if pip container exists; if not, skip (PASS)
+ 2560: 	var pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+ 2561: 	if pip_c:
+ 2562: 		var old_size = pip_c.size
+ 2563: 		pip_c.size = pip_c.size * 1.1
+ 2564: 		if pip_c.size != old_size:
+ 2569: 		print("[TEST] ZOOM: PASS (no pip container, skip test)")
+--- FULL FUNCTION _setup_pip_overlay (lines 2103-2203) ---
+ 2103: func _setup_pip_overlay() -> void:
+ 2104: 	print("[VERBATIM] ENTER _setup_pip_overlay gate=none")
+ 2105: 	var fbx_path = "res://assets/characters/parachutist.fbx"
+ 2106: 	if not FileAccess.file_exists(fbx_path):
+ 2107: 		print("[VERBATIM] WARN FBX not found — PiP will use canopy GLB only")
+ 2108: 
+ 2109: 	_pip_layer = CanvasLayer.new()
+ 2110: 	_pip_layer.name = "PiPLayer"
+ 2111: 	_pip_layer.layer = 2  # R104: PiP on layer 2 (above HUD layer 1)
+ 2112: 	add_child(_pip_layer)
+ 2113: 	var container := SubViewportContainer.new()
+ 2114: 	container.size = Vector2(320, 240)
+ 2115: 	# Load saved position from ConfigFile (R105)
+ 2116: 	var config = ConfigFile.new()
+ 2117: 	if config.load("user://pip_settings.cfg") == OK:
+ 2118: 		var pos_x = config.get_value("pip", "position_x", 20.0)
+ 2119: 		var pos_y = config.get_value("pip", "position_y", 20.0)
+ 2120: 		container.position = Vector2(pos_x, pos_y)
+ 2121: 	else:
+ 2122: 		container.position = Vector2(20, 20)
+ 2123: 	container.mouse_filter = Control.MOUSE_FILTER_STOP
+ 2124: 	# Make draggable and save position on drag end
+ 2125: 	container.set_script(load("res://scripts/pip_draggable.gd"))
+ 2126: 	# Connect to a signal that saves position when drag ends (implemented in pip_draggable.gd)
+ 2127: 	# We'll also add a direct save function here that can be called from that script.
+ 2128: 	_pip_layer.add_child(container)
+ 2129: 	container.add_to_group("pip_container")
+ 2130: 	container.add_to_group("pip_container")
+ 2131: 	container.add_to_group("pip_container")
+ 2132: 	container.visible = true
+ 2133: 	_pip_viewport = SubViewport.new()
+ 2134: 	_pip_viewport.size = Vector2i(320, 240)
+ 2135: 	_pip_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+ 2136: 	container.add_child(_pip_viewport)
+ 2137: 
+ 2138: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+ 2139: 	if not ResourceLoader.exists(canopy_path):
+ 2140: 		canopy_path = "res://assets/canopy/parachute_clean.glb"
+ 2141: 	if not ResourceLoader.exists(canopy_path):
+ 2142: 		canopy_path = "res://assets/canopy/parachute.glb"
+ 2143: 	print("[VERBATIM] PiP canopy path=", canopy_path)
+ 2144: 	var canopy_scene = load(canopy_path)
+ 2145: 	if not canopy_scene:
+ 2146: 		print("[VERBATIM] ERROR: canopy load null – no .import sidecar")
+ 2147: 		# Fallback: create a simple sphere
+ 2148: 		var sphere := MeshInstance3D.new()
+ 2149: 		sphere.mesh = SphereMesh.new()
+ 2150: 		sphere.position = Vector3(0.0, 5.0, 0.0)
+ 2151: 		_pip_viewport.add_child(sphere)
+ 2152: 		container.visible = true
+ 2153: 		print("[VERBATIM] PiP fallback: sphere created")
+ 2154: 		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
+ 2155: 		return
+ 2156: 
+ 2157: 	_pip_canopy_node = canopy_scene.instantiate()
+ 2158: 	_pip_viewport.add_child(_pip_canopy_node)
+ 2159: 	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+ 2160: 
+ 2161: 	_pip_camera = Camera3D.new()
+ 2162: 	var pip_env := WorldEnvironment.new()
+ 2163: 	var env := Environment.new()
+ 2164: 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+ 2165: 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+ 2166: 	env.ambient_light_energy = 0.8
+ 2167: 	pip_env.environment = env
+ 2168: 	_pip_viewport.add_child(pip_env)
+ 2169: 	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+ 2170: 	_pip_camera.look_at_from_position(
+ 2171: 		Vector3(0.0, 1.8, 0.0), Vector3(0.0, 5.0, 0.0), Vector3.FORWARD
+ 2172: 	)
+ 2173: 	_pip_camera.fov = 110.0
+ 2174: 	_pip_viewport.add_child(_pip_camera)
+ 2175: 	_pip_camera.current = true
+ 2176: 
+ 2177: 	var light := DirectionalLight3D.new()
+ 2178: 	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+ 2179: 	_pip_viewport.add_child(light)
+ 2180: 
+ 2181: 	_wind_label = Label.new()
+ 2182: 	_wind_label.name = "WindLabel"
+ 2183: 	_wind_label.position = Vector2(20, 260)
+ 2184: 	_wind_label.add_theme_color_override("font_color", Color(1, 1, 0))
+ 2185: 	_pip_layer.add_child(_wind_label)
+ 2186: 	var timer := Timer.new()
+ 2187: 	timer.wait_time = 1.0
+ 2188: 	timer.autostart = true
+ 2189: 	timer.timeout.connect(_update_wind_display)
+ 2190: 	_pip_layer.add_child(timer)
+ 2191: 
+ 2192: 	var main_canopy_scene2 = load(canopy_path)
+ 2193: 	if main_canopy_scene2:
+ 2194: 		_main_canopy_node = main_canopy_scene2.instantiate()
+ 2195: 		_main_canopy_node.position = Vector3(0.0, 3.2, 0.0)
+ 2196: 		_main_canopy_node.scale = Vector3(0.18, 0.12, 0.18)
+ 2197: 		_character.add_child(_main_canopy_node)
+ 2198: 		print("[VERBATIM] main canopy attached offset=(0,2.5,0) path=", canopy_path)
+ 2199: 	else:
+ 2200: 		print("[VERBATIM] WARN main canopy load null — character will have no overhead canopy")
+ 2201: 	print("[VERBATIM] EXIT _setup_pip_overlay ok=true")
+ 2202: 
+ 2203: 
+--- call sites of _setup_pip_overlay: 4 ---
+  490: 	_setup_pip_overlay()
+ 2104: 	print("[VERBATIM] ENTER _setup_pip_overlay gate=none")
+ 2154: 		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
+ 2201: 	print("[VERBATIM] EXIT _setup_pip_overlay ok=true")
+--- update_altitude already referenced in this file: False ---
+--- anchors: _ready x1, _physics_process x1, _character present=True ---
+PHASE B SKIPPED: call site(s) exist — function is invoked but PiP still absent at runtime; the body printed above is the evidence for the next pass.
+--- [C-wire-altimeter] context around line 1881 (before edit) ---
+    1878: 		print("[CAMERA] Settings saved manually")
+    1879: 
+    1880: 
+    1881: func _physics_process(delta) -> void:
+    1882: 	# --- Q/E turn input (checked first so it's available for all states) ---
+    1883: 	if Input.is_key_pressed(KEY_Q):
+    1884: 		_turn_input = -1.0
+PHASE C DECISION: altimeter feed inserted at top of _physics_process (meters -> feet).
+Edits written and read back OK.
+[2026-07-20T04:25:11Z] [SUCCESS] apply_fix: wired_pip=no wired_alt=yes
+space-indented lines: 0
+[2026-07-20T04:25:11Z] [SUCCESS] indent_gate: tabs only
+--- parse gate: res://scripts/build_terrain.gd ---
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Compile Error: Identifier not found: AltimeterHUD
+          at: GDScript::reload (res://scripts/build_terrain.gd:1883)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+PARSE GATE FAILED — restoring.
+build_terrain.gd restored from godot_project/scripts/build_terrain.gd.bak.20260720042511
+[2026-07-20T04:25:12Z] [FAILURE] parse_gate: restored

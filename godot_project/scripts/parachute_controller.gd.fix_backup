@@ -1,0 +1,206 @@
+# parachute_controller.gd – Fixed logging (append) and input diagnostics
+extends RigidBody3D
+
+const DIAG_FILE = "user://parachute_diag.txt"
+
+func _log(msg: String):
+    var f = FileAccess.open(DIAG_FILE, FileAccess.READ_WRITE)
+    if f == null:
+        f = FileAccess.open(DIAG_FILE, FileAccess.WRITE)
+    f.seek_end()
+    f.store_line(str(Time.get_datetime_string_from_system()) + " " + msg)
+    f.close()
+    print("[VERBATIM] " + msg)
+
+func _stack(msg: String):
+    _log(msg)
+    print_stack()
+
+static func _static_init():
+    var f = FileAccess.open(DIAG_FILE, FileAccess.READ_WRITE)
+    if f == null:
+        f = FileAccess.open(DIAG_FILE, FileAccess.WRITE)
+    f.seek_end()
+    f.store_line("_static_init")
+    f.close()
+    print("[VERBATIM] _static_init")
+
+func _init():
+    _log("_init")
+
+@export var descent_rate := 5.0
+@export var turn_speed := 1.5
+@export var drift_factor := 2.0
+@export var camera_shake_strength := 0.05
+@export var freefall_fov := 85.0
+@export var normal_fov := 75.0
+
+enum State { PLANE, EXIT, FREEFALL, OPENING, FLYING, LANDED }
+var state := State.PLANE
+var deployed := false
+var deployment_timer := 0.0
+const DEPLOY_TIME := 1.2
+var opening_progress := 0.0
+
+var wind_vector := Vector3.ZERO
+var character_camera: Camera3D
+var canopy_model: Node3D
+var original_camera_pos: Vector3
+
+signal landed(safe: bool)
+signal malfunction_triggered(type: String)
+
+func _ready():
+    _stack("_ready START")
+    
+    # Check Input Map actions
+    var required_actions = ["deploy", "turn_left", "turn_right"]
+    for action in required_actions:
+        if not InputMap.has_action(action):
+            _log("WARNING: Input action '" + action + "' is missing. Add it in Project Settings -> Input Map.")
+    
+    for child in get_children():
+        if child is Camera3D:
+            character_camera = child
+            _log("Found camera: " + child.name)
+        elif child.name.to_lower().contains("canopy"):
+            canopy_model = child
+            _log("Found canopy: " + child.name)
+    
+    if character_camera:
+        original_camera_pos = character_camera.position
+    
+    gravity_scale = 0.0
+    freeze = false
+    add_to_group("player")
+    _log("Added to player group")
+    
+    var plane = get_tree().get_first_node_in_group("plane")
+    _log("Plane search result: " + str(plane))
+    
+    if plane:
+        _log("Plane found: " + plane.name)
+        var old_parent = get_parent()
+        if old_parent:
+            _log("Old parent: " + old_parent.name)
+            old_parent.remove_child(self)
+        plane.add_child(self)
+        _log("Reparented to plane")
+        
+        var door_offset = Vector3(1.5, 0, -2)
+        position = door_offset
+        _log("Positioned at door offset: " + str(door_offset))
+        
+        if plane.has_signal("jumped_from_plane"):
+            plane.jumped_from_plane.connect(_on_jump_from_plane)
+            _log("Connected to plane signal")
+        else:
+            _log("Plane missing jumped_from_plane signal – fallback auto-exit")
+            await get_tree().create_timer(2.0).timeout
+            start_freefall(global_position, Vector3.ZERO)
+    else:
+        _log("No plane found – starting in FREEFALL")
+        state = State.FREEFALL
+    
+    _log("_ready END")
+    _log("Final state: " + str(state))
+
+func _on_jump_from_plane(player_pos: Vector3, plane_vel: Vector3):
+    _log("_on_jump_from_plane called, state " + str(state))
+    if state != State.PLANE:
+        return
+    state = State.EXIT
+    _log("EXIT: leaving plane")
+    await get_tree().create_timer(0.5).timeout
+    start_freefall(player_pos, plane_vel)
+
+func start_freefall(start_pos: Vector3, plane_vel: Vector3):
+    _log("start_freefall called with start_pos " + str(start_pos) + " plane_vel " + str(plane_vel))
+    var plane = get_parent()
+    var world = get_tree().root.get_child(0)
+    if plane:
+        plane.remove_child(self)
+    world.add_child(self)
+    global_position = start_pos + Vector3(0, 2, -5)
+    linear_velocity = plane_vel + Vector3.DOWN * 5.0
+    state = State.FREEFALL
+    _log("FREEFALL started at altitude " + str(global_position.y))
+    if character_camera:
+        character_camera.fov = freefall_fov
+
+func _physics_process(delta):
+    if Engine.get_process_frames() % 60 == 0:
+        _log("_physics_process: state = " + str(state) + ", deployed = " + str(deployed) + ", y = " + str(global_position.y))
+    
+    # Check for deploy input
+    if Input.is_action_just_pressed("deploy") and state == State.FREEFALL and not deployed:
+        _log("Deploy key pressed")
+        deploy()
+    
+    match state:
+        State.OPENING:
+            deployment_timer -= delta
+            opening_progress = 1.0 - (deployment_timer / DEPLOY_TIME)
+            opening_progress = clamp(opening_progress, 0.0, 1.0)
+            if canopy_model:
+                canopy_model.scale = Vector3(3.0, 2.0, 3.0) * opening_progress
+            if deployment_timer <= 0.0:
+                state = State.FLYING
+                _log("Canopy open – FLYING state")
+        State.FLYING:
+            var turn_input = Input.get_axis("turn_left", "turn_right")
+            rotate_y(turn_input * turn_speed * delta)
+            var forward = -global_transform.basis.z
+            var horizontal = forward * turn_input * drift_factor
+            var velocity = Vector3.DOWN * descent_rate + horizontal
+            velocity += wind_vector * delta
+            linear_velocity = velocity
+            if global_position.y <= 1.0:
+                land(true)
+        State.FREEFALL:
+            linear_velocity += Vector3.DOWN * 9.8 * delta
+            linear_velocity += wind_vector * delta
+    
+    if character_camera:
+        if state == State.FREEFALL or state == State.OPENING:
+            var offset = Vector3(
+                randf_range(-camera_shake_strength, camera_shake_strength),
+                randf_range(-camera_shake_strength, camera_shake_strength),
+                0
+            )
+            character_camera.position = original_camera_pos + offset
+        else:
+            character_camera.position = original_camera_pos
+    if state == State.FLYING and character_camera and character_camera.fov != normal_fov:
+        character_camera.fov = normal_fov
+
+func deploy():
+    deployed = true
+    state = State.OPENING
+    deployment_timer = DEPLOY_TIME
+    opening_progress = 0.0
+    _log("Deploying canopy – OPENING state")
+    if canopy_model:
+        canopy_model.visible = true
+        canopy_model.scale = Vector3.ZERO
+
+func land(safe: bool):
+    if state == State.LANDED:
+        return
+    state = State.LANDED
+    linear_velocity = Vector3.ZERO
+    freeze = true
+    landed.emit(safe)
+    _log("Landed. Safe: " + str(safe))
+
+func set_malfunction(type: String):
+    match type:
+        "LINE_TWISTS":
+            turn_speed *= 0.5
+        "BAG_LOCK":
+            descent_rate *= 1.5
+        "PILOT_IN_TOW":
+            drift_factor = 0.0
+        _:
+            pass
+    malfunction_triggered.emit(type)

@@ -1,0 +1,14 @@
+[2026-07-19T22:55:34.565401+00:00] [FAILURE] lint_undefined_symbols_v2: godot_project/autoloads/forensic_panel.gd: undefined symbols: ['_build_ui', '_on_hub_reply']
+
+--- UNDEFINED-SYMBOL LINT GATE v2 (comment-stripped): godot_project/autoloads/forensic_panel.gd ---
+  defined functions:  ['_adopt_pip_container', '_get_drag_data', '_ready', '_try_adopt_later']
+  called identifiers (comments excluded): ['_adopt_pip_container', '_build_ui', '_get_drag_data', '_on_hub_reply', '_ready', '_try_adopt_later']
+  [UNDEFINED] _build_ui
+  [UNDEFINED] _on_hub_reply
+
+======================================================================
+COMPARISON: v1 (buggy, scanned comments) vs v2 (comment-stripped)
+======================================================================
+  v1 falsely flagged (confirmed comment text): ['_process', '_query']
+  v2 genuinely undefined (real gap, unchanged): ['_build_ui', '_on_hub_reply']
+  CONFIRMED: _adopt_pip no longer appears in either list -- external rename to _adopt_pip_container holds.

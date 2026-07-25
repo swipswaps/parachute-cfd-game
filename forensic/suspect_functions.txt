@@ -1,0 +1,295 @@
+================================================================================
+strip_screenshot_code_from_build_terrain 1356-1419
+================================================================================
+def strip_screenshot_code_from_build_terrain():
+    target = SCRIPTS_DIR / "build_terrain.gd"
+    if not target.exists():
+        print("[STRIP-ERROR] build_terrain.gd not found", flush=True)
+        return False
+
+    content = target.read_text()
+    original = content
+
+    # Remove lines containing "save_png"
+    lines = content.splitlines()
+    new_lines = []
+    removed = 0
+    for line in lines:
+        if "save_png" in line:
+            print(f"[STRIP] Removing line: {line.strip()}", flush=True)
+            removed += 1
+            continue
+        new_lines.append(line)
+    if removed == 0:
+        print("[STRIP] No screenshot code found in build_terrain.gd", flush=True)
+        # Still run gdformat to ensure indentation is clean
+        subprocess.run(["gdformat", str(target)], check=False)
+        print("[STRIP] gdformat applied (no changes needed).", flush=True)
+        return True
+
+    new_content = "\n".join(new_lines)
+
+    # Aggressive removal if any remained
+    if "save_png" in new_content:
+        print("[STRIP-ERROR] save_png still present after stripping!", flush=True)
+        new_content = re.sub(r'^.*save_png.*$', '', new_content, flags=re.MULTILINE)
+        new_content = re.sub(r'\n\s*\n', '\n', new_content)
+
+    if "save_png" in new_content:
+        print("[STRIP-FATAL] Could not remove save_png line. Manual intervention required.", flush=True)
+        return False
+
+    # Add headless guard if not present
+    if "if Engine.is_in_headless_mode():" not in new_content:
+        new_content = re.sub(
+            r'(func _process\s*\([^)]*\):\s*)',
+            r'\1\n\tif Engine.is_in_headless_mode(): return',
+            new_content
+        )
+        print("[STRIP] Added headless guard.", flush=True)
+
+    # Write the stripped content
+    target.write_text(new_content)
+    _r082_verify(target, new_content, "build_terrain.gd stripped")
+
+    # Run gdformat to fix indentation after line removal (FIX-167-001)
+    subprocess.run(["gdformat", str(target)], check=False)
+    print("[STRIP] gdformat applied to fix indentation.", flush=True)
+
+    # Verify the file still passes gdparse
+    result = subprocess.run(["gdparse", str(target)], capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[STRIP-ERROR] File fails gdparse after stripping and formatting.", flush=True)
+        print(result.stdout + result.stderr, flush=True)
+        return False
+
+    print("[STRIP] Successfully removed save_png, added headless guard, and fixed indentation.", flush=True)
+    return True
+
+================================================================================
+gate_build_terrain_preflight 1603-1648
+================================================================================
+def gate_build_terrain_preflight() -> bool:
+    bt = SCRIPTS_DIR / "build_terrain.gd"
+    if not bt.exists():
+        print("[GATE-FAIL] build_terrain.gd not found", flush=True)
+        return False
+
+    content = bt.read_text()
+    line_count = len(content.splitlines())
+    print(f"[GATE] build_terrain.gd: {line_count} lines", flush=True)
+
+    result = subprocess.run(["gdparse", str(bt)], capture_output=True, text=True)
+    if result.returncode != 0:
+        print("[GATE-FAIL] build_terrain.gd fails gdparse. Attempting restore from backup...", flush=True)
+        if restore_build_terrain_from_backup():
+            print("[GATE-RESTORE] Restore successful. Re-checking...", flush=True)
+            result2 = subprocess.run(["gdparse", str(bt)], capture_output=True, text=True)
+            if result2.returncode == 0:
+                print("[GATE-OK] build_terrain.gd passes gdparse after restore.", flush=True)
+                # Now strip screenshot code if present
+                content = bt.read_text()
+                if "save_png" in content:
+                    print("[GATE-WARN] save_png still present after restore – stripping.", flush=True)
+                    return strip_screenshot_code_from_build_terrain()
+                return True
+            else:
+                print("[GATE-FAIL] build_terrain.gd still fails gdparse after restore.", flush=True)
+                print(result2.stdout + result2.stderr, flush=True)
+                return False
+        else:
+            print("[GATE-FAIL] Restore failed.", flush=True)
+            return False
+
+    print("[GATE-OK] build_terrain.gd passes gdparse", flush=True)
+
+    if "save_png" in content:
+        print("[GATE-WARN] build_terrain.gd contains 'save_png' – will strip it.", flush=True)
+        if not strip_screenshot_code_from_build_terrain():
+            return False
+        # Re-read after strip and verify
+        content = bt.read_text()
+        if "save_png" in content:
+            print("[GATE-FAIL] save_png still present after strip.", flush=True)
+            return False
+    print("[GATE-OK] build_terrain.gd: no screenshot code present — correct", flush=True)
+
+    return True
+
+================================================================================
+main 1653-1825
+================================================================================
+def main():
+    global system_diagnostics_running
+
+    print("=== Self-Healing Observable Pipeline (v6.5.167) ===", flush=True)
+    print("[FIX-167-001] Run gdformat after stripping screenshot code to fix indentation.")
+    print("[FIX-167-002] Removed input-action name replacement step (unnecessary and dangerous).")
+    print("[FIX-167-003] Added final gdparse gate before launching Godot.")
+
+    print("[STARTUP-CLEANUP] Ensuring no Godot processes linger...", flush=True)
+    kill_all_godot_processes()
+
+    patch_pipeline_init()
+
+    diag_thread = threading.Thread(target=system_diagnostics_loop, daemon=True)
+    diag_thread.start()
+    time.sleep(1)
+
+    print("[0/8] Ensuring dependencies...", flush=True)
+    if not ensure_dependencies():
+        print("[ERROR] Dependencies still missing.", flush=True)
+        kill_all_godot_processes()
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    print("[1/8] Ensuring database...", flush=True)
+    if not ensure_database():
+        print("[ERROR] Database setup failed.", flush=True)
+        kill_all_godot_processes()
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    try:
+        conn_check = sqlite3.connect(DB_PATH)
+        conn_check.execute("SELECT 1 FROM gd_patch_registry LIMIT 1")
+        conn_check.close()
+        print("[DB-PREFLIGHT] gd_patch_registry accessible.", flush=True)
+    except sqlite3.OperationalError as e:
+        print(f"[DB-PREFLIGHT-FAIL] gd_patch_registry not accessible: {e}", flush=True)
+        kill_all_godot_processes()
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    _db_conn = sqlite3.connect(DB_PATH)
+    print("[DB-CONN] persistent connection opened for patch gates", flush=True)
+
+    print("[1.5/8] DB kaizen...", flush=True)
+    kaizen_database()
+
+    _hostname = socket.gethostname()
+    _run_conn = sqlite3.connect(DB_PATH)
+    _run_cur = _run_conn.cursor()
+    _run_cur.execute("BEGIN IMMEDIATE")
+    _run_cur.execute(
+        """INSERT INTO pipeline_runs
+           (start_time, end_time, outcome, step_reached, version, hostname, notes)
+           VALUES (datetime('now'), NULL, 'running', 'init', 'v6.5.167', ?, ?)""",
+        (_hostname, f"run_167_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+    )
+    _run_conn.commit()
+    _pipeline_run_id = _run_cur.lastrowid
+    _run_conn.close()
+    print(f"[DB-RUN] pipeline_runs run_id={_pipeline_run_id} opened (outcome=running)", flush=True)
+
+    def _close_run(outcome: str, step: str, note: str = ""):
+        try:
+            conn2 = sqlite3.connect(DB_PATH)
+            if note:
+                final_note = note
+            else:
+                final_note = f"{outcome} at step {step}" if outcome != "SUCCESS" else ""
+            conn2.execute(
+                """UPDATE pipeline_runs
+                   SET end_time=datetime('now'), outcome=?, step_reached=?, notes=COALESCE(notes,'') || ?
+                   WHERE run_id=?""",
+                (outcome, step, (" " + final_note) if final_note else "", _pipeline_run_id)
+            )
+            conn2.commit()
+            conn2.close()
+            print(f"[DB-RUN] pipeline_runs run_id={_pipeline_run_id} closed (outcome={outcome}, step={step})", flush=True)
+            if note:
+                print(f"[DB-NOTE] {note}", flush=True)
+        except Exception as e:
+            print(f"[DB-RUN-WARN] Could not close pipeline_run row: {e}", flush=True)
+        kill_all_godot_processes()
+
+    print("[2/8] Killing orphan Godot processes...", flush=True)
+    kill_all_godot_processes()
+
+    print("[3/8] Ensuring main scene...", flush=True)
+    ensure_main_scene()
+
+    print("[3.5/8] Ensuring SQLite GDExtension...", flush=True)
+    ensure_sqlite_extension()
+
+    # Pre-flight gate: restore and strip
+    print("[3.9/8] Pre-flight gate: build_terrain.gd...", flush=True)
+    if not gate_build_terrain_preflight():
+        print("[ERROR] build_terrain.gd pre-flight gate failed.", flush=True)
+        _close_run("FAIL", "preflight_gate", "build_terrain.gd failed pre-flight gate")
+        _db_conn.close()
+        system_diagnostics_running = False
+        sys.exit(1)
+    print("[GATE-PASS] build_terrain.gd pre-flight complete.", flush=True)
+
+    print("[4/8] Self-healing scripts (syntax)...", flush=True)
+    if not self_heal():
+        print("[ERROR] Could not auto-fix all syntax errors.", flush=True)
+        _close_run("FAIL", "self_heal", "Self-heal loop failed to fix all syntax errors")
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    print("[4.1/8] Post-self-heal gate: build_terrain.gd...", flush=True)
+    if not gate_build_terrain_preflight():
+        print("[ERROR] build_terrain.gd failed post-self-heal gate.", flush=True)
+        _close_run("FAIL", "post_selfheal_gate", "build_terrain.gd failed gate after self_heal")
+        _db_conn.close()
+        system_diagnostics_running = False
+        sys.exit(1)
+    print("[GATE-PASS] build_terrain.gd post-self-heal gate complete.", flush=True)
+
+    print("[4.6/8] Ensuring asset imports...", flush=True)
+    if not ensure_asset_imports():
+        print("[ERROR] Asset import failed.", flush=True)
+        _close_run("FAIL", "asset_imports", "Asset import failed")
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    # [FIX-167-002] Input-action fix removed entirely
+
+    print("[4.8/8] Fixing flight_controller unused-arg warnings...", flush=True)
+    try:
+        fix_flight_controller_unused_args()
+    except Exception as _exc:
+        print("[ERROR] fix_flight_controller_unused_args raised: " + str(_exc), flush=True)
+        _close_run("FAIL", "flight_controller_args", f"flight_controller fix failed: {_exc}")
+        _db_conn.close()
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    print("[5/8] Running pipeline (Godot --quit-after 5)...", flush=True)
+    if not run_pipeline():
+        error_msg = "Observable runner failed or log contained script errors."
+        try:
+            with open("pipeline_run.log", "r") as f:
+                log_content = f.read()
+                if "Parse Error" in log_content:
+                    error_msg = "GDScript parse error in build_terrain.gd"
+                elif "SCRIPT ERROR" in log_content:
+                    error_msg = "Runtime script error in Godot"
+        except Exception:
+            pass
+        _close_run("FAIL", "run_pipeline", error_msg)
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    print("[6/8] Running diagnostic tests...", flush=True)
+    tests_passed = run_diagnostic_tests(_pipeline_run_id)
+    if not tests_passed:
+        _close_run("FAIL", "diagnostic_tests", "Diagnostic tests failed. Check test_output.log")
+        system_diagnostics_running = False
+        sys.exit(1)
+
+    _close_run("SUCCESS", "complete", "All steps completed successfully")
+    _db_conn.close()
+    print("[DB-CONN] persistent connection closed", flush=True)
+    print("=== Pipeline complete ===", flush=True)
+    print("[VERIFICATION] Godot exited cleanly (exit code 0, no script errors).")
+    system_diagnostics_running = False
+    diag_thread.join(timeout=2)
+
+    kill_all_godot_processes()
+    print("[LOCK] Removing lock file.")
+    LOCK_FILE.unlink(missing_ok=True)
+

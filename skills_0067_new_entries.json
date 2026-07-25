@@ -1,0 +1,77 @@
+{
+  "_comment": "skills_0067_new_entries.json – six new rules R134–R139 from the 2026-06-11 gating session",
+  "new_rules": {
+    "R134_gdscript_typed_assignment_gate": {
+      "rule": "Any GDScript variable initialized with `:=` must have the type inferable from a local, typed expression. Assignment from a function call returning Variant (e.g., `JSON.parse_string()`, `find_child()`, `get_node()`, `randf_range()`, typed array accessor methods like `back()`, `front()`, `pop_at()`) must use explicit typing (`var x: Type = ...`) or simple assignment (`var x = ...`), never `:=`.",
+      "problem": "Script error 'Cannot infer the type of variable' occurs when `:=` is used with functions that return Variant. Godot 4 with strict warnings treats this as an error.",
+      "detector": "python3 -c \"import re, sys; src=open(sys.argv[1]).read(); matches=re.findall(r':=\\s*([^#\\n]+)', src); err=[m for m in matches if re.search(r'\\b(JSON\\.parse_string|find_child|get_node|randf_range|randi|max|min|get|back\\(|front\\(|pop_at\\()', m)]; print('FAIL' if err else 'PASS')\"",
+      "verification": "Run the detector on any GDScript file. If it prints FAIL, rewrite all `:=` violating lines to use `=` or explicit typing. Rerun until PASS.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 GDScript warning system + GitHub issue #96324",
+        "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_advanced.html#type-inference",
+        "verbatim_quote": "If the expression returns a Variant, you must use = or provide an explicit type."
+      }
+    },
+    "R135_animation_reset_track_required": {
+      "rule": "Any AnimationPlayer that modifies bone transforms or node properties must have a complete RESET animation containing tracks for every property that will be animated. Without a RESET track, when a scene is saved or instantiated, the last keyframe values become the new defaults.",
+      "problem": "In the session, `_force_neutral_arms()` used bone pose overrides, but the RESET animation was not verified. Arms stayed extended after game reset.",
+      "detector": "python3 -c \"import sys; src=open(sys.argv[1]).read(); if 'AnimationPlayer' not in src: print('SKIP'); sys.exit(0); print('PASS' if 'RESET' in src else 'FAIL: no RESET animation referenced')\"",
+      "verification": "Detector must print PASS on any GDScript that uses AnimationPlayer. If FAIL, add a RESET animation in the scene or a fallback in code.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot Forum – RESET tracks",
+        "url": "https://forum.godotengine.org/t/reset-track-importance/",
+        "verbatim_quote": "Without a RESET track, animated properties don't restore to initial values when changing scenes."
+      }
+    },
+    "R136_skeleton_pose_override_execution_order": {
+      "rule": "Skeleton3D.set_bone_pose_rotation() and set_bone_global_pose_override() are overridden by any active AnimationPlayer or AnimationTree that animates the same bones. Before applying bone pose overrides, either disable competing animation players or place the override code after the animation system.",
+      "problem": "`_force_neutral_arms()` tried to override bone poses while an AnimationPlayer was active, causing the override to be ignored.",
+      "detector": "python3 -c \"import re, sys; src=open(sys.argv[1]).read(); has_anim='AnimationPlayer' in src; has_bone='set_bone_pose_rotation' in src or 'set_bone_global_pose_override' in src; if has_anim and has_bone and 'active = false' not in src and 'set_active(false)' not in src and 'stop()' not in src: print('FAIL: bone override without disabling AnimationPlayer'); sys.exit(1); print('PASS')\"",
+      "verification": "Any script that uses both AnimationPlayer and manual bone poses must include a gate that stops or disables the AnimationPlayer before the overrides.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "GitHub Godot issue #83676",
+        "url": "https://github.com/godotengine/godot/issues/83676",
+        "verbatim_quote": "AnimationPlayer active seems to override the skeleton pose you set programmatically. Disabling or removing them allows the code to set and retain the pose."
+      }
+    },
+    "R137_canvas_layer_layering_required": {
+      "rule": "Any UI element that must remain above 3D content (HUD, PiP overlays, menus) must be added as a child of a CanvasLayer with explicit `.layer` indices set (e.g., layer 1 for HUD, layer 2 for PiP). Direct add_child of Control nodes to Node3D or root leads to unpredictable layering.",
+      "problem": "The HUD layer was correctly created as CanvasLayer, but the loading screen used layer 128 without verification. Layering must be consistent and documented.",
+      "detector": "python3 -c \"import re, sys; src=open(sys.argv[1]).read(); layers=re.findall(r'CanvasLayer\\.new\\(\\)\\s*\\n\\s*[^\\n]*\\.layer\\s*=\\s*(\\d+)', src); print('PASS: layering found layers=' + str(layers) if layers else 'WARN: no CanvasLayer layering detected')\"",
+      "verification": "Every Control that should float above 3D must be a descendant of a CanvasLayer. At least one CanvasLayer with layer ≥ 1 must exist.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 docs – CanvasLayer",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html",
+        "verbatim_quote": "CanvasLayers are useful for HUDs like health bar overlays (on layers 1 and higher) or backgrounds (on layers -1 and lower)."
+      }
+    },
+    "R138_subviewport_isolated_world_gate": {
+      "rule": "Before adding a node to a SubViewport expecting it to be visible from the main camera, verify that either: (a) the main camera also has its own separate instance of the node (per R084), or (b) SubViewport.world_3d is explicitly set to share the main viewport's world.",
+      "problem": "The code correctly created both PiP and main canopy instances, but no gate verified both exist before deployment.",
+      "detector": "python3 -c \"import re, sys; src=open(sys.argv[1]).read(); pip_add=re.search(r'pip_viewport\\.add_child\\([^)]+\\)', src) is not None; main_add=re.search(r'_character\\.add_child\\([^)]*canopy[^)]*\\)', src, re.I) is not None; world_share='world_3d' in src and 'shared_world' in src; print('PASS' if not pip_add or (main_add or world_share) else 'FAIL: PiP canopy but no main canopy or shared world')\"",
+      "verification": "If a SubViewport is used, the detector must confirm that either the main scene has its own instance or the world is explicitly shared.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 docs – SubViewport",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_subviewport.html",
+        "verbatim_quote": "By default it has its own World3D. To share the parent viewport's World3D, set world_3d to the parent viewport's world_3d property."
+      }
+    },
+    "R139_load_threaded_for_heavy_assets": {
+      "rule": "Any GLB, FBX, or large texture loaded in `_ready()` must use `ResourceLoader.load_threaded_request()` for background loading, with a loading screen displayed during the load. Synchronous `load()` blocks the main thread, causing the game to appear frozen.",
+      "problem": "The script loads `parachute_sanitized.glb` synchronously in `_ready()`, blocking the UI thread.",
+      "detector": "python3 -c \"import re, sys; src=open(sys.argv[1]).read(); loads=re.findall(r'load\\([^)]*\\.(glb|fbx|gltf|obj)', src, re.I); threaded='load_threaded_request' in src; print('WARN: synchronous asset loads found – consider load_threaded_request' if loads and not threaded else 'PASS')\"",
+      "verification": "Heavy 3D assets should be loaded asynchronously. Detector prints a warning (non‑blocking) if synchronous loads are present.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 docs – Background loading",
+        "url": "https://docs.godotengine.org/en/stable/tutorials/io/background_loading.html",
+        "verbatim_quote": "The standard load method blocks your thread, making your game appear unresponsive. One way around this is using ResourceLoader to load resources asynchronously in background threads."
+      }
+    }
+  }
+}

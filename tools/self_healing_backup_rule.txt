@@ -1,0 +1,77 @@
+## SELF‑HEALING WITH VERIFIABLE BACKUPS
+
+### Principle
+
+Every automated repair that relies on copying a backup must be **verifiable** and **auditable**. The system must:
+1. Know the exact path of the backup.
+2. Verify the backup’s integrity (e.g., by SHA‑256 checksum) before using it.
+3. Record which backup was used, its checksum, and the verification result.
+4. Store a repair strategy that includes the backup path, checksum, and a verification command.
+
+### Why This Is Needed
+
+Without these safeguards, the system may copy a corrupted or outdated backup, leading to further errors. By storing a checksum and verification command, we ensure that only known‑good backups are applied, and we can trace which repair was performed.
+
+### Implementation Example
+
+    -- 1. Compute SHA of the known‑good backup (the .godot cache)
+    -- $ tar -C /path/to/backup -cf - .godot | sha256sum
+    -- b643d233ba5bef05b4b2c9d8a1df0696c1ec988d0e417cb4b14fa166cad47753
+
+    -- 2. Store the repair strategy with the backup path, target path, verification command, and expected SHA
+    INSERT OR IGNORE INTO repair_strategies (error_pattern, repair_type, repair_data)
+    VALUES (
+        'Failed to instantiate an autoload.*path: \.',
+        'file_edit',
+        '{
+          "script": "copy_godot_cache_from_backup",
+          "backup_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0033/godot_project/.godot",
+          "target_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/.godot",
+          "verification_command": "godot --headless --quit --path /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project",
+          "expected_sha": "b643d233ba5bef05b4b2c9d8a1df0696c1ec988d0e417cb4b14fa166cad47753"
+        }'
+    );
+
+    -- 3. Create an audit table to log all backup repairs
+    CREATE TABLE IF NOT EXISTS backup_audit (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        backup_path TEXT,
+        sha TEXT,
+        verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        verification_result TEXT,
+        used_for_fix BOOLEAN DEFAULT 0
+    );
+
+    -- 4. Log the successful repair
+    INSERT INTO backup_audit (backup_path, sha, verification_result, used_for_fix)
+    VALUES (
+        '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0033/godot_project/.godot',
+        'b643d233ba5bef05b4b2c9d8a1df0696c1ec988d0e417cb4b14fa166cad47753',
+        'success',
+        1
+    );
+
+### Verification Protocol
+
+When a repair is triggered:
+1. The system reads the `repair_strategies` entry for the error pattern.
+2. It computes the SHA‑256 of the backup directory (using `tar -C ... -cf - .godot | sha256sum`).
+3. It compares the computed SHA with the stored `expected_sha`.
+4. If they match, it copies the backup to the target path.
+5. It runs the verification command (e.g., `godot --headless --quit`).
+6. If the verification succeeds, it logs the repair in `backup_audit` with `verification_result='success'`.
+7. If verification fails, it logs the failure and does **not** mark the repair as successful.
+
+### Why This Follows Established Principles
+
+- **Design by Contract** (Meyer, 1997, ISBN 0‑13‑629155‑4): Precondition = SHA matches expected; action = copy; postcondition = verification passes.
+- **Autonomic Computing** (Kephart & Chess, 2003, IEEE Computer, 36(1):41‑50): Self‑healing requires closed‑loop control with sensors (SHA check) and effectors (copy).
+- **Site Reliability Engineering** (Beyer et al., 2016, ISBN 978‑1‑491‑92912‑4): Automating toil requires auditable and repeatable actions.
+- **Verification of Integrity**: SHA‑256 is a cryptographic hash standard (NIST FIPS 180‑4), ensuring data integrity.
+
+### References
+
+- Meyer, B. (1997). *Object‑Oriented Software Construction*, 2nd ed. Prentice Hall. ISBN 0‑13‑629155‑4.
+- Kephart, J. O., & Chess, D. M. (2003). The Vision of Autonomic Computing. *IEEE Computer*, 36(1):41‑50. DOI:10.1109/MC.2003.1160055.
+- Beyer, B., Jones, C., Petoff, J., & Murphy, N. R. (2016). *Site Reliability Engineering*. O'Reilly Media. ISBN 978‑1‑491‑92912‑4.
+- National Institute of Standards and Technology (NIST). FIPS PUB 180‑4: Secure Hash Standard (SHS). https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf

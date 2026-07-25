@@ -1,0 +1,1161 @@
+Database Schema Report – /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+================================================================================
+
+Database: audit_logs/ab_test.db
+----------------------------------------
+  Table: ab_test_runs
+    Columns: run_id, session_id, ready_time_ms, vol_cs, nvol_cs, outcome, timestamp
+  Table: alerts_sent
+    Columns: run_id, alert_type, sent_at
+  Table: auto_heal_actions
+    Columns: action_id, run_id, error_pattern, file_path, line_number, patch_applied, status, timestamp
+  Table: fix_patterns
+    Columns: pattern_id, error_keyword, fix_template, file_glob, success_count, last_used
+  Table: godot_log_entries
+    Columns: entry_id, run_id, session_id, timestamp, verbatim, raw_json
+  Table: godot_state_events
+    Columns: event_id, run_id, session_id, timestamp, event_type, event_name, raw_message
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, io_wait, vol_cs, nvol_cs, timestamp
+  Table: resource_contention_log_old
+    Columns: id, session_id, godot_pid, ts, io_wait, vol_cs, nvol_cs, timestamp
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_175530.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_180319.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_181738.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_182534.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_184439.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_190423.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_191130.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_192754.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_201235.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_203749.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_204507.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260624_204925.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_075353.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_075910.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_082748.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_083807.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_090224.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: asset_validation
+    Columns: id, created_at, asset_path, file_exists, run_id
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: runtime_failures
+    Columns: id, created_at, run_id, failure_type, symptom, root_cause, fix_applied, verified
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_092021.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: asset_validation
+    Columns: id, created_at, asset_path, file_exists, run_id
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: runtime_failures
+    Columns: id, created_at, run_id, failure_type, symptom, root_cause, fix_applied, verified
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_092838.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: asset_validation
+    Columns: id, created_at, asset_path, file_exists, run_id
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: runtime_failures
+    Columns: id, created_at, run_id, failure_type, symptom, root_cause, fix_applied, verified
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_093019.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: asset_validation
+    Columns: id, created_at, asset_path, file_exists, run_id
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: runtime_failures
+    Columns: id, created_at, run_id, failure_type, symptom, root_cause, fix_applied, verified
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: db_backups/parachute_mutations_20260625_100703.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: asset_validation
+    Columns: id, created_at, asset_path, file_exists, run_id
+  Table: auto_heal_actions
+    Columns: id, run_id, error_pattern, file_path, line_number, patch_applied, status, created_ts
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+    Sample rows:
+  Columns: id, repair_id, description, corrupted_prefix, corrupted_suffix, correct_line, applies_to_file, discovered_version, created_ts
+  Row: (1, 'repair_bt_rightarm_v6507', 'build_terrain.gd: right-arm bone if-check stripped of indent by gdformat', 'if name == "mixamorig_RightArm"', 'mixamorig:RightArm":', '\t\t\t\tif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (2, 'repair_bt_otype_utility_v6507', 'build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat', 'if otype.begins_with("UTILITY")', '"POLE":', '\t\t\tif otype.begins_with("UTILITY") or otype == "POLE":', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Row: (3, 'repair_bt_opening_anim_v6507', 'build_terrain.gd: OPENING_ANIM state check stripped of indent', 'if _game_state == GameState.OPENING_ANIM:', 'if _game_state == GameState.OPENING_ANIM:', '\tif _game_state == GameState.OPENING_ANIM:', 'build_terrain.gd', 'v6.5.207', '2026-06-25 11:53:53')
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_runs
+    Columns: run_id, start_time, end_time, outcome, step_reached, version, hostname, notes
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts
+  Table: runtime_failures
+    Columns: id, created_at, run_id, failure_type, symptom, root_cause, fix_applied, verified
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: godot_project/default.db
+----------------------------------------
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  (empty table)
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: godot_project/dependencies.db
+----------------------------------------
+  Table: discovered_scripts
+    Columns: script_path, discovered_from, discovered_at, hash
+
+Database: godot_project/parachute_mutations.db
+----------------------------------------
+  Table: autohealactions
+    Columns: id, run_id, iteration, file_path, tool_used, success, raw_output, timestamp, line_num
+  Table: error_log
+    Columns: id, file_path, line_num, error_type, message, captured_at, fixed
+    Sample rows:
+  Columns: id, file_path, line_num, error_type, message, captured_at, fixed
+  Row: (1, 'godot_project/scripts/DatabaseGuard.gd', 17, 'misplaced_extends', 'SCRIPT ERROR: Parse Error: Unexpected "extends" in class body.', '2026-06-26 01:37:52', 1)
+  Row: (2, 'godot_project/scripts/ResourceThrottle.gd', 5, 'syntax_error', "ERROR: Failed to instantiate an autoload, script 'res://scripts/DatabaseGuard.gd' does not inherit from 'Node'.", '2026-06-26 01:37:52', 1)
+  Row: (3, 'godot_project/scripts/ResourceThrottle.gd', 5, 'misplaced_extends', 'SCRIPT ERROR: Parse Error: Unexpected "extends" in class body.', '2026-06-26 01:37:52', 1)
+  Table: fix_strategies
+    Columns: id, error_type, description, pattern, replacement, validation_tool, priority, enabled, created_at
+  Table: gd_patch_registry
+    Columns: id, file_path, line_num, patch_type, description, applied_at
+  Table: pipelineruns
+    Columns: run_id, started_at, ended_at, status, total_processed, total_fixes
+  Table: sqlite_sequence
+    Columns: name, seq
+  Table: verificationresults
+    Columns: id, run_id, component, passed, verified_at
+
+Database: godot_project/recovery_engine.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, timestamp, action, file, status, details
+  Table: component_health
+    Columns: id, timestamp, component, health_data
+  Table: dependencies
+    Columns: name, version, installed, last_check
+  Table: dependency_graph
+    Columns: id, child_file, base_class, base_file, resolved, timestamp
+  Table: error_log
+    Columns: id, file_path, line_num, error_text, offending_line, hash, first_seen, last_seen, occurrences, fixed, strategy_id, run_id, error_class
+    Sample rows:
+  Columns: id, file_path, line_num, error_text, offending_line, hash, first_seen, last_seen, occurrences, fixed, strategy_id, run_id, error_class
+  Row: (1, 'scripts/GameIntegrity.gd', 55, "Unexpected token Token('STATIC', 'static') at line 55, column 2.", '\tstatic func save_flight_screenshot():', '142b21417f05f754ab50384c0fc6e614', '2026-06-26 19:30:19', '2026-06-26 21:34:31', 14, 0, None, None, None)
+  Row: (2, 'scripts/GameIntegrity_2606150714.gd', 31, "Unexpected token Token('STATIC', 'static') at line 31, column 2.", '\tstatic func save_flight_screenshot():', '6c8935708f6675b20ad5e4fd49871af1', '2026-06-26 19:30:20', '2026-06-26 21:34:31', 14, 0, None, None, None)
+  Row: (3, 'scripts/InputManager.gd', 71, "Unexpected token Token('STATIC', 'static') at line 71, column 2.", '\tstatic func save_flight_screenshot():', 'd8a3b38b3277b85f69b32be2663b2719', '2026-06-26 19:30:20', '2026-06-26 21:34:32', 14, 0, None, None, None)
+  Table: errors
+    Columns: id, file_path, line_num, error_text, offending_line, hash, fixed
+    Sample rows:
+  (empty table)
+  Table: fix_log
+    Columns: id, file_path, line_num, before_text, after_text, timestamp, details
+  Table: fix_strategies
+    Columns: id, pattern, replacement, description, is_regex, priority, last_applied, success_count, fail_count, last_used
+  Table: runtime_logs
+    Columns: id, log_line, source_file, source_line, code, timestamp
+  Table: tool_registry
+    Columns: id, name, path, version, status, last_checked, install_command, error, retries
+
+Database: godot_project/scripts/parachute_mutations.db
+----------------------------------------
+  Table: replay_api_tests
+    Columns: id, test_name, timestamp, passed, expected, actual, citation
+  Table: sqlite_sequence
+    Columns: name, seq
+  Table: tool_audit
+    Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+    Sample rows:
+  Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+  Row: (1, 1782609728454610726, 'TrackImporter.gd', 'gdparse', 0, '', '', 458)
+  Row: (2, 1782609728921886003, 'FlightTrack.gd', 'gdparse', 0, '', '', 466)
+  Row: (3, 1782609729368135844, 'CanopyReplay.gd', 'gdparse', 0, '', '', 445)
+
+Database: godot_project/scripts.broken_0005/parachute_mutations.db
+----------------------------------------
+  (no tables found)
+
+Database: godot_project/scripts_backup_20260629_075234/parachute_mutations.db
+----------------------------------------
+  Table: replay_api_tests
+    Columns: id, test_name, timestamp, passed, expected, actual, citation
+  Table: sqlite_sequence
+    Columns: name, seq
+  Table: tool_audit
+    Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+    Sample rows:
+  Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+  Row: (1, 1782609728454610726, 'TrackImporter.gd', 'gdparse', 0, '', '', 458)
+  Row: (2, 1782609728921886003, 'FlightTrack.gd', 'gdparse', 0, '', '', 466)
+  Row: (3, 1782609729368135844, 'CanopyReplay.gd', 'gdparse', 0, '', '', 445)
+
+Database: parac1ute_mutations.db
+----------------------------------------
+  Table: auto_heal_actions
+    Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, fix_applied, success
+  Table: error_fingerprints
+    Columns: id, error_class, pattern, description, created_at
+    Sample rows:
+  (empty table)
+  Table: known_repairs
+    Columns: id, error_class, strategy_name, pattern_old, pattern_new, description, created_at
+    Sample rows:
+  Columns: id, error_class, strategy_name, pattern_old, pattern_new, description, created_at
+  Row: (1, 'UNEXPECTED_TOKEN', 'fix_all_unbalanced_braces', '', '', 'Uncomment/insert all missing closing braces globally', 1782641358000000000)
+  Row: (2, 'UNEXPECTED_TOKEN', 'fix_not_var', '\\bnot\\b\\s*', '', "Remove stray 'not' token", 1782641358000000000)
+  Row: (3, 'UNEXPECTED_TOKEN', 'fix_commented_closing_brace', '^(\\s*)#\\s*\\}\\s*$', '\\1}', 'Uncomment single commented brace (legacy)', 1782641358000000000)
+  Table: parse_error_log
+    Columns: id, timestamp, file_path, error_class, error_line, error_col, raw_stderr, strategy_tried, resolved
+    Sample rows:
+  Columns: id, timestamp, file_path, error_class, error_line, error_col, raw_stderr, strategy_tried, resolved
+  Row: (1, 1782641367135074821, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd', 'UNEXPECTED_TOKEN', 149, 0, "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd:\n\n var controller_input_map = {\n ^\n\nUnexpected token Token('VAR', 'var') at line 149, column 2.\nExpected one of: \n\t* GET\n\t* SET\nPrevious tokens: [Token('_NL', '\\n\\n ')]\n\n", '', 0)
+  Row: (2, 1782641367532849477, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd', 'UNEXPECTED_TOKEN', 411, 0, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:\n\nvar fbx_path = "res://assets/characters/para\n    ^\n\nUnexpected token Token(\'TYPE_HINT\', \'fbx_path\') at line 411, column 5.\nExpected one of: \n\t* COLON\n\t* EQUAL\n\t* RPAR\n\t* COMMA\nPrevious tokens: [Token(\'NAME\', \'var\')]\n\n', '', 0)
+  Row: (3, 1782641368823418320, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd', 'UNEXPECTED_TOKEN', 460, 0, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd:\n\nvar fbx_path = "res://assets/characters/para\n    ^\n\nUnexpected token Token(\'TYPE_HINT\', \'fbx_path\') at line 460, column 5.\nExpected one of: \n\t* COLON\n\t* RPAR\n\t* EQUAL\n\t* COMMA\nPrevious tokens: [Token(\'NAME\', \'var\')]\n\n', '', 0)
+  Table: repair_attempts
+    Columns: id, rule_id, file_path, error_class, success, timestamp
+    Sample rows:
+  (empty table)
+  Table: repair_rules
+    Columns: id, error_class, error_pattern, fix_type, pattern_old, pattern_new, description, wins, trials, last_used, created_at
+    Sample rows:
+  Columns: id, error_class, error_pattern, fix_type, pattern_old, pattern_new, description, wins, trials, last_used, created_at
+  Row: (1, 'UNEXPECTED_TOKEN', 'Expected one of:.*GET.*SET', 'uncomment', '^(\\s*)#\\s*\\)\\s*$', '\\1)', 'Uncomment a commented closing parenthesis', 0, 0, 0, 1782642583)
+  Row: (2, 'UNEXPECTED_TOKEN', 'Expected one of:.*GET.*SET', 'uncomment', '^(\\s*)#\\s*\\]\\s*$', '\\1]', 'Uncomment a commented closing bracket', 0, 0, 0, 1782642583)
+  Row: (3, 'UNEXPECTED_TOKEN', 'Expected one of:.*IN', 'uncomment', '^(\\s*)#\\s*\\}\\s*$', '\\1}', 'Uncomment a commented closing brace', 0, 0, 0, 1782642583)
+  Table: sqlite_sequence
+    Columns: name, seq
+  Table: strategy_rewards
+    Columns: id, error_class, strategy_name, wins, total_trials, last_updated
+  Table: tool_audit
+    Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+    Sample rows:
+  (empty table)
+
+Database: parachute_mutations.db
+----------------------------------------
+  Table: applied_fixes
+    Columns: id, fix_id, file_path, fix_name, before_sha256, after_sha256, applied_at, run_id, status, error_pattern
+  Table: asset_validation
+    Columns: id, created_at, asset_path, file_exists, run_id
+  Table: auto_heal_actions
+    Columns: id, timestamp, tool, action, file_path, line_number, before_line, after_line, success, error_message, iteration, action_name, status, old_sha256, new_sha256, error_msg, exit_code, stdout, stderr, fix_applied
+  Table: autohealactions
+    Columns: id, run_id, iteration, file_path, tool_used, success, timestamp, raw_output
+  Table: error_fingerprints
+    Columns: id, error_class, pattern, description, created_at
+    Sample rows:
+  Columns: id, error_class, pattern, description, created_at
+  Row: (1, 'UNDECLARED_VAR', 'Identifier .* is not declared', 'Variable used before declaration', 1782582236000000000)
+  Row: (2, 'MISSING_CLASS_BODY', 'Expected end of file after .* class', 'Empty class body', 1782582236000000000)
+  Row: (3, 'UNRESOLVABLE_BASE', 'Could not resolve base class', 'Invalid extends', 1782582236000000000)
+  Table: error_patterns
+    Columns: id, pattern, replacement, description, priority, file_filter, enabled, created_ts
+    Sample rows:
+  Columns: id, pattern, replacement, description, priority, file_filter, enabled, created_ts
+  Row: (1, '(\\w+\\s*[\\(\\)\\.\\[\\]]*)\\s*=\\s*([A-Z_][A-Z_0-9]*|[0-9]+|"[^"]*")', '\\1 == \\2', 'Assignment = used where == required in condition', 1, '*.gd', 1, '2026-06-25T12:42:28.801707')
+  Row: (2, '(\\w+\\.keycode)\\s*=\\s*([A-Z_]+)', '\\1 == \\2', '.keycode = KEY should be .keycode == KEY', 2, '*.gd', 1, '2026-06-25T12:42:28.801980')
+  Row: (3, '(\\w+\\.load\\s*\\([^)]*\\))\\s*=\\s*([A-Z_]+)', '\\1 == \\2', 'Config.load(...) = value should be ==', 3, '*.gd', 1, '2026-06-25T12:42:28.802035')
+  Table: file_splits
+    Columns: id, original_file, split_file, split_index, line_start, line_end, created_ts
+    Sample rows:
+  Columns: id, original_file, split_file, split_index, line_start, line_end, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100.gd', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd', 1, 1, 201, '2026-06-25T11:56:43.535602')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100.gd', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd', 2, 202, 2003, '2026-06-25T11:56:43.585708')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100.gd', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_003.gd', 3, 2004, 2234, '2026-06-25T11:56:43.618466')
+  Table: files_to_fix
+    Columns: id, file_path, line_number, error_text, error_pattern_id, before_content, after_content, status, attempt_count, max_attempts, last_attempt, fixed_ts
+    Sample rows:
+  Columns: id, file_path, line_number, error_text, error_pattern_id, before_content, after_content, status, attempt_count, max_attempts, last_attempt, fixed_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 5, 'Assignment = used where == required in condition', 1, 'var backup_dir: String = "user://backups/"', '\\1 == \\2', 'fixed', 0, 3, None, '2026-06-25T12:42:28.942577')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 20, 'Assignment = used where == required in condition', 1, '\tvar sqlite_ok: bool = ClassDB.class_exists("SQLite")', '\\1 == \\2', 'fixed', 0, 3, None, '2026-06-25T12:44:50.927077')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 24, 'Assignment = used where == required in condition', 1, '\t\t\tvar event = InputEventKey.new()', '\\1 == \\2', 'fixed', 0, 3, None, '2026-06-25T12:44:51.032272')
+  Table: game_state_log
+    Columns: id, run_id, timestamp, game_state, altitude, is_deployed, error
+  Table: gd_patch_registry
+    Columns: id, file, content_hash_before, content_hash_after, applied_at
+  Table: issues
+    Columns: id, created_at, symptom, root_cause, fix_applied, verified
+  Table: known_repairs
+    Columns: id, error_class, strategy_name, pattern_old, pattern_new, description, created_at
+    Sample rows:
+  Columns: id, error_class, strategy_name, pattern_old, pattern_new, description, created_at
+  Row: (1, 'INVALID_INDENT', 'rebuild_indentation', '', '', 'Rebuild indentation from block structure', 1782595787000000000)
+  Row: (2, 'UNDECLARED_VAR', 'prepend_var_declaration', '', '', 'Insert var declaration at top', 1782595787000000000)
+  Row: (3, 'MISSING_CLASS_BODY', 'insert_pass_body', '', '', 'Insert pass into empty class', 1782595787000000000)
+  Table: omissions
+    Columns: id, created_at, omission_id, file, symptom, root_cause, fix_applied, fix_status, verified
+  Table: parse_checks
+    Columns: id, file_path, parser, return_code, output, created_ts
+  Table: parse_error_log
+    Columns: id, timestamp, file_path, error_class, error_line, error_col, raw_stderr, strategy_tried, resolved
+    Sample rows:
+  Columns: id, timestamp, file_path, error_class, error_line, error_col, raw_stderr, strategy_tried, resolved
+  Row: (1, 1782582237773358759, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'UNEXPECTED_TOKEN', 0, 0, "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd:\n\n\t\tif not InputMap.has_action(action)::\n                                                   ^\n\nUnexpected token Token('COLON', ':') at line 24, column 38.\nExpected one of: \n\t* BREAK\n\t* BREAKPOINT\n\t* LONG_RSTRING\n\t* LBRACE\n\t* CONTINUE\n\t* BANG\n\t* WHILE\n\t* BIN\n\t* AMPERSAND\n\t* PERCENT\n\t* CIRCUMFLEX\n\t* MATCH\n\t* TILDE\n\t* DOLLAR\n\t* GET\n\t* CONST\n\t* IF\n\t* _NL\n\t* RETURN\n\t* PASS\n\t* HEX\n\t* LONG_STRING\n\t* NOT\n\t* REGULAR_RSTRING\n\t* VAR\n\t* NAME\n\t* MINUS\n\t* LSQB\n\t* FOR\n\t* SET\n\t* PLUS\n\t* NUMBER\n\t* FUNC\n\t* AT\n\t* REGULAR_STRING\n\t* LPAR\n\t* AWAIT\nPrevious tokens: [Token('COLON', ':')]\n\n", '', 1)
+  Row: (2, 1782582238610709081, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'UNEXPECTED_TOKEN', 0, 0, "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd:\n\n\t\tif not InputMap.has_action(action)::\n                                                   ^\n\nUnexpected token Token('COLON', ':') at line 24, column 38.\nExpected one of: \n\t* PASS\n\t* LONG_STRING\n\t* IF\n\t* VAR\n\t* CONTINUE\n\t* LSQB\n\t* _NL\n\t* LPAR\n\t* HEX\n\t* PERCENT\n\t* NAME\n\t* BREAK\n\t* REGULAR_RSTRING\n\t* PLUS\n\t* BREAKPOINT\n\t* BANG\n\t* MATCH\n\t* SET\n\t* AT\n\t* DOLLAR\n\t* WHILE\n\t* AWAIT\n\t* REGULAR_STRING\n\t* CONST\n\t* NUMBER\n\t* LONG_RSTRING\n\t* AMPERSAND\n\t* BIN\n\t* NOT\n\t* FOR\n\t* MINUS\n\t* LBRACE\n\t* FUNC\n\t* GET\n\t* CIRCUMFLEX\n\t* RETURN\n\t* TILDE\nPrevious tokens: [Token('COLON', ':')]\n\n", '', 1)
+  Row: (3, 1782582239449306317, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'UNEXPECTED_TOKEN', 0, 0, "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd:\n\n\t\tif not InputMap.has_action(action)::\n                                                   ^\n\nUnexpected token Token('COLON', ':') at line 24, column 38.\nExpected one of: \n\t* CIRCUMFLEX\n\t* FUNC\n\t* RETURN\n\t* DOLLAR\n\t* REGULAR_RSTRING\n\t* IF\n\t* NUMBER\n\t* LONG_RSTRING\n\t* GET\n\t* AMPERSAND\n\t* VAR\n\t* WHILE\n\t* LONG_STRING\n\t* BREAK\n\t* LBRACE\n\t* NAME\n\t* TILDE\n\t* LPAR\n\t* AWAIT\n\t* PLUS\n\t* SET\n\t* NOT\n\t* MINUS\n\t* REGULAR_STRING\n\t* _NL\n\t* CONTINUE\n\t* PASS\n\t* BREAKPOINT\n\t* AT\n\t* BANG\n\t* MATCH\n\t* HEX\n\t* LSQB\n\t* CONST\n\t* PERCENT\n\t* FOR\n\t* BIN\nPrevious tokens: [Token('COLON', ':')]\n\n", '', 1)
+  Table: parse_errors
+    Columns: id, created_at, script, error_text, fix_script, fix_result
+    Sample rows:
+  Columns: id, created_at, script, error_text, fix_script, fix_result
+  Row: (1, '2026-06-24 20:40:51', 'test_runner.gd', 'gdformat reformatted file', 'gdformat', 'applied')
+  Table: pipeline_metadata
+    Columns: key, value
+  Table: pipeline_runs
+    Columns: id, run_id, start_time, end_time, status, iteration_count, errors_found, errors_fixed, project_root, total_files, files_fixed, files_failed, outcome
+  Table: pipelineruns
+    Columns: run_id, started_at, ended_at, status, total_processed, total_fixes
+  Table: repair_attempts
+    Columns: id, rule_id, file_path, error_class, success, timestamp
+    Sample rows:
+  Columns: id, rule_id, file_path, error_class, success, timestamp
+  Row: (1, 6, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd', 'UNEXPECTED_TOKEN', 0, 1782656995)
+  Row: (2, 13, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd', 'UNEXPECTED_TOKEN', 0, 1782678766)
+  Table: repair_evidence
+    Columns: id, repair_attempt_id, stdout, stderr, exit_code, created_at
+    Sample rows:
+  (empty table)
+  Table: repair_metrics
+    Columns: repair_rule_id, attempts, successes, failures, success_rate
+    Sample rows:
+  (empty table)
+  Table: repair_rules
+    Columns: id, error_class, error_pattern, fix_type, pattern_old, pattern_new, description, wins, trials, last_used, created_at
+    Sample rows:
+  Columns: id, error_class, error_pattern, fix_type, pattern_old, pattern_new, description, wins, trials, last_used, created_at
+  Row: (1, 'UNEXPECTED_TOKEN', 'Expected one of:.*GET.*SET', 'uncomment', '^(\\s*)#\\s*\\)\\s*$', '\\1)', 'Uncomment a closing parenthesis on a dedicated comment line', 0, 0, 0, 1782652169)
+  Row: (2, 'UNEXPECTED_TOKEN', 'Expected one of:.*GET.*SET', 'uncomment', '^(\\s*)#\\s*\\]\\s*$', '\\1]', 'Uncomment a closing bracket on a dedicated comment line', 0, 0, 0, 1782652169)
+  Row: (3, 'UNEXPECTED_TOKEN', 'Expected one of:.*IN', 'uncomment', '^(\\s*)#\\s*\\}\\s*$', '\\1}', 'Uncomment a closing brace on a dedicated comment line', 0, 0, 0, 1782652169)
+  Table: replay_api_tests
+    Columns: id, test_name, timestamp, passed, expected, actual, citation
+  Table: resource_contention_log
+    Columns: id, session_id, godot_pid, ts, vm_rss_kb, vol_cs, nonvol_cs, created_ts, vol_ctxt_sw, nonvol_ctxt_sw, cpu_pct, io_wait_pct, sched_policy
+  Table: runtime_failures
+    Columns: id, created_at, run_id, failure_type, symptom, root_cause, fix_applied, verified
+  Table: schema_migrations
+    Columns: version, filename, applied_at, checksum
+  Table: screenshots
+    Columns: id, created_at, filename, path
+  Table: source_mutations
+    Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+    Sample rows:
+  Columns: id, file_path, mutation_name, before_sha256, after_sha256, success, created_ts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', '934cf3754af545e48772862a678f4d017d5541e83a20da642357a36afaf2e6ad', 1, '2026-06-24 20:40:22')
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', '667e7802670cc953ff1ddbf2ba4a29551e6dff227219d1f5c13eb2f7f3459a11', 1, '2026-06-24 20:40:23')
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 'f5a381930f203822f301ad85c0b9dfb9b0c823f376ec71f7425cbfd9da6f980f', 1, '2026-06-24 20:40:24')
+  Table: source_snapshots
+    Columns: id, file_path, sha256, content, created_ts
+  Table: sqlite_sequence
+    Columns: name, seq
+  Table: strategy_rewards
+    Columns: id, error_class, strategy_name, wins, total_trials, last_updated
+  Table: syntax_errors
+    Columns: id, file_path, line_number, error_pattern, fix_applied, fixed_ts, error_text, code_line, context
+    Sample rows:
+  (empty table)
+  Table: syntax_fixes
+    Columns: id, file_path, line_number, pattern, fix_applied, fixed_ts
+  Table: throttle_log
+    Columns: id, operation, attempt_count, last_attempt, backoff_seconds, success_count, failure_count, locked
+  Table: tool_audit
+    Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+    Sample rows:
+  Columns: id, timestamp, file_path, tool, exit_code, stdout, stderr, duration_ms
+  Row: (1, 1782678720073567790, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/AirplaneController.gd', 'gdparse', 0, '', '', 0)
+  Row: (2, 1782678720711340151, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/AirplaneController.gd', 'gdformat', 0, '0 files reformatted, 1 file left unchanged.', '', 0)
+  Row: (3, 1782678721549176539, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/AirplaneController.gd', 'gdlint', 0, 'Success: no problems found', '', 0)
+  Table: verbatim_logs
+    Columns: id, run_id, command, output, exit_code, created_ts
+  Table: verificationresults
+    Columns: id, run_id, component, passed, verified_at
+
+Database: pipeline_audit.db
+----------------------------------------
+  Table: actions
+    Columns: id, file_id, action, timestamp, success, output, iteration
+  Table: files
+    Columns: id, path, status, last_checked, heal_attempts
+    Sample rows:
+  Columns: id, path, status, last_checked, heal_attempts
+  Row: (1, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/build_terrain_0123.gd', 'valid', '2026-06-27T15:30:51.909428+00:00', 0)
+  Row: (2, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/StructuredLogger.gd', 'valid', '2026-06-27T15:30:52.351651+00:00', 0)
+  Row: (3, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/GameIntegrity_0002.gd', 'failed', '2026-06-27T15:14:47.114146', 0)
+  Table: sqlite_sequence
+    Columns: name, seq
+
+Database: pipeline_forensics.db
+----------------------------------------
+  Table: save_png_hits
+    Columns: id, file_path, line_no, line_text, created_ts
+  Table: snapshots
+    Columns: id, file_path, sha256, line_count, save_png_count, created_ts
+  Table: strip_tests
+    Columns: id, before_sha, after_sha, before_lines, after_lines, removed_lines, created_ts
+

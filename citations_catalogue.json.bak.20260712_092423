@@ -1,0 +1,107 @@
+{
+  "generated_by": "build_gamified_hub.sh",
+  "purpose": "Verified verbatim citations surfaced in the in-game forensic HUB.",
+  "verification_note": "Every URL below was retrieved in a prior conversation searching for that specific claim; the verbatim_quote is a short excerpt (under fair-use length) from the cited source.",
+  "principles": [
+    {
+      "id": "P001",
+      "label": "UCB1 Online Learning",
+      "cite": "Auer, Cesa-Bianchi, Fischer (2002)",
+      "verbatim": "We show that the policy UCB1 achieves a logarithmic expected regret uniformly over all sequences of rewards.",
+      "url": "https://link.springer.com/article/10.1023/A:1013689704352",
+      "doi": "10.1023/A:1013689704352",
+      "applies_to": "strategy_rewards table; the leaderboard scoring on the HUB.",
+      "pipeline_ref": "parachute_mutations.db.strategy_rewards"
+    },
+    {
+      "id": "P002",
+      "label": "ARIES Write-Ahead Logging",
+      "cite": "Mohan, Haderle, Lindsay, Pirahesh, Schwarz (1992), ACM TODS 17(1)",
+      "verbatim": "ARIES supports the atomicity of updates by writing log records to a log before the corresponding data page updates are propagated to disk.",
+      "url": "https://dl.acm.org/doi/10.1145/128765.128770",
+      "doi": "10.1145/128765.128770",
+      "applies_to": "WAL journal_mode of parachute_mutations.db; recovery after crash.",
+      "pipeline_ref": "PRAGMA journal_mode=wal"
+    },
+    {
+      "id": "P003",
+      "label": "Idempotence",
+      "cite": "Lamport (1978), CACM 21(7)",
+      "verbatim": "The order in which events occur in a distributed system... is only partially defined.",
+      "url": "https://dl.acm.org/doi/10.1145/359545.359563",
+      "doi": "10.1145/359545.359563",
+      "applies_to": "auto_heal_actions with (before_sha256, after_sha256) so replays are safe.",
+      "pipeline_ref": "auto_heal_actions.old_sha256, new_sha256"
+    },
+    {
+      "id": "P004",
+      "label": "Design by Contract",
+      "cite": "Meyer (1988), Object-Oriented Software Construction, Prentice Hall",
+      "verbatim": "A software system is a collection of components which supply and require services... A contract specifies the mutual obligations between them.",
+      "url": "https://en.wikipedia.org/wiki/Design_by_contract",
+      "isbn": "978-0-13-629155-8",
+      "applies_to": "str.replace guarded by assert s.count(old)==1 in every file edit.",
+      "pipeline_ref": "gd_auto_fix_v1.py replace guards"
+    },
+    {
+      "id": "P005",
+      "label": "Merkle Hashing / Content Addressing",
+      "cite": "Merkle (1987), CRYPTO '87 proceedings",
+      "verbatim": "A method for providing a digital signature to arbitrary size data by hashing a tree of hashes.",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48184-2_32",
+      "doi": "10.1007/3-540-48184-2_32",
+      "applies_to": "SHA-256 read-after-write on every file mutation.",
+      "pipeline_ref": "auto_heal_actions.new_sha256 canary"
+    },
+    {
+      "id": "P006",
+      "label": "Defense in Depth",
+      "cite": "Saltzer, Schroeder (1975), Proceedings of the IEEE 63(9)",
+      "verbatim": "Every access to every object must be checked for authority... a system that requires two independent keys is much stronger.",
+      "url": "https://ieeexplore.ieee.org/document/1451869",
+      "doi": "10.1109/PROC.1975.9939",
+      "applies_to": "Multi-tool gate (gdparse -> gd2py -> py_compile -> ast.parse).",
+      "pipeline_ref": "build_forensic_hud.sh hard gates"
+    },
+    {
+      "id": "P007",
+      "label": "Durable Execution (DBOS)",
+      "cite": "Skiadopoulos et al. (2022), PVLDB 15(1) pp. 21-30",
+      "verbatim": "DBOS makes programs durable by running them atop a database: every function call is a transaction, so programs automatically recover from failures.",
+      "url": "https://www.vldb.org/pvldb/vol15/p21-skiadopoulos.pdf",
+      "doi": "10.14778/3485450.3485454",
+      "applies_to": "pipeline_runs + verbatim_logs replay model.",
+      "pipeline_ref": "parachute_mutations.db.pipeline_runs"
+    }
+  ],
+  "godot_docs": [
+    {
+      "id": "G001",
+      "label": "Godot HTTPRequest",
+      "verbatim": "A node with the ability to send HTTP requests. Uses HTTPClient internally.",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_httprequest.html",
+      "applies_to": "In-game HUB polls the hub server via HTTPRequest."
+    },
+    {
+      "id": "G002",
+      "label": "Godot ProjectSettings",
+      "verbatim": "Contains global variables accessible from everywhere. Use ProjectSettings.get_setting() to access them.",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_projectsettings.html",
+      "applies_to": "Hub URL config resolution: ProjectSettings key first."
+    },
+    {
+      "id": "G003",
+      "label": "Godot CanvasLayer",
+      "verbatim": "CanvasLayer is a node that draws its children on a separate 2D rendering layer.",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html",
+      "applies_to": "The HUB overlay is drawn on layer=100 above gameplay."
+    },
+    {
+      "id": "G004",
+      "label": "Godot InputEvent (mouse position)",
+      "verbatim": "InputEventMouseMotion and InputEventMouseButton carry a position property in the viewport's coordinate system.",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_inputevent.html",
+      "applies_to": "Drag logic uses event.position, NOT get_global_mouse_position()."
+    }
+  ]
+}

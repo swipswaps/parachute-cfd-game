@@ -1,0 +1,21 @@
+  2045		print("[VERBATIM] 3D screenshot saved: ", path)
+  2046	
+  2047	
+  2048	func _save_flight_screenshot() -> void:
+  2049		var viewport = get_viewport()
+  2050		if not viewport:
+  2051			return
+  2052		var img = viewport.get_texture().get_image()
+  2053		if not img:
+  2054			return
+  2055		var ts = Time.get_datetime_string_from_system().replace(":", "").replace("-", "")
+  2056		var path = "user://screenshots/flight_" + ts + ".png"
+  2057			if not _screenshot_library.has(path):
+  2058				_screenshot_library.append(path)
+  2059				_screenshot_library.sort()
+  2060	
+  2061	
+  2062	# ------------------------------------------------------------------
+  2063	# Unhandled input – processes Input Map actions (R091, R060)
+  2064	# ------------------------------------------------------------------
+  2065	# ------------------------------------------------------------------

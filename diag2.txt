@@ -1,0 +1,66 @@
+=== 1. forensic_hud.gd ON DISK: selectable + toggle both present? ===
+e8e94c1461ad35582696d96321323f1a099a3cc71376d50e2e12909d5a45aa4d  godot_project/scripts/forensic_hud.gd
+-- toggle keys (want QUOTELEFT + T) --
+117:		if event.keycode == KEY_F3 or event.keycode == KEY_F9 or event.keycode == KEY_QUOTELEFT or event.keycode == KEY_T:
+grep exit: 0 (1 = toggle keys MISSING -> selectable fix reverted them)
+-- _mklabel return type (want RichTextLabel) --
+83:func _mklabel(txt: String, color := Color(0.9, 0.95, 0.9, 1.0)) -> RichTextLabel:
+-- the built-message string (reveals which version is on disk) --
+198:	print("[FHUD] built, hidden at start. Press F3 or F9 to show. Panel pos=", _panel.position)
+-- member var types --
+36:var _title_label: RichTextLabel
+38:var _status_label: RichTextLabel
+
+=== 2. Was there a PARSE/RUNTIME error loading either script? ===
+   (a broken script silently disables its _input -> no toggle)
+   run the real check:
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+forensic_hud check EXIT: 0
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Compile Error: Identifier not found: SqliteDb
+          at: GDScript::reload (res://scripts/build_terrain.gd:2587)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+build_terrain check EXIT: 1
+
+=== 3. _sync_pip_canopy body: what nodes does it touch? (canopy regression) ===
+func _sync_pip_canopy() -> void:
+	# Mirrors live canopy state into the PiP overlay each poll tick.
+	# Added because _setup_pip_overlay instantiates the pip canopy ONCE
+	# and nothing synced it afterward (H5, diag 2026-07-15).
+	if _pip_canopy_node == null or _canopy_instance == null:
+		return
+	if not is_instance_valid(_pip_canopy_node) or not is_instance_valid(_canopy_instance):
+		return
+	_pip_canopy_node.visible = _canopy_instance.visible
+	_pip_canopy_node.rotation = _canopy_instance.rotation
+-- how _pip_canopy_node is created in _setup_pip_overlay --
+55:var _pip_canopy_node: Node3D
+1528:	_sync_pip_canopy()
+2153:	_pip_canopy_node = canopy_scene.instantiate()
+2154:	_pip_viewport.add_child(_pip_canopy_node)
+2155:	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+2647:func _sync_pip_canopy() -> void:
+2651:	if _pip_canopy_node == null or _canopy_instance == null:
+2653:	if not is_instance_valid(_pip_canopy_node) or not is_instance_valid(_canopy_instance):
+2655:	_pip_canopy_node.visible = _canopy_instance.visible
+2656:	_pip_canopy_node.rotation = _canopy_instance.rotation
+-- is _pip_canopy_node a MESH, or the canopy scene root, or a camera? --
+2153:	_pip_canopy_node = canopy_scene.instantiate()
+2651:	if _pip_canopy_node == null or _canopy_instance == null:
+
+=== 4. Which forensic_hud is the AUTOLOAD actually pointing at? ===
+31:ForensicHUD="*res://scripts/forensic_hud.gd"
+
+=== 5. backups available to revert to ===
+-rw-r--r--. 1 owner owner 13784 Jul 15 04:27 godot_project/scripts/backups/forensic_hud.gd.bak.20260715_043535
+-rw-r--r--. 1 owner owner 13724 Jul 15 03:42 godot_project/scripts/backups/forensic_hud.gd.bak.20260715_042717
+-rw-r--r--. 1 owner owner 13373 Jul 15 03:42 godot_project/scripts/backups/forensic_hud.gd.bak.20260715_034231
+-rw-r--r--. 1 owner owner 99280 Jul 14 16:02 godot_project/scripts/backups/build_terrain.gd.bak.20260715_042717
+
+=== VERDICT KEY ===
+toggle broke:  section 1 QUOTELEFT grep exit 1, OR section 2 forensic check != 0
+canopy broke:  section 3 shows _sync sets .rotation/.visible on the
+               canopy SCENE ROOT (shared resource) or a non-mesh node

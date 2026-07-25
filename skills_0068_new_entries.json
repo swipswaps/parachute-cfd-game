@@ -1,0 +1,48 @@
+{
+  "new_rules": {
+    "R140": {
+      "rule": "Print exact command before execution",
+      "problem": "Scripts omit the exact command line, making it impossible to reproduce failures or see what arguments were used.",
+      "fix": "Before any `subprocess.run()`, `os.system()`, or `bash -c`, print the full command string with a `[VERBATIM]` prefix.",
+      "detector": "python3 -c \"import sys, re; src=open(sys.argv[1]).read(); assert re.search(r'print\\([^\\n]*\\[VERBATIM\\][^\\n]*\\+\\s*cmd', src) or re.search(r'print\\([^\\n]*\\[VERBATIM\\][^\\n]*command', src), 'FAIL: no command print before subprocess'; print('PASS')\"",
+      "verification": "Run the detector on any patch script. It must print PASS.",
+      "citation": {
+        "source": "R060 (verbatim logging) extension",
+        "verbatim_quote": "Every critical step must print [VERBATIM] + exact command and output."
+      }
+    },
+    "R141": {
+      "rule": "Print full stdout/stderr of every command",
+      "problem": "Scripts capture output but only print a summary or nothing, hiding critical error details.",
+      "fix": "After each command, print `stdout` and `stderr` (including any timestamps from the command itself) with a `[VERBATIM]` prefix. Do not truncate, filter, or paraphrase.",
+      "detector": "python3 -c \"import sys, re; src=open(sys.argv[1]).read(); assert re.search(r'print\\([^\\n]*\\[VERBATIM\\][^\\n]*result\\.stdout', src) and re.search(r'print\\([^\\n]*\\[VERBATIM\\][^\\n]*result\\.stderr', src), 'FAIL: missing full stdout/stderr print'; print('PASS')\"",
+      "verification": "Run the detector – must print PASS.",
+      "citation": {
+        "source": "R060 extension",
+        "verbatim_quote": "Every critical step must print [VERBATIM] + exact output."
+      }
+    },
+    "R142": {
+      "rule": "Print file diff before/after write",
+      "problem": "Scripts claim to have patched a file but never show what changed, making silent corruption hard to detect.",
+      "fix": "Before writing any file, print a checksum or the first/last few lines. After writing, print a unified diff (using `difflib.unified_diff`) or the full new content, both with `[VERBATIM]`.",
+      "detector": "python3 -c \"import sys, re; src=open(sys.argv[1]).read(); assert 'difflib.unified_diff' in src or 'print(\\'[VERBATIM]\\' + new_content)' in src, 'FAIL: no diff or new content print'; print('PASS')\"",
+      "verification": "Run detector – PASS.",
+      "citation": {
+        "source": "R082 (read-back verification) extension",
+        "verbatim_quote": "Python patch scripts must read back the file after writing and re‑assert markers."
+      }
+    },
+    "R143": {
+      "rule": "Print read‑back verification content",
+      "problem": "Read‑back only checks presence of a marker, but does not show what was actually found, so a false positive (old marker) can go unnoticed.",
+      "fix": "After re‑opening a file, print the exact line(s) containing the marker (or the entire relevant block) with a `[VERBATIM]` prefix.",
+      "detector": "python3 -c \"import sys, re; src=open(sys.argv[1]).read(); assert re.search(r'print\\([^\\n]*\\[VERBATIM\\][^\\n]*read', src) or re.search(r'print\\([^\\n]*\\[VERBATIM\\][^\\n]*marker', src), 'FAIL: missing read-back content print'; print('PASS')\"",
+      "verification": "Run detector – PASS.",
+      "citation": {
+        "source": "R126 and R082",
+        "verbatim_quote": "Read‑back verification must check markers that are new and verify they are present on disk."
+      }
+    }
+  }
+}

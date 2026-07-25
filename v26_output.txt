@@ -1,0 +1,104 @@
+======================================================================
+STEP 1: Locate camera setup in backup
+======================================================================
+Found 4 camera-related lines in backup.
+
+--- Backup camera block (lines 19-43) ---
+  19: }
+  20: var _game_state: GameState = GameState.FREEFALL
+  21: # ------------------------------------------------------------------
+  22: # Core nodes
+  23: # ------------------------------------------------------------------
+  24: var _camera: Camera3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+  25: var _character: Node3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  26: var _hud_labels := []  # Array of Label nodes
+  27: var _hud_layer: CanvasLayer  # Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+  28: var _focus_label: Label  # Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
+  29: var _frame_count := 0
+  30: var _pip_viewport: SubViewport  # Ref: https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+  31: var _pip_camera: Camera3D
+  32: var _pip_canopy_node: Node3D
+  33: var _main_canopy_node: Node3D
+  34: var _wind_label: Label
+  35: # ------------------------------------------------------------------
+  36: # Flight physics
+  37: # Ref: https://docs.godotengine.org/en/stable/tutorials/physics/rigid_body.html
+  38: # ------------------------------------------------------------------
+  39: var _velocity_vec := Vector3.ZERO
+  40: var _forward_speed = 0.0
+  41: var _turn_input = 0.0
+  42: var _max_speed = 30.0
+  43: var _accel = 15.0
+
+Found camera function at line 1082: func _cycle_camera():
+
+--- Camera function (lines 1080-1111) ---
+1080: # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+1081: # ------------------------------------------------------------------
+1082: func _cycle_camera():
+1083: 	print("[VERBATIM] ENTER _cycle_camera gate=none")
+1084: 	if not _camera:
+1085: 		print("[VERBATIM] EXIT _cycle_camera early=no_camera")
+1086: 		return
+1087: 	_cam_angle_idx = (_cam_angle_idx + 1) % 4
+1088: 	match _cam_angle_idx:
+1089: 		0:
+1090: 			_camera.position = Vector3(0, 50, 150)   # far behind and above character
+1091: 			_camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
+1092: 			print("[VERBATIM] camera=BEHIND (0,2,3)")
+1093: 		1:
+1094: 			_camera.position = Vector3(6.0, 1.0, 0.0)
+1095: 			_camera.rotation = Vector3(0.0, deg_to_rad(-90.0), 0.0)
+1096: 			print("[VERBATIM] camera=SIDE (6,1,0)")
+1097: 		2:
+1098: 			_camera.position = Vector3(0.0, 1.8, 0.0)
+1099: 			_camera.rotation = Vector3(deg_to_rad(90.0), 0.0, 0.0)
+1100: 			print("[VERBATIM] camera=PILOT_UP (0,1.8,0) looking up")
+1101: 		3:
+1102: 			_camera.position = Vector3(0.0, 0.5, 1.5)
+1103: 			_camera.rotation = Vector3(deg_to_rad(-5.0), 0.0, 0.0)
+1104: 			print("[VERBATIM] camera=CHASE_CLOSE (0,0.5,1.5)")
+1105: 	print("[VERBATIM] EXIT _cycle_camera ok=true")
+1106: # ------------------------------------------------------------------
+1107: # HUD toggle (H key)
+1108: # Ref: https://docs.godotengine.org/en/stable/classes/class_canvasitem.html#class-canvasitem-property-visible
+1109: # ------------------------------------------------------------------
+1110: func _toggle_hud():
+1111: 	print("[VERBATIM] ENTER _toggle_hud gate=none")
+
+======================================================================
+STEP 2: Locate camera setup in current file
+======================================================================
+Found 4 camera-related lines in current file.
+
+--- Current camera block (lines 59-83) ---
+  59: 
+  60: 
+  61: # ------------------------------------------------------------------
+  62: # Core nodes
+  63: # ------------------------------------------------------------------
+  64: var _camera: Camera3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+  65: var _character: Node3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  66: var _hud_labels := []  # Array of Label nodes
+  67: var _hud_layer: CanvasLayer  # Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+  68: var _focus_label: Label  # Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
+  69: var _frame_count := 0
+  70: var _pip_viewport: SubViewport  # Ref: https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+  71: var _pip_camera: Camera3D
+  72: var _pip_canopy_node: Node3D
+  73: var _main_canopy_node: Node3D
+  74: var _wind_label: Label
+  75: 
+  76: 
+  77: # ------------------------------------------------------------------
+  78: # Flight physics
+  79: # Ref: https://docs.godotengine.org/en/stable/tutorials/physics/rigid_body.html
+  80: # ------------------------------------------------------------------
+  81: var _velocity_vec := Vector3.ZERO
+  82: var _forward_speed = 0.0
+  83: var _turn_input = 0.0
+
+======================================================================
+VERDICT
+======================================================================
+Both files have camera code; the issue may be elsewhere.

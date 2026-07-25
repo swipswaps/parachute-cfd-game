@@ -1,0 +1,9 @@
+## TELEMETRY AND OBSERVABILITY FOR VERIFICATION
+
+Definition: Every verification step that invokes a subprocess (e.g., running the game scanner, a linter, or a test suite) must emit continuous progress telemetry so the user can see what is happening, and must include a timeout or explicit termination mechanism to prevent indefinite hangs.
+
+Rationale: Without telemetry, a user cannot distinguish between a slow operation and a hang. This violates DIAGNOSTIC TRANSPARENCY and creates frustration. Additionally, subprocesses that launch interactive applications (like Godot) may run indefinitely; verification must either (a) stop after a short timeout or (b) detect that the application has started successfully and treat that as a pass.
+
+Implementation template (Python):
+
+When launching a subprocess for verification, use 

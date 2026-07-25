@@ -1,0 +1,100 @@
+[VERBATIM] [VERBATIM] Plane created at altitude 6000
+
+[DIAG] _ready: plane created, _plane_node=FlyingPlane:<CharacterBody3D#37077648986>
+
+[DEBUG] Plane position: (0.0, 6000.0, 0.0)
+
+[DEBUG] Camera position: (0.0, 6075.357, -243.6108)
+
+[DIAG] _ready: camera positioned
+
+[VERBATIM] Camera attached to root, following plane
+
+[VERBATIM] Drop zone created
+
+[VERBATIM] ENTER _load_faa_obstacles gate=none
+
+[VERBATIM] _load_faa_obstacles read_bytes=9568
+
+[VERBATIM] _load_faa_obstacles obstacle_count=41
+
+[VERBATIM] FAA obstacles loaded: 41
+
+[VERBATIM] EXIT _load_faa_obstacles ok=true placed=41
+
+[VERBATIM] HUD created
+
+[DIAG] _ready: HUD created, _hud_labels size=8
+
+[VERBATIM] Initial heading set to 0.0
+
+[VERBATIM] ENTER _setup_pip_overlay gate=none
+
+Loading resource: res://scripts/pip_draggable.gd
+
+[PIP] _ready: size=(320.0, 240.0) position=(10.0, 10.0)
+
+[VERBATIM] PiP canopy path=res://assets/canopy/parachute_sanitized.glb
+
+Loading resource: res://assets/canopy/parachute_sanitized.glb
+
+Loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn
+
+[VERBATIM] main canopy attached offset=(0,2.5,0) path=res://assets/canopy/parachute_sanitized.glb
+
+[VERBATIM] EXIT _setup_pip_overlay ok=true
+
+[VERBATIM] ENTER _init_achievements gate=none
+
+[VERBATIM] Unlocked achievements: ["first_jump", "malfunction_ace"]
+
+[VERBATIM] EXIT _init_achievements ok=true
+
+[VERBATIM] ENTER _init_mission gate=none
+
+[VERBATIM] Mission updated: Training
+
+[VERBATIM] EXIT _init_mission ok=true
+
+[VERBATIM] ENTER _init_leaderboard gate=none
+
+[VERBATIM] EXIT _init_leaderboard ok=true
+
+[VERBATIM] ENTER _init_controller gate=none
+
+[VERBATIM] EXIT _init_controller ok=true
+
+[VERBATIM] ENTER _init_sentry gate=none
+
+[VERBATIM] Sentry not configured
+
+[VERBATIM] EXIT _init_sentry ok=true
+
+Loading resource: res://assets/canopy/parachute_sanitized.glb
+
+Loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn
+
+[VERBATIM] Clean GLB loaded from: res://assets/canopy/parachute_sanitized.glb
+
+[VERBATIM] ENTER _randomize_malfunction gate=none
+
+[VERBATIM] Canopy visuals updated for GOOD
+
+[VERBATIM] EXIT _randomize_malfunction ok=true
+
+[VERBATIM] Initial malfunction: GOOD
+
+[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy
+
+[VERBATIM] Headless auto‐start triggered.
+
+[VERBATIM] ARM GATE: Left arm rotation = (1.570796, 1.570796, 0.0)
+
+[VERBATIM] ARM GATE: Right arm rotation = (1.570796, -1.570796, 0.0)
+
+[VERBATIM] ARM GATE: Arms are lowered
+
+[VERBATIM] ... EXIT _ready ok=true
+
+[DIAG] _ready: EXIT
+

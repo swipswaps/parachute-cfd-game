@@ -1,0 +1,140 @@
+## TOIL ELIMINATION
+
+*(named for the user's own working principle, found in this account's
+chat history: "If it can be typed, it MUST be scripted!" — first invoked
+2026-05-01 in a VS Code extension project, and again 2026-05-08 correcting
+an instruction to manually run `tail -f` instead of scripting the log
+capture, and again 2026-06-21 on this project's `WINDOW_TIMEOUT`
+diagnosis.)*
+
+Google's Site Reliability Engineering book names this exact failure mode
+under the term "toil": operational work that is manual and automatable,
+and therefore should not be done by hand.
+
+> "Toil is the kind of work that tends to be manual, repetitive,
+> automatable, tactical, devoid of enduring value, and that scales
+> linearly as a service grows." — SRE Book ch. 5, quoted at https://cloud.google.com/blog/products/management-tools/identifying-and-tracking-toil-using-sre-principles
+
+> "It is better to run a script than execute a set of commands manually."
+> — https://arunachalamalagappan.medium.com/the-sre-path-b324bbe2eb11
+
+Applied here: any sequence of commands typed to inspect, diagnose, or fix
+something is written as a script and run, not narrated as manual steps or
+handed to the user to type themselves — including diagnostic commands
+during an active failure, not just the eventual fix.
+
+    # WHAT: turn a manual diagnostic sequence into a script instead of
+    #       telling the user to "open a second terminal and run..."
+    # WHY: per the user's own documented principle and the SRE definition of
+    #      toil — manual + repeatable + automatable means it should be a script,
+    #      run and reported here, not typed by hand
+    import subprocess
+
+    def capture_background_progress(log_path: str, lines: int = 20) -> str:
+        """Replaces 'open a second terminal and tail -f' with a single
+        scripted capture of current progress, run and shown inline."""
+        result = subprocess.run(
+            ["tail", "-n", str(lines), log_path],
+            capture_output=True, text=True
+        )
+        return result.stdout or f"(log not yet written: {log_path})"
+
+### Gating for Complete Fixes
+
+To prevent iterative manual troubleshooting, the assistant must apply a **gate** before proposing any fix. The assistant must:
+
+1. **Identify all instances** of the error pattern in the file or database (e.g., `SELECT * FROM errors WHERE file_path LIKE ...`).
+2. **Combine all fixes** into a single script that handles every occurrence in one pass.
+3. **Include a dry‑run mode** that shows what would be changed.
+4. **Include a verification step** that runs the same checks as the error detection.
+5. **Present a single command** to the user – not a sequence of incremental commands.
+6. If the script fails, it must automatically restore from backup and report the failure with full diagnostic output (per **DIAGNOSTIC TRANSPARENCY**).
+
+#### Implementation Example (Gating Script)
+
+    # WHAT: gating diagnostic script for autoload quote errors
+    # WHY: finds all malformed entries and fixes them in one pass
+    import os, shutil, subprocess, sqlite3
+
+    PROJECT_GODOT = "godot_project/project.godot"
+    BACKUP = PROJECT_GODOT + ".backup"
+
+    def diagnose():
+        """Return list of lines in [autoload] section that are malformed."""
+        with open(PROJECT_GODOT, 'r') as f:
+            lines = f.readlines()
+        in_autoload = False
+        issues = []
+        for i, line in enumerate(lines):
+            if line.strip().startswith('[autoload]'):
+                in_autoload = True
+            elif in_autoload and line.strip().startswith('['):
+                break
+            if in_autoload and '=' in line and not line.strip().startswith('#'):
+                key, val = line.split('=', 1)
+                key = key.strip()
+                val = val.strip()
+                if not val or val == '.' or not (val.startswith('"') or val.startswith("'")):
+                    issues.append((i, line.strip()))
+        return issues
+
+    def fix(issues):
+        """Apply fixes and return diff."""
+        with open(PROJECT_GODOT, 'r') as f:
+            lines = f.readlines()
+        for i, _ in issues:
+            key, val = lines[i].split('=', 1)
+            key = key.strip()
+            val = val.strip()
+            if not val or val == '.':
+                lines[i] = ''  # remove line
+            else:
+                lines[i] = f'{key}="{val}"\n'
+        with open(PROJECT_GODOT, 'w') as f:
+            f.writelines(lines)
+        return lines
+
+    def verify():
+        result = subprocess.run(
+            ["godot", "--headless", "--quit", "--path", os.path.dirname(PROJECT_GODOT)],
+            capture_output=True, text=True, timeout=30
+        )
+        return result.returncode == 0 and "Error parsing" not in result.stderr
+
+    def main():
+        print("Gating diagnostic…")
+        issues = diagnose()
+        if not issues:
+            print("No issues found.")
+            return 0
+        shutil.copy2(PROJECT_GODOT, BACKUP)
+        print(f"Found {len(issues)} issue(s). Applying fixes…")
+        fix(issues)
+        if verify():
+            print("Verification passed. Updating database.")
+            conn = sqlite3.connect("syntax_errors.db")
+            conn.execute("INSERT OR IGNORE INTO repair_strategies (error_pattern, repair_type, repair_data) VALUES (?, ?, ?)",
+                         ("Error parsing project.godot", "file_edit", '{"script": "fix_autoload_quotes"}'))
+            conn.commit()
+            print("Done.")
+            return 0
+        else:
+            print("Verification failed. Restoring backup.")
+            shutil.copy2(BACKUP, PROJECT_GODOT)
+            return 1
+
+    if __name__ == "__main__":
+        exit(main())
+
+#### Why This Prevents Wasted Steps
+
+- **Single command**: The user runs one script, not multiple attempts.
+- **Full diagnosis**: The script finds all errors before fixing.
+- **Dry‑run optional**: We can add a `--dry-run` flag.
+- **Verification**: The script verifies after the fix.
+- **Self‑healing**: The database is updated automatically with a repair strategy.
+
+### References
+
+- Google Site Reliability Engineering book, Chapter 5 (Toil): https://cloud.google.com/blog/products/management-tools/identifying-and-tracking-toil-using-sre-principles
+- "It is better to run a script than execute a set of commands manually." — https://arunachalamalagappan.medium.com/the-sre-path-b324bbe2eb11

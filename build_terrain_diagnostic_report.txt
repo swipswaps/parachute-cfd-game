@@ -1,0 +1,359 @@
+==============================================================================
+READ-ONLY GDScript DIAGNOSTIC — build_terrain.gd
+Total lines: 2351
+==============================================================================
+
+[1] Function index: 76 defs total, 76 at top-level.
+  No duplicate top-level function names.
+
+[2] '# --- Injected missing function ---' markers: 3
+  These indicate a prior automated repair added functions; verify each
+  matches its call sites and isn't shadowed by an earlier definition.
+
+    PATH: build_terrain.gd
+    LINE 2267: injected marker for _setup_plane_node()
+        2264│ 
+        2265│ 
+        2266│ 
+    >>  2267│ # --- Injected missing function: _setup_plane_node ---
+        2268│ func _setup_plane_node():
+        2269│ 	if not _plane_node:
+        2270│ 		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+
+    PATH: build_terrain.gd
+    LINE 2278: injected marker for _log()
+        2275│ # Helper to find node with a specific method
+        2276│ 
+        2277│ 
+    >>  2278│ # --- Injected missing function: _log ---
+        2279│ func _log(msg: String):
+        2280│ 	print("[VERBATIM] " + msg)
+        2281│ 	if _notification_label:
+
+    PATH: build_terrain.gd
+    LINE 2294: injected marker for _find_node_with_method()
+        2291│ # ------------------------------------------------------------------
+        2292│ 
+        2293│ 
+    >>  2294│ # --- Injected missing function: _find_node_with_method ---
+        2295│ func _find_node_with_method(node, method_name):
+        2296│ 	if node.has_method(method_name):
+        2297│ 		return node
+
+
+[3] Top-level input/process handlers: 4
+
+  --- _unhandled_input() @ line 1618 (span 1618..1634) ---
+    Key/action checks (1):
+      line 1631: key/action = 'pause'   :: if event.is_action_pressed("pause"):
+
+  --- _input() @ line 1645 (span 1645..1677) ---
+    Key/action checks (11):
+      line 1652: key/action = 'InputEventKey'   :: if event is InputEventKey and event.pressed and not event.echo:
+      line 1654: key/action = 'Q'   :: if event.keycode == KEY_Q:
+      line 1656: key/action = 'E'   :: elif event.keycode == KEY_E:
+      line 1658: key/action = 'SPACE'   :: elif event.keycode == KEY_SPACE:
+      line 1660: key/action = 'C'   :: elif event.keycode == KEY_C:
+      line 1662: key/action = 'H'   :: elif event.keycode == KEY_H:
+      line 1664: key/action = 'X'   :: elif event.keycode == KEY_X:
+      line 1666: key/action = 'V'   :: elif event.keycode == KEY_V:
+      line 1668: key/action = 'F'   :: elif event.keycode == KEY_F:
+      line 1670: key/action = 'R'   :: elif event.keycode == KEY_R:
+      line 1674: key/action = 'pause'   :: if event.is_action_pressed("pause"):
+
+  --- _physics_process() @ line 1678 (span 1678..1775) ---
+    No key/action checks found inside _physics_process.
+    PATH: build_terrain.gd
+    LINE 1678: func _physics_process(delta):
+        1675│ 		toggle_pause()
+        1676│ 
+        1677│ 
+    >>  1678│ func _physics_process(delta):
+        1679│ 	if _game_state == GameState.IN_PLANE:
+        1680│ 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+        1681│ 		if _plane_node:
+
+  --- _process() @ line 1776 (span 1776..1815) ---
+    No key/action checks found inside _process.
+    PATH: build_terrain.gd
+    LINE 1776: func _process(delta):
+        1773│ # ------------------------------------------------------------------
+        1774│ # Process loop (pattern state, heading, bearing, screenshot, mission check)
+        1775│ # ------------------------------------------------------------------
+    >>  1776│ func _process(delta):
+        1777│ 	if _hud_labels.size() < 8: return
+        1778│ 	_poll_controls()
+        1779│ 	if _game_state == GameState.GAME_OVER:
+
+[4] All 'W'-key / forward-motion references in file:
+    PATH: build_terrain.gd
+    LINE 214: "W": false,
+         211│ 	"DOWN": false,
+         212│ 	"LEFT": false,
+         213│ 	"RIGHT": false,
+    >>   214│ 	"W": false,
+         215│ 	"S": false,
+         216│ 	"A": false,
+         217│ 	"D": false,
+
+    PATH: build_terrain.gd
+    LINE 1532: if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+        1529│ 	_process_controller_input()
+        1530│ 
+        1531│ 	var cam_move = Vector3.ZERO
+    >>  1532│ 	if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+        1533│ 		cam_move.z -= 1.0
+        1534│ 	if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+        1535│ 		cam_move.z += 1.0
+
+
+[5] _game_state transitions: 10
+    PATH: build_terrain.gd
+    LINE 784: -> GameState.OPENING_ANIM    :: _game_state = GameState.OPENING_ANIM
+         781│ 	_canopy_instance.visible = true
+         782│ 	_canopy_instance.scale = Vector3.ZERO
+         783│ 	_deployment_timer = DEPLOY_TIME
+    >>   784│ 	_game_state = GameState.OPENING_ANIM
+         785│ 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+         786│ 
+         787│ 	if not _replay_playing:
+
+    PATH: build_terrain.gd
+    LINE 989: -> GameState.LANDED    :: _game_state = GameState.LANDED
+         986│ 
+         987│ 	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
+         988│ 	call_deferred("_recreate_hud_if_needed")
+    >>   989│ 	_game_state = GameState.LANDED
+         990│ 	_capture_3d_screenshot()
+         991│ 
+         992│ 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+
+    PATH: build_terrain.gd
+    LINE 1028: -> GameState.LANDED    :: _game_state = GameState.LANDED
+        1025│ 		return
+        1026│ 	_flare_done = true
+        1027│ 	_safe_landing = true
+    >>  1028│ 	_game_state = GameState.LANDED
+        1029│ 	_capture_3d_screenshot()
+        1030│ 
+        1031│ 	print("[VERBATIM] FLARE executed – GOOD canopy landing")
+
+    PATH: build_terrain.gd
+    LINE 1345: -> GameState.GAME_OVER    :: _game_state = GameState.GAME_OVER
+        1342│ 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+        1343│ 			ScreenshotLibrary.save_flight_screenshot()
+        1344│ 			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+    >>  1345│ 			_game_state = GameState.GAME_OVER
+        1346│ 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+        1347│ 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+        1348│ 	elif _current_altitude <= 0.0 and not _safe_landing:
+
+    PATH: build_terrain.gd
+    LINE 1351: -> GameState.GAME_OVER    :: _game_state = GameState.GAME_OVER
+        1348│ 	elif _current_altitude <= 0.0 and not _safe_landing:
+        1349│ 		ScreenshotLibrary.save_flight_screenshot()
+        1350│ 		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+    >>  1351│ 		_game_state = GameState.GAME_OVER
+        1352│ 		print("[VERBATIM] FATAL – ground impact without safe landing")
+        1353│ 		_show_notification("FATAL – ground impact")
+        1354│ 
+
+    PATH: build_terrain.gd
+    LINE 1466: -> GameState.FREEFALL    :: _game_state = GameState.FREEFALL
+        1463│ 		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+        1464│ 		if _exit_pressed:
+        1465│ 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+    >>  1466│ 			_game_state = GameState.FREEFALL
+        1467│ 			if _plane_node:
+        1468│ 				_plane_node.visible = false
+        1469│ 			_character.visible = true
+
+    PATH: build_terrain.gd
+    LINE 1570: -> GameState.IN_PLANE    :: _game_state = GameState.IN_PLANE
+        1567│ # ------------------------------------------------------------------
+        1568│ func _reset_game():
+        1569│ 	print("[VERBATIM] === RESETTING GAME ===")
+    >>  1570│ 	_game_state = GameState.IN_PLANE
+        1571│ 	if _plane_node:
+        1572│ 		_plane_node.visible = true
+        1573│ 		_plane_angle = 0.0
+
+    PATH: build_terrain.gd
+    LINE 1702: -> GameState.GAME_OVER    :: _game_state = GameState.GAME_OVER
+        1699│ 		if not _safe_landing:
+        1700│ 			ScreenshotLibrary.save_flight_screenshot()
+        1701│ 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+    >>  1702│ 			_game_state = GameState.GAME_OVER
+        1703│ 			print("[VERBATIM] Ground impact – fatal")
+        1704│ 	_current_altitude = _character.position.y - 25.0
+        1705│ 
+
+    PATH: build_terrain.gd
+    LINE 1738: -> GameState.DIAGNOSIS    :: _game_state = GameState.DIAGNOSIS
+        1735│ 			_deployment_timer -= delta
+        1736│ 		if _deployment_timer <= 0.0:
+        1737│ 			_randomize_malfunction()
+    >>  1738│ 			_game_state = GameState.DIAGNOSIS
+        1739│ 			print("[VERBATIM] Canopy open — entering DIAGNOSIS state")
+        1740│ 			_show_notification("Canopy open — check canopy!")
+        1741│ 
+
+    PATH: build_terrain.gd
+    LINE 2335: -> GameState.FREEFALL    :: _game_state = GameState.FREEFALL
+        2332│ 		print("[TEST] ZOOM: PASS (no pip container, skip test)")
+        2333│ 	var old_state = _game_state
+        2334│ 	if _game_state == GameState.IN_PLANE:
+    >>  2335│ 		_game_state = GameState.FREEFALL
+        2336│ 		_character.visible = true
+        2337│ 		if _plane_node:
+        2338│ 			_plane_node.visible = false
+
+
+[6] _reset_game() body inspection:
+  span: lines 1568..1617
+  state/plane-visibility ops inside body: 2
+    PATH: build_terrain.gd
+    LINE 1570: _game_state = GameState.IN_PLANE
+        1567│ # ------------------------------------------------------------------
+        1568│ func _reset_game():
+        1569│ 	print("[VERBATIM] === RESETTING GAME ===")
+    >>  1570│ 	_game_state = GameState.IN_PLANE
+        1571│ 	if _plane_node:
+        1572│ 		_plane_node.visible = true
+        1573│ 		_plane_angle = 0.0
+
+    PATH: build_terrain.gd
+    LINE 1572: _plane_node.visible = true
+        1569│ 	print("[VERBATIM] === RESETTING GAME ===")
+        1570│ 	_game_state = GameState.IN_PLANE
+        1571│ 	if _plane_node:
+    >>  1572│ 		_plane_node.visible = true
+        1573│ 		_plane_angle = 0.0
+        1574│ 	_character.visible = false
+        1575│ 	_character.position = Vector3(100.0, 6000.0, -100.0)
+
+  Transition sequence inside _reset_game: IN_PLANE
+
+[7] Plane visibility assignments: 3
+    PATH: build_terrain.gd
+    LINE 1468: _plane_node.visible = false
+        1465│ 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+        1466│ 			_game_state = GameState.FREEFALL
+        1467│ 			if _plane_node:
+    >>  1468│ 				_plane_node.visible = false
+        1469│ 			_character.visible = true
+        1470│ 			if _plane_node:
+        1471│ 				_character.position = _plane_node.position + Vector3(0, -2.0, 0)
+
+    PATH: build_terrain.gd
+    LINE 1572: _plane_node.visible = true
+        1569│ 	print("[VERBATIM] === RESETTING GAME ===")
+        1570│ 	_game_state = GameState.IN_PLANE
+        1571│ 	if _plane_node:
+    >>  1572│ 		_plane_node.visible = true
+        1573│ 		_plane_angle = 0.0
+        1574│ 	_character.visible = false
+        1575│ 	_character.position = Vector3(100.0, 6000.0, -100.0)
+
+    PATH: build_terrain.gd
+    LINE 2338: _plane_node.visible = false
+        2335│ 		_game_state = GameState.FREEFALL
+        2336│ 		_character.visible = true
+        2337│ 		if _plane_node:
+    >>  2338│ 			_plane_node.visible = false
+        2339│ 			_character.position = _plane_node.position + Vector3(0, -2, 0)
+        2340│ 		else:
+        2341│ 			_character.position = Vector3(100, 6000, -100)
+
+
+[8] camera_target string assignments: 3
+    PATH: build_terrain.gd
+    LINE 1552: camera_target = 'character'   :: camera_target = "character"
+        1549│ 	# --- Camera toggle on J (when not in plane) ---
+        1550│ 	if Input.is_action_just_pressed("j") and _game_state != GameState.IN_PLANE:
+        1551│ 		if camera_target == "plane":
+    >>  1552│ 			camera_target = "character"
+        1553│ 			if is_instance_valid(_character) and is_instance_valid(_camera):
+        1554│ 				_camera.global_position = _character.global_position + Vector3(0, 2, 3)
+        1555│ 				_camera.look_at(_character.global_position, Vector3.UP)
+
+    PATH: build_terrain.gd
+    LINE 1558: camera_target = 'plane'   :: camera_target = "plane"
+        1555│ 				_camera.look_at(_character.global_position, Vector3.UP)
+        1556│ 				print("[CAMERA] Switched to character (J)")
+        1557│ 		else:
+    >>  1558│ 			camera_target = "plane"
+        1559│ 			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+        1560│ 				_camera.global_position = _plane_node.global_position + _plane_node.global_transform.basis * Vector3(0, 100, 200)
+        1561│ 				_camera.look_at(_plane_node.global_position, Vector3.UP)
+
+    PATH: build_terrain.gd
+    LINE 1609: camera_target = 'plane'   :: camera_target = "plane"
+        1606│ 		_skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion(Vector3(0, 0, 1), PI / 2))
+        1607│ 	_show_notification("Game reset")
+        1608│ 	print("[VERBATIM] Reset complete. New malfunction: ", _malfunction_name())
+    >>  1609│ 	camera_target = "plane"
+        1610│ 	_start_recording()
+        1611│ 
+        1612│ 
+
+
+[9] _ready() setup-order inspection:
+  _ready() span: lines 225..349
+    LINE 295: add_child(terrain_inst)
+    LINE 310: add_child(flat_inst)
+    LINE 317: add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+    LINE 318: add_child(
+    LINE 321: add_child(
+    LINE 330: _character = Node3D.new()
+    LINE 331: add_child(_character)
+    LINE 332: _character.position = Vector3(100.0, 6000.0, -100.0)
+    LINE 333: print("[DEBUG] _character position after set: ", _character.position)
+    LINE 334: print("[DEBUG] _character global_position: ", _character.global_position)
+    LINE 335: _load_character()
+    LINE 346: _character.add_child(_camera)
+
+[10] Node lookups ($ or get_node/get_node_or_null): 3 total.
+  Sampling first 6 with context (silent nulls are a common cause of 
+  'controls do nothing'):
+
+    PATH: build_terrain.gd
+    LINE 1620: get_node("SubViewportContainer")    :: var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+        1617│ # ------------------------------------------------------------------
+        1618│ func _unhandled_input(event: InputEvent) -> void:
+        1619│ 	if event is InputEventMouseButton and event.pressed:
+    >>  1620│ 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+        1621│ 		if _pip_c:
+        1622│ 			var _step := 0.1
+        1623│ 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+
+    PATH: build_terrain.gd
+    LINE 1638: $(PauseMenu)    :: $PauseMenu.visible = tree.paused
+        1635│ func toggle_pause() -> void:
+        1636│ 	var tree := get_tree()
+        1637│ 	tree.paused = not tree.paused
+    >>  1638│ 	$PauseMenu.visible = tree.paused
+        1639│ 	if tree.paused:
+        1640│ 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+        1641│ 	else:
+
+    PATH: build_terrain.gd
+    LINE 2323: get_node("SubViewportContainer")    :: var pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+        2320│ 	else:
+        2321│ 		print("[TEST] PLANE_MOVEMENT: FAIL")
+        2322│ 	# ZOOM test: check if pip container exists; if not, skip (PASS)
+    >>  2323│ 	var pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+        2324│ 	if pip_c:
+        2325│ 		var old_size = pip_c.size
+        2326│ 		pip_c.size = pip_c.size * 1.1
+
+
+==============================================================================
+SUMMARY — findings ranked by likelihood of causing
+'plane does not display, controls fail'
+==============================================================================
+  1. MEDIUM: 3 '# --- Injected missing function ---' marker(s). Automated repair inserted defs; confirm they aren't shadowed and their call sites still exist.
+
+NOTE: This analyzer is static-only. Nothing here has been executed
+against a live Godot instance; a runtime check with `gdparse` and an
+actual play-test remains the only ground truth per DYNAMIC-OVER-STATIC.

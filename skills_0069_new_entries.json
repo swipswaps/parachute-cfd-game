@@ -1,0 +1,31 @@
+{
+  "new_rules": {
+    "R144": {
+      "rule": "Compliance detectors must print line numbers and context on failure",
+      "problem": "Many compliance detectors only print PASS/FAIL summaries, hiding the exact source of the violation. This makes debugging tedious and relies on the user to guess where the problem is.",
+      "fix": "When a required pattern is missing, the detector must print the line number of the first relevant print/log statement, show 3 lines of context before and after, and indicate which function or variable is involved.",
+      "detector": "python3 diagnose_verbatim.py <script>  # built-in, prints line numbers and context on FAIL",
+      "verification": "Run the detector on a script that violates R140; it must print line numbers and context.",
+      "citation": {
+        "source": "Extension of R140–R143 based on 2026-06-16 debugging session",
+        "verbatim_quote": "Print the exact line number where a required pattern is missing, show the surrounding code block, and indicate which function/variable is involved."
+      }
+    }
+  },
+  "new_techniques": [
+    {
+      "id": "T053",
+      "name": "diagnose_verbatim.py – Raw evidence detector with line numbers and context",
+      "description": "A self-contained Python script that scans a target file for the required verbatim logging patterns (R140–R143) and prints each check with timestamps, line numbers, and source context. On failure, it shows the nearest print/log call with surrounding lines.",
+      "problem": "Existing detectors only output PASS/FAIL, making it hard to locate missing patterns.",
+      "context": "Used successfully to verify build_skills_0069_self_audit.py and prove its compliance.",
+      "code": "#!/usr/bin/env python3\n# diagnose_verbatim.py – Diagnostic tool for R140–R143 compliance.\n# Outputs every check with timestamps, line numbers, and context.\n\nimport re\nimport sys\nfrom pathlib import Path\nfrom datetime import datetime\n\ndef ts():\n    return datetime.now().isoformat(timespec='seconds')\n\ndef log(msg):\n    print(f\"[{ts()}] {msg}\")\n\ndef examine_pattern(src, pattern, description, lines):\n    \"\"\"Search for pattern. Print context for first 5 matches or the first missing line.\"\"\"\n    log(f\"CHECK: {description}\")\n    log(f\"  PATTERN: {pattern}\")\n    matches = list(re.finditer(pattern, src, re.IGNORECASE))\n    if matches:\n        log(f\"  RESULT: FOUND {len(matches)} occurrence(s)\")\n        # Show the first 3 matches with context\n        for i, m in enumerate(matches[:3]):\n            line_no = src[:m.start()].count('\\n') + 1\n            start = max(0, line_no - 4)\n            end = min(len(lines), line_no + 3)\n            log(f\"  Match {i+1} at line {line_no}:\")\n            for j in range(start, end):\n                marker = \" -> \" if j == line_no - 1 else \"    \"\n                log(f\"    {marker} {j+1}: {lines[j].rstrip()}\")\n        return True\n    else:\n        # Find the most likely location where the pattern should be\n        # Look for lines containing print or log\n        for i, line in enumerate(lines, 1):\n            if re.search(r'\\b(print|log)\\s*\\(', line):\n                start = max(0, i - 4)\n                end = min(len(lines), i + 3)\n                log(f\"  RESULT: NOT FOUND\")\n                log(f\"  Suggested location near line {i} (context):\")\n                for j in range(start, end):\n                    marker = \" -> \" if j == i - 1 else \"    \"\n                    log(f\"    {marker} {j+1}: {lines[j].rstrip()}\")\n                return False\n        log(f\"  RESULT: NOT FOUND (no print/log calls found)\")\n        return False\n\ndef main():\n    if len(sys.argv) != 2:\n        print(f\"[{ts()}] Usage: python3 diagnose_verbatim.py <script.py>\")\n        sys.exit(1)\n    \n    path = Path(sys.argv[1])\n    if not path.exists():\n        print(f\"[{ts()}] ERROR: {path} not found\")\n        sys.exit(1)\n    \n    src = path.read_text()\n    lines = src.splitlines()\n    \n    log(f\"Diagnosing {path}\")\n    log(\"=\" * 60)\n    \n    # R140: timestamped command print before subprocess\n    ok1 = examine_pattern(src, r'print\\(f\"\\[.*?\\] Running:', 'R140 command print', lines)\n    \n    # R141: stdout/stderr prints\n    ok2 = examine_pattern(src, r'print\\(f\"\\[.*?\\] stdout:', 'R141 stdout print', lines)\n    ok3 = examine_pattern(src, r'print\\(f\"\\[.*?\\] stderr:', 'R141 stderr print', lines)\n    \n    # R142: diff or new content print (allow log() as well)\n    ok4 = examine_pattern(src, r'(print\\(f\"\\[.*?\\] .*diff|log\\([^)]*diff)', 'R142 diff print', lines)\n    \n    # R143: read-back marker print (allow log())\n    ok5 = examine_pattern(src, r'(print\\(f\"\\[.*?\\] marker|log\\([^)]*marker)', 'R143 marker print', lines)\n    \n    log(\"=\" * 60)\n    log(f\"SUMMARY: PASSED: {sum([ok1, ok2, ok3, ok4, ok5])}/5\")\n    if not (ok1 and ok2 and ok3 and ok4 and ok5):\n        log(\"OVERALL: FAIL – some checks missing\")\n        sys.exit(1)\n    else:\n        log(\"OVERALL: PASS – all checks present\")\n        sys.exit(0)\n\nif __name__ == \"__main__\":\n    main()",
+      "language": "python",
+      "verification": "Run the script on a file that violates R140; it must print line numbers and context showing the missing pattern.",
+      "citation": {
+        "source": "2026-06-16 debugging session",
+        "verbatim_quote": "Print the exact line number where a required pattern is missing, show the surrounding code block, and indicate which function/variable is involved."
+      }
+    }
+  ]
+}

@@ -1,0 +1,731 @@
+id,error_class,strategy_name,count,sample_file,sample_line,sample_msg,latest_timestamp
+6,UNEXPECTED_TOKEN,fix_active_enum_closing_brace,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+7,UNEXPECTED_TOKEN,fix_invalid_parentheses_after_number,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+8,UNEXPECTED_TOKEN,fix_merged_var_declaration,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+9,UNEXPECTED_TOKEN,fix_not_var,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+10,UNEXPECTED_TOKEN,fix_commented_closing_brace,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+11,UNEXPECTED_TOKEN,fix_unclosed_quoted_string,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+12,UNEXPECTED_TOKEN,fix_missing_method_call_parentheses,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+13,UNEXPECTED_TOKEN,fix_unclosed_parentheses_globally,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+14,UNEXPECTED_TOKEN,fix_unclosed_function_signature,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+15,UNEXPECTED_TOKEN,fix_unclosed_string,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+16,UNEXPECTED_TOKEN,fix_missing_parenthesis,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+17,UNEXPECTED_TOKEN,fix_decorator_semicolon,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+18,UNEXPECTED_TOKEN,remove_double_colon,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+19,UNEXPECTED_TOKEN,fix_trailing_semicolon,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+20,UNEXPECTED_TOKEN,fix_semicolon_colon,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+21,UNEXPECTED_TOKEN,fix_multicolon_in_comment,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+22,UNEXPECTED_TOKEN,comment_orphan_else,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+23,UNEXPECTED_TOKEN,comment_top_level_orphan_body,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+24,UNEXPECTED_TOKEN,fix_func_name_as_type_hint,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+25,UNEXPECTED_TOKEN,fix_split_var_name,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+26,UNEXPECTED_TOKEN,fix_extends_inside_func,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+27,UNEXPECTED_TOKEN,fix_typed_var_missing_enum,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+28,UNEXPECTED_TOKEN,fix_malformed_clamp,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+29,UNEXPECTED_TOKEN,fix_invalid_comment_line,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+30,UNEXPECTED_TOKEN,wrap_top_level_statements,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+31,UNEXPECTED_TOKEN,fix_incomplete_statements,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+32,UNEXPECTED_TOKEN,gdformat_recheck,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+35,UNEXPECTED_TOKEN,fix_replay_api_usage,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+36,UNEXPECTED_TOKEN,fix_all_unbalanced_braces,1,/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd,152,"/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:
+
+)
+^
+
+Unexpected token Token('RPAR', ')') at line 152, column 1.
+Expected one of:
+	* _NL
+	* ENUM
+	* FUNC
+	* LONG_STRING
+	* AT
+	* CONST
+	* CLASS_NAME
+	* PASS
+	* STATIC
+	* _INDENT
+	* $END
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* CLASS
+	* SIGNAL
+Previous tokens: [Token('_NL', '\n# \tvar uvs = []\n# \tconst W = 1024\n# \tconst H = 1024\n# \tconst MAX_ELEV = 80.0\n# \tconst SCALE_XZ = 4000.0\n# \tfor z in range(H):\n# \t# \tfor x in range(W):\n# \t# \t# \tvar px = (float / float(W - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar pz = (float / float(H - 1) - 0.5) * SCALE_XZ\n# \t# \t# \tvar idx = (z * W + x) * 2\n# \t# \t# \tvar raw = data.decode_u16 if idx + 1 < data.size() else 0\n# \t# \t# \tvar py = (float / 65535.0) * MAX_ELEV\n# \t# \t# \tverts.push_back(Vector3(px, py, pz))\n# \t# \t# \tuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))\n# \tvar indices = []\n# \tfor z in range(H - 1):\n# \t# \tfor x in range(W - 1):\n# \t# \t# \tvar a = z * W + x\n# \t# \t# \tvar b = a + 1\n# \t# \t# \tvar c = a + W\n# \t# \t# \tvar d = c + 1\n# \t# \t# \tindices.append_array([a, c, b, b, c, d])\n# \tvar st = SurfaceTool.new()\n# \tst.begin(Mesh.PRIMITIVE_TRIANGLES)\n# \tst.set_color(Color(1.0, 1.0, 1.0, 1.0))\n# \tfor i in range(verts.size()):\n# \t# \tvar ci = i * 3\n# \t# \tvar cr = float / 255.0 if ci < _baked.size() else 0.5\n# \t# \tvar cg = float / 255.0 if ci + 1 < _baked.size() else 0.5\n# \t# \tvar cb = float / 255.0 if ci + 2 < _baked.size() else 0.5\n# \t# \tst.set_color(Color(cr, cg, cb, 1.0))\n# \t# \tst.set_uv(uvs[i])\n# \t# \tst.add_vertex(verts[i])\n# \tfor idx in indices:\n# \t# \tst.add_index(idx)\n# \tst.generate_normals()\n# \tst.generate_tangents()\n# \tvar terrain_mesh = st.commit()\n# \tvar terrain_inst = MeshInstance3D.new()\n# \tterrain_inst.mesh = terrain_mesh\n# \tvar terrain_mat = StandardMaterial3D.new()\n# \tterrain_mat.vertex_color_use_as_albedo = true\n# \tterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED()\n# \tterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED()\n# \tterrain_inst.material_override = terrain_mat\n# \tadd_child(terrain_inst)\n# \tprint(""[VERBATIM] Terrain created: "", verts.size(), "" vertices"")\n#\n# \t# --------------------------------------------------------------\n# \t# Runways (three predefined)\n# \t# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html()\n# \t# --------------------------------------------------------------\n# \tadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))\n# \tadd_child(\n# \t# \t# _create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))\n')]
+",2026-06-28T16:34:58.322954
+2,UNDECLARED_VAR,prepend_var_declaration,0,,,,
+3,MISSING_CLASS_BODY,insert_pass_body,0,,,,
+4,UNRESOLVABLE_BASE,strip_extends,0,,,,
+5,DUPLICATE_SIGNAL,remove_duplicate_signal,0,,,,
+45,ORPHAN_ELSE,remove_orphan_else,0,,,,

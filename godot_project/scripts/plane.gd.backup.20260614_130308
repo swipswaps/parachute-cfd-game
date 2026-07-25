@@ -1,0 +1,12 @@
+extends CharacterBody3D
+
+signal jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)
+
+func _ready():
+    global_position = Vector3(0, 6000, 0)
+    print("[VERBATIM] Plane placed at altitude ", global_position.y)
+
+func _input(event: InputEvent):
+    if event.is_action_pressed("jump"):
+        print("[VERBATIM] Plane: jump key pressed – emitting jumped_from_plane")
+        emit_signal("jumped_from_plane", global_position, linear_velocity)

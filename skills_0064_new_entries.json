@@ -1,0 +1,67 @@
+{
+  "new_rules": {
+    "R104_use_canvas_layer_for_ui": {
+      "rule": "Any UI element that must be layered above 3D content (HUD, PiP overlays, menus) must be added as a child of a CanvasLayer, not added directly to the scene root or a 3D node. The CanvasLayer.layer property must be explicitly set (e.g., 1 for HUD, 2 for PiP) to define draw order. Direct add_child of Control nodes to Node3D or root leads to unpredictable layering and is forbidden.",
+      "problem": "HUD was obscured by PiP because both were added to the same layer (default 0). Without explicit CanvasLayer layering, draw order depends on child order, which is fragile and cannot be fixed with move_to_front().",
+      "detector": "grep -n 'add_child.*_hud_layer\\|add_child.*_pip' build_terrain.gd | grep -v 'CanvasLayer' && echo 'FAIL: UI not on CanvasLayer'",
+      "verification": "Every Control-based UI node must be a descendant of a CanvasLayer. Verify with: grep -E '(Panel|Label|TextureRect).*add_child' build_terrain.gd | grep -v 'CanvasLayer.add_child' && echo 'FAIL'",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 documentation – CanvasLayer",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html",
+        "verbatim_quote": "CanvasLayer nodes provide a way to separate 2D elements into different layers. The layer property determines the rendering order: layers with higher numbers are drawn on top."
+      }
+    },
+    "R105_prefer_configfile_for_user_settings": {
+      "rule": "Any user‑configurable setting (e.g., UI position, volume, control bindings) that must persist across game launches must be saved and loaded using ConfigFile, not by manually writing JSON, custom binary, or using ResourceSaver. ConfigFile is the Godot standard for INI‑style key‑value settings. Manual file I/O without ConfigFile is forbidden for user preferences.",
+      "problem": "UI positions were not saved between sessions because custom JSON writing was incomplete and fragile. ConfigFile provides a simpler, tested API.",
+      "detector": "grep -n 'FileAccess.open.*WRITE\\|JSON.stringify' build_terrain.gd | grep -v 'leaderboard\\|achievements' && echo 'WARN: manual file write – consider ConfigFile for user settings'",
+      "verification": "User preferences must be saved via ConfigFile. Run: grep -c 'ConfigFile' build_terrain.gd > 0 && echo 'PASS'",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 documentation – ConfigFile",
+        "url": "https://docs.godotengine.org/en/stable/classes/class_configfile.html",
+        "verbatim_quote": "ConfigFile helper class to parse and generate INI-style configuration files. Ideal for saving simple user settings."
+      }
+    },
+    "R106_threaded_loading_for_splash": {
+      "rule": "The main game scene must not be loaded synchronously in _ready() if it contains heavy resources (terrain, GLB assets, large textures). Instead, use a lightweight splash/loader scene as the project’s main scene. That loader scene calls ResourceLoader.load_threaded_request() for the main scene, displays a progress bar or rotating logo, and switches to the main scene only when loading completes. The default Godot logo must not be visible for more than a few frames; a custom splash must be used.",
+      "problem": "Long startup delay and default Godot logo appear because main scene loads synchronously while the engine displays its own splash. Threaded loading gives control and improves perceived performance.",
+      "detector": "grep -n 'ResourceLoader.load_threaded' project.godot || echo 'WARN: no threaded loading – consider implementing splash scene'",
+      "verification": "Project main scene is not the heavy terrain scene; a separate loader scene exists and uses load_threaded_request. Run: grep 'run/main_scene' project.godot | grep -v 'loader' && echo 'FAIL: main scene is heavy'",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 documentation – Background loading",
+        "url": "https://docs.godotengine.org/en/stable/tutorials/io/background_loading.html",
+        "verbatim_quote": "Use ResourceLoader.load_threaded_request() to load resources in a background thread, preventing frame stutter and allowing custom loading screens."
+      }
+    },
+    "R107_ui_draggable_with_mouse_input": {
+      "rule": "Any draggable UI panel must implement dragging using _input() or _gui_input() by checking mouse button state and updating the panel’s position. Do not use polling in _process() for drag updates. The drag logic must be contained in the panel’s script and must save its final position to ConfigFile (R105) on drag end.",
+      "problem": "No dragging was implemented; UI positions were static. Proper draggable panels require event‑driven input, not polling.",
+      "detector": "grep -n '_gui_input\\|_input.*mouse_button' build_terrain.gd | grep -v '_process' && echo 'PASS: event-driven drag' || echo 'FAIL: no drag implementation or polling used'",
+      "verification": "Panel class contains a _gui_input(event) that handles MOUSE_BUTTON_LEFT and updates position.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 documentation – GUI dragging example",
+        "url": "https://docs.godotengine.org/en/stable/tutorials/ui/gui_drag_and_drop.html",
+        "verbatim_quote": "For custom dragging, use Control._gui_input() to detect mouse button events and update the control's position."
+      }
+    },
+    "R108_separate_script_per_major_system": {
+      "rule": "A single GDScript file longer than 2000 lines or containing more than 10 distinct functional areas (physics, UI, input, canopy, obstacles, scoring, etc.) must be split into multiple scripts. Each script should manage one responsibility (e.g., HUDManager, CanopyController, TerrainGenerator). The main script should only instantiate and coordinate these subsystems.",
+      "problem": "build_terrain.gd exceeded 1800 lines and mixed terrain generation, input handling, HUD, PiP, obstacles, scoring, achievements, replays, etc. This made it hard to debug and violated single responsibility.",
+      "detector": "bash -c \"find . -name '*.gd' -exec wc -l {} \\; | awk '$1 > 1500 {print $2 \\\" has \\\" $1 \\\" lines – REFACTOR\\\"}'\"",
+      "verification": "No script exceeds 1500 lines. Each script has a clear, single purpose evident from its name.",
+      "citation": {
+        "tier": "Tier 1",
+        "source": "Martin, R. C. (2009). 'Clean Code: A Handbook of Agile Software Craftsmanship.' Chapter 6: Objects and Data Structures.",
+        "url": "",
+        "verbatim_quote": "A class should have only one reason to change."
+      }
+    }
+  },
+  "new_techniques": [],
+  "new_search_ux_improvements": [],
+  "_note": "Adds R104–R108: CanvasLayer UI layering, ConfigFile user settings, threaded loading, draggable UI, and script separation."
+}

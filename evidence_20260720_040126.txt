@@ -1,0 +1,645 @@
+=== RUNTIME EVIDENCE GATHER Mon Jul 20 04:01:26 AM UTC 2026 — READ-ONLY, ZERO MUTATIONS ===
+
+############################################################
+## D3: altimeter_hud.gd — full source (small file; visibility logic, base class, node setup)
+############################################################
+--- FULL SOURCE: godot_project/scripts/altimeter_hud.gd (79 lines) ---
+    1: extends CanvasLayer
+    2: # ==========================================================================
+    3: # altimeter_hud.gd
+    4: #
+    5: # Purpose: simple ALT/VARIO panel, draggable, F4 toggle.
+    6: # WHY this rewrite: the prior version (transcript 17417-17479) triggered
+    7: #   "Nodes with non-equal opposite anchors will have their size overridden
+    8: #   after _ready()." (transcript 17593-17597, points at altimeter_hud.gd:23)
+    9: # because vbox had anchor_right=1.0 anchor_bottom=1.0 AND an explicit size
+   10: # assignment in _ready() -- Godot's Control layout rewrites size after
+   11: # _ready() when opposite anchors differ. Fix: use anchors only (no explicit
+   12: # size) so the vbox fills the panel deterministically, and defer the panel
+   13: # child add so anchor propagation is stable.
+   14: # ==========================================================================
+   15: 
+   16: var panel: Panel
+   17: var vbox: VBoxContainer
+   18: var altitude_label: Label
+   19: var vario_label: Label
+   20: var dragging: bool = false
+   21: var drag_offset: Vector2 = Vector2.ZERO
+   22: 
+   23: func _ready() -> void:
+   24: 	panel = Panel.new()
+   25: 	panel.size = Vector2(200, 100)
+   26: 	panel.position = Vector2(50, 200)
+   27: 	add_child(panel)
+   28: 	panel.visible = true
+   29: 
+   30: 	vbox = VBoxContainer.new()
+   31: 	# Use anchors that fully fill the panel, and DO NOT also set size --
+   32: 	# setting both is what produced the "non-equal opposite anchors" warning.
+   33: 	vbox.anchor_left = 0.0
+   34: 	vbox.anchor_top = 0.0
+   35: 	vbox.anchor_right = 1.0
+   36: 	vbox.anchor_bottom = 1.0
+   37: 	vbox.offset_left = 4
+   38: 	vbox.offset_top = 4
+   39: 	vbox.offset_right = -4
+   40: 	vbox.offset_bottom = -4
+   41: 	panel.add_child(vbox)
+   42: 
+   43: 	altitude_label = Label.new()
+   44: 	altitude_label.text = "ALT: 0 ft"
+   45: 	vbox.add_child(altitude_label)
+   46: 
+   47: 	vario_label = Label.new()
+   48: 	vario_label.text = "VARIO: 0.0 m/s"
+   49: 	vbox.add_child(vario_label)
+   50: 
+   51: 	panel.visible = true
+   52: 
+   53: func _input(event: InputEvent) -> void:
+   54: 	if event is InputEventKey and event.pressed and not event.echo:
+   55: 		if event.keycode == KEY_F4:
+   56: 			panel.visible = not panel.visible
+   57: 			get_viewport().set_input_as_handled()
+   58: 			return
+   59: 
+   60: 	if event is InputEventMouseButton:
+   61: 		var mb := event as InputEventMouseButton
+   62: 		if mb.button_index == MOUSE_BUTTON_LEFT:
+   63: 			var pos: Vector2 = mb.position
+   64: 			var rect := Rect2(panel.position, panel.size)
+   65: 			if mb.pressed and rect.has_point(pos):
+   66: 				dragging = true
+   67: 				drag_offset = pos - panel.position
+   68: 				get_viewport().set_input_as_handled()
+   69: 			elif not mb.pressed:
+   70: 				dragging = false
+   71: 
+   72: 	if event is InputEventMouseMotion and dragging:
+   73: 		var mm := event as InputEventMouseMotion
+   74: 		panel.position = mm.position - drag_offset
+   75: 		get_viewport().set_input_as_handled()
+   76: 
+   77: func update_altitude(alt_ft: float, vario: float = 0.0) -> void:
+   78: 	altitude_label.text = "ALT: %d ft" % int(round(alt_ft))
+   79: 	vario_label.text = "VARIO: %.2f m/s" % vario
+
+############################################################
+## D3: what class does it extend, and where is it registered?
+############################################################
+--- extends line ---
+1:extends CanvasLayer
+--- autoload registrations in project.godot ---
+31-GameIntegrity="*res://scripts/GameIntegrity.gd"
+32:AltimeterHUD="*res://scripts/altimeter_hud.gd"
+33-ForensicHUD="*res://scripts/forensic_hud.gd"
+34-Audit="*res://scripts/audit.gd"
+--- [autoload] section of project.godot, complete ---
+[autoload]
+
+HealthChecker="*res://autoloads/HealthChecker.gd"
+HubManager="*res://scripts/HubManager.gd"
+SqliteDb="*res://scripts/SqliteDb.gd"
+DatabaseGuard="*res://scripts/DatabaseGuard.gd"
+ResourceThrottle="*res://scripts/ResourceThrottle.gd"
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+aero_units="*res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd"
+SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+StructuredLogger="*res://scripts/StructuredLogger.gd"
+InputManager="*res://scripts/InputManager.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+AltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+WindField="*res://scripts/wind_field.gd"
+ErrorLogger="*res://autoloads/ErrorLogger.gd"
+CursorManager="*res://autoloads/CursorManager.gd"
+Gamification="*res://autoloads/Gamification.gd"
+ErrorBus="*res://autoloads/ErrorBus.gd"
+ForensicPanel="*res://autoloads/forensic_panel.gd"
+
+
+############################################################
+## D1: forensic_panel.gd — the PiP adoption path (why is pip container None?)
+############################################################
+--- FUNCTION _adopt_pip_container in godot_project/autoloads/forensic_panel.gd ---
+   91: func _adopt_pip_container() -> bool:
+   92: 	print("[FPANEL] _adopt_pip_container: ENTER")
+   93: 	print("[FPANEL] pip container path: ", _pip_container if _pip_container else "None")
+   94: 	# Try group-based discovery first
+   95: 	var tree = get_tree()
+   96: 	if tree:
+   97: 		var containers = tree.get_nodes_in_group("pip_container")
+   98: 		if containers.size() > 0:
+   99: 			_pip_container = containers[0]
+  100: 			return true
+  101: 		
+  102: 		# Fallback: search by type
+  103: 		var root = tree.get_root()
+  104: 		if root:
+  105: 			var found = root.find_children("*", "SubViewportContainer", true, false)
+  106: 			if found.size() > 0:
+  107: 				_pip_container = found[0]
+  108: 				return true
+  109: 	
+  110: 	return false
+  111: 
+  112: var _pip_container: SubViewportContainer = null
+  113: 
+  114: 
+  115: # === AUTO-ADDED: Group-based PiP discovery for dynamic containers ===
+  116: # Fixes: [FPANEL] FAILED to adopt PiP after 10 attempts
+  117: # Citation: Godot Node Groups:
+  118: #   https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-to-group
+  119: # Citation: Godot Signals:
+  120: #   https://docs.godotengine.org/en/stable/classes/class_signal.html
+  121: #
+  122: # The PiP container is created dynamically in build_terrain.gd.
+  123: 
+--- FUNCTION _try_adopt_later in godot_project/autoloads/forensic_panel.gd ---
+   81: func _try_adopt_later() -> void:
+   82: 	print("[FPANEL] _try_adopt_later: attempt")
+   83: 	print("[FPANEL] _pip_container = ", _pip_container)
+   84: 	# Retry with longer delay for dynamic container creation
+   85: 	for i in range(30):
+   86: 		if _adopt_pip_container():
+   87: 			return
+   88: 		await get_tree().create_timer(1.0).timeout
+   89: 	push_error("[FPANEL] FAILED to adopt PiP after 30 attempts (container may never be created)")
+   90: 
+--- every reference to 'pip' in godot_project/autoloads/forensic_panel.gd (what path/name it searches for) ---
+3:# ForensicPanel – pull‑based unified container (forensic HUD + PiP).
+7:#   - PiP is created at runtime in build_terrain.gd – search by type
+21:var _pip_slot: PanelContainer
+34:	_adopt_pip_container.call_deferred()
+38:	# Retry adoption after a short delay to allow PiP creation
+42:	timer.timeout.connect(_adopt_pip_container)
+68:	_pip_slot = PanelContainer.new()
+69:	_pip_slot.custom_minimum_size = Vector2(320, 200)
+70:	vbox.add_child(_pip_slot)
+83:	print("[FPANEL] _pip_container = ", _pip_container)
+86:		if _adopt_pip_container():
+89:	push_error("[FPANEL] FAILED to adopt PiP after 30 attempts (container may never be created)")
+91:func _adopt_pip_container() -> bool:
+92:	print("[FPANEL] _adopt_pip_container: ENTER")
+93:	print("[FPANEL] pip container path: ", _pip_container if _pip_container else "None")
+97:		var containers = tree.get_nodes_in_group("pip_container")
+99:			_pip_container = containers[0]
+107:				_pip_container = found[0]
+112:var _pip_container: SubViewportContainer = null
+115:# === AUTO-ADDED: Group-based PiP discovery for dynamic containers ===
+116:# Fixes: [FPANEL] FAILED to adopt PiP after 10 attempts
+122:# The PiP container is created dynamically in build_terrain.gd.
+
+############################################################
+## D1: does any scene actually CONTAIN the node it searches for?
+############################################################
+--- 'pip' occurrences across all .tscn/.gd (excluding .godot cache) ---
+godot_project/scenes/forensic_hud.gd:2:# forensic_hud.gd – manages the on-screen forensic overlay and PiP windows.
+godot_project/scenes/forensic_hud.gd:5:signal pip_closed(pip_id: String)
+godot_project/scenes/forensic_hud.gd:9:var _pip_container: Control  # parent for PiP windows
+godot_project/scenes/forensic_hud.gd:10:var _pips: Dictionary = {}   # id -> PiPControl
+godot_project/scenes/forensic_hud.gd:11:var _next_pip_pos: Vector2 = Vector2(24, 24)
+godot_project/scenes/forensic_hud.gd:14:# PiPControl – simple draggable PiP window
+godot_project/scenes/forensic_hud.gd:16:class PiPControl:
+godot_project/scenes/forensic_hud.gd:18:	var pip_id: String
+godot_project/scenes/forensic_hud.gd:23:		pip_id = id
+godot_project/scenes/forensic_hud.gd:54:	if _panel and not _panel.has_method("_pip_ready"):
+godot_project/scenes/forensic_hud.gd:58:	# PiP container (stays above the HUD panel)
+godot_project/scenes/forensic_hud.gd:59:	_pip_container = Control.new()
+godot_project/scenes/forensic_hud.gd:60:	_pip_container.mouse_filter = MOUSE_FILTER_IGNORE
+godot_project/scenes/forensic_hud.gd:61:	_layer.add_child(_pip_container)
+godot_project/scenes/forensic_hud.gd:65:# PiP management
+godot_project/scenes/forensic_hud.gd:67:func open_pip(id: String, title: String, content: Control) -> PiPControl:
+godot_project/scenes/forensic_hud.gd:68:	if _pips.has(id):
+godot_project/scenes/forensic_hud.gd:69:		return _pips[id] as PiPControl
+godot_project/scenes/forensic_hud.gd:71:	var pip = PiPControl.new(id, _pip_container)
+godot_project/scenes/forensic_hud.gd:72:	pip.position = _next_pip_pos
+godot_project/scenes/forensic_hud.gd:73:	_next_pip_pos += Vector2(32, 32)
+godot_project/scenes/forensic_hud.gd:74:	_pips[id] = pip
+godot_project/scenes/forensic_hud.gd:75:	print("[HUD] Opened PiP: %s at %s" % [id, pip.position])
+godot_project/scenes/forensic_hud.gd:76:	return pip
+godot_project/scenes/forensic_hud.gd:78:func close_pip(id: String) -> void:
+godot_project/scenes/forensic_hud.gd:79:	if _pips.has(id):
+godot_project/scenes/forensic_hud.gd:80:		var pip = _pips[id] as PiPControl
+godot_project/scenes/forensic_hud.gd:81:		pip.queue_free()
+godot_project/scenes/forensic_hud.gd:82:		_pips.erase(id)
+godot_project/scenes/forensic_hud.gd:83:		emit_signal("pip_closed", id)
+godot_project/scenes/forensic_hud.gd:84:		print("[HUD] Closed PiP: %s" % id)
+godot_project/scenes/forensic_hud.gd:86:func move_pip_to(pip_id: String, pos: Vector2) -> void:
+godot_project/scenes/forensic_hud.gd:87:	if _pips.has(pip_id):
+godot_project/scenes/forensic_hud.gd:88:		(_pips[pip_id] as PiPControl).position = pos
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:70:var _pip_viewport: SubViewport  # Ref: https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:71:var _pip_camera: Camera3D
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:72:var _pip_canopy_node: Node3D
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:421:	# Real‑time wind and PiP overlay
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:424:	_setup_pip_overlay()
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:1683:# PiP overlay, real‑time wind (initial fetch)
+(none found — the container may simply not exist)
+
+############################################################
+## D2: HealthChecker drag test + ForensicHUD drag handling
+############################################################
+--- drag-related functions in godot_project/autoloads/HealthChecker.gd ---
+5:#   - ForensicHUD drag simulation.
+26:	test_forensic_hud_drag()
+29:# ---------- Test: ForensicHUD drag --------------------------------------------
+30:func test_forensic_hud_drag():
+33:		_log_test("ForensicHUD.drag", false, "Autoload missing")
+39:		_log_test("ForensicHUD.drag", false, "Panel not found")
+43:	# Simulate mouse press and drag
+48:	panel.position = Vector2(200, 150)  # simulate drag
+62:	_log_test("ForensicHUD.drag", moved, "Initial=%s, Final=%s" % [initial_pos, panel.position])
+105:func test_pip_drag():
+108:		_log_test("PiP.drag", false, "Autoload missing")
+118:	_log_test("PiP.drag", true, "Drag simulation completed")
+--- FUNCTION test_forensic_hud_drag in godot_project/autoloads/HealthChecker.gd ---
+   30: func test_forensic_hud_drag():
+   31: 	var fhud = get_node_or_null("/root/ForensicHUD")
+   32: 	if not fhud:
+   33: 		_log_test("ForensicHUD.drag", false, "Autoload missing")
+   34: 		return
+   35: 
+   36: 	# Access the _panel property (if not exposed, we can use get() or direct variable)
+   37: 	var panel = fhud.get("_panel")
+   38: 	if panel == null:
+   39: 		_log_test("ForensicHUD.drag", false, "Panel not found")
+   40: 		return
+   41: 
+   42: 	var initial_pos = panel.position
+   43: 	# Simulate mouse press and drag
+   44: 	var press = InputEventMouseButton.new()
+   45: 	press.button_index = MOUSE_BUTTON_LEFT
+   46: 	press.position = Vector2(100, 100)
+   47: 	press.pressed = true
+   48: 	panel.position = Vector2(200, 150)  # simulate drag
+   49: 
+   50: 	var motion = InputEventMouseMotion.new()
+   51: 	motion.position = Vector2(200, 150)
+   52: 	motion.relative = Vector2(100, 50)
+   53: 	# panel._gui_input(motion)  # removed
+   54: 
+   55: 	var release = InputEventMouseButton.new()
+   56: 	release.button_index = MOUSE_BUTTON_LEFT
+   57: 	release.position = Vector2(200, 150)
+   58: 	release.pressed = false
+   59: 	# panel._gui_input(release)  # removed
+   60: 
+   61: 	var moved = (panel.position != initial_pos)
+   62: 	_log_test("ForensicHUD.drag", moved, "Initial=%s, Final=%s" % [initial_pos, panel.position])
+   63: 
+   64: # ---------- Test: ForensicHUD HTML data ---------------------------------------
+--- FUNCTION test_pip_drag in godot_project/autoloads/HealthChecker.gd ---
+  105: func test_pip_drag():
+  106: 	var pip = get_node_or_null("/root/PiPOverlay")
+  107: 	if not pip:
+  108: 		_log_test("PiP.drag", false, "Autoload missing")
+  109: 		return
+  110: 	var start_pos = pip.position
+  111: 	var event = InputEventMouseButton.new()
+  112: 	event.button_index = MOUSE_BUTTON_LEFT
+  113: 	event.pressed = true
+  114: 	event.position = start_pos + Vector2(10, 10)
+  115: 	pip._input(event)
+  116: 	event.pressed = false
+  117: 	pip._input(event)
+  118: 	_log_test("PiP.drag", true, "Drag simulation completed")
+--- drag/input handling in godot_project/scenes/forensic_hud.gd ---
+3:# This version has the hud_draggable.gd script attached to the main HUD panel.
+14:# PiPControl – simple draggable PiP window
+19:	var _drag_active: bool = false
+20:	var _drag_offset: Vector2 = Vector2.ZERO
+25:		mouse_filter = MOUSE_FILTER_STOP
+27:	func _gui_input(event: InputEvent) -> void:
+28:		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+30:				_drag_active = true
+31:				_drag_offset = event.position
+34:				_drag_active = false
+36:		elif event is InputEventMouseMotion and _drag_active:
+53:	# Attach hud_draggable script to the HUD panel
+55:		_panel.set_script(preload("res://scripts/hud_draggable.gd"))
+56:		print("[VERBATIM] HUD drag script attached")
+60:	_pip_container.mouse_filter = MOUSE_FILTER_IGNORE
+--- FUNCTION _input in godot_project/scenes/forensic_hud.gd ---
+--- FUNCTION _gui_input in godot_project/scenes/forensic_hud.gd ---
+
+############################################################
+## Indentation census (Rule #31): tabs vs spaces per relevant file
+############################################################
+godot_project/scripts/altimeter_hud.gd: tab-indented=46 space-indented=0 OK (tabs only)
+godot_project/autoloads/forensic_panel.gd: tab-indented=69 space-indented=0 OK (tabs only)
+godot_project/autoloads/HealthChecker.gd: tab-indented=77 space-indented=0 OK (tabs only)
+godot_project/scenes/forensic_hud.gd: tab-indented=51 space-indented=0 OK (tabs only)
+
+############################################################
+## Mutation DB state (Rule #17): schema + last 10 rows
+############################################################
+--- .schema files_to_fix ---
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number)
+);
+--- last 10 rows by fixed_ts ---
+file_path                                  line_number  status           attempt_count  fixed_ts           
+-----------------------------------------  -----------  ---------------  -------------  -------------------
+godot_project/scripts/altimeter_hud.gd     25           fix_verified     1              2026-07-20 03:53:36
+godot_project/autoloads/forensic_panel.gd  2            verify_verified  2              2026-07-20 03:39:48
+
+############################################################
+## Backup inventory (informational only — nothing deleted; Rule #21 history)
+############################################################
+godot_project/addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_atmosphere_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_atmosphere_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_water_atmosphere_3d/aero_water_atmosphere_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_water_atmosphere_3d/aero_water_atmosphere_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_sphere_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_sphere_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_cyclic_propeller_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_cyclic_propeller_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_mover_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_mover_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_rotor_hinge_3d/aero_rotor_hinge_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_rotor_hinge_3d/aero_rotor_hinge_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_thruster_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_thruster_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/drag_influencer/aero_drag_influencer.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/drag_influencer/aero_drag_influencer.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config_axis.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config_axis.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/flight_assist.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/flight_assist.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/gizmos/aero_surface_gizmo.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/gizmos/aero_surface_gizmo.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/core/singletons/aero_units.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/core/singletons/aero_units.gd.backup.20260704_152316
+godot_project/addons/godot_aerodynamic_physics/core/singletons/aero_units.gd.backup.20260704_152557
+godot_project/addons/godot_aerodynamic_physics/demo/misc_demo_assets/ball_launcher.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/demo/misc_demo_assets/ball_launcher.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/demo/misc_demo_assets/mouse_control.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/demo/misc_demo_assets/mouse_control.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/demo/misc_demo_assets/wind_indicator.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/demo/misc_demo_assets/wind_indicator.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/plugin.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/plugin.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/node_utils.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/node_utils.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/pid.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/pid.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/plugin_utils.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/plugin_utils.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/point_3d/point_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/point_3d/point_3d.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/transform_utils.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/transform_utils.gd.backup.20260704_160209
+godot_project/addons/godot_aerodynamic_physics/utils/vector_3d/vector_3d.gd.backup.20260704_150637
+godot_project/addons/godot_aerodynamic_physics/utils/vector_3d/vector_3d.gd.backup.20260704_160209
+godot_project/assets/canopy/parachute.glb.import.backup.20260609_081023
+godot_project/assets/terrain/earth_mesh.glb.import.backup.20260608_202449
+godot_project/autoloads/ErrorLogger.gd.backup.auto
+godot_project/autoloads/ErrorLogger.gd.backup.final
+godot_project/autoloads/ErrorLogger.gd.backup.fixed
+godot_project/autoloads/forensic_panel.gd.bak.20260718162836
+godot_project/autoloads/forensic_panel.gd.bak.20260718163408
+godot_project/autoloads/forensic_panel.gd.bak.20260718174413
+godot_project/autoloads/forensic_panel.gd.bak.20260718174716
+godot_project/autoloads/forensic_panel.gd.bak.20260718175011
+godot_project/autoloads/forensic_panel.gd.bak.20260719170823
+godot_project/autoloads/forensic_panel.gd.bak.20260719205746
+godot_project/autoloads/forensic_panel.gd.bak.20260720020829
+godot_project/autoloads/forensic_panel.gd.bak.20260720020841
+godot_project/autoloads/forensic_panel.gd.bak.20260720021652
+godot_project/autoloads/forensic_panel.gd.bak.20260720022313
+godot_project/autoloads/forensic_panel.gd.bak.20260720023738
+godot_project/autoloads/forensic_panel.gd.bak.20260720025806
+godot_project/autoloads/forensic_panel.gd.bak.20260720030229
+godot_project/autoloads/forensic_panel.gd.bak.20260720033514
+godot_project/project.godot.backup.20260704_121906
+godot_project/project.godot.backup.20260704_122903
+godot_project/project.godot.backup.20260704_125806
+godot_project/project.godot.backup.20260704_140541
+godot_project/project.godot.backup.20260704_143801
+godot_project/project.godot.backup.20260704_144013
+godot_project/project.godot.bak.20260711_181425
+godot_project/project.godot.bak.20260711_204216
+godot_project/project.godot.bak.20260717201148
+godot_project/scenes/forensic_hud.gd.backup.1784159900
+godot_project/scenes/forensic_hud.gd.backup.1784160358
+godot_project/scenes/forensic_hud.gd.backup.1784160664
+godot_project/scenes/forensic_hud.gd.backup.1784161844
+godot_project/scenes/forensic_hud.gd.backup.1784162212
+godot_project/scenes/forensic_hud.gd.backup.1784162618
+godot_project/scenes/forensic_hud.gd.backup.1784197189
+godot_project/scenes/forensic_hud.gd.backup.1784198061
+godot_project/scenes/forensic_hud.gd.backup.1784198751
+godot_project/scenes/forensic_hud.gd.backup.1784204811
+godot_project/scenes/forensic_hud.gd.backup.1784204896
+godot_project/scenes/forensic_hud.gd.backup.1784205091
+godot_project/scenes/main.tscn.backup.20260704_122903
+godot_project/scenes/main.tscn.backup.20260704_125806
+godot_project/scenes/main.tscn.backup.20260704_143801
+godot_project/scenes/main.tscn.backup.20260704_144013
+godot_project/scenes/main.tscn.bak.20260711_181425
+godot_project/scripts/altimeter_hud.gd.bak.20260718174414
+godot_project/scripts/altimeter_hud.gd.bak.20260720022313
+godot_project/scripts/altimeter_hud.gd.bak.20260720023738
+godot_project/scripts/altimeter_hud.gd.bak.20260720025806
+godot_project/scripts/altimeter_hud.gd.bak.20260720030229
+godot_project/scripts/altimeter_hud.gd.bak.20260720035310
+godot_project/scripts.backup.20260707_202143
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd.backup_0045
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd.backup_indent_20260619_132454
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd.uid
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd.backup_0045
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd.backup_indent_20260619_132454
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd.uid
+godot_project/scripts/backups/project.backup.20260607_153555.godot
+godot_project/scripts/build_terrain.backup.20260610_143654
+godot_project/scripts/build_terrain.backup.20260610_143956
+godot_project/scripts/build_terrain.backup.20260610_144058
+godot_project/scripts/build_terrain.backup.20260611_183029
+godot_project/scripts/build_terrain.backup.20260611_183248
+godot_project/scripts/build_terrain.backup.20260611_183438
+godot_project/scripts/build_terrain.gd.backup.20260603_162037
+godot_project/scripts/build_terrain.gd.backup.20260603_163008
+godot_project/scripts/build_terrain.gd.backup.20260607_140558
+godot_project/scripts/build_terrain.gd.backup.20260607_141103
+godot_project/scripts/build_terrain.gd.backup.20260607_155744
+godot_project/scripts/build_terrain.gd.backup.20260607_155913
+godot_project/scripts/build_terrain.gd.backup.20260607_160341
+godot_project/scripts/build_terrain.gd.backup.20260607_160528
+godot_project/scripts/build_terrain.gd.backup.20260607_160731
+godot_project/scripts/build_terrain.gd.backup.20260607_160856
+godot_project/scripts/build_terrain.gd.backup.20260607_161033
+godot_project/scripts/build_terrain.gd.backup.20260607_161343
+godot_project/scripts/build_terrain.gd.backup.20260607_164350
+godot_project/scripts/build_terrain.gd.backup.20260607_170506
+godot_project/scripts/build_terrain.gd.backup.20260607_172115
+godot_project/scripts/build_terrain.gd.backup.20260607_173559
+godot_project/scripts/build_terrain.gd.backup.20260607_173705
+godot_project/scripts/build_terrain.gd.backup.20260608_082649
+godot_project/scripts/build_terrain.gd.backup.20260608_090421
+godot_project/scripts/build_terrain.gd.backup.20260608_103450
+godot_project/scripts/build_terrain.gd.backup.20260608_110337
+godot_project/scripts/build_terrain.gd.backup.20260608_111711
+godot_project/scripts/build_terrain.gd.backup.20260608_112110
+godot_project/scripts/build_terrain.gd.backup.20260608_120154
+godot_project/scripts/build_terrain.gd.backup.20260608_144853
+godot_project/scripts/build_terrain.gd.backup.20260608_145200
+godot_project/scripts/build_terrain.gd.backup.20260609_075835
+godot_project/scripts/build_terrain.gd.backup.20260609_075927
+godot_project/scripts/build_terrain.gd.backup.20260609_080930
+godot_project/scripts/build_terrain.gd.backup.20260609_080938
+godot_project/scripts/build_terrain.gd.backup.20260609_080948
+godot_project/scripts/build_terrain.gd.backup.20260609_081645
+godot_project/scripts/build_terrain.gd.backup.20260609_082037
+godot_project/scripts/build_terrain.gd.backup.20260609_082309
+godot_project/scripts/build_terrain.gd.backup.20260609_082522
+godot_project/scripts/build_terrain.gd.backup.20260609_090142
+godot_project/scripts/build_terrain.gd.backup.20260609_090444
+godot_project/scripts/build_terrain.gd.backup.20260609_090558
+godot_project/scripts/build_terrain.gd.backup.20260609_092223
+godot_project/scripts/build_terrain.gd.backup.20260609_092423
+godot_project/scripts/build_terrain.gd.backup.20260609_093532
+godot_project/scripts/build_terrain.gd.backup.20260609_093646
+godot_project/scripts/build_terrain.gd.backup.20260609_093724
+godot_project/scripts/build_terrain.gd.backup.20260609_094407
+godot_project/scripts/build_terrain.gd.backup.20260609_095837
+godot_project/scripts/build_terrain.gd.backup.20260609_100044
+godot_project/scripts/build_terrain.gd.backup.20260609_143855
+godot_project/scripts/build_terrain.gd.backup.20260609_181245
+godot_project/scripts/build_terrain.gd.backup.20260610_122941
+godot_project/scripts/build_terrain.gd.backup.20260610_134557
+godot_project/scripts/build_terrain.gd.backup.20260610_135431
+godot_project/scripts/build_terrain.gd.backup.20260610_135736
+godot_project/scripts/build_terrain.gd.backup.20260610_140928
+godot_project/scripts/build_terrain.gd.backup.20260610_141317
+godot_project/scripts/build_terrain.gd.backup.20260610_142109
+godot_project/scripts/build_terrain.gd.backup.20260610_145226
+godot_project/scripts/build_terrain.gd.backup.20260610_173806
+godot_project/scripts/build_terrain.gd.backup.20260610_174116
+godot_project/scripts/build_terrain.gd.backup.20260610_174857
+godot_project/scripts/build_terrain.gd.backup.20260610_182840
+godot_project/scripts/build_terrain.gd.backup.20260610_185214
+godot_project/scripts/build_terrain.gd.backup.20260610_185513
+godot_project/scripts/build_terrain.gd.backup.20260611_172638
+godot_project/scripts/build_terrain.gd.backup.20260611_172809
+godot_project/scripts/build_terrain.gd.backup.20260611_173005
+godot_project/scripts/build_terrain.gd.backup.20260611_173208
+godot_project/scripts/build_terrain.gd.backup.20260611_175726
+godot_project/scripts/build_terrain.gd.backup.20260614_130309
+godot_project/scripts/build_terrain.gd.backup.20260616_114111
+godot_project/scripts/build_terrain.gd.backup.20260616_114757
+godot_project/scripts/build_terrain.gd.backup.20260616_115117
+godot_project/scripts/build_terrain.gd.backup.20260616_120024
+godot_project/scripts/build_terrain.gd.backup.20260616_122553
+godot_project/scripts/build_terrain.gd.backup.20260616_123506
+godot_project/scripts/build_terrain.gd.backup.20260616_123710
+godot_project/scripts/build_terrain.gd.backup.20260616_130231
+godot_project/scripts/build_terrain.gd.backup.20260616_130529
+godot_project/scripts/build_terrain.gd.backup.20260616_131549
+godot_project/scripts/build_terrain.gd.backup.20260616_132045
+godot_project/scripts/build_terrain.gd.backup.20260616_132223
+godot_project/scripts/build_terrain.gd.backup.20260616_132338
+godot_project/scripts/build_terrain.gd.backup.20260616_134211
+godot_project/scripts/build_terrain.gd.backup.20260616_134544
+godot_project/scripts/build_terrain.gd.backup.20260616_134711
+godot_project/scripts/build_terrain.gd.backup.20260616_134912
+godot_project/scripts/build_terrain.gd.backup.20260616_135831
+godot_project/scripts/build_terrain.gd.backup.20260616_140649
+godot_project/scripts/build_terrain.gd.backup.20260616_141709
+godot_project/scripts/build_terrain.gd.backup.20260616_141754
+godot_project/scripts/build_terrain.gd.backup.20260616_143918
+godot_project/scripts/build_terrain.gd.backup.20260616_144044
+godot_project/scripts/build_terrain.gd.backup.20260616_144150
+godot_project/scripts/build_terrain.gd.backup.20260616_144308
+godot_project/scripts/build_terrain.gd.backup.20260616_144532
+godot_project/scripts/build_terrain.gd.backup.20260616_144630
+godot_project/scripts/build_terrain.gd.backup.20260616_144958
+godot_project/scripts/build_terrain.gd.backup.20260616_145414
+godot_project/scripts/build_terrain.gd.backup.20260616_153828
+godot_project/scripts/build_terrain.gd.backup.20260616_160544
+godot_project/scripts/build_terrain.gd.backup.20260616_160847
+godot_project/scripts/build_terrain.gd.backup.20260616_161204
+godot_project/scripts/build_terrain.gd.backup.20260616_173452
+godot_project/scripts/build_terrain.gd.backup.20260616_173812
+godot_project/scripts/build_terrain.gd.backup.20260616_174015
+godot_project/scripts/build_terrain.gd.backup.20260616_174929
+godot_project/scripts/build_terrain.gd.backup.20260616_175713
+godot_project/scripts/build_terrain.gd.backup.20260616_183744
+godot_project/scripts/build_terrain.gd.backup.20260625_092008
+godot_project/scripts/build_terrain.gd.backup.20260625_092825
+godot_project/scripts/build_terrain.gd.backup.gdlint.20260611_180344
+godot_project/scripts/build_terrain.gd.bak.20260718141333
+godot_project/scripts/build_terrain.gd.bak.20260718141803
+godot_project/scripts/build_terrain.gd.bak.20260718162836
+godot_project/scripts/forensic_hud.gd.backup.1784207053
+godot_project/scripts/forensic_hud.gd.backup.1784207413
+godot_project/scripts/forensic_hud.gd.backup.1784207427
+godot_project/scripts/forensic_hud.gd.bak.20260719205746
+godot_project/scripts/forensic_hud.gd.bak.20260719211836
+godot_project/scripts/game_manager.gd.backup.20260611_172638
+godot_project/scripts/game_manager.gd.backup.20260611_172809
+godot_project/scripts/game_manager.gd.backup.20260611_173005
+godot_project/scripts/game_manager.gd.backup.20260611_173208
+godot_project/scripts/InputManager.gd.backup.20260616_114757
+godot_project/scripts/InputManager.gd.backup.20260616_120721
+godot_project/scripts/InputManager.gd.backup.20260616_121014
+godot_project/scripts/InputManager.gd.backup.20260616_121031
+godot_project/scripts/InputManager.gd.backup.20260616_121302
+godot_project/scripts/InputManager.gd.backup.20260616_122553
+godot_project/scripts/InputManager.gd.backup.20260616_123506
+godot_project/scripts/InputManager.gd.backup.20260616_123710
+godot_project/scripts/InputManager.gd.backup.20260616_124233
+godot_project/scripts/pip_draggable.backup.20260610_143654
+godot_project/scripts/pip_draggable.backup.20260610_143956
+godot_project/scripts/pip_draggable.backup.20260610_144058
+godot_project/scripts/plane.gd.backup.20260614_130308
+godot_project/scripts/plane.gd.backup.20260616_130231
+godot_project/scripts/plane.gd.backup.20260616_130529
+godot_project/scripts/plane.gd.backup.20260616_135229
+godot_project/scripts/plane.gd.backup.20260625_092008
+godot_project/scripts/plane.gd.backup.20260625_092825
+godot_project/scripts/screenshot_library.gd.backup.20260608_094213
+godot_project/scripts/screenshot_library.gd.backup.20260611_172638
+godot_project/scripts/screenshot_library.gd.backup.20260611_173208
+godot_project/scripts/SqliteDb.gd.backup.20260704_143801
+godot_project/scripts/test_runner.gd.backup.20260625_092008
+godot_project/scripts/test_runner.gd.backup.20260625_092825
+godot_project/scripts/wind_field.gd.backup.20260611_172638
+godot_project/scripts/wind_field.gd.backup.20260611_173208
+godot_project/scripts/wind_field.gd.backup.20260704_143801
+
+=== DONE. Upload evidence_20260720_040126.txt — the D1/D2/D3 fixes will be written against it. ===

@@ -1,0 +1,32 @@
+@tool
+class_name AeroBody3D
+extends EditorScript
+
+
+func _run():
+	var actions = {
+		"deploy": [KEY_SPACE],
+		"turn_left": [KEY_Q, JOY_BUTTON_LEFT_SHOULDER],
+		"turn_right": [KEY_E, JOY_BUTTON_RIGHT_SHOULDER],
+		"flight_check": [KEY_C, JOY_BUTTON_A],
+		"cutaway": [KEY_X, JOY_BUTTON_X],
+		"reserve": [KEY_V, JOY_BUTTON_B],
+		"flare": [KEY_F, JOY_BUTTON_Y],
+		"restart": [KEY_R, JOY_BUTTON_START],
+		"cycle_camera": [KEY_Y],
+		"toggle_hud": [KEY_H],
+		"check_arms": []
+	}
+	for action_name in actions:
+		if not InputMap.has_action(action_name):
+			InputMap.add_action(action_name)
+		for key in actions[action_name]:
+			var event
+			if key is int and key < 1000:
+				event = InputEventKey.new()
+				event.keycode = key
+			else:
+				event = InputEventJoypadButton.new()
+				event.button_index = key
+			InputMap.action_add_event(action_name, event)
+	print("InputMap configured. Save project.")

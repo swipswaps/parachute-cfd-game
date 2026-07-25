@@ -1,0 +1,233 @@
+{
+  "generated_by": "generate_fix_0224.py",
+  "session_id": 20,
+  "generated_ts": "2026-06-19T11:00:33Z",
+  "database_schema_version": "7.0",
+  "migration": "dedup fix_results + screenshot_library_errors (UNIQUE constraint added)",
+  "citation_catalog": {
+    "Codd1970": "https://dl.acm.org/doi/10.1145/362384.362685",
+    "GrayReuter1992": "ISBN 1-55860-190-2",
+    "DaveyPriestley": "ISBN 978-0-521-78451-7",
+    "Fisher1935": "ISBN 978-0-050-02170-5",
+    "Gregg2021": "ISBN 978-0-13-682015-6",
+    "AhoEtAl2006": "ISBN 978-0-32-148681-3",
+    "SQLiteInsert": "https://www.sqlite.org/lang_insert.html",
+    "SQLiteAlter": "https://www.sqlite.org/lang_altertable.html",
+    "GodotFileAccess": "https://docs.godotengine.org/en/stable/classes/class_fileaccess.html",
+    "GodotSignals": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_signals.html",
+    "GodotIssue60985": "https://github.com/godotengine/godot/issues/60985",
+    "LinuxProcfs": "https://www.kernel.org/doc/html/latest/filesystems/proc.html",
+    "SchedMan": "https://man7.org/linux/man-pages/man7/sched.7.html"
+  },
+  "rules": [
+    {
+      "rule_id": "VR001",
+      "rule_name": "bare_expression_statement",
+      "description": "Expression used as statement with no effect \u2014 e.g. a variable name on its own line. GDScript 4 emits 'Expression is not assigned to a variable' or parse error depending on context.",
+      "pattern": "^\\s+\\w+\\s*$",
+      "fix_strategy": "DELETE",
+      "added_session": 1,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/warning_system.html"
+    },
+    {
+      "rule_id": "VR002",
+      "rule_name": "missing_colon_after_if",
+      "description": "GDScript 4 requires colon after if/elif/else/for/while/func/class. GDScript 3 allowed some omissions. Migration scripts may drop colons.",
+      "pattern": "^\\s*(if|elif|else|for|while)\\b[^:]*$",
+      "fix_strategy": "REPLACE",
+      "added_session": 1,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html"
+    },
+    {
+      "rule_id": "VR003",
+      "rule_name": "export_keyword_changed",
+      "description": "GDScript 3 used 'export var x'. GDScript 4 uses '@export var x'. The old form causes parse error in Godot 4.",
+      "pattern": "^\\s*export\\s+var\\b",
+      "fix_strategy": "REPLACE",
+      "added_session": 2,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"
+    },
+    {
+      "rule_id": "VR004",
+      "rule_name": "onready_keyword_changed",
+      "description": "GDScript 3 used 'onready var x'. GDScript 4 uses '@onready var x'. The old form causes parse error.",
+      "pattern": "^\\s*onready\\s+var\\b",
+      "fix_strategy": "REPLACE",
+      "added_session": 2,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"
+    },
+    {
+      "rule_id": "VR005",
+      "rule_name": "connect_signal_old_syntax",
+      "description": "GDScript 3 used node.connect('signal', target, 'method'). GDScript 4 uses node.signal.connect(callable). Old syntax causes TypeError at runtime.",
+      "pattern": "\\.connect\\(['\\\"][\\w_]+['\\\"],\\s*\\w+,\\s*['\\\"][\\w_]+['\\\"]",
+      "fix_strategy": "REPLACE",
+      "added_session": 3,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"
+    },
+    {
+      "rule_id": "VR006",
+      "rule_name": "yield_removed",
+      "description": "GDScript 3 used yield(). GDScript 4 removed yield() \u2014 use await instead. yield() causes parse error in GDScript 4.",
+      "pattern": "\\byield\\s*\\(",
+      "fix_strategy": "REPLACE",
+      "added_session": 3,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"
+    },
+    {
+      "rule_id": "VR007",
+      "rule_name": "variable_out_of_scope",
+      "description": "A variable is referenced in a function scope where it was not declared and is not a class member. In GDScript 4 this causes 'Identifier not found' parse error. Confirmed: Document 1 lines 2049/2052/2056 reference `plane` inside _find_node_with_method() where plane is only in scope in _create_plane().",
+      "pattern": "\\bplane\\b",
+      "fix_strategy": "DELETE",
+      "added_session": 19,
+      "confirmed_sha": "c85b0203ac45",
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#variables"
+    },
+    {
+      "rule_id": "VR008",
+      "rule_name": "class_name_conflict",
+      "description": "Two scripts declare the same class_name. GDScript 4 emits 'Class already defined' parse error.",
+      "pattern": "^class_name\\s+\\w+",
+      "fix_strategy": "DELETE",
+      "added_session": 4,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#class-name"
+    },
+    {
+      "rule_id": "VR009",
+      "rule_name": "return_type_annotation_invalid",
+      "description": "Return type annotation uses a type not yet registered at parse time. GDScript 4 is strict about forward references in type annotations.",
+      "pattern": "-> \\w+:",
+      "fix_strategy": "REPLACE",
+      "added_session": 5,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/static_typing.html"
+    },
+    {
+      "rule_id": "VR010",
+      "rule_name": "tool_annotation_changed",
+      "description": "GDScript 3 used 'tool' keyword at top of file. GDScript 4 uses '@tool' annotation. Old form causes parse error.",
+      "pattern": "^\\s*tool\\s*$",
+      "fix_strategy": "REPLACE",
+      "added_session": 5,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"
+    },
+    {
+      "rule_id": "VR011",
+      "rule_name": "setget_changed",
+      "description": "GDScript 3 used 'var x setget setter,getter'. GDScript 4 uses property with get/set blocks. Old form causes parse error.",
+      "pattern": "\\bsetget\\b",
+      "fix_strategy": "REPLACE",
+      "added_session": 6,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"
+    },
+    {
+      "rule_id": "VR012",
+      "rule_name": "signal_declaration_changed",
+      "description": "GDScript 3 used 'signal my_signal(arg)'. GDScript 4 uses 'signal my_signal(arg: Type)'. Untyped signal args may cause warnings or errors.",
+      "pattern": "^\\s*signal\\s+\\w+\\(",
+      "fix_strategy": "REPLACE",
+      "added_session": 7,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#signals"
+    },
+    {
+      "rule_id": "VR013",
+      "rule_name": "node_path_changed",
+      "description": "GDScript 3 used $Node/Path shorthand without quotes. Some paths with special characters require NodePath() in GDScript 4.",
+      "pattern": "\\$[\\w/]+",
+      "fix_strategy": "REPLACE",
+      "added_session": 8,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#nodes-and-scene-paths"
+    },
+    {
+      "rule_id": "VR014",
+      "rule_name": "misplaced_annotation",
+      "description": "An annotation (@export, @onready, @tool) appears outside its valid scope \u2014 e.g. inside a function body. GDScript 4 emits parse error.",
+      "pattern": "^\\s+@(export|onready|tool|static_unload)\\b",
+      "fix_strategy": "MOVE",
+      "added_session": 9,
+      "confirmed_sha": null,
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#annotations"
+    },
+    {
+      "rule_id": "VR015",
+      "rule_name": "unreachable_code_after_return",
+      "description": "Code appears after a `return` statement in the same scope, making it unreachable. GDScript 4 does not raise a parse error for this but the UNREACHABLE_CODE warning is emitted. When the unreachable code also references out-of-scope variables (VR007), gdparse reports those as errors. Confirmed: Document 1 lines 2045-2056 in scope _find_node_with_method were unreachable after `return null` at line 2044. The VR007 violations at 2049/2052/2056 were inside this dead-code block.",
+      "pattern": "^\\s*return\\b",
+      "fix_strategy": "DELETE",
+      "added_session": 19,
+      "confirmed_sha": "c85b0203ac45",
+      "citation_url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/warning_system.html"
+    }
+  ],
+  "lattice": [
+    {
+      "parent_rule": "VR007",
+      "child_rule": "VR015",
+      "subsumption_note": "When out-of-scope reference (VR007) appears in dead code after return (VR015), deleting the dead block resolves both. VR007 fix subsumes VR015 fix. Confirmed session_id=19, lines 2049/2052/2056 in _find_node_with_method."
+    }
+  ],
+  "fixes": [
+    {
+      "result_id": 1,
+      "session_id": 19,
+      "rule_id": "VR007",
+      "file_path": "godot_project/scripts/build_terrain.gd",
+      "line_number": 2049,
+      "sha_before": "2697f59b9539",
+      "sha_after": "c85b0203ac45",
+      "gdparse_result": "PASS",
+      "game_ran": 1,
+      "fix_note": "F18: removed plane.has_signal/jumped_from_plane/add_to_group from _find_node_with_method() scope \u2014 plane only valid in _create_plane(). Lines 2049/2052/2056 confirmed Document 1 verbatim.",
+      "ts": "2026-06-19T10:43:56Z"
+    },
+    {
+      "result_id": 2,
+      "session_id": 19,
+      "rule_id": "VR015",
+      "file_path": "godot_project/scripts/build_terrain.gd",
+      "line_number": 2045,
+      "sha_before": "2697f59b9539",
+      "sha_after": "c85b0203ac45",
+      "gdparse_result": "PASS",
+      "game_ran": 1,
+      "fix_note": "VR015 subsumed by VR007 fix (F18). Dead code block lines 2045-2056 was after return null at line 2044. Deletion of block resolved both rules. Confirmed via rule_subsumes lattice edge VR007->VR015.",
+      "ts": "2026-06-19T10:43:56Z"
+    }
+  ],
+  "patches": [
+    {
+      "patch_id": 1,
+      "session_id": 20,
+      "file_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd",
+      "patch_id_str": "F19-screenshot-guard",
+      "lines_changed": 13,
+      "sha256_before": "c85b0203ac45f8ae588bc596ef60c365efba130b7e0e206683e71621f3e612d7",
+      "sha256_after": "33315dd90b44dd9e480638716e90e48891313b0d5c1fa31849948718f5f3e7d1",
+      "verified": 1,
+      "ts": "2026-06-19T11:00:32Z"
+    }
+  ],
+  "signal_audits": [
+    {
+      "audit_id": 1,
+      "session_id": 20,
+      "signal_name": "jumped_from_plane",
+      "found": 1,
+      "in_scope": 0,
+      "line_count": 3,
+      "ts": "2026-06-19T11:00:33Z"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "prf.fixlist.v1",
+  "description": "v106: Fixes icon.svg quoting failure by using heredoc. Persists JSON fix list and database for LLM loop.",
+  "steps": [
+    {
+      "id": "GODOT-ICON-002",
+      "severity": "CRITICAL",
+      "name": "Write icon.svg using heredoc to avoid nested quote escaping",
+      "issue": "run_step apply string with python3 -c and double quotes failed because eval stripped necessary escaping for SVG attributes. Result: SyntaxError 'unterminated string literal'.",
+      "fix_applied": "Replace the python3 -c command with a heredoc that writes the SVG content directly."
+    },
+    {
+      "id": "FIXLIST-PERSIST-002",
+      "severity": "HIGH",
+      "name": "Persist the JSON fix list as a text file in the repo",
+      "issue": "The fix list JSON must always be available for future self‑healing and the LLM loop.",
+      "fix_applied": "At script start, write the full v106 JSON to parachute-fixlist-v106.json."
+    }
+  ]
+}

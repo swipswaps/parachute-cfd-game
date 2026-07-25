@@ -1,0 +1,58 @@
+[2026-07-19T23:25:55.298791+00:00] [SUCCESS] check_dependencies: python3 found
+[2026-07-19T23:25:55.299865+00:00] [SUCCESS] create_backup: backup at backups/forensic_panel.gd.bak.20260719192555 (sha256 verified)
+[2026-07-19T23:25:55.300075+00:00] [SUCCESS] write_and_confirm: read-back matches
+[2026-07-19T23:25:55.300222+00:00] [SUCCESS] restore_functions: both functions restored
+[2026-07-19T23:25:55.300284+00:00] [SUCCESS] hard_gate: all criteria met with evidence
+
+======================================================================
+Extracting _build_ui and _on_hub_reply from pre-image backup
+======================================================================
+
+--- extracted _build_ui (27 lines) ---
+func _build_ui() -> void:
+	_panel = PanelContainer.new()
+	_panel.anchor_left = 0.62
+	_panel.anchor_top = 0.05
+	_panel.anchor_right = 0.98
+	_panel.anchor_bottom = 0.95
+	add_child(_panel)
+
+	var vbox := VBoxContainer.new()
+	_panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "FORENSIC PANEL"
+	vbox.add_child(title)
+
+	_label = RichTextLabel.new()
+	_label.selection_enabled = true
+	_label.context_menu_enabled = true
+	_label.bbcode_enabled = true
+	_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_label.custom_minimum_size = Vector2(0, 300)
+	vbox.add_child(_label)
+
+	_pip_slot = PanelContainer.new()
+	_pip_slot.custom_minimum_size = Vector2(320, 200)
+	vbox.add_child(_pip_slot)
+
+
+--- extracted _on_hub_reply (7 lines) ---
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	if code == 200:
+		_label.text = body.get_string_from_utf8()
+	else:
+		_label.text = "[hub unreachable: HTTP %d -- will retry in %.0fs]" % [code, REFRESH_SEC]
+
+
+
+
+======================================================================
+SUMMARY
+======================================================================
+  Restore: before=True applied=True after=False
+
+======================================================================
+HARD GATE
+======================================================================
+RESTORED AND VERIFIED CLEAN.

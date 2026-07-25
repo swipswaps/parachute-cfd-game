@@ -1,0 +1,73 @@
+=== 1. WHICH forensic_hud.gd IS ON DISK (H1) ===
+3fc867026473401015e2de551d4001f3e7c0191aa93c76d0a42cfb83034a92d8  godot_project/scripts/forensic_hud.gd
+-- v2 markers (all three must appear if v2 was applied) --
+67:func _spawn_hub_server() -> void:
+109:		if event.keycode == KEY_F3 or event.keycode == KEY_F9:
+190:	print("[FHUD] built, hidden at start. Press F3 or F9 to show. Panel pos=", _panel.position)
+212:	_spawn_hub_server()
+grep exit: 0 (0 = v2 markers found, 1 = OLD FILE STILL ON DISK)
+-- toggle + guard lines --
+101:func _toggle_layer() -> void:
+102:	_layer.visible = not _layer.visible
+106:func _input(event: InputEvent) -> void:
+111:				_toggle_layer()
+115:	if _layer == null or not _layer.visible or _panel == null:
+
+=== 2. pip_draggable.gd ON DISK ===
+6fe3fcb5bfe1f455dced9cf9492362e3073de76c1e18ae97a85cb464b7bd4beb  godot_project/scripts/pip_draggable.gd
+11:	mouse_filter = MOUSE_FILTER_STOP
+17:func _gui_input(event: InputEvent) -> void:
+
+=== 3. DID F3/F9 KEYCODES EVER REACH THE APP (H2 vs H3) ===
+-- keycode 4194332 (F3) / 4194338 (F9) in run_output.txt --
+grep exit: 0 (1 = keys NEVER arrived: desktop grabbed them -> H2)
+-- [FHUD] marker prints (v2 runtime evidence) --
+grep exit: 0 (1 = v2 never ran in this session -> H1)
+-- [PIP] prints --
+205:[PIP] _ready: size=(320.0, 240.0) position=(10.0, 10.0)
+4641:[PIP] drag start offset=(146.0, 109.0)
+5078:[PIP] drag end position=(820.0, 152.0)
+5080:[PIP] position saved: (820.0, 152.0)
+
+=== 4. HUB SERVER STATE (H4) ===
+LISTENING on 8765: PID 806954: python3 forensic_hub_server.py
+-- endpoint check (full verbatim output) --
+GET /api/gamification:
+{"xp": 15710, "level": 4, "success_rate": 0.3826, "streak": 73, "unresolved_parse_errors": 91, "pokedex_caught": 974, "pokedex_known": 1065, "achievements": ["first_heal", "healer_35pct", "streak_50"]}
+curl exit: 0  (7 = connection refused = server down)
+GET /api/leaderboard:
+[{"name": "rebuild_indentation", "error_class": "INVALID_INDENT", "wins": 0, "trials": 1, "win_rate": 0.0, "ucb1": 4.6041}, {"name": "prepend_var_declaration", "error_class": "UNDECLARED_VAR", "wins": 0, "trials": 1, "win_rate": 0.0, "ucb1": 4.6041}, {"name": "insert_pass_body", "error_class": "MISSING_CLASS_BODY", "wins": 0, "trials": 1, "win_rate": 0.0, "ucb1": 4.6041}, {"name": "strip_extends", "error_class": "UNRESOLVABLE_BASE", "wins": 0, "trials": 1, "win_rate": 0.0, "ucb1": 4.6041}, {"name": "remove_duplicate_signal", "error_class": "DUPLICATE_SIGNAL", "wins": 0, "trials": 1, "win_rate": 0.0, "ucb1": 4.6041}, {"name": "fix_unclosed_quoted_string", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 2, "win_rate": 0.0, "ucb1": 3.2556}, {"name": "fix_unclosed_parentheses_globally", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 2, "win_rate": 0.0, "ucb1": 3.2556}, {"name": "fix_unclosed_string", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 2, "win_rate": 0.0, "ucb1": 3.2556}, {"name": "remove_double_colon", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 2, "win_rate": 0.0, "ucb1": 3.2556}, {"name": "wrap_top_level_statements", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 2, "win_rate": 0.0, "ucb1": 3.2556}, {"name": "gdformat_recheck", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 2, "win_rate": 0.0, "ucb1": 3.2556}, {"name": "fix_missing_method_call_parentheses", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_unclosed_function_signature", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_missing_parenthesis", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_decorator_semicolon", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_trailing_semicolon", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_semicolon_colon", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_multicolon_in_comment", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "comment_orphan_else", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "comment_top_level_orphan_body", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_func_name_as_type_hint", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_split_var_name", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_extends_inside_func", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_typed_var_missing_enum", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_malformed_clamp", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_invalid_comment_line", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_incomplete_statements", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_unbalanced_braces", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 3, "win_rate": 0.0, "ucb1": 2.6582}, {"name": "fix_commented_closing_brace", "error_class": "UNEXPECTED_TOKEN", "wins": 0, "trials": 18, "win_rate": 0.0, "ucb1": 1.0852}, {"name": "fix_active_enum_closing_brace", "error_class": "UNEXPECTED_TOKEN", "wins": 10000, "trials": 10000, "win_rate": 1.0, "ucb1": 1.046}, {"name": "fix_invalid_parentheses_after_number", "error_class": "UNEXPECTED_TOKEN", "wins": 10000, "trials": 10000, "win_rate": 1.0, "ucb1": 1.046}, {"name": "fix_merged_var_declaration", "error_class": "UNEXPECTED_TOKEN", "wins": 10000, "trials": 10000, "win_rate": 1.0, "ucb1": 1.046}, {"name": "fix_not_var", "error_class": "UNEXPECTED_TOKEN", "wins": 10000, "trials": 10012, "win_rate": 0.9988, "ucb1": 1.0448}]
+curl exit: 0  (7 = connection refused = server down)
+
+=== 5. PIP CANOPY WIRING (H5) ===
+-- how build_terrain populates the PiP SubViewport --
+489:	_setup_pip_overlay()
+2103:func _setup_pip_overlay() -> void:
+2104:	print("[VERBATIM] ENTER _setup_pip_overlay gate=none")
+2103: func _setup_pip_overlay() -> void:
+-- does anything UPDATE the PiP canopy per-frame or on malfunction change? --
+54:var _pip_camera: Camera3D
+55:var _pip_canopy_node: Node3D
+2149:		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
+2152:	_pip_canopy_node = canopy_scene.instantiate()
+2153:	_pip_viewport.add_child(_pip_canopy_node)
+2154:	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+2156:	_pip_camera = Camera3D.new()
+2164:	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+2165:	_pip_camera.look_at_from_position(
+2168:	_pip_camera.fov = 110.0
+grep exit: 0 (1 = canopy attached ONCE at setup, never synced -> H5 CONFIRMED:
+   the PiP shows a static model, not live malfunction/deploy state)
+
+=== VERDICT KEY ===
+H1 old file:   section 1 grep exit 1
+H2 DE grab:    section 3 keycode grep exit 1 AND section 1 grep exit 0
+H3 consumed:   keycodes present but no [FHUD] toggle print
+H4 no server:  section 4 NOTHING listening / curl exit 7
+H5 static pip: section 5 final grep exit 1
+
+Directory:
+-rw-r--r--. 1 owner owner   7480 Jul 15 03:57 diag_output.txt
+-rw-r--r--. 1 owner owner  13724 Jul 15 03:42 godot_project/scripts/forensic_hud.gd
+-rwxr-xr-x. 1 owner owner   1204 Jul 14 15:14 godot_project/scripts/pip_draggable.gd
+-rw-r--r--. 1 owner owner 549256 Jul 14 16:06 run_output.txt

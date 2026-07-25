@@ -1,0 +1,52 @@
+MODE: APPLY
+
+======================================================================
+STEP 0: Preconditions
+======================================================================
+  Found GLB loading block from line 628 to 640
+
+--- Current block (with context) (lines 626-641) ---
+ 626: 
+ 627: 	# ---------- AIRPLANE LOADING (diagnostic) ----------
+ 628: 	var plane_path = "res://assets/aircraft/cesna_airplane.glb"
+ 629: 	if FileAccess.file_exists(plane_path):
+ 630: 		var plane_scene = load(plane_path)
+ 631: 		if plane_scene:
+ 632: 			var plane = plane_scene.instantiate()
+ 633: 			if _character: _character.reparent(plane, true)
+ 634: 			plane.position = Vector3(200, 1800, -200)
+ 635: 			add_child(plane)
+ 636: 			print("[VERBATIM] Airplane loaded from ", plane_path)
+ 637: 		else:
+ 638: 			print("[VERBATIM] ERROR: Could not instantiate airplane scene from ", plane_path)
+ 639: 	else:
+ 640: 		print("[VERBATIM] WARNING: Airplane scene not found at ", plane_path)
+ 641: 
+
+======================================================================
+STEP 1: Remove the GLB block
+======================================================================
+  Backup written: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.backup_20260706_055311
+  Removed lines 628 to 640
+  ✅ Read-After-Write verified.
+
+======================================================================
+STEP 2: Verification – show updated _ready() ending
+======================================================================
+
+--- Updated _ready() ending (after removal) (lines 382-392) ---
+ 382: 	print("[VERBATIM] HUD initialised")
+ 383: 
+ 384: 
+ 385: # ------------------------------------------------------------------
+ 386: # Input handling (mouse wheel and SPACE)
+ 387: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
+ 388: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+ 389: # ------------------------------------------------------------------
+ 390: 
+ 391: _create_plane()
+ 392: 
+
+DONE. The GLB airplane loading block has been removed.
+The game will now use _create_plane() to load test_plane.tscn.
+Please run the game to verify the airplane appears correctly.

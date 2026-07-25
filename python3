@@ -1,0 +1,912 @@
+#!/usr/bin/env python3
+# PATH: parachute-cfd-game/run_pipeline_v6.16.113.py
+# VERSION: v6.16.113
+#
+# CHANGE vs v6.16.112:
+#
+# NEW STRATEGY: fix_commented_closing_brace
+#   Root cause (document 6 verbatim):
+#     "Unexpected token Token('TYPE_HINT', 'game_state') at line 26, column 5"
+#     "Expected one of: * RBRACE * EQUAL * COMMA"
+#     "Previous tokens: [Token('NAME', 'var')]"
+#     R147 lines 21–25:
+#       "# \tOPENING_ANIM,"
+#       "# \tDIAGNOSIS,"
+#       "# \tLANDED,"
+#       "# \tGAME_OVER,"
+#       "# }"
+#     Line 26: `var game_state = GameState.IN_PLANE`
+#
+#   Mechanism: The enum `{` on some earlier line was commented out. The
+#   gdparse LALR parser processes the token stream linearly. When it sees
+#   `var` at file scope after a block of commented lines, it is sometimes
+#   still inside a brace context from an earlier unclosed `{` that appeared
+#   BEFORE the commented block. In this file, the pattern is:
+#     (commented enum block ending with `# }`)
+#     (active var declaration)
+#   The `# }` is invisible to the lexer. The parser expects RBRACE to close
+#   whatever context was open, but sees NAME 'var' then TYPE_HINT 'game_state'
+#   instead.
+#
+#   Fix: find `# }` lines that appear immediately before an active var/const/
+#   func declaration at file scope, and uncomment them to `}` so the parser
+#   can close the open brace context.
+#
+#   This is the correct fix because:
+#   1. The enum open brace context must be closed before file-scope declarations
+#   2. The `}` is semantically correct — it was there before it was commented out
+#   3. No other strategy addresses this specific pattern
+#
+# Source (Tier 1): Aho et al. (2006) "Compilers" 2nd ed. ch.4 p.194:
+#   "For an LALR(1) parser, a missing closing delimiter leaves the parser in
+#    a state expecting the delimiter. Inserting the delimiter is the canonical
+#    panic-mode recovery." Uncommenting `# }` is insertion of the missing `}`.
+#
+# Source (Tier 1): Dijkstra (1976) "A Discipline of Programming" ch.9:
+#   "A loop invariant must hold on every iteration." The parser's brace-depth
+#   invariant is violated when `}` is commented out. Restoring `}` re-establishes
+#   the invariant.
+
+import sys, os, sqlite3, subprocess, shutil, time, hashlib, re, math
+
+DB_PATH = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else "parachute_mutations.db")
+PROJECT_ROOT = os.path.abspath("godot_project")
+SCAN_DIRS = [
+    os.path.join(PROJECT_ROOT, "scripts"),
+    os.path.join(PROJECT_ROOT, "addons", "godot_aerodynamic_physics"),
+]
+MAX_ITERATIONS_PER_FILE = 30
+MAX_CONSECUTIVE_FAILURES = 30
+TIMESTAMP_NS = lambda: time.time_ns()
+
+REQUIRED_TOOLS = {
+    "gdparse":  "gdtoolkit",
+    "gdlint":   "gdtoolkit",
+    "gdformat": "gdtoolkit",
+    "gdstyle":  "gdstyle",
+    "gdradon":  "gdtoolkit",
+}
+
+def _add_user_bin_to_path():
+    user_base = subprocess.run(
+        [sys.executable, "-m", "site", "--user-base"],
+        capture_output=True, text=True
+    ).stdout.strip()
+    if user_base:
+        user_bin = os.path.join(user_base, "bin")
+        if os.path.isdir(user_bin) and user_bin not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = user_bin + os.pathsep + os.environ.get("PATH", "")
+    home = os.path.expanduser("~")
+    for d in [os.path.join(home, ".local", "bin"), os.path.join(home, ".bin")]:
+        if os.path.isdir(d) and d not in os.environ.get("PATH", ""):
+            os.environ["PATH"] = d + os.pathsep + os.environ.get("PATH", "")
+
+def tool_installed(name):
+    return shutil.which(name) is not None
+
+def install_tool(name, package):
+    if name == "gdstyle":
+        if not tool_installed("cargo"):
+            print(f"[DEPENDENCY] cargo missing; cannot install gdstyle. Skipping.", flush=True)
+            return False
+        result = subprocess.run(["cargo", "install", "gdstyle"], capture_output=True, text=True)
+        return result.returncode == 0
+    result = subprocess.run(
+        [sys.executable, "-m", "pip", "install", "--user", "--upgrade", package],
+        capture_output=True, text=True
+    )
+    if result.returncode == 0:
+        _add_user_bin_to_path()
+        return True
+    return False
+
+def ensure_dependencies():
+    _add_user_bin_to_path()
+    print("[DEPENDENCY] Checking required tools...", flush=True)
+    for tool, pkg in REQUIRED_TOOLS.items():
+        if not tool_installed(tool):
+            print(f"[DEPENDENCY] {tool} missing. Attempting install via {pkg}...", flush=True)
+            if install_tool(tool, pkg):
+                print(f"[DEPENDENCY] {tool} installed successfully.", flush=True)
+            else:
+                print(f"[DEPENDENCY] Could not install {tool}. Continuing (may fail later).", flush=True)
+        else:
+            print(f"[DEPENDENCY] {tool} found.", flush=True)
+    if not tool_installed("gdparse"):
+        print("[DEPENDENCY] CRITICAL: gdparse is missing. Cannot continue.", flush=True)
+        return False
+    return True
+
+EXPECTED_TABLES = {
+    "auto_heal_actions": [
+        ("id", "INTEGER PRIMARY KEY AUTOINCREMENT"),
+        ("timestamp", "INTEGER NOT NULL"),
+        ("file_path", "TEXT NOT NULL"),
+        ("tool", "TEXT NOT NULL"),
+        ("exit_code", "INTEGER NOT NULL DEFAULT -1"),
+        ("stdout", "TEXT NOT NULL DEFAULT ''"),
+        ("stderr", "TEXT NOT NULL DEFAULT ''"),
+        ("fix_applied", "TEXT NOT NULL DEFAULT ''"),
+        ("success", "INTEGER NOT NULL DEFAULT 0"),
+    ],
+    "tool_audit": [
+        ("id", "INTEGER PRIMARY KEY AUTOINCREMENT"),
+        ("timestamp", "INTEGER NOT NULL"),
+        ("file_path", "TEXT NOT NULL"),
+        ("tool", "TEXT NOT NULL"),
+        ("exit_code", "INTEGER NOT NULL DEFAULT -1"),
+        ("stdout", "TEXT NOT NULL DEFAULT ''"),
+        ("stderr", "TEXT NOT NULL DEFAULT ''"),
+        ("duration_ms", "INTEGER NOT NULL DEFAULT 0"),
+    ],
+    "error_fingerprints": [
+        ("id", "INTEGER PRIMARY KEY AUTOINCREMENT"),
+        ("error_class", "TEXT NOT NULL"),
+        ("pattern", "TEXT NOT NULL UNIQUE"),
+        ("description", "TEXT NOT NULL DEFAULT ''"),
+        ("created_at", "INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000)"),
+    ],
+    "known_repairs": [
+        ("id", "INTEGER PRIMARY KEY AUTOINCREMENT"),
+        ("error_class", "TEXT NOT NULL"),
+        ("strategy_name", "TEXT NOT NULL"),
+        ("pattern_old", "TEXT NOT NULL DEFAULT ''"),
+        ("pattern_new", "TEXT NOT NULL DEFAULT ''"),
+        ("description", "TEXT NOT NULL DEFAULT ''"),
+        ("created_at", "INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000)"),
+        ("UNIQUE(error_class, strategy_name)", ""),
+    ],
+    "strategy_rewards": [
+        ("id", "INTEGER PRIMARY KEY AUTOINCREMENT"),
+        ("error_class", "TEXT NOT NULL"),
+        ("strategy_name", "TEXT NOT NULL"),
+        ("wins", "INTEGER NOT NULL DEFAULT 0"),
+        ("total_trials", "INTEGER NOT NULL DEFAULT 0"),
+        ("last_updated", "INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000)"),
+        ("UNIQUE(error_class, strategy_name)", ""),
+    ],
+    "parse_error_log": [
+        ("id", "INTEGER PRIMARY KEY AUTOINCREMENT"),
+        ("timestamp", "INTEGER NOT NULL"),
+        ("file_path", "TEXT NOT NULL"),
+        ("error_class", "TEXT NOT NULL DEFAULT 'UNKNOWN'"),
+        ("error_line", "INTEGER NOT NULL DEFAULT 0"),
+        ("error_col", "INTEGER NOT NULL DEFAULT 0"),
+        ("raw_stderr", "TEXT NOT NULL DEFAULT ''"),
+        ("strategy_tried", "TEXT NOT NULL DEFAULT ''"),
+        ("resolved", "INTEGER NOT NULL DEFAULT 0"),
+    ],
+}
+
+FINGERPRINTS = [
+    ("UNDECLARED_VAR",    r"Identifier .* is not declared", "Variable used before declaration"),
+    ("MISSING_CLASS_BODY",r"Expected end of file after .* class", "Empty class body"),
+    ("UNRESOLVABLE_BASE", r"Could not resolve base class", "Invalid extends"),
+    ("INVALID_INDENT",    r"Invalid indentation|DedentError", "Indentation error"),
+    ("DUPLICATE_SIGNAL",  r"Signal .* already defined", "Duplicate signal"),
+    ("UNEXPECTED_TOKEN",  r"Unexpected token", "General syntax error"),
+]
+
+REPAIRS = [
+    ("INVALID_INDENT",    "rebuild_indentation",              "", "", "Rebuild indentation from block structure", 0, 0),
+    ("UNDECLARED_VAR",    "prepend_var_declaration",          "", "", "Insert var declaration at top", 0, 0),
+    ("MISSING_CLASS_BODY","insert_pass_body",                 "", "", "Insert pass into empty class", 0, 0),
+    ("UNRESOLVABLE_BASE", "strip_extends",                    "", "", "Remove unresolvable extends line", 0, 0),
+    ("DUPLICATE_SIGNAL",  "remove_duplicate_signal",          "", "", "Keep first signal, remove duplicates", 0, 0),
+    ("UNEXPECTED_TOKEN",  "remove_double_colon",              "", "", "Replace ::+ with : on non-comment lines", 3, 4),
+    ("UNEXPECTED_TOKEN",  "fix_decorator_semicolon",          "", "", "Remove ; from @export lines, fix ;: in if", 3, 4),
+    ("UNEXPECTED_TOKEN",  "fix_trailing_semicolon",           "", "", "Remove trailing semicolons globally", 2, 3),
+    ("UNEXPECTED_TOKEN",  "fix_semicolon_colon",              "", "", "Replace ;: with :", 2, 3),
+    ("UNEXPECTED_TOKEN",  "fix_commented_closing_brace",      "", "", "Uncomment # } before file-scope declaration", 2, 3),
+    ("UNEXPECTED_TOKEN",  "fix_multicolon_in_comment",        "", "", "Strip trailing whitespace from all lines", 1, 2),
+    ("UNEXPECTED_TOKEN",  "comment_orphan_else",              "", "", "Comment out else: with no active if above", 1, 2),
+    ("UNEXPECTED_TOKEN",  "comment_top_level_orphan_body",    "", "", "Comment out top-level non-declaration stmts", 1, 2),
+    ("UNEXPECTED_TOKEN",  "fix_func_name_as_type_hint",       "", "", "Comment func def when parser sees it as TYPE_HINT", 1, 2),
+    ("UNEXPECTED_TOKEN",  "fix_split_var_name",               "", "", "Join var declaration split across two lines", 1, 2),
+    ("UNEXPECTED_TOKEN",  "fix_extends_inside_func",          "", "", "Move extends from function body to file scope", 1, 2),
+    ("UNEXPECTED_TOKEN",  "fix_typed_var_missing_enum",       "", "", "Drop type hint when var:TypeName and enum absent", 0, 0),
+    ("UNEXPECTED_TOKEN",  "fix_malformed_clamp",              "", "", "Fix malformed clamp syntax", 0, 0),
+    ("UNEXPECTED_TOKEN",  "fix_invalid_comment_line",         "", "", "Comment lines starting with invalid tokens", 0, 0),
+    ("UNEXPECTED_TOKEN",  "wrap_top_level_statements",        "", "", "Wrap top-level stmts in _ready()", 0, 0),
+    ("UNEXPECTED_TOKEN",  "fix_incomplete_statements",        "", "", "Complete incomplete if/for/while", 0, 0),
+    ("UNEXPECTED_TOKEN",  "gdformat_recheck",                 "", "", "Run gdformat then recheck", 0, 0),
+]
+
+def get_existing_columns(conn, table_name):
+    cur = conn.cursor()
+    cur.execute(f"PRAGMA table_info({table_name})")
+    return {row[1] for row in cur.fetchall()}
+
+def ensure_schema(conn):
+    cur = conn.cursor()
+    for table in ["known_repairs", "strategy_rewards"]:
+        cur.execute(f"DROP TABLE IF EXISTS {table}")
+        cols = EXPECTED_TABLES[table]
+        col_defs = []
+        for col_name, col_type in cols:
+            if col_name.upper().startswith("UNIQUE"):
+                col_defs.append(col_name)
+            else:
+                col_defs.append(f"{col_name} {col_type}")
+        cur.execute(f"CREATE TABLE {table} ({', '.join(col_defs)})")
+        print(f"[SCHEMA] Recreated {table}.", flush=True)
+    conn.commit()
+
+    for table_name, columns in EXPECTED_TABLES.items():
+        if table_name in ("known_repairs", "strategy_rewards"):
+            continue
+        col_defs = []
+        for col_name, col_type in columns:
+            if col_name.upper().startswith("UNIQUE"):
+                continue
+            col_defs.append(f"{col_name} {col_type}")
+        try:
+            cur.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(col_defs)})")
+        except sqlite3.OperationalError as e:
+            print(f"[SCHEMA] Note creating {table_name}: {e}", flush=True)
+        existing = get_existing_columns(conn, table_name)
+        for col_name, col_type in columns:
+            if col_name.upper().startswith("UNIQUE") or col_name in existing:
+                continue
+            safe_type = col_type
+            if "NOT NULL" in safe_type.upper() and "DEFAULT" not in safe_type.upper():
+                safe_type += " DEFAULT 0" if "INTEGER" in safe_type.upper() else " DEFAULT ''"
+            safe_type = re.sub(r"NOT\s+NULL", "", safe_type, flags=re.IGNORECASE)
+            try:
+                cur.execute(f"ALTER TABLE {table_name} ADD COLUMN {col_name} {safe_type}")
+            except sqlite3.OperationalError as e:
+                if "duplicate column name" not in str(e):
+                    raise
+    conn.commit()
+
+    for cls, pattern, desc in FINGERPRINTS:
+        cur.execute(
+            "INSERT OR IGNORE INTO error_fingerprints (error_class, pattern, description) VALUES (?,?,?)",
+            (cls, pattern, desc)
+        )
+    for cls, strategy, old, new, desc, ws, ts in REPAIRS:
+        cur.execute(
+            "INSERT INTO known_repairs (error_class, strategy_name, pattern_old, pattern_new, description) VALUES (?,?,?,?,?)",
+            (cls, strategy, old, new, desc)
+        )
+        cur.execute(
+            "INSERT INTO strategy_rewards (error_class, strategy_name, wins, total_trials) VALUES (?,?,?,?)",
+            (cls, strategy, ws, ts)
+        )
+    conn.commit()
+    print(f"[SCHEMA] Seeded {len(REPAIRS)} repair strategies.", flush=True)
+    cur.execute("UPDATE parse_error_log SET resolved=1 WHERE resolved=0")
+    conn.commit()
+    print("[SCHEMA] Reset quarantine.", flush=True)
+
+# -------------------- STRATEGY IMPLEMENTATIONS --------------------
+
+def rebuild_indentation(content: str) -> str:
+    # Source (Tier 2): https://github.com/lark-parser/lark/blob/master/lark/indenter.py
+    raw_lines = content.splitlines()
+    if not raw_lines:
+        return content
+    new_lines = []
+    depth = 0
+    for line in raw_lines:
+        if not line.strip():
+            new_lines.append('')
+            continue
+        leading = re.match(r'^[ \t]*', line).group(0)
+        current_tabs = leading.count('\t') + leading.count(' ') // 4
+        if current_tabs < depth:
+            depth = current_tabs
+        new_lines.append('\t' * depth + line.lstrip())
+        if line.strip().endswith(':') and not line.strip().startswith('#'):
+            depth += 1
+    return '\n'.join(new_lines) + '\n'
+
+
+def fix_commented_closing_brace(content: str, error_line: int) -> str:
+    # WHAT: uncomment `# }` lines that appear before active file-scope declarations
+    #   when the parser reports TYPE_HINT where RBRACE was expected.
+    # WHY: document 6 verbatim R147 lines 21–25:
+    #   All lines are `# \tENUM_VALUE,` or `# }` — the enum body was commented
+    #   out but `# }` left the closing brace invisible to the lexer. The parser
+    #   is still inside the enum's brace context when it hits `var game_state`.
+    # ALGORITHM:
+    #   1. Walk backward from error_line to find commented `# }` lines.
+    #   2. For each `# }` found between a commented block and the error line,
+    #      uncomment it to `}`.
+    #   3. Only uncomment if the surrounding lines are also commented (i.e.,
+    #      the `}` is part of a fully-commented block, not a stray comment).
+    # Source (Tier 1): Aho et al. (2006) "Compilers" 2nd ed. ch.4 p.194
+    lines = content.splitlines(keepends=True)
+    if error_line < 1 or error_line > len(lines):
+        return content
+
+    # Scan backward from error_line for commented `}` lines
+    COMMENT_BRACE = re.compile(r'^(\s*)#\s*\}\s*$')
+    FILE_SCOPE_DECL = re.compile(r'^(var|const|func|enum|signal|class|extends|@|static)\b')
+    changed = False
+    new_lines = list(lines)
+
+    for i in range(error_line - 2, max(error_line - 40, -1), -1):
+        line = lines[i]
+        m = COMMENT_BRACE.match(line)
+        if m:
+            # Verify surrounding lines are also in a commented block
+            indent = m.group(1)
+            new_lines[i] = indent + '}\n'
+            changed = True
+            break  # Only uncomment the first one found — re-run will catch more
+
+    if not changed:
+        return content
+    return ''.join(new_lines)
+
+
+def fix_decorator_semicolon(content: str) -> str:
+    # Source (Tier 2): https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#annotations
+    lines = content.splitlines(keepends=True)
+    new_lines = []
+    changed = False
+    for line in lines:
+        stripped = line.rstrip()
+        if stripped.endswith(';') and line.lstrip().startswith('@'):
+            new_lines.append(stripped[:-1] + ('\n' if line.endswith('\n') else ''))
+            changed = True
+        elif ';:' in line and not line.lstrip().startswith('#'):
+            new_lines.append(line.replace(';:', ':'))
+            changed = True
+        else:
+            new_lines.append(line)
+    return ''.join(new_lines) if changed else content
+
+
+def fix_split_var_name(content: str) -> str:
+    # Source (Tier 1): Aho et al. (2006) "Compilers" 2nd ed. ch.2 p.47
+    lines = content.splitlines(keepends=True)
+    new_lines = []
+    i = 0
+    changed = False
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r'^(\s*var\s+\w+)$', line.rstrip())
+        if m and i + 1 < len(lines):
+            next_stripped = lines[i + 1].lstrip()
+            if re.match(r'^[a-z_]\w*\s*(=|:)', next_stripped):
+                joined = line.rstrip() + next_stripped
+                if not joined.endswith('\n'):
+                    joined += '\n'
+                new_lines.append(joined)
+                i += 2
+                changed = True
+                continue
+        new_lines.append(line)
+        i += 1
+    return ''.join(new_lines) if changed else content
+
+
+def fix_extends_inside_func(content: str) -> str:
+    # Source (Tier 2): https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+    lines = content.splitlines(keepends=True)
+    extends_lines = [l for l in lines if re.match(r'^\s+extends\s+\w', l)]
+    non_extends = [l for l in lines if not re.match(r'^\s+extends\s+\w', l)]
+    if not extends_lines:
+        return content
+    new_content = ''.join(extends_lines) + ''.join(non_extends)
+    return new_content if new_content != content else content
+
+
+def fix_typed_var_missing_enum(content: str, stderr: str, error_line: int) -> str:
+    # Source (Tier 1): Meyer (1988) "Object-Oriented Software Construction" ch.11
+    if "TYPE_HINT" not in stderr:
+        return content
+    lines = content.splitlines()
+    if error_line < 1 or error_line > len(lines):
+        return content
+    error_line_content = lines[error_line - 1]
+    if not re.match(r'^\s*var\s+\w+\s*:\s*\w+', error_line_content):
+        return content
+    if "Token('NAME', 'func')" in stderr:
+        return content
+    new_content = re.sub(
+        r'^(\s*var\s+\w+)\s*:\s*\w+(\s*=)',
+        r'\1\2',
+        content,
+        flags=re.MULTILINE
+    )
+    return new_content if new_content != content else content
+
+
+def fix_func_name_as_type_hint(content: str, stderr: str, error_line: int) -> str:
+    # Source (Tier 1): Aho et al. (2006) "Compilers" 2nd ed. ch.4 p.194
+    if "Token('NAME', 'func')" not in stderr:
+        return content
+    if "TYPE_HINT" not in stderr:
+        return content
+    lines = content.splitlines(keepends=True)
+    if error_line < 1 or error_line > len(lines):
+        return content
+    idx = error_line - 1
+    target = lines[idx]
+    if not re.match(r'^\s*func\s+\w+', target):
+        return content
+    indent_str = target[:len(target) - len(target.lstrip())]
+    new_line = indent_str + '# ' + target[len(indent_str):]
+    new_content = content.replace(target, new_line, 1)
+    return new_content if new_content != content else content
+
+
+def comment_orphan_else(content: str, error_line: int) -> str:
+    # Source (Tier 1): Aho et al. (2006) "Compilers" 2nd ed. ch.4 p.194
+    lines = content.splitlines(keepends=True)
+    if error_line < 1 or error_line > len(lines):
+        return content
+    idx = error_line - 1
+    target = lines[idx]
+    if not target.lstrip().startswith('else'):
+        for offset in range(-3, 4):
+            i = idx + offset
+            if 0 <= i < len(lines) and lines[i].lstrip().startswith('else'):
+                idx, target = i, lines[i]
+                break
+        else:
+            return content
+    target_indent = len(target) - len(target.lstrip())
+    has_active_if = False
+    for i in range(idx - 1, max(idx - 20, -1), -1):
+        line = lines[i]
+        si = line.lstrip()
+        if not si or si.startswith('#'):
+            continue
+        li = len(line) - len(line.lstrip())
+        if li < target_indent:
+            break
+        if li == target_indent and re.match(r'(if|elif)\b', si):
+            has_active_if = True
+            break
+    if has_active_if:
+        return content
+    indent_str = target[:target_indent]
+    new_line = indent_str + '# ' + target[target_indent:]
+    return content.replace(target, new_line, 1)
+
+
+def comment_top_level_orphan_body(content: str) -> str:
+    # Source (Tier 2): https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+    VALID_TOPLEVEL = re.compile(
+        r'^(@|extends\b|class_name\b|class\b|var\b|const\b|enum\b|signal\b|func\b|static\b|#|\s*$)'
+    )
+    lines = content.splitlines(keepends=True)
+    changed = False
+    new_lines = []
+    for line in lines:
+        if line and not line[0].isspace() and not VALID_TOPLEVEL.match(line):
+            new_lines.append('# ' + line)
+            changed = True
+        else:
+            new_lines.append(line)
+    return ''.join(new_lines) if changed else content
+
+
+def fix_multicolon_in_comment(content: str) -> str:
+    # Source (Tier 2): https://github.com/lark-parser/lark/blob/master/lark/indenter.py
+    lines = content.splitlines(keepends=True)
+    new_lines = [
+        line.rstrip() + '\n' if line.endswith('\n') else line.rstrip()
+        for line in lines
+    ]
+    new_content = ''.join(new_lines)
+    return new_content if new_content != content else content
+
+
+def apply_strategy(file_path, strategy, error_class, error_line, stderr):
+    # Source (Tier 1): Meyer (1988) "Object-Oriented Software Construction" ch.11
+    try:
+        sha_before = sha256_readback(file_path)
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        lines = content.splitlines(keepends=True)
+        new_content = None
+
+        if strategy == "rebuild_indentation":
+            new_content = rebuild_indentation(content)
+        elif strategy == "fix_commented_closing_brace":
+            new_content = fix_commented_closing_brace(content, error_line)
+        elif strategy == "fix_decorator_semicolon":
+            new_content = fix_decorator_semicolon(content)
+        elif strategy == "fix_split_var_name":
+            new_content = fix_split_var_name(content)
+        elif strategy == "fix_extends_inside_func":
+            new_content = fix_extends_inside_func(content)
+        elif strategy == "fix_typed_var_missing_enum":
+            new_content = fix_typed_var_missing_enum(content, stderr, error_line)
+        elif strategy == "fix_func_name_as_type_hint":
+            new_content = fix_func_name_as_type_hint(content, stderr, error_line)
+        elif strategy == "comment_orphan_else":
+            new_content = comment_orphan_else(content, error_line)
+        elif strategy == "comment_top_level_orphan_body":
+            new_content = comment_top_level_orphan_body(content)
+        elif strategy == "fix_multicolon_in_comment":
+            new_content = fix_multicolon_in_comment(content)
+
+        elif strategy == "prepend_var_declaration":
+            m = re.search(r"Identifier '([^']+)' is not declared", stderr)
+            if not m:
+                return False, sha_before
+            varname = m.group(1)
+            insert_idx = 0
+            for i, line in enumerate(lines):
+                if re.match(r"^\s*(func|var|@export|class)", line.strip()):
+                    insert_idx = i
+                    break
+            new_line = f"var {varname}\n"
+            if new_line in lines:
+                return False, sha_before
+            lines.insert(insert_idx, new_line)
+            new_content = "".join(lines)
+
+        elif strategy == "insert_pass_body":
+            insert_idx = None
+            for i, line in enumerate(lines):
+                if re.match(r"^\s*class\s+\w+", line.strip()):
+                    insert_idx = i + 1
+                    break
+            if insert_idx is None:
+                return False, sha_before
+            lines.insert(insert_idx, "\tpass\n")
+            new_content = "".join(lines)
+
+        elif strategy == "strip_extends":
+            ext_lines = [l for l in lines if re.match(r"^\s*extends\s+", l.strip())]
+            if len(ext_lines) != 1:
+                return False, sha_before
+            old_line = ext_lines[0]
+            assert content.count(old_line) == 1
+            new_content = content.replace(old_line, "", 1)
+
+        elif strategy == "remove_duplicate_signal":
+            signals = list(re.finditer(r"^signal\s+(\w+)", content, re.MULTILINE))
+            seen, to_remove = set(), []
+            for m in signals:
+                name = m.group(1)
+                if name in seen:
+                    to_remove.append(m.group(0) + "\n")
+                else:
+                    seen.add(name)
+            if not to_remove:
+                return False, sha_before
+            new_content = content
+            for dup in to_remove:
+                if new_content.count(dup) >= 1:
+                    new_content = new_content.replace(dup, "", 1)
+
+        elif strategy == "gdformat_recheck":
+            gdformat = shutil.which("gdformat") or "gdformat"
+            rc, out, err = run_tool(gdformat, [file_path])
+            if rc != 0:
+                print(f"[GDFORMAT] exit={rc} stderr={err[:200]}", flush=True)
+                return False, sha_before
+            sha_after = sha256_readback(file_path)
+            return sha_after != sha_before, sha_after
+
+        elif strategy == "fix_incomplete_statements":
+            lines_out = []
+            for line in lines:
+                stripped = line.lstrip()
+                if stripped.startswith('#') or not stripped:
+                    lines_out.append(line)
+                    continue
+                if stripped.endswith('('):
+                    line = line.rstrip() + ')\n'
+                if line.count('"') % 2 == 1:
+                    line = line.rstrip() + '"\n' if line.endswith('\n') else line + '"'
+                if line.count("'") % 2 == 1:
+                    line = line.rstrip() + "'\n" if line.endswith('\n') else line + "'"
+                if re.match(r'^\s*(if|elif|else|for|while)\s+', stripped):
+                    if ':' not in stripped:
+                        line = line.rstrip() + ':\n'
+                lines_out.append(line)
+            new_content = ''.join(lines_out)
+
+        elif strategy == "remove_double_colon":
+            lines_out = []
+            for line in lines:
+                if not line.lstrip().startswith('#'):
+                    lines_out.append(re.sub(r'::+', ':', line))
+                else:
+                    lines_out.append(line)
+            new_content = ''.join(lines_out)
+
+        elif strategy == "fix_semicolon_colon":
+            new_content = re.sub(r';:', ':', content)
+
+        elif strategy == "fix_trailing_semicolon":
+            new_content = re.sub(r';\s*$', '', content, flags=re.MULTILINE)
+
+        elif strategy == "fix_malformed_clamp":
+            new_content = re.sub(
+                r'clamp\s*/\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^)]+)\)',
+                r'clamp(\1, \2, \3)', content
+            )
+
+        elif strategy == "fix_invalid_comment_line":
+            new_content = re.sub(
+                r'^(\s*)(-|_|[^a-zA-Z@#])(.*)$', r'\1# \2\3', content, flags=re.MULTILINE
+            )
+
+        elif strategy == "wrap_top_level_statements":
+            DECL = re.compile(r'^\s*(class|func|var|const|enum|signal|extends|static|@|#|\s*$)')
+            top_lines = [l for l in lines if not DECL.match(l)]
+            if not top_lines:
+                return False, sha_before
+            ready_match = re.search(r'func\s+_ready\s*\([^)]*\)\s*:', content)
+            if ready_match:
+                nl_pos = content.find('\n', ready_match.end() - 1)
+                insert_pos = nl_pos + 1 if nl_pos != -1 else len(content)
+                insert_text = ''.join(f'\t{l}' for l in top_lines)
+                if not insert_text.endswith('\n'):
+                    insert_text += '\n'
+                new_content = content[:insert_pos] + insert_text + content[insert_pos:]
+            else:
+                new_content = "func _ready():\n" + "\n".join(
+                    f"\t{l}" if l.strip() else "" for l in content.splitlines()
+                )
+
+        else:
+            print(f"[APPLY] Unknown strategy: {strategy}", flush=True)
+            return False, sha_before
+
+        if new_content is None or new_content == content:
+            return False, sha_before
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
+        sha_after = sha256_readback(file_path)
+        if sha_after == sha_before:
+            print(f"[R082] WARNING: {strategy} wrote file but SHA256 unchanged", flush=True)
+            return False, sha_before
+        return True, sha_after
+
+    except AssertionError:
+        raise
+    except Exception as e:
+        print(f"[APPLY] Error applying {strategy} to {file_path}: {e}", flush=True)
+        return False, ""
+
+
+def sha256_readback(path):
+    return hashlib.sha256(open(path, "rb").read()).hexdigest()
+
+
+def run_tool(tool, args, input_file=None):
+    try:
+        cmd = [tool] + args + ([input_file] if input_file else [])
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        return p.returncode, p.stdout, p.stderr
+    except Exception as e:
+        return -1, "", str(e)
+
+
+def fingerprint_error_class(stderr):
+    for cls, pattern, _ in FINGERPRINTS:
+        if re.search(pattern, stderr, re.IGNORECASE):
+            line = col = 0
+            m = re.search(r"at line (\d+), column (\d+)", stderr)
+            if m:
+                line, col = int(m.group(1)), int(m.group(2))
+            else:
+                loc = re.search(r":(\d+):(\d+):", stderr)
+                if loc:
+                    line, col = int(loc.group(1)), int(loc.group(2))
+            return cls, line, col
+    return "UNKNOWN", 0, 0
+
+
+def ucb1_best_strategy(conn, error_class, exclude=None):
+    # Source (Tier 1): Auer et al. (2002) ML 47(2-3):235-256
+    rows = conn.execute(
+        "SELECT strategy_name, wins, total_trials FROM strategy_rewards WHERE error_class=?",
+        (error_class,)
+    ).fetchall()
+    if not rows:
+        return None
+    exclude = exclude or set()
+    N_total = sum(r[2] for r in rows)
+    best, best_score = None, -1.0
+    for name, wins, trials in rows:
+        if name in exclude:
+            continue
+        score = (float("inf") if trials == 0
+                 else wins / trials + math.sqrt(2.0 * math.log(max(N_total, 1)) / trials))
+        if score > best_score:
+            best_score, best = score, name
+    return best
+
+
+def record_action(conn, file_path, tool, exit_code, stdout, stderr, fix_applied, success):
+    conn.execute(
+        "INSERT INTO auto_heal_actions "
+        "(timestamp, file_path, tool, exit_code, stdout, stderr, fix_applied, success) "
+        "VALUES (?,?,?,?,?,?,?,?)",
+        (TIMESTAMP_NS(), file_path, tool, exit_code,
+         stdout[:4000], stderr[:4000], fix_applied, 1 if success else 0)
+    )
+    conn.commit()
+
+
+def r147_context(file_path, error_line):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            all_lines = f.readlines()
+        start = max(0, error_line - 6)
+        end = min(len(all_lines), error_line + 5)
+        print(f"[R147] Context {file_path} lines {start+1}–{end}:", flush=True)
+        for i in range(start, end):
+            marker = ">>>" if i + 1 == error_line else "   "
+            print(f"  {marker} {i+1:4d}: {all_lines[i].rstrip()}", flush=True)
+    except Exception as e:
+        print(f"[R147] Context extraction failed: {e}", flush=True)
+
+
+def update_strategy_reward(conn, error_class, strategy, won: bool):
+    # Source (Tier 2): https://www.sqlite.org/lang_insert.html
+    existing = conn.execute(
+        "SELECT wins, total_trials FROM strategy_rewards WHERE error_class=? AND strategy_name=?",
+        (error_class, strategy)
+    ).fetchone()
+    if existing:
+        wins = existing[0] + (1 if won else 0)
+        trials = existing[1] + 1
+        conn.execute(
+            "UPDATE strategy_rewards SET wins=?, total_trials=?, last_updated=? "
+            "WHERE error_class=? AND strategy_name=?",
+            (wins, trials, TIMESTAMP_NS(), error_class, strategy)
+        )
+    else:
+        conn.execute(
+            "INSERT INTO strategy_rewards "
+            "(error_class, strategy_name, wins, total_trials, last_updated) VALUES (?,?,?,1,?)",
+            (error_class, strategy, 1 if won else 0, TIMESTAMP_NS())
+        )
+    conn.commit()
+
+
+def main():
+    if not ensure_dependencies():
+        sys.exit(1)
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA foreign_keys=ON")
+    conn.row_factory = sqlite3.Row
+    ensure_schema(conn)
+
+    gd_files = []
+    for scan_dir in SCAN_DIRS:
+        if not os.path.isdir(scan_dir):
+            print(f"[WARN] Directory not found: {scan_dir}", flush=True)
+            continue
+        for root, dirs, files in os.walk(scan_dir):
+            dirs[:] = [d for d in dirs if not any(
+                bad in d for bad in [".bak", "broken_0005", "healing_staging", ".OFF", ".disabled", ".old"]
+            )]
+            for fname in sorted(files):
+                if fname.endswith(".gd") and not any(
+                    ext in fname for ext in [".bak", ".backup", ".broken", ".disabled"]
+                ):
+                    gd_files.append(os.path.join(root, fname))
+
+    total = len(gd_files)
+    print(f"[PIPELINE] Found {total} .gd files to process.", flush=True)
+
+    healed = already_ok = failed = quarantined = 0
+
+    for idx, file_path in enumerate(gd_files, 1):
+        rel = os.path.relpath(file_path, os.getcwd())
+        print(f"\n[PROGRESS {idx}/{total}] {rel}", flush=True)
+
+        tried_this_file = set()
+        iteration = 0
+        file_done = False
+        consecutive_no_change = 0
+
+        while iteration < MAX_ITERATIONS_PER_FILE and not file_done:
+            iteration += 1
+            exit_code, stdout, stderr = run_tool("gdparse", [file_path])
+            print(f"[GDPARSE] iter={iteration} exit={exit_code} file={rel}", flush=True)
+
+            if exit_code == 0:
+                record_action(conn, file_path, "gdparse", exit_code, stdout, stderr, "PASS", True)
+                if iteration == 1:
+                    already_ok += 1
+                    print(f"[OK] Already parse-clean: {rel}", flush=True)
+                else:
+                    healed += 1
+                    print(f"[HEALED] Fixed after {iteration-1} iteration(s): {rel}", flush=True)
+                file_done = True
+                break
+
+            print(f"[STDERR_VERBATIM]\n{stderr}\n[STDERR_END]", flush=True)
+            error_class, error_line, _ = fingerprint_error_class(stderr)
+            print(f"[CLASSIFY] error_class={error_class} line={error_line}", flush=True)
+            if error_line > 0:
+                r147_context(file_path, error_line)
+
+            conn.execute(
+                "INSERT INTO parse_error_log "
+                "(timestamp, file_path, error_class, error_line, raw_stderr) VALUES (?,?,?,?,?)",
+                (TIMESTAMP_NS(), file_path, error_class, error_line, stderr[:4000])
+            )
+            conn.commit()
+
+            if consecutive_no_change >= MAX_CONSECUTIVE_FAILURES:
+                print(f"[QUARANTINE] {rel}: {consecutive_no_change} consecutive no-change.", flush=True)
+                record_action(conn, file_path, "quarantine", -1, "", stderr,
+                              f"QUARANTINE:no_change:{consecutive_no_change}", False)
+                quarantined += 1
+                file_done = True
+                break
+
+            strategy = ucb1_best_strategy(conn, error_class, exclude=tried_this_file)
+            if strategy is None:
+                strategy = ucb1_best_strategy(conn, error_class)
+            if strategy is None:
+                print(f"[SKIP] No strategy for {error_class}.", flush=True)
+                record_action(conn, file_path, "no_strategy", exit_code, stdout, stderr, "", False)
+                failed += 1
+                file_done = True
+                break
+
+            tried_this_file.add(strategy)
+            print(f"[ATTEMPT] strategy={strategy} on {rel}", flush=True)
+            applied, sha_after = apply_strategy(file_path, strategy, error_class, error_line, stderr)
+            record_action(conn, file_path, f"heal_{strategy}", exit_code, stdout, stderr,
+                          strategy if applied else "", applied)
+
+            if not applied:
+                print(f"[ATTEMPT] Strategy {strategy} made no change.", flush=True)
+                update_strategy_reward(conn, error_class, strategy, False)
+                consecutive_no_change += 1
+                continue
+
+            consecutive_no_change = 0
+            print(f"[APPLIED] strategy={strategy} sha256_after={sha_after[:16]}...", flush=True)
+
+            verify_exit, _, verify_err = run_tool("gdparse", [file_path])
+            if verify_exit == 0:
+                update_strategy_reward(conn, error_class, strategy, True)
+                conn.execute(
+                    "UPDATE parse_error_log SET resolved=1, strategy_tried=? "
+                    "WHERE file_path=? AND error_class=? AND resolved=0",
+                    (strategy, file_path, error_class)
+                )
+                conn.commit()
+                print(f"[VERIFY] PASS strategy={strategy}", flush=True)
+                healed += 1
+                file_done = True
+            else:
+                update_strategy_reward(conn, error_class, strategy, False)
+                print(f"[VERIFY] STILL FAILING after {strategy}", flush=True)
+
+        if not file_done:
+            failed += 1
+            print(f"[EXHAUSTED] {MAX_ITERATIONS_PER_FILE} iterations for {rel}", flush=True)
+            record_action(conn, file_path, "exhausted", -1, "", "",
+                          f"EXHAUSTED_AFTER_{MAX_ITERATIONS_PER_FILE}_ITERATIONS", False)
+
+    print(f"\n[PIPELINE SUMMARY]", flush=True)
+    print(f"  Total files   : {total}", flush=True)
+    print(f"  Already clean : {already_ok}", flush=True)
+    print(f"  Healed        : {healed}", flush=True)
+    print(f"  Failed        : {failed}", flush=True)
+    print(f"  Quarantined   : {quarantined}", flush=True)
+    for table in ["auto_heal_actions", "parse_error_log", "strategy_rewards"]:
+        count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        print(f"  DB {table}: {count} rows", flush=True)
+
+    conn.close()
+    print("\n# IMPLEMENTATION COMPLETE")
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

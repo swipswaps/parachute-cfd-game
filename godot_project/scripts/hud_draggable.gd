@@ -1,0 +1,36 @@
+extends Control
+# hud_draggable.gd – drag handler for the forensic HUD panel.
+# Works on any Control; saves position to config file.
+
+var _dragging: bool = false
+var _drag_offset: Vector2 = Vector2.ZERO
+
+func _ready() -> void:
+	mouse_filter = MOUSE_FILTER_STOP
+	print("[VERBATIM] HUD drag script _ready")
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_dragging = true
+			_drag_offset = event.position
+			accept_event()
+			print("[HUD] drag start offset=", _drag_offset)
+		else:
+			_dragging = false
+			accept_event()
+			print("[HUD] drag end position=", position)
+			_save_position()
+	elif event is InputEventMouseMotion and _dragging:
+		position += event.relative
+		accept_event()
+
+func _save_position() -> void:
+	var cfg = ConfigFile.new()
+	var path = "user://forensic_hud.cfg"
+	cfg.load(path)
+	cfg.set_value("position", "panel", position)
+	cfg.save(path)
+	print("[HUD] position saved: ", position)
+
+	# vHUD2: removed duplicate stub func _gui_input(event) (former line 36) — real implementation with drag logic is at line 12; GDScript disallows two methods with the same name in one class, which is what caused preload() to fail parsing this file.

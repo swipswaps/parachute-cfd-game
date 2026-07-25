@@ -1,0 +1,129 @@
+{
+  "fix_list_version": "0235-analysis",
+  "generated_at": "2026-06-19",
+  "source_files_read_verbatim": [
+    "generate_fix_0235.py (uploaded)",
+    "parachute_mutations.db (uploaded — schema extracted via PRAGMA table_info)"
+  ],
+  "cs_principles_invoked": [
+    {
+      "principle": "Bertrand Meyer — Design by Contract (1992)",
+      "tier": 2,
+      "url": "https://dl.acm.org/doi/10.1145/29599.29608",
+      "application": "Every function has a precondition (schema must match), postcondition (row must be inserted), and invariant (UNIQUE constraint not violated). FIX-001 violates the precondition: the INSERT omits session_id which has NOT NULL, so the contract is broken before execution begins."
+    },
+    {
+      "principle": "E.F. Codd — Relational Model / 1NF (1970)",
+      "tier": 2,
+      "url": "https://dl.acm.org/doi/10.1145/362384.362685",
+      "application": "ab_test_metrics.UNIQUE(session_id, run_id) enforces entity integrity at the relational level. An INSERT that omits session_id (NOT NULL) is rejected by the constraint engine — this is correct relational behaviour, but the caller must satisfy the schema contract."
+    },
+    {
+      "principle": "Jim Gray & Andreas Reuter — Transaction Processing (1992) Ch.7 Idempotency",
+      "tier": 2,
+      "url": "https://dl.acm.org/doi/10.5555/573304",
+      "application": "INSERT OR IGNORE is used to achieve idempotency. But idempotency only works if the INSERT satisfies all NOT NULL constraints. A failing INSERT is silently discarded — no metrics row is ever written, leaving run_id=22 and run_id=23 orphaned in ab_test_runs with no matching ab_test_metrics row."
+    },
+    {
+      "principle": "Tony Hoare — Axiomatic Basis for Computer Programming (1969)",
+      "tier": 2,
+      "url": "https://dl.acm.org/doi/10.1145/363235.363259",
+      "application": "FIX-002 (wrong SELECT column name 'launched_at' vs actual 'launch_ts'): a query that names a non-existent column raises sqlite3.OperationalError at runtime. This is a post-condition violation: the SELECT postcondition is 'return rows' but the precondition 'column exists' is not met."
+    },
+    {
+      "principle": "Knuth — The Art of Computer Programming Vol.1 §2.3 Silent failure modes (1968)",
+      "tier": 2,
+      "url": "https://www-cs-faculty.stanford.edu/~knuth/taocp.html",
+      "application": "The INSERT failure in FIX-001 is silent because INSERT OR IGNORE swallows the constraint violation. This is the worst failure mode: no exception, no log entry, no indication that data was not written. The AB test result dict correctly shows ready_time_ms and rss_peak_kb, but they are never persisted — the caller has no way to detect this."
+    },
+    {
+      "principle": "Dijkstra — A Discipline of Programming §3 Weakest Precondition (1976)",
+      "tier": 2,
+      "url": "https://dl.acm.org/doi/10.5555/540029",
+      "application": "The weakest precondition for INSERT OR IGNORE to actually insert a row is: all NOT NULL columns must be supplied AND the UNIQUE constraint must not be violated. FIX-001 fails wp(INSERT, row_exists) because session_id is missing. The correct fix is to add session_id to the column list."
+    }
+  ],
+  "bugs": [
+    {
+      "fix_id": "FIX-001",
+      "severity": "CRITICAL",
+      "title": "ab_test_metrics INSERT omits session_id (NOT NULL) — rows for run_id=22 and run_id=23 never written",
+      "confirmed_from": "PRAGMA table_info(ab_test_metrics) verbatim: cid=1 name='session_id' type='INTEGER' notnull=1",
+      "symptom": "AB test completes with outcome=READY_OK, ready_time_ms=13260, rss_peak_kb=2035920, but SELECT ab_test_metrics returns only 1 row (metric_id=1, session_id=24, run_id=1, all metrics NULL)",
+      "root_cause": "generate_fix_0235.py line ~470: INSERT OR IGNORE INTO ab_test_metrics (run_id, ready_time_ms, rss_peak_kb, fps_avg, crash_detected) — missing session_id. SQLite silently discards the INSERT due to NOT NULL constraint violation + INSERT OR IGNORE.",
+      "broken_sql_verbatim": "INSERT OR IGNORE INTO ab_test_metrics (run_id, ready_time_ms, rss_peak_kb, fps_avg, crash_detected) VALUES (?,?,?,?,?)",
+      "correct_sql": "INSERT OR IGNORE INTO ab_test_metrics (session_id, run_id, ready_time_ms, rss_peak_kb, fps_avg, crash_detected) VALUES (?,?,?,?,?,?)",
+      "correct_params_order": ["session_id", "run_id", "ready_time_ms", "rss_peak_kb", "cpu_avg (maps to fps_avg)", "0 if ready_ok else 1"],
+      "also_missing_columns": ["voluntary_cs from _monitor rss_samples", "involuntary_cs from _monitor", "fps_min"],
+      "db_table": "ab_test_metrics",
+      "exact_columns_from_pragma": ["metric_id INTEGER PK AUTOINCREMENT", "session_id INTEGER NOT NULL", "run_id INTEGER NOT NULL REFERENCES ab_test_runs(run_id)", "fps_avg REAL", "fps_min REAL", "rss_peak_kb INTEGER", "voluntary_cs INTEGER", "involuntary_cs INTEGER", "ready_time_ms INTEGER", "crash_detected INTEGER DEFAULT 0", "ts TEXT DEFAULT strftime(...)"],
+      "unique_constraint": "UNIQUE(session_id, run_id)",
+      "verification_query": "SELECT session_id, run_id, ready_time_ms, rss_peak_kb, crash_detected FROM ab_test_metrics WHERE session_id=31 ORDER BY run_id DESC LIMIT 5; -- must return 2 rows"
+    },
+    {
+      "fix_id": "FIX-002",
+      "severity": "CRITICAL",
+      "title": "STEP 4 display query uses 'launched_at' — column does not exist; actual column is 'launch_ts'",
+      "confirmed_from": "PRAGMA table_info(ab_test_runs) verbatim: cid=4 name='launch_ts' type='TEXT' notnull=1 — no column named 'launched_at' exists",
+      "symptom": "sqlite3.OperationalError: no such column: launched_at — traceback at generate_fix_0235.py line 523 after every successful A/B test run",
+      "root_cause": "generate_fix_0235.py STEP 4 query: SELECT run_id, outcome_code, exit_code, launched_at FROM ab_test_runs — wrong column name. Actual column is launch_ts.",
+      "broken_sql_verbatim": "SELECT run_id, outcome_code, exit_code, launched_at FROM ab_test_runs ORDER BY run_id DESC LIMIT 5",
+      "correct_sql": "SELECT run_id, outcome_code, exit_code, launch_ts FROM ab_test_runs ORDER BY run_id DESC LIMIT 5",
+      "db_table": "ab_test_runs",
+      "exact_columns_from_pragma": ["run_id INTEGER PK", "session_id INTEGER NOT NULL", "godot_pid INTEGER", "sha_at_launch TEXT NOT NULL", "launch_ts TEXT NOT NULL", "exit_ts TEXT", "exit_code INTEGER", "outcome_code TEXT", "gdparse_errors_before INTEGER DEFAULT 0", "gdparse_errors_after INTEGER DEFAULT 0", "notes TEXT"],
+      "verification_query": "SELECT run_id, outcome_code, exit_code, launch_ts FROM ab_test_runs ORDER BY run_id DESC LIMIT 5; -- must return rows without OperationalError"
+    },
+    {
+      "fix_id": "FIX-003",
+      "severity": "HIGH",
+      "title": "resource_contention_log vm_rss_kb values collapse from 2035920 KB to 202952 KB — monitor thread leak: rss_samples accumulate incorrectly across monitor restarts",
+      "confirmed_from": "resource_contention_log last 5 verbatim: rows 32,31 show vm_rss_kb=202952 but rows 29,28 show 2035792 — same PID 1164280",
+      "symptom": "rss_peak_kb reported as 2035920 in AB test result dict but actual game RSS after stabilisation is ~202MB not ~2GB",
+      "root_cause": "The rss_samples list captures the first /proc poll which catches the full mmap (before OS reclaims pages from initial load spike). This is correct behaviour — the peak IS the load-time peak. But the collapse pattern (2035792 -> 202952) indicates the monitor keeps running after proc.kill() because stop_event.set() happens inside finally but monitor reads a stale proc.pid after process exit. _read_proc_status returns {} (process gone) so the break fires — but not before 2-3 extra samples with stale RSS.",
+      "fix": "Check stop_event.is_set() BEFORE _read_proc_status to prevent stale reads after kill",
+      "db_table": "resource_contention_log",
+      "verification_query": "SELECT log_id, ts, vm_rss_kb FROM resource_contention_log WHERE session_id=31 ORDER BY log_id; -- vm_rss_kb values after proc.kill should stop, not collapse to low value"
+    },
+    {
+      "fix_id": "FIX-004",
+      "severity": "HIGH",
+      "title": "CREATE TABLE ab_test_metrics in main() creates wrong schema (no session_id NOT NULL) if table does not already exist — will silently diverge on fresh DB",
+      "confirmed_from": "generate_fix_0235.py main() lines 497-506: CREATE TABLE IF NOT EXISTS ab_test_metrics (metric_id, run_id, fps_avg, ready_time_ms, rss_peak_kb, crash_detected, UNIQUE(run_id)) — missing session_id column entirely",
+      "symptom": "On a fresh parachute_mutations.db the CREATE TABLE in 0235 would produce a different schema than the one already in the DB. Since the table already exists (IF NOT EXISTS), this is currently harmless — but it masks the schema divergence and will break on any DB reset.",
+      "root_cause": "The CREATE TABLE DDL in main() was not updated to match the actual schema established by generate_fix_0230.py (which owns ensure_tables). The DDL in 0235 is stale.",
+      "fix": "Remove the CREATE TABLE from 0235.main() entirely. ensure_tables() from generate_fix_0230.py already creates ab_test_metrics with the correct schema. Calling CREATE TABLE IF NOT EXISTS with wrong schema is a no-op on existing DB but a footgun on reset.",
+      "db_table": "ab_test_metrics",
+      "correct_action": "DELETE the CREATE TABLE block from generate_fix_0235.py main() — rely on ensure_tables() from generate_fix_0230.py exclusively"
+    },
+    {
+      "fix_id": "FIX-005",
+      "severity": "MEDIUM",
+      "title": "verify_0235.sh STEP 4 query also uses 'launched_at' — same wrong column name propagated to shell script",
+      "confirmed_from": "verify_0235.sh line: sqlite3 \"$DB\" \"SELECT run_id, outcome_code, exit_code, launched_at FROM ab_test_runs ORDER BY run_id DESC LIMIT 10;\"",
+      "symptom": "bash verify_0235.sh fails at ab_test_runs display with sqlite3 error: no such column: launched_at",
+      "root_cause": "Same wrong column name as FIX-002, copied into the shell verification script",
+      "fix": "Change 'launched_at' to 'launch_ts' in verify_0235.sh",
+      "db_table": "ab_test_runs",
+      "verification_query": "sqlite3 parachute_mutations.db \"SELECT run_id, outcome_code, exit_code, launch_ts FROM ab_test_runs ORDER BY run_id DESC LIMIT 10;\""
+    }
+  ],
+  "next_user_requests_in_order": [
+    {
+      "step": 1,
+      "priority": "FIRST — unblocks all metrics persistence",
+      "request": "Write generate_fix_0236.py that fixes FIX-001 and FIX-002 in generate_fix_0235.py: (a) correct the ab_test_metrics INSERT to include session_id; (b) correct all STEP 4 display queries to use launch_ts not launched_at; (c) remove the stale CREATE TABLE DDL from main(). No new features — only the three surgical fixes to the INSERT and two SELECT statements. Include verify_0236.sh that runs the fix and then displays ab_test_metrics and ab_test_runs verbatim with correct column names.",
+      "db_operations_first": "python3 -c \"import sqlite3; conn=sqlite3.connect('parachute_mutations.db'); rows=conn.execute('SELECT session_id, run_id, ready_time_ms FROM ab_test_metrics ORDER BY run_id DESC LIMIT 5').fetchall(); print(rows)\" -- confirm 0 rows for session_id=31 before fix, 2 rows after"
+    },
+    {
+      "step": 2,
+      "priority": "SECOND — closes monitor thread leak (FIX-003)",
+      "request": "In generate_fix_0236.py _monitor() function: add 'if stop_event.is_set(): break' as the FIRST line of the while loop body, before _read_proc_status(). This prevents stale /proc reads after proc.kill(). Verification: resource_contention_log vm_rss_kb values for the last run should monotonically decrease to nothing after stop_event fires, not show collapsing values.",
+      "db_operations_first": "sqlite3 parachute_mutations.db \"SELECT log_id, ts, vm_rss_kb FROM resource_contention_log WHERE session_id=31 ORDER BY log_id;\""
+    },
+    {
+      "step": 3,
+      "priority": "THIRD — schema audit",
+      "request": "Run python3 -c \"import sqlite3; conn=sqlite3.connect('parachute_mutations.db'); print(conn.execute('SELECT sql FROM sqlite_master WHERE name=\\\"ab_test_metrics\\\"').fetchone()[0])\" and paste verbatim output — confirm the live schema matches the fix_list expectation before writing generate_fix_0237.py"
+    }
+  ]
+}

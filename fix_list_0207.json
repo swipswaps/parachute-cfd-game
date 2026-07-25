@@ -1,0 +1,145 @@
+[
+  {
+    "id": "F01",
+    "priority": 1,
+    "severity": "BLOCKING_PARSE",
+    "file": "godot_project/scripts/validate_scene.gd",
+    "line": 122,
+    "confirmed_from": "0204.txt lines 280-285 verbatim",
+    "errors": [
+      "Parse Error: Too many arguments for 'find_child()' call. Expected at most 3 but received 4.",
+      "Parse Error: Cannot pass a value of type 'String' as 'bool'.",
+      "Parse Error: Invalid argument for 'find_child()' function: argument 2 should be 'bool' but is 'String'."
+    ],
+    "root_cause": "GDScript 4.x find_child(name, recursive=true, owned=true) takes 3 args max. Caller passed 4, with a String in the bool slot. Godot 4 changed the signature from Godot 3 which had (mask, recursive, owned). Source: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-find-child",
+    "fix_strategy": "regex_rewrite — strip the 4th argument, replace String-in-bool position with bool literal",
+    "cs_principle": "Cardelli_Wegner_1985 — type-theoretic early binding; GDScript resolves argument types at parse time not runtime",
+    "status": "NOT_FIXED_BY_0206",
+    "db_record_required": true
+  },
+  {
+    "id": "F02",
+    "priority": 2,
+    "severity": "BLOCKING_PARSE",
+    "file": "godot_project/add_input_actions.gd",
+    "line": 44,
+    "confirmed_from": "0204.txt lines 291-293 verbatim",
+    "errors": [
+      "Parse Error: Expected closing ')' after call arguments."
+    ],
+    "root_cause": "Unclosed parenthesis in a function call at line 44 — likely a multi-line call where a continuation was dropped or a string contains an unescaped paren. The parser found end-of-expression before closing ')'. Source: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html",
+    "fix_strategy": "inspect_and_close — read line 44 context, find the unmatched paren, close it",
+    "cs_principle": "Aho_2006_Ch3 — lexer context-sensitive paren matching; GDScript lexer is stateful on open-paren depth",
+    "status": "NOT_FIXED_BY_0206",
+    "db_record_required": true
+  },
+  {
+    "id": "F03",
+    "priority": 3,
+    "severity": "BLOCKING_PARSE",
+    "file": "godot_project/addons/gd_repair/debug_components_editor.gd",
+    "line": 135,
+    "confirmed_from": "0204.txt lines 265-267 verbatim",
+    "errors": [
+      "Parse Error: Expected parameter name."
+    ],
+    "root_cause": "Likely a function definition with a type annotation in the wrong position, or a keyword used as parameter name, or a trailing comma in parameter list. GDScript parser emits 'Expected parameter name' when it encounters a non-identifier token where a parameter identifier is required. Source: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#functions",
+    "fix_strategy": "inspect_and_fix_param — read lines 130-140, identify malformed func signature, correct parameter syntax",
+    "cs_principle": "Aho_2006_Ch3 — LL(1) parser error recovery; GDScript uses recursive-descent, fails fast on unexpected token in parameter list",
+    "status": "NOT_FIXED_BY_0206",
+    "db_record_required": true
+  },
+  {
+    "id": "F04",
+    "priority": 4,
+    "severity": "BLOCKING_RUNTIME",
+    "file": "godot_project/scripts/build_terrain.gd",
+    "line": 303,
+    "confirmed_from": "0204.txt line 443-444 verbatim: 'Cannot call method add_child on a null value at: _ready build_terrain.gd:303'",
+    "errors": [
+      "SCRIPT ERROR: Cannot call method 'add_child' on a null value."
+    ],
+    "root_cause": "0204.txt line 8091 (AI analysis): 'plane.add_child(_character)' was injected at line 303 but 'plane' is a local variable declared later in _ready(). The member variable var _plane is null at line 303 because _create_plane() is called after line 303 in the execution order. Order-of-initialization bug: line 303 uses 'plane' before it exists. Fix: call _create_plane() before line 303, or revert 'plane.add_child' back to 'add_child' (root node). Source: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#variables",
+    "fix_strategy": "revert_reparenting — change 'plane.add_child(_character)' back to 'add_child(_character)' as proposed at 0204.txt line 8130",
+    "cs_principle": "Meyer_1997 — Design by Contract; precondition 'is_instance_valid(plane)' must hold before calling .add_child(); Avizienis_2004 cascading failure: null plane → null add_child → character never placed → _game_state never initialized → HUD array crash at 1626",
+    "status": "NOT_FIXED_BY_0206",
+    "db_record_required": true
+  },
+  {
+    "id": "F05",
+    "priority": 5,
+    "severity": "RUNTIME_60HZ_SPAM",
+    "file": "godot_project/scripts/build_terrain.gd",
+    "line": 1626,
+    "confirmed_from": "0204.txt lines 450-8075: 'Out of bounds get index 7 (on base: Array) at: _physics_process build_terrain.gd:1626' — fires every physics frame",
+    "errors": [
+      "SCRIPT ERROR: Out of bounds get index '7' (on base: 'Array')"
+    ],
+    "root_cause": "Array _hud_labels has 7 elements (indices 0-6). Code at line 1626 accesses index 7. Classic off-by-one: HUD was designed for 8 labels, one was removed (or never added), but the access counter was not decremented. Fires at ~60Hz = ~1272 log lines per minute = log amplification DoS per OWASP_2021. Source: https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-size",
+    "fix_strategy": "bounds_guard — wrap access in 'if _hud_labels.size() > 7:' as in generate_fix_0206.py — ALREADY CODED in 0206 but 0206 has not been run yet against real machine",
+    "cs_principle": "Dijkstra_1968 — off-by-one as classical boundary condition error; OWASP_2021 — log amplification as availability attack vector",
+    "status": "CODED_IN_0206_NOT_YET_RUN",
+    "db_record_required": true
+  },
+  {
+    "id": "F06",
+    "priority": 6,
+    "severity": "BLOCKING_PARSE",
+    "file": "godot_project/scripts/game_manager.gd",
+    "line": 30,
+    "confirmed_from": "0204.txt line 269 verbatim: 'Parse Error: Used tab character for indentation instead of space as used before in the file. at: game_manager.gd:30'",
+    "errors": [
+      "Parse Error: Used tab character for indentation instead of space as used before in the file."
+    ],
+    "root_cause": "Prior fix script injected _log() function using 4-space indent inside a tab-indented file. GDScript lexer locks onto first indentation character; mixed tabs and spaces in same file is a lex error. Source: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html#indentation",
+    "fix_strategy": "detect_indent_and_reinject — as coded in generate_fix_0206.py fix_log_injection()",
+    "cs_principle": "Aho_2006_Ch3 — stateful lexer; GDScript tokenizer locks indent mode on first indented line encountered",
+    "status": "CODED_IN_0206_NOT_YET_RUN",
+    "db_record_required": true
+  },
+  {
+    "id": "F07",
+    "priority": 7,
+    "severity": "BLOCKING_PARSE",
+    "file": "godot_project/scripts/wind_field.gd",
+    "line": 28,
+    "confirmed_from": "0204.txt line 287 verbatim: 'Parse Error: Used tab character for indentation instead of space as used before in the file. at: wind_field.gd:28'",
+    "errors": [
+      "Parse Error: Used tab character for indentation instead of space as used before in the file."
+    ],
+    "root_cause": "Same class of bug as F06 — _log() injection used wrong indent character.",
+    "fix_strategy": "detect_indent_and_reinject — as coded in generate_fix_0206.py fix_log_injection()",
+    "cs_principle": "Aho_2006_Ch3 — same as F06",
+    "status": "CODED_IN_0206_NOT_YET_RUN",
+    "db_record_required": true
+  },
+  {
+    "id": "F08",
+    "priority": 8,
+    "severity": "BLOCKING_PARSE",
+    "file": "godot_project/scripts/splash.gd",
+    "lines": [22, 23],
+    "confirmed_from": "0204.txt lines 273-276 verbatim",
+    "errors": [
+      "Parse Error: Cannot find member 'integrity_check_completed' in base 'res://scripts/GameIntegrity.gd'.",
+      "Parse Error: Cannot call non-static function 'check_and_repair()' on the class directly. Make an instance instead."
+    ],
+    "root_cause": "Error 1: signal name 'integrity_check_completed' does not exist in GameIntegrity.gd — name mismatch. Error 2: check_and_repair() is an instance method called on the class itself — OOP static-dispatch violation. Source: https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#static-functions",
+    "fix_strategy": "inspect_gi_and_fix — as coded in generate_fix_0206.py fix_splash()",
+    "cs_principle": "Cardelli_Wegner_1985 — static vs dynamic dispatch; Levine_1999 linker theory — signal resolution is an early-binding name lookup at parse time",
+    "status": "CODED_IN_0206_NOT_YET_RUN",
+    "db_record_required": true
+  },
+  {
+    "id": "ARCH01",
+    "priority": 0,
+    "severity": "ARCHITECTURAL_DEFICIT",
+    "affects": "ALL fix scripts across ALL sessions",
+    "confirmed_from": "0204.txt: grep 'DB OPEN|DB CLOSE|CREATE TABLE|INSERT INTO' returns only lines 392 and 8080 — zero mutation records from any Python fix script",
+    "root_cause": "Every Python fix script (generate_fix_0201 through generate_fix_0206) writes to .gd files with zero database record. The Mutation Commit Protocol (Gray_Reuter_1992 WAL) is inverted: mutations commit to disk without a log entry. This is the single root cause of divergent re-fixing across sessions. Source: Gray & Reuter 1992 'Transaction Processing' Ch.4 — write-ahead log principle.",
+    "fix_strategy": "Add sqlite3 Mutation Commit Protocol to generate_fix_0207.py: CREATE TABLE mutations IF NOT EXISTS, SELECT before every write_text(), INSERT after every gdparse PASS",
+    "cs_principle": "Gray_Reuter_1992 — WAL; Tanenbaum_VanSteen_2007 — idempotence violation; Parnas_1972 — SoC violation (fix scripts knowing nothing about audit state)",
+    "status": "NOT_IMPLEMENTED_IN_ANY_SESSION",
+    "db_record_required": "IS_THE_FIX_ITSELF"
+  }
+]

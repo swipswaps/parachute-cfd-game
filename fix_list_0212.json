@@ -1,0 +1,91 @@
+{
+  "fix_session": "0212",
+  "schema_version": "5.1",
+  "schema_bug_fixed": {
+    "bug": "error_message_pattern strings in VR007/VR008 contained double-quotes that survived re.escape() as backslash-escaped chars, causing SQL LIKE -> Python regex conversion to never match Godot output. VR007 was recorded PASS when Godot output contained the error verbatim.",
+    "confirmed_from": "document 13 verbatim: '[RECORDED] variant=B rule=VR007 result=PASS' while output contained 'Function \"_log()\" not found in base self'",
+    "fix": "error_message_pattern must use only alphanumeric and % _ wildcards; no double-quotes or special regex characters",
+    "corrected_patterns": {
+      "VR008": "%Function%not found in base self%",
+      "VR009": "%Identifier%not declared in the current scope%"
+    }
+  },
+  "naming_correction": {
+    "note": "Competing AI answers used VR007=undefined_helper, VR008=stale_signal. Our schema already has VR007=empty_function_body (seeded session_id=4). New rules are VR008 and VR009.",
+    "confirmed_schema": {
+      "VR001": "indent_mode_lock",
+      "VR002": "reserved_keyword_parameter",
+      "VR003": "python_fstring_rejection",
+      "VR004": "find_child_max_3_args",
+      "VR005": "array_bounds_hud_labels",
+      "VR006": "null_node_add_child",
+      "VR007": "empty_function_body",
+      "VR008": "undefined_method_call",
+      "VR009": "stale_identifier_reference"
+    }
+  },
+  "rules": [
+    {
+      "rule_id": "VR008",
+      "category": "symbol_resolution",
+      "title": "undefined_method_call",
+      "description": "Call to a method not declared in the current script or any inherited type. GDScript 4 resolves method names at parse time for static typing; an undefined method causes Parse Error not runtime error.",
+      "confirmed_from": "document 13 verbatim: 'SCRIPT ERROR: Parse Error: Function \"_log()\" not found in base self. at: GDScript::reload (res://scripts/build_terrain.gd:2052)'",
+      "root_cause": "_log() was called in _create_plane() body (lines 2052/2063/2065) which was SPACE-indented code converted by F09. The function was written assuming _log() was an autoload or inherited from a base class. It was never injected into build_terrain.gd by generate_fix_0206.py (which only injected into game_manager.gd and wind_field.gd).",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": null,
+      "false_oracle": false,
+      "severity": "critical",
+      "fix_strategy": "inject_local_log_helper — add func _log(msg: String) -> void: print(msg) near top of build_terrain.gd after extends clause",
+      "error_message_pattern": "%Function%not found in base self%",
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#functions", "quote": "Functions must be declared before use in the same file or inherited from a base class."},
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#keywords", "quote": "print() is a global built-in; _log() is a user-defined convention with no autoload guarantee."},
+        {"tier": "local_log", "url": "document 13 verbatim", "quote": "Parse Error: Function '_log()' not found in base self. at: build_terrain.gd:2052"}
+      ]
+    },
+    {
+      "rule_id": "VR009",
+      "category": "symbol_resolution",
+      "title": "stale_identifier_reference",
+      "description": "Reference to an identifier (variable, function, or signal handler name) that was removed from the script by an automated mutation but whose reference was not also removed. Causes 'Identifier not declared in the current scope'.",
+      "confirmed_from": "document 13 verbatim: 'SCRIPT ERROR: Parse Error: Identifier \"_on_exit_trigger_body_entered\" not declared in the current scope. at: GDScript::reload (res://scripts/build_terrain.gd:2090)'",
+      "root_cause": "0204.txt confirmed the signal handler _on_exit_trigger_body_entered was removed. However line 2090 still contains a reference to this identifier (likely a .connect() call or a callable reference). The function body was deleted but the connect call was not.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": null,
+      "false_oracle": false,
+      "severity": "critical",
+      "fix_strategy": "comment_or_remove_stale_reference — comment out line 2090 and any adjacent connect() calls referencing _on_exit_trigger_body_entered; do NOT delete the identifier in case a future session restores the handler",
+      "error_message_pattern": "%Identifier%not declared in the current scope%",
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#identifiers", "quote": "All identifiers (variable names, function names, etc.) are case-sensitive and must be declared before use."},
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/getting_started/step_by_step/signals.html", "quote": "The callable passed to connect() must be a valid method on the target object."},
+        {"tier": "local_log", "url": "0204.txt line 56 verbatim", "quote": "Optionally comment out broken _on_exit_trigger_body_entered line"},
+        {"tier": "local_log", "url": "document 13 verbatim", "quote": "Parse Error: Identifier '_on_exit_trigger_body_entered' not declared in the current scope. at: build_terrain.gd:2090"}
+      ]
+    }
+  ],
+  "pending_fixes": [
+    {"fix_id": "F11", "rule_id": "VR008", "file": "scripts/build_terrain.gd", "action": "inject_local_log_helper", "lines": "after extends clause (~line 3)", "status": "pending"},
+    {"fix_id": "F12", "rule_id": "VR009", "file": "scripts/build_terrain.gd", "action": "comment_stale_reference", "line": 2090, "status": "pending"},
+    {"fix_id": "F10b", "rule_id": "VR007", "file": "all 10 remaining scripts", "action": "insert_pass_in_empty_func_bodies", "affected": ["GameIntegrity.gd:16", "GameIntegrity_2606150714.gd:20", "InputManager.gd:2", "game_manager.gd:1", "minimal.gd:1", "pip_draggable.gd:2", "pip_draggable_v2.gd:1", "plane.gd:5", "splash.gd:3", "wind_field.gd:1"], "status": "pending"}
+  ],
+  "schema_bug_fix": {
+    "table": "gdscript_version_rules",
+    "column": "error_message_pattern",
+    "action": "UPDATE — set VR008/VR009 patterns without double-quotes",
+    "and": "fix run_game_and_record pattern matching — replace re.escape(pattern) with raw wildcard substitution only"
+  },
+  "convergence_status": {
+    "VR001": "RESOLVED (F09)",
+    "VR002": "RESOLVED (F03b)",
+    "VR003": "RESOLVED (F02b)",
+    "VR004": "RESOLVED (F01)",
+    "VR005": "RESOLVED (F05 idempotent)",
+    "VR006": "RESOLVED (F04 idempotent)",
+    "VR007_build_terrain": "RESOLVED (F10)",
+    "VR007_other_10_files": "PENDING (F10b)",
+    "VR008": "PENDING (F11)",
+    "VR009": "PENDING (F12)"
+  }
+}

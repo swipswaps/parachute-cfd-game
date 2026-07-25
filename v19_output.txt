@@ -1,0 +1,168 @@
+
+======================================================================
+SEARCH FOR 'airplane.tscn' IN ALL .gd AND .tscn FILES
+======================================================================
+  Found 1 occurrence(s) of 'airplane.tscn':
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:627
+       622: 		ap.stop()
+       623: 		print("[VERBATIM] Stopped AnimationPlayer")
+       624: 	print("[VERBATIM] EXIT _load_character ok=true")
+       625: 
+       626: 	# ---------- AIRPLANE LOADING (diagnostic) ----------
+    >> 627: 	var plane_path = "res://assets/aircraft/airplane.tscn"
+       628: 	if FileAccess.file_exists(plane_path):
+       629: 		var plane_scene = load(plane_path)
+       630: 		if plane_scene:
+       631: 			var plane = plane_scene.instantiate()
+       632: 			plane.position = Vector3(200, 1800, -200)
+
+======================================================================
+SEARCH FOR 'cesna_airplane.glb' IN ALL .gd AND .tscn FILES
+======================================================================
+  Found 11 occurrence(s) of 'cesna_airplane.glb':
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/tmp_candidate.gd:2155
+      2150: 	else:
+      2151: 		_log("[VERBATIM] WARNING: plane.gd not found")
+      2152: 	add_child(plane)
+      2153: 	plane.add_to_group("plane")
+      2154: 	# Load aircraft model from assets
+    >>2155: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+      2156: 	if plane_scene and plane_scene is PackedScene:
+      2157: 		var aircraft = plane_scene.instantiate()
+      2158: 		plane.add_child(aircraft)
+      2159: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+      2160: 		print("[VERBATIM] Cessna model loaded.")
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/audit_logs/main.tscn:4
+         1: [gd_scene
+         2: [sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
+         3: size = Vector3(6, 6, 6)
+    >>   4: [ext_resource type="PackedScene" uid="uid://cw7o7k7f8bgep" path="res://assets/aircraft/cesna_airplane.glb" id="3_cesna"]
+         5: [ext_resource type="Script" path="res://scripts/plane.gd" id="2_plane"]
+         6: [ext_resource type="Script" path="res://scripts/build_terrain.gd" id="1_build_terrain"] format=3 uid="uid://dho8wuaq6suf0"]
+         7: 
+         8: [ext_resource type="Script" uid="uid://glfox1kq4xa4" path="res://scripts/build_terrain.gd" id="1"]
+         9: 
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scenes/main.tscn:4
+         1: [gd_scene load_steps=7 format=3 uid="uid://rnfag5lj5tvy"]
+         2: 
+         3: [ext_resource type="Script" path="res://scripts/build_terrain.gd" id="1_build_terrain"]
+    >>   4: [ext_resource type="PackedScene" uid="uid://cw7o7k7f8bgep" path="res://assets/aircraft/cesna_airplane.glb" id="2_cessna"]
+         5: [ext_resource type="PackedScene" uid="uid://hdk81w8ddexa" path="res://assets/characters/Hanging under canopy.fbx" id="3_parachutist"]
+         6: 
+         7: [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_123"]
+         8: 
+         9: [sub_resource type="Sky" id="Sky_123"]
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/archived_fragments/build_terrain_part_003.gd:241
+       236: 	else:
+       237: 		_log("[VERBATIM] WARNING: plane.gd not found")
+       238: 	add_child(plane)
+       239: 	plane.add_to_group("plane")
+       240: 	# Load aircraft model from assets
+    >> 241: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+       242: 	if plane_scene and plane_scene is PackedScene:
+       243: 		var aircraft = plane_scene.instantiate()
+       244: 		plane.add_child(aircraft)
+       245: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+       246: 		print("[VERBATIM] Cessna model loaded.")
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/archived_fragments/build_terrain_0100_part_003.gd:176
+       171: 	else:
+       172: 		_log("[VERBATIM] WARNING: plane.gd not found")
+       173: 	add_child(plane)
+       174: 	plane.add_to_group("plane")
+       175: 	# Load aircraft model from assets
+    >> 176: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+       177: 	if plane_scene and plane_scene is PackedScene:
+       178: 		var aircraft = plane_scene.instantiate()
+       179: 		plane.add_child(aircraft)
+       180: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+       181: 		print("[VERBATIM] Cessna model loaded.")
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/scripts_backup_20260629_075234/plane.gd:23
+        18: 	print("[VERBATIM] plane.gd _ready() called")
+        19: 	add_to_group("airplane")
+        20: 	global_position = _pattern_pos(0.0)
+        21: 
+        22: 	# Load and attach the Cessna 3D model
+    >>  23: 	var model_path = "res://assets/aircraft/cesna_airplane.glb"
+        24: 	if FileAccess.file_exists(model_path):
+        25: 		var model_scene = load(model_path)
+        26: 		if model_scene and model_scene is PackedScene:
+        27: 			_model_instance = model_scene.instantiate()
+        28: 			add_child(_model_instance)
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/scripts_backup_20260629_075234/build_terrain_0100_part_003.gd:167
+       162: 	else:
+       163: 		_log("[VERBATIM] WARNING: plane.gd not found")
+       164: 	add_child(plane)
+       165: 	plane.add_to_group("plane")
+       166: 	# Load aircraft model from assets
+    >> 167: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+       168: 	if plane_scene and plane_scene is PackedScene:
+       169: 		var aircraft = plane_scene.instantiate()
+       170: 		plane.add_child(aircraft)
+       171: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+       172: 		print("[VERBATIM] Cessna model loaded.")
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/scripts_backup_20260629_075234/build_terrain_part_003.gd:218
+       213: 	else:
+       214: 		_log("[VERBATIM] WARNING: plane.gd not found")
+       215: 	add_child(plane)
+       216: 	plane.add_to_group("plane")
+       217: 	# Load aircraft model from assets
+    >> 218: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+       219: 	if plane_scene and plane_scene is PackedScene:
+       220: 		var aircraft = plane_scene.instantiate()
+       221: 		plane.add_child(aircraft)
+       222: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+       223: 		print("[VERBATIM] Cessna model loaded.")
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/scripts_backup_20260629_075234/build_terrain.gd:2176
+      2171: 	else:
+      2172: 		_log("[VERBATIM] WARNING: plane.gd not found")
+      2173: 	add_child(plane)
+      2174: 	plane.add_to_group("plane")
+      2175: 	# Load aircraft model from assets
+    >>2176: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+      2177: 	if plane_scene and plane_scene is PackedScene:
+      2178: 		var aircraft = plane_scene.instantiate()
+      2179: 		plane.add_child(aircraft)
+      2180: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+      2181: 		print("[VERBATIM] Cessna model loaded.")
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/scripts.broken_0005/plane.gd:21
+        16: 	print("[VERBATIM] plane.gd _ready() called")
+        17: 	add_to_group("airplane")
+        18: 	global_position = _pattern_pos(0.0)
+        19: 
+        20: 	# Load and attach the Cessna 3D model
+    >>  21: 	var model_path = "res://assets/aircraft/cesna_airplane.glb"
+        22: 	if FileAccess.file_exists(model_path):
+        23: 		var model_scene = load(model_path)
+        24: 		if model_scene and model_scene is PackedScene:
+        25: 			_model_instance = model_scene.instantiate()
+        26: 			add_child(_model_instance)
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/scripts.broken_0005/build_terrain_0100_part_003.gd:156
+       151: 	else:
+       152: 		_log("[VERBATIM] WARNING: plane.gd not found")
+       153: 	add_child(plane)
+       154: 	plane.add_to_group("plane")
+       155: 	# Load aircraft model from assets
+    >> 156: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+       157: 	if plane_scene and plane_scene is PackedScene:
+       158: 		var aircraft = plane_scene.instantiate()
+       159: 		plane.add_child(aircraft)
+       160: 		aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+       161: 		print("[VERBATIM] Cessna model loaded.")
+
+======================================================================
+SEARCH FOR 'Airplane' (node name) IN .gd FILES
+======================================================================
+  Found 0 occurrence(s) of '"Airplane"' in .gd files:
+  No occurrences found.
+
+======================================================================
+VERDICT
+======================================================================
+  The references above show exactly where the game tries to load the airplane scene.
+  If the reference is to 'airplane.tscn', you need to either:
+    1. Create the missing scene (using the GLB as a starting point).
+    2. Change the reference to point to the GLB directly (if the code supports it).
+  If the reference is to 'cesna_airplane.glb', the scene should work but may lack physics.
+  Check the context to determine the correct fix.
+
+DONE. Upload v19_output.txt for further analysis.

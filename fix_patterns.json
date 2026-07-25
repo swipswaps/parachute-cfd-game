@@ -1,0 +1,117 @@
+{
+  "evasion_dirs": [
+    "backup",
+    "archived",
+    "healing_staging",
+    "old_copies",
+    ".quarantine",
+    "broken",
+    "external_backups"
+  ],
+  "fixes": [
+    {
+      "id": "project_godot_delete_backup_references",
+      "description": "Delete any line in project.godot containing backup directory references",
+      "file": "project.godot",
+      "type": "delete_lines",
+      "pattern": "addons_backup|scripts_backup|backup_20260629"
+    },
+    {
+      "id": "airplane_controller_indentation",
+      "description": "Convert leading spaces to tabs in AirplaneController.gd",
+      "file": "scripts/AirplaneController.gd",
+      "type": "regex",
+      "pattern": "^    ",
+      "replace": "\t",
+      "flags": "MULTILINE"
+    },
+    {
+      "id": "airplane_controller_queue_free",
+      "description": "Move queue_free inside for-loop (fixes scope error)",
+      "file": "scripts/AirplaneController.gd",
+      "type": "regex",
+      "pattern": "for\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s+in\\s+_container\\.get_children\\(\\):\\s*\\n\\s*_container\\.remove_child\\(\\1\\)\\s*\\n\\s*\\1\\.queue_free\\(\\)",
+      "replace": "for {m.group(1)} in _container.get_children():\n\t_container.remove_child({m.group(1)})\n\t{m.group(1)}.queue_free()",
+      "flags": "MULTILINE"
+    },
+    {
+      "id": "airplane_controller_scene_paths",
+      "description": "Update PLANE_SCENES to use existing cessna172.tscn",
+      "file": "scripts/AirplaneController.gd",
+      "type": "regex",
+      "pattern": "const\\s+PLANE_SCENES\\s*=\\s*\\[.*?\\]",
+      "replace": "const PLANE_SCENES = [\"res://addons/godot_aerodynamic_physics/demo/aircraft_examples/cessna172/cessna172.tscn\"]",
+      "flags": "DOTALL"
+    },
+    {
+      "id": "database_guard_missing_vars",
+      "description": "Insert missing instance variables in DatabaseGuard.gd",
+      "file": "scripts/DatabaseGuard.gd",
+      "type": "insert",
+      "anchor": "extends Node",
+      "insert_lines": [
+        "",
+        "# Missing variables added by auto-fix",
+        "var _last_error: String = \"\"",
+        "var _total_queries: int = 0",
+        "var _circuit_state: String = \"CLOSED\"",
+        "var _circuit_last_failure: int = 0",
+        "var _circuit_timeout_ms: int = 60000",
+        "var _failure_count: int = 0",
+        "var _failure_threshold: int = 5",
+        "var _recovery_attempts: int = 0",
+        "var _max_recovery_attempts: int = 5",
+        "var _connection_retries: int = 0",
+        "var _retry_delay_ms: int = 1000",
+        "var _successful_queries: int = 0",
+        ""
+      ]
+    },
+    {
+      "id": "database_guard_name_clash",
+      "description": "Rename variable is_healthy to _health_status to avoid function name clash",
+      "file": "scripts/DatabaseGuard.gd",
+      "type": "regex",
+      "pattern": "\\bis_healthy\\b",
+      "replace": "_health_status",
+      "flags": "MULTILINE",
+      "exclude_pattern": "^\\s*func\\s+is_healthy\\s*\\("
+    },
+    {
+      "id": "resource_throttle_indentation",
+      "description": "Fix indentation after if statement in ResourceThrottle.gd",
+      "file": "scripts/ResourceThrottle.gd",
+      "type": "insert",
+      "anchor": "if last_attempt != \"\" and last_attempt != \"null\":",
+      "insert_lines": [
+        "\tpass"
+      ]
+    },
+    {
+      "id": "resource_throttle_datetime_fix",
+      "description": "Comment out missing get_datetime_dict_from_string and define last_time",
+      "file": "scripts/ResourceThrottle.gd",
+      "type": "regex",
+      "pattern": "^\\s*var last_time = Time\\.get_datetime_dict_from_string\\(last_attempt\\)",
+      "replace": "# var last_time = Time.get_datetime_dict_from_string(last_attempt)\nvar last_time = {}  # FIXME: replaced with empty dict",
+      "flags": "MULTILINE",
+      "condition": "Time\\.get_datetime_dict_from_string\\(last_attempt\\)"
+    },
+    {
+      "id": "performance_monitor_get_ticks",
+      "description": "Replace OS.Time.Time.get_ticks_msec() with Time.get_ticks_msec()",
+      "file": "scripts/PerformanceMonitor.gd",
+      "type": "regex",
+      "pattern": "OS\\.Time\\.Time\\.get_ticks_msec\\s*\\(",
+      "replace": "Time.get_ticks_msec(",
+      "flags": "MULTILINE"
+    },
+    {
+      "id": "remove_backup_references_from_tscn",
+      "description": "Remove any lines referencing backup dirs in .tscn files",
+      "file": "**/*.tscn",
+      "type": "delete_lines",
+      "pattern": "addons_backup|scripts_backup|backup_20260629|scripts.broken_0005|healing_staging|old_copies"
+    }
+  ]
+}

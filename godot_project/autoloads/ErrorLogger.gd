@@ -1,0 +1,38 @@
+extends Node
+signal error_occurred(message: String, details: Dictionary)
+# ErrorLogger.gd - Custom logger for Godot's error/warning stream.
+# This build does not support set_error_handler, so we leave _ready() empty.
+
+func _ready() -> void:
+	pass
+
+func _error_handler(msg: String, file: String, line: int, error: int, _stack: String) -> bool:
+	if "crossed_circle" in msg or "Failed loading custom cursor" in msg:
+		log_warning("Cursor error (harmless): " + msg)
+		return true
+	_log_error("_error_handler", file, line, "", msg, false, error, [])
+	return false
+
+func _warning_handler(msg: String, file: String, line: int, _error: int, _stack: String) -> bool:
+	log_warning("Engine warning: " + msg + " (" + file + ":" + str(line) + ")")
+	return false
+
+func _log_error(function: String, file: String, line: int, code: String, rationale: String, _editor_notify: bool, error_type: int, _script_backtraces: Array) -> void:
+	var db = SqliteDb
+	if db:
+		db.query("INSERT INTO diagnostic_logs (level, source, message) VALUES (?, ?, ?)", ["ERROR", file + ":" + str(line), rationale])
+	var error_bus = ErrorBus
+	if error_bus and error_bus.has_signal("error_occurred"):
+		error_bus.error_occurred.emit(function, file, line, code, rationale, error_type)
+	else:
+		push_error("ErrorLogger: " + rationale + " (" + file + ":" + str(line) + ")")
+
+func log_warning(message: String) -> void:
+	var error_bus = ErrorBus
+	if error_bus and error_bus.has_signal("error_occurred"):
+		error_bus.error_occurred.emit("log_warning", "ErrorLogger", 0, "", message, 0)
+	else:
+		push_warning("ErrorLogger: " + message)
+
+func _forward_error(message: String, details: Dictionary = {}) -> void:
+	emit_signal("error_occurred", message, details)

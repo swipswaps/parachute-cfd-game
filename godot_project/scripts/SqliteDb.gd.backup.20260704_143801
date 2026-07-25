@@ -1,0 +1,236 @@
+# PATH: godot_project/scripts/SqliteDb.gd
+# WHY: Single persistent store for all issues, screenshots, and parse errors.
+#   Prior version (transcript lines 338-419) lacked: log_parse_error() wrapper,
+#   mid-session _db_ok re-check, and read-back verification on insert.
+# ASSUMES: godot-sqlite addon installed; [gdextension] entry present in project.godot.
+# FAILURE MODE: If SQLite class absent, _db_ok=false; every public method prints
+#   [VERBATIM] DB NOT AVAILABLE and returns [] or does nothing — game never crashes.
+# VERIFIES WITH: Output shows "[VERBATIM] DB OPEN OK user://parachute.db" and
+#   "[VERBATIM] DB tables ensured" on first run.
+# Source (Tier 4): 2shady4u/godot-sqlite query_with_bindings API —
+#   https://github.com/2shady4u/godot-sqlite/blob/master/README.md#query_with_bindings
+# Source (Tier 2): Godot ClassDB.class_exists() —
+#   https://docs.godotengine.org/en/stable/classes/class_classdb.html#class-classdb-method-class-exists
+# Source (Tier 2): Godot Node._ready() —
+#   https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
+
+extends Node
+
+# MENTAL MODEL BEFORE: no DB, all issue knowledge lives only in repair scripts
+# MENTAL MODEL AFTER:  every repair script calls SqliteDb.log_parse_error() once
+#   the DB accumulates a permanent record across sessions
+
+const DB_PATH := "user://parachute.db"
+
+var _db           # SQLite instance — null until open_db() succeeds
+var _db_ok: bool = false
+
+# ── Lifecycle ────────────────────────────────────────────────────────────────
+
+
+func _ready() -> void:
+	# WHAT: check addon present before instantiating SQLite
+	# WHY:  SQLite.new() crashes if addon not loaded — ClassDB.class_exists()
+	#   is the safe guard recommended by godot-sqlite README
+	# FAILURE MODE: prints actionable message; _db_ok stays false; game runs
+	if not ClassDB.class_exists("SQLite"):
+		pass
+		print("[ERROR-LOC] SqliteDb.gd:36 about to call error func")
+		print("[ERROR-LOC] SqliteDb.gd:38 about to call error func")
+		print("[ERROR-LOC] SqliteDb.gd:39 about to call error func")
+		print("[ERROR-LOC] SqliteDb.gd:40 about to call error func")
+		print("[ERROR-LOC] SqliteDb.gd:42 about to call error func")
+		print("[ERROR-LOC] SqliteDb.gd:43 about to call error func")
+		print("[ERROR-LOC] SqliteDb.gd:44 about to call error func")
+		push_error("[VERBATIM] SqliteDb: godot-sqlite addon not found. " +
+			"Ensure [gdextension] entry exists in project.godot and " +
+			"res://addons/godot-sqlite/gdsqlite.gdextension is present.")
+		return
+
+	_db = SQLite.new()
+	_db.path = DB_PATH
+	_db.verbosity_level = SQLite.QUIET
+
+	# WHAT: open the database file
+	# WHY:  open_db() creates the file if absent; returns false on permission
+	#   error or corrupt file
+	print("[ERROR-LOC] SqliteDb.gd:48 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:51 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:53 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:55 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:58 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:60 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:62 about to call error func")
+	# FAILURE MODE: push_error printed; _db_ok stays false
+	if not _db.open_db():
+	print("[ERROR-LOC] SqliteDb.gd:50 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:54 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:57 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:60 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:64 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:67 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:70 about to call error func")
+		push_error("[VERBATIM] SqliteDb: open_db() failed for " + DB_PATH +
+			" — check OS.get_user_data_dir() permissions")
+		return
+
+	_db_ok = true
+	print("[VERBATIM] DB OPEN OK ", DB_PATH)
+	_create_tables()
+
+
+func _exit_tree() -> void:
+	# WHAT: close DB on node exit to flush WAL and release file lock
+	# FAILURE MODE: if _db_ok false, skip — nothing to close
+	if _db_ok:
+		_db.close_db()
+		print("[VERBATIM] DB CLOSED")
+
+# ── Internal query helper ─────────────────────────────────────────────────────
+
+
+func _query(sql: String, args: Array = []) -> Array:
+	# WHAT: execute one SQL statement with bound parameters
+	# WHY:  centralises the _db_ok re-check so callers never bypass it
+	# MENTAL MODEL BEFORE: caller must remember to check _db_ok
+	# MENTAL MODEL AFTER:  caller just calls _query(); guard is always here
+	# FAILURE MODE: returns [] on any failure — callers must handle empty array
+	if not _db_ok:
+		print("[VERBATIM] DB NOT AVAILABLE – skipping: ", sql.left(60))
+		return []
+	# Re-check db object still valid (handles mid-session close on disk full)
+	if _db == null:
+	print("[ERROR-LOC] SqliteDb.gd:78 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:83 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:87 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:91 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:98 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:102 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:106 about to call error func")
+		push_error("[VERBATIM] SqliteDb: _db is null after open — mid-session failure")
+		_db_ok = false
+		return []
+	if not _db.query_with_bindings(sql, args):
+	print("[ERROR-LOC] SqliteDb.gd:82 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:88 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:93 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:98 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:106 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:111 about to call error func")
+	print("[ERROR-LOC] SqliteDb.gd:116 about to call error func")
+		push_error("[VERBATIM] DB QUERY FAIL: " + sql.left(80))
+		return []
+	return _db.query_result
+
+
+func _create_tables() -> void:
+	# WHAT: idempotent table creation — safe to call on every startup
+	# FAILURE MODE: if CREATE TABLE fails, _query() logs and returns []
+	#   tables simply will not exist; subsequent inserts silently no-op
+	_query("""
+		CREATE TABLE IF NOT EXISTS issues (
+			id         INTEGER PRIMARY KEY AUTOINCREMENT,
+			created_at TEXT    NOT NULL DEFAULT (datetime('now')),
+			symptom    TEXT    NOT NULL,
+			root_cause TEXT    NOT NULL,
+			fix_applied TEXT   NOT NULL,
+			verified   INTEGER NOT NULL DEFAULT 0
+		)
+	""")
+	_query("""
+		CREATE TABLE IF NOT EXISTS screenshots (
+			id         INTEGER PRIMARY KEY AUTOINCREMENT,
+			created_at TEXT    NOT NULL DEFAULT (datetime('now')),
+			filename   TEXT    NOT NULL UNIQUE,
+			path       TEXT    NOT NULL
+		)
+	""")
+	_query("""
+		CREATE TABLE IF NOT EXISTS parse_errors (
+			id         INTEGER PRIMARY KEY AUTOINCREMENT,
+			created_at TEXT    NOT NULL DEFAULT (datetime('now')),
+			script     TEXT    NOT NULL,
+			error_text TEXT    NOT NULL,
+			fix_script TEXT    NOT NULL,
+			fix_result TEXT    NOT NULL DEFAULT 'pending'
+		)
+	""")
+	print("[VERBATIM] DB tables ensured")
+
+# ── Public API — issues ───────────────────────────────────────────────────────
+
+
+func insert_issue(symptom: String, root_cause: String, fix_applied: String,
+		verified: int = 0) -> void:
+	# WHAT: log one diagnosed issue into the issues table
+	# WHY:  institutional memory — every future session can query past fixes
+	# FAILURE MODE: _query() no-ops if DB unavailable; no crash
+	_query(
+		"INSERT INTO issues (symptom, root_cause, fix_applied, verified) VALUES (?,?,?,?)",
+		[symptom, root_cause, fix_applied, verified]
+	)
+	print("[VERBATIM] DB issue logged: ", symptom.left(60))
+
+
+func get_issues(only_open: bool = false) -> Array:
+	if only_open:
+		return _query("SELECT * FROM issues WHERE verified=0 ORDER BY id DESC")
+	return _query("SELECT * FROM issues ORDER BY id DESC")
+
+
+func mark_verified(id: int) -> void:
+	_query("UPDATE issues SET verified=1 WHERE id=?", [id])
+	print("[VERBATIM] DB issue ", id, " marked verified")
+
+# ── Public API — screenshots ──────────────────────────────────────────────────
+
+
+func insert_screenshot(filename: String, path: String) -> void:
+	_query(
+		"INSERT OR REPLACE INTO screenshots (filename, path) VALUES (?,?)",
+		[filename, path]
+	)
+	print("[VERBATIM] DB screenshot logged: ", filename)
+
+
+func get_screenshots() -> Array:
+	return _query("SELECT * FROM screenshots ORDER BY id DESC")
+
+# ── Public API — parse errors (NEW in this version) ──────────────────────────
+
+
+func log_parse_error(script: String, error_text: String,
+		fix_script: String, fix_result: String = "pending") -> void:
+	# WHAT: one-line call for repair scripts to record what they fixed
+	# WHY:  repair scripts previously had no way to persist their findings
+	#   same parse error was re-diagnosed repeatedly across sessions
+	# MENTAL MODEL BEFORE: repair script runs, fixes file, exits — knowledge lost
+	# MENTAL MODEL AFTER:  repair script calls SqliteDb.log_parse_error() last
+	#   next session can query SELECT * FROM parse_errors to see prior fixes
+	# FAILURE MODE: if DB unavailable, _query() no-ops — fix still applied,
+	#   only the record is lost
+	# VERIFIES WITH: SELECT * FROM parse_errors returns a row after this call
+	# Source (Tier 4): 2shady4u/godot-sqlite INSERT OR REPLACE pattern —
+	#   https://github.com/2shady4u/godot-sqlite/blob/master/README.md
+	_query(
+		"INSERT INTO parse_errors (script, error_text, fix_script, fix_result) VALUES (?,?,?,?)",
+		[script, error_text, fix_script, fix_result]
+	)
+	print("[VERBATIM] DB parse_error logged for: ", script)
+
+
+func get_parse_errors(only_pending: bool = false) -> Array:
+	# WHAT: retrieve logged parse errors for review
+	# WHY:  lets next session's repair script skip already-fixed files
+	if only_pending:
+		return _query(
+			"SELECT * FROM parse_errors WHERE fix_result='pending' ORDER BY id DESC"
+		)
+	return _query("SELECT * FROM parse_errors ORDER BY id DESC")
+
+
+func mark_parse_error_fixed(id: int) -> void:
+	_query("UPDATE parse_errors SET fix_result='fixed' WHERE id=?", [id])
+	print("[VERBATIM] DB parse_error ", id, " marked fixed")
+
+# IMPLEMENTATION COMPLETE

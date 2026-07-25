@@ -1,0 +1,24 @@
+======================================================================
+STEP 1: Extract airplane creation block from backup
+======================================================================
+No airplane loading block found in backup.
+
+======================================================================
+STEP 2: Locate insertion point in current file
+======================================================================
+End of _ready() in current file is at line 391
+
+--- Current file around insertion point (lines 388-392) ---
+ 388: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+ 389: # ------------------------------------------------------------------
+ 390: 
+ 391: 
+ 392: func _input(event):
+
+======================================================================
+VERDICT
+======================================================================
+The backup contains the airplane loading block. It should be inserted
+into the current file's _ready() function before the 'EXIT _ready' line.
+The current file does not have this block, which is why the airplane
+is not created.

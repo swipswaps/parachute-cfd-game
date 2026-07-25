@@ -1,0 +1,12 @@
+=== restore_components.sh v7 started Mon Jul 20 04:17:43 AM UTC 2026 ===
+[2026-07-20T04:17:43Z] [SUCCESS] dep_check: binaries + repo layout OK
+Live file: godot_project/scripts/build_terrain.gd
+PiP source (newest backup, Rule #1 — chosen by sort, shown for audit): godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd
+[2026-07-20T04:17:43Z] [SUCCESS] find_target: godot_project/scripts/build_terrain.gd + godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd
+Backup of live file: godot_project/scripts/build_terrain.gd.bak.20260720041743
+[2026-07-20T04:17:43Z] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260720041743
+PRECONDITION VIOLATED: _setup_pip_overlay already exists in live file — refusing.
+Porting from backup: funcs=['_setup_pip_overlay'] vars=['var _pip_viewport: SubViewport  # Ref: https://docs.godotengine.org/en/stable/classes/class_subviewport.html', 'var _pip_camera: Camera3D', 'var _pip_canopy_node: Node3D']
+Guarded port/wiring refused or failed — restoring.
+build_terrain.gd restored from godot_project/scripts/build_terrain.gd.bak.20260720041743
+[2026-07-20T04:17:43Z] [FAILURE] apply_fix: phase B/C failed, restored

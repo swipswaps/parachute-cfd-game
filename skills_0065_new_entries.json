@@ -1,0 +1,19 @@
+{
+  "new_rules": {
+    "R109_post_write_completion_gate": {
+      "rule": "A fix script is complete only after the written file is read back and the file contains every required post-patch marker: the new function definition, the required call site, any type-safe replacements, and the completion marker. If any marker is missing, the script must fail closed and stop.",
+      "problem": "Previous patch scripts passed syntax checks but still left runtime omissions, including a missing showloadingscreen implementation and an Array[String] type mismatch.",
+      "detector": "python3 -c \"from pathlib import Path; s=Path('build_terrain.gd').read_text(encoding='utf-8'); req=['func showloadingscreen','showloadingscreen(','Array[String]','IMPLEMENTATION COMPLETE']; print('PASS' if all(x in s for x in req) else 'FAIL')\"",
+      "verification": "Run the script, then read the file back. All required markers must be present in the saved file before the build is considered done.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Godot 4 script loading and Python read-back verification pattern from this session",
+        "url": "",
+        "verbatim_quote": "A fix is complete only if the written file contains the required function definition, the required call site, the required type-safe assignment, and the completion marker after read-back verification."
+      }
+    }
+  },
+  "new_techniques": [],
+  "new_search_ux_improvements": [],
+  "_note": "Adds R109: post-write completion gate for omission-proof patch scripts."
+}

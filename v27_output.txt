@@ -1,0 +1,415 @@
+======================================================================
+STEP 1: Extract _ready() from backup
+======================================================================
+
+--- Backup _ready() (lines 191-431) ---
+ 191: func _ready():
+ 192: 	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _ready gate=none")
+ 193: 	# --------------------------------------------------------------
+ 194: 	# Terrain generation (full – uses heightmap and baked colours)
+ 195: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 196: 	# --------------------------------------------------------------
+ 197: 	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+ 198: 	if not file:
+ 199: 		print("[VERBATIM] ERROR: heightmap_512.raw not found")
+ 200: 		return
+ 201: 	var data = file.get_buffer(file.get_length())
+ 202: 	file.close()
+ 203: 	var _baked := PackedByteArray()
+ 204: 	var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+ 205: 	if _bf:
+ 206: 		_baked = _bf.get_buffer(3_145_728)
+ 207: 		_bf.close()
+ 208: 		print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 209: 	else:
+ 210: 		print("[VERBATIM] BAKE FALLBACK")
+ 211: 	var verts = []
+ 212: 	var uvs = []
+ 213: 	const W = 1024
+ 214: 	const H = 1024
+ 215: 	const MAX_ELEV = 80.0
+ 216: 	const SCALE_XZ = 4000.0
+ 217: 	for z in range(H):
+ 218: 		for x in range(W):
+ 219: 			var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+ 220: 			var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+ 221: 			var idx = (z * W + x) * 2
+ 222: 			var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+ 223: 			var py = (float(raw) / 65535.0) * MAX_ELEV
+ 224: 			verts.push_back(Vector3(px, py, pz))
+ 225: 			uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
+ 226: 	var indices = []
+ 227: 	for z in range(H - 1):
+ 228: 		for x in range(W - 1):
+ 229: 			var a = z * W + x
+ 230: 			var b = a + 1
+ 231: 			var c = a + W
+ 232: 			var d = c + 1
+ 233: 			indices.append_array([a, c, b, b, c, d])
+ 234: 	var st = SurfaceTool.new()
+ 235: 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+ 236: 	st.set_color(Color(1.0, 1.0, 1.0, 1.0))
+ 237: 	for i in range(verts.size()):
+ 238: 		var ci = i * 3
+ 239: 		var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
+ 240: 		var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
+ 241: 		var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+ 242: 		st.set_color(Color(cr, cg, cb, 1.0))
+ 243: 		st.set_uv(uvs[i])
+ 244: 		st.add_vertex(verts[i])
+ 245: 	for idx in indices:
+ 246: 		st.add_index(idx)
+ 247: 	st.generate_normals()
+ 248: 	st.generate_tangents()
+ 249: 	var terrain_mesh = st.commit()
+ 250: 	var terrain_inst = MeshInstance3D.new()
+ 251: 	terrain_inst.mesh = terrain_mesh
+ 252: 	var terrain_mat = StandardMaterial3D.new()
+ 253: 	terrain_mat.vertex_color_use_as_albedo = true
+ 254: 	terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+ 255: 	terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 256: 	terrain_inst.material_override = terrain_mat
+ 257: 	add_child(terrain_inst)
+ 258: 	print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+ 259: 	# Add directional sunlight
+ 260: 	var sun = DirectionalLight3D.new()
+ 261: 	sun.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+ 262: 	add_child(sun)
+ 263: 	print("[VERBATIM] Sunlight added")
+ 264: 	# --------------------------------------------------------------
+ 265: 	# Runways (three predefined)
+ 266: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+ 267: 	# --------------------------------------------------------------
+ 268: 	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+ 269: 	add_child(
+ 270: 		_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))
+ 271: 	)
+ 272: 	add_child(
+ 273: 		_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))
+ 274: 	)
+ 275: 	print("[VERBATIM] Runways added")
+ 276: 	# --------------------------------------------------------------
+ 277: 	# Character (skydiver) – loads FBX with skeleton
+ 278: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+ 279: 	# --------------------------------------------------------------
+ 280: 	_character = Node3D.new()
+ 281: 	add_child(_character)
+ 282: 	print("[VERBATIM] Character position: ", _character.global_position)
+ 283: 	print("[VERBATIM] Character scale: ", _character.scale)
+ 284: 	_character.position = Vector3(100.0, 6000.0, -100.0)
+ 285: 	# FIX_ALTITUDE
+ 286: 	_load_character()
+ 287: 	# --------------------------------------------------------------
+ 288: 	# Third‑person camera attached to character
+ 289: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+ 290: 	# --------------------------------------------------------------
+ 291: 	_camera = Camera3D.new()
+ 292: 	_camera.position = Vector3(0, 50, 150)   # far behind and above character
+ 293: 	_camera.fov = 75.0
+ 294: 	_camera.near = 0.1
+ 295: 	_camera.far = 10000.0
+ 296: 	_character.add_child(_camera)
+ 297: 	_camera.look_at(_character.global_position + Vector3(0, 2, 0), Vector3.UP)
+ 298: 	_camera.current = true
+ 299: 	print("[VERBATIM] Camera attached")
+ 300: 	# --------------------------------------------------------------
+ 301: 	# Drop zone (yellow cylinder) – reduced radius
+ 302: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_cylindermesh.html
+ 303: 	# --------------------------------------------------------------
+ 304: 	var dz = MeshInstance3D.new()
+ 305: 	var cyl = CylinderMesh.new()
+ 306: 	cyl.top_radius = 5.0
+ 307: 	cyl.bottom_radius = 5.0
+ 308: 	cyl.radial_segments = 32
+ 309: 	dz.mesh = cyl
+ 310: 	dz.position = Vector3(0.0, 25.0, 0.0)
+ 311: 	var dz_mat = StandardMaterial3D.new()
+ 312: 	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+ 313: 	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 314: 	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+ 315: 	dz.material_override = dz_mat
+ 316: 	add_child(dz)
+ 317: 	print("[VERBATIM] Drop zone created")
+ 318: 	# --------------------------------------------------------------
+ 319: 	# HUD (8 lines + score + notification)
+ 320: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
+ 321: 	# --------------------------------------------------------------
+ 322: 	_hud_layer = CanvasLayer.new()
+ 323: 	add_child(_hud_layer)
+ 324: 	var font = ThemeDB.fallback_font
+ 325: 	var label_names = ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+ 326: 	for i in range(8):
+ 327: 		var lbl = Label.new()
+ 328: 		lbl.add_theme_font_override("font", font)
+ 329: 		lbl.add_theme_font_size_override("font_size", 14)
+ 330: 		lbl.add_theme_color_override("font_color", Color(0, 1, 0))
+ 331: 		lbl.position = Vector2(10, 10 + i * 22)
+ 332: 		lbl.custom_minimum_size = Vector2(220, 20)
+ 333: 		lbl.text = label_names[i] + ": --"
+ 334: 		_hud_layer.add_child(lbl)
+ 335: 		_hud_labels.append(lbl)
+ 336: 	_score_label = Label.new()
+ 337: 	_score_label.add_theme_font_override("font", font)
+ 338: 	_score_label.add_theme_font_size_override("font_size", 16)
+ 339: 	_score_label.add_theme_color_override("font_color", Color(1, 1, 0))
+ 340: 	_score_label.position = Vector2(10, 200)
+ 341: 	_hud_layer.add_child(_score_label)
+ 342: 	_notification_label = Label.new()
+ 343: 	_notification_label.add_theme_font_override("font", font)
+ 344: 	_notification_label.add_theme_font_size_override("font_size", 16)
+ 345: 	_notification_label.add_theme_color_override("font_color", Color(1, 0.8, 0))
+ 346: 	_notification_label.position = Vector2(400, 20)
+ 347: 	_hud_layer.add_child(_notification_label)
+ 348: 	_focus_label = Label.new()
+ 349: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+ 350: 	_focus_label.add_theme_font_override("font", font)
+ 351: 	_focus_label.add_theme_font_size_override("font_size", 16)
+ 352: 	_focus_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.0, 1.0))
+ 353: 	_focus_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+ 354: 	_focus_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+ 355: 	_focus_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+ 356: 	_hud_layer.add_child(_focus_label)
+ 357: 	print("[VERBATIM] HUD created")
+ 358: 	# FIX_HUD: set initial labels
+ 359: 	_hud_labels[0].text = "ALT: %.0f ft" % _current_altitude
+ 360: 	_hud_labels[6].text = "MALF: " + _malfunction_name()
+ 361: 	# --------------------------------------------------------------
+ 362: 	# Initial heading (parse from HUD, fallback 120)
+ 363: 	# --------------------------------------------------------------
+ 364: 	var heading_text = _hud_labels[2].text
+ 365: 	var parts = heading_text.split("°")
+ 366: 	if parts.size() > 0:
+ 367: 		var sub = parts[0].split(":")
+ 368: 		if sub.size() > 1:
+ 369: 			_initial_heading = float(sub[1].strip_edges())
+ 370: 	_turn_target_heading = _initial_heading
+ 371: 	print("[VERBATIM] Initial heading set to ", _initial_heading)
+ 372: 	# --------------------------------------------------------------
+ 373: 	# Real‑time wind and PiP overlay
+ 374: 	# --------------------------------------------------------------
+ 375: 	_fetch_real_wind()
+ 376: 	_setup_pip_overlay()
+ 377: 	# --------------------------------------------------------------
+ 378: 	# Initialise subsystems
+ 379: 	# --------------------------------------------------------------
+ 380: 	_init_achievements()
+ 381: 	_init_mission()
+ 382: 	_init_leaderboard()
+ 383: 	_init_controller()
+ 384: 	_init_sentry()
+ 385: 	# --------------------------------------------------------------
+ 386: 	# Load the repaired GLB – fallback to procedural dome
+ 387: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_resourceloader.html
+ 388: 	# --------------------------------------------------------------
+ 389: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+ 390: 	if ResourceLoader.exists(canopy_path):
+ 391: 		var scene = load(canopy_path)
+ 392: 		if scene:
+ 393: 			_canopy_instance = scene.instantiate()
+ 394: 			if _canopy_instance:
+ 395: 				_character.add_child(_canopy_instance)
+ 396: 				_canopy_instance.position = Vector3(0, 2.5, 0)
+ 397: 				_canopy_material = StandardMaterial3D.new()
+ 398: 				_canopy_material.albedo_color = Color(0.0, 0.6, 1.0)
+ 399: 				var mesh_node = _canopy_instance.find_child("MeshInstance3D", true, false)
+ 400: 				if mesh_node:
+ 401: 					mesh_node.material_override = _canopy_material
+ 402: 				else:
+ 403: 					# No MeshInstance3D found – using procedural canopy
+ 404: 					_create_procedural_canopy()
+ 405: 				_canopy_instance.visible = false
+ 406: 				print("[VERBATIM] Clean GLB loaded from: ", canopy_path)
+ 407: 			else:
+ 408: 				_create_procedural_canopy()
+ 409: 				_create_procedural_canopy()
+ 410: 		else:
+ 411: 			_create_procedural_canopy()
+ 412: 	else:
+ 413: 		print("[VERBATIM] Clean GLB not found – using procedural dome.")
+ 414: 		_create_procedural_canopy()
+ 415: 	# --------------------------------------------------------------
+ 416: 	# Create environment objects: buildings and trees (no turbines)
+ 417: 	# --------------------------------------------------------------
+ 418: 	_create_buildings()
+ 419: 	_create_trees()
+ 420: 	# --------------------------------------------------------------
+ 421: 	# Random initial malfunction
+ 422: 	# --------------------------------------------------------------
+ 423: 	_randomize_malfunction()
+ 424: 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
+ 425: 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+ 426: 	_create_plane()
+ 427: 	print("[VERBATIM] EXIT _ready ok=true")
+ 428: # ------------------------------------------------------------------
+ 429: # Helper: create runway (returns MeshInstance3D)
+ 430: # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+ 431: # ------------------------------------------------------------------
+
+======================================================================
+STEP 2: Extract _ready() from current file
+======================================================================
+
+--- Current _ready() (lines 238-391) ---
+ 238: func _ready():
+ 239: 	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _ready gate=none")
+ 240: 
+ 241: 	# --------------------------------------------------------------
+ 242: 	# Terrain generation (full – uses heightmap and baked colours)
+ 243: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 244: 	# --------------------------------------------------------------
+ 245: 	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+ 246: 	if not file:
+ 247: 		print("[VERBATIM] ERROR: heightmap_512.raw not found")
+ 248: 		return
+ 249: 	var data = file.get_buffer(file.get_length())
+ 250: 	file.close()
+ 251: 
+ 252: 	var _baked := PackedByteArray()
+ 253: 	var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+ 254: 	if _bf:
+ 255: 		_baked = _bf.get_buffer(3_145_728)
+ 256: 		_bf.close()
+ 257: 		print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 258: 	else:
+ 259: 		print("[VERBATIM] BAKE FALLBACK")
+ 260: 
+ 261: 	var verts = []
+ 262: 	var uvs = []
+ 263: 	const W = 1024
+ 264: 	const H = 1024
+ 265: 	const MAX_ELEV = 80.0
+ 266: 	const SCALE_XZ = 4000.0
+ 267: 	for z in range(H):
+ 268: 		for x in range(W):
+ 269: 			var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+ 270: 			var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+ 271: 			var idx = (z * W + x) * 2
+ 272: 			var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+ 273: 			var py = (float(raw) / 65535.0) * MAX_ELEV
+ 274: 			verts.push_back(Vector3(px, py, pz))
+ 275: 			uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
+ 276: 	var indices = []
+ 277: 	for z in range(H - 1):
+ 278: 		for x in range(W - 1):
+ 279: 			var a = z * W + x
+ 280: 			var b = a + 1
+ 281: 			var c = a + W
+ 282: 			var d = c + 1
+ 283: 			indices.append_array([a, c, b, b, c, d])
+ 284: 	var st = SurfaceTool.new()
+ 285: 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+ 286: 	st.set_color(Color(1.0, 1.0, 1.0, 1.0))
+ 287: 	for i in range(verts.size()):
+ 288: 		var ci = i * 3
+ 289: 		var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
+ 290: 		var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
+ 291: 		var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+ 292: 		st.set_color(Color(cr, cg, cb, 1.0))
+ 293: 		st.set_uv(uvs[i])
+ 294: 		st.add_vertex(verts[i])
+ 295: 	for idx in indices:
+ 296: 		st.add_index(idx)
+ 297: 	st.generate_normals()
+ 298: 	st.generate_tangents()
+ 299: 	var terrain_mesh = st.commit()
+ 300: 	var terrain_inst = MeshInstance3D.new()
+ 301: 	terrain_inst.mesh = terrain_mesh
+ 302: 	var terrain_mat = StandardMaterial3D.new()
+ 303: 	terrain_mat.vertex_color_use_as_albedo = true
+ 304: 	terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+ 305: 	terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 306: 	terrain_inst.material_override = terrain_mat
+ 307: 	add_child(terrain_inst)
+ 308: 	print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+ 309: 
+ 310: 	# --------------------------------------------------------------
+ 311: 	# Runways (three predefined)
+ 312: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+ 313: 	# --------------------------------------------------------------
+ 314: 	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+ 315: 	add_child(
+ 316: 		_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))
+ 317: 	)
+ 318: 	add_child(
+ 319: 		_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))
+ 320: 	)
+ 321: 	print("[VERBATIM] Runways added")
+ 322: 
+ 323: 	# --------------------------------------------------------------
+ 324: 	# Character (skydiver) – loads FBX with skeleton
+ 325: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+ 326: 	# --------------------------------------------------------------
+ 327: 	_character = Node3D.new()
+ 328: 	add_child(_character)
+ 329: 	print("[VERBATIM] Character position: ", _character.global_position)
+ 330: 	print("[VERBATIM] Character scale: ", _character.scale)
+ 331: 	_character.position = Vector3(100.0, 1853.8, -100.0)
+ 332: 	_load_character()
+ 333: 
+ 334: 	# Attach flight controller
+ 335: 	var flight_controller = preload("res://scripts/flight_controller.gd").new()
+ 336: 	if _character:
+ 337: 		_character.add_child(flight_controller)
+ 338: 		flight_controller.parent = _character
+ 339: 		print("[VERBATIM] FlightController attached to character")
+ 340: 	else:
+ 341: 		print("[VERBATIM] WARNING: _character is null, flight controller not attached")
+ 342: 
+ 343: 	# --------------------------------------------------------------
+ 344: 	# Third‑person camera attached to character
+ 345: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+ 346: 	# --------------------------------------------------------------
+ 347: 	_camera = Camera3D.new()
+ 348: 	_camera.position = Vector3(0.0, 1.0, 5.0)
+ 349: 	_camera.fov = 75.0
+ 350: 	_camera.near = 0.1
+ 351: 	_camera.far = 10000.0
+ 352: 	_character.add_child(_camera)
+ 353: 	_camera.look_at_from_position(
+ 354: 		_camera.global_position, _character.global_position + Vector3(0.0, 1.0, 0.0), Vector3.UP
+ 355: 	)
+ 356: 	_camera.current = true
+ 357: 	print("[VERBATIM] Camera attached")
+ 358: 
+ 359: 	# ---------- HUD initialisation ----------
+ 360: 	# Create a CanvasLayer if not already present
+ 361: 	var hud_layer = CanvasLayer.new()
+ 362: 	hud_layer.name = "HUD"
+ 363: 	add_child(hud_layer)
+ 364: 	_hud_layer = hud_layer
+ 365: 
+ 366: 	# Create 8 labels for alt, speed, turn, malfunction, etc.
+ 367: 	_hud_labels = []
+ 368: 	for i in range(8):
+ 369: 		var lbl = Label.new()
+ 370: 		lbl.text = "---"
+ 371: 		lbl.position = Vector2(20, 20 + i * 30)
+ 372: 		lbl.add_theme_color_override("font_color", Color(1, 1, 0))
+ 373: 		hud_layer.add_child(lbl)
+ 374: 		_hud_labels.append(lbl)
+ 375: 
+ 376: 	# Set initial texts
+ 377: 	_hud_labels[0].text = "ALT: 0 ft"
+ 378: 	_hud_labels[1].text = "SPD: 0 kts | VARIO: 0.0 m/s"
+ 379: 	_hud_labels[4].text = "TURN: 0"
+ 380: 	_hud_labels[6].text = "MALF: GOOD"
+ 381: 	_hud_labels[7].text = "EP: Press C for FC check"
+ 382: 	print("[VERBATIM] HUD initialised")
+ 383: 
+ 384: 
+ 385: # ------------------------------------------------------------------
+ 386: # Input handling (mouse wheel and SPACE)
+ 387: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
+ 388: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+ 389: # ------------------------------------------------------------------
+ 390: 
+ 391: 
+
+======================================================================
+STEP 3: Check for camera initialization in _ready()
+======================================================================
+Traceback (most recent call last):
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/v27_compare_ready_functions.py", line 86, in <module>
+    if start_backup is not None:
+       ^^^^^^^^^^^^
+NameError: name 'start_backup' is not defined

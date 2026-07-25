@@ -1,0 +1,15 @@
+{
+  "new_rules": {
+    "R146": {
+      "rule": "When a script encounters an error (e.g., parse failure, missing file, runtime exception), the log must output the absolute or relative path to the file involved, and print at least 3 lines of context around the error location (e.g., the line number and surrounding lines). This allows the user to copy, cat, or upload the relevant section for diagnosis.",
+      "problem": "Error messages often omit file paths or only print a generic message, forcing the user to guess which file failed and where. Without path and context, debugging is slow and error-prone.",
+      "detector": "grep -E '(Error|Exception|FAIL)' /tmp/log.txt | grep -E '(\\.gd:\\d+|path:|file:)' || echo 'WARN: no path or line context in error logs'",
+      "verification": "Run a script that triggers an error (e.g., gdparse on a malformed file) and check that the log contains the file path and at least 3 lines of context (or a snippet showing the offending lines).",
+      "citation": {
+        "source": "Best practice for debugging",
+        "verbatim_quote": "Always include file path and line numbers in error output, with surrounding code context."
+      }
+    }
+  },
+  "new_techniques": []
+}

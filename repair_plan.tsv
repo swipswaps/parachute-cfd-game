@@ -1,0 +1,30 @@
+file_path	line	tool	errortext	severity	action
+godot_project/autoloads/fix_forensic_hud.gd	0	gdparse	godot_project/autoloads/fix_forensic_hud.gd:
+
+tool
+^
+
+Unexpected token Token('TYPE_HINT', 'tool') at line 1, column 1.
+E	error	FIX_REQUIRED
+godot_project/autoloads/fix_forensic_tool.gd	0	gdparse	godot_project/autoloads/fix_forensic_tool.gd:
+
+tool
+^
+
+Unexpected token Token('TYPE_HINT', 'tool') at line 1, column 1.
+	error	FIX_REQUIRED
+godot_project/capture.gd	0	gdparse	godot_project/capture.gd:
+
+:
+^
+
+Unexpected token Token('COLON', ':') at line 13, column 1.
+Expected one of: 
+	* REGULAR_	error	FIX_REQUIRED
+godot_project/test_hud.gd	0	gdparse	godot_project/test_hud.gd:
+
+... (test script) ...
+^
+
+Unexpected token Token('__ANON_1', '...') at line 1, column 1.
+Expe	error	FIX_REQUIRED

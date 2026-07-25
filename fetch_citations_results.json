@@ -1,0 +1,287 @@
+{
+  "run_ts": "2026-07-12T12:00:01.705546+00:00",
+  "target_count": 16,
+  "results": [
+    {
+      "id": "P001_springer",
+      "label": "Auer 2002 UCB1 -- Springer abstract",
+      "url": "https://link.springer.com/article/10.1023/A:1013689704352",
+      "note": "Springer journal page; abstract should contain the verbatim quote",
+      "http_code": 200,
+      "elapsed_ms": 1516,
+      "body_bytes": 240053,
+      "error": "",
+      "search_hits": [
+        "regret",
+        "logarithmic",
+        "uniformly"
+      ],
+      "excerpt": "[match: 'regret'] ...of a policy&#39;s success in addressing this dilemma is the regret, that is the loss due to the fact that the globally optimal policy is not followed all the times. One of the simplest examples of the exploration/exploitation dilemma is the multi-armed bandit problem. Lai and Robbins were the first ones to show that the regret for this problem has to grow at...",
+      "body_sha256": "3f68993e01651ba1",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P001_semanticscholar",
+      "label": "Auer 2002 UCB1 -- Semantic Scholar API",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1023/A:1013689704352?fields=title,authors,year,abstract,externalIds",
+      "note": "Semantic Scholar open API -- returns JSON with abstract field",
+      "http_code": 200,
+      "elapsed_ms": 298,
+      "body_bytes": 945,
+      "error": "",
+      "search_hits": [
+        "abstract"
+      ],
+      "excerpt": "[match: 'abstract'] ...following paper fields have been elided by the publisher: {'abstract'}. Paper or abstract available at https://api.unpaywall.org/v2/10.1023/A:1013689704352?email=<INSERT_YOUR_EMAIL> or https://doi.org/10.1023/A:1013689704352, which is subject to the license by the author or copyright owner provided with this content. Please go to the source to verify the lic...",
+      "body_sha256": "73fada940dc760fe",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P002_acm",
+      "label": "Mohan 1992 ARIES -- ACM DL abstract page",
+      "url": "https://dl.acm.org/doi/abs/10.1145/128765.128770",
+      "note": "ACM Digital Library abstract; may require JS but often serves static",
+      "http_code": 200,
+      "elapsed_ms": 1734,
+      "body_bytes": 212658,
+      "error": "",
+      "search_hits": [
+        "ARIES",
+        "write-ahead",
+        "atomicity",
+        "WAL"
+      ],
+      "excerpt": "[match: 'ARIES'] ...<title>ARIES: a transaction recovery method supporting fine-granularity locking and partial rollbacks using write-ahead logging: ACM Transactions on Database Systems: Vol 17, No 1</title>...",
+      "body_sha256": "71f2921485328d05",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P002_semanticscholar",
+      "label": "Mohan 1992 ARIES -- Semantic Scholar API",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1145/128765.128770?fields=title,authors,year,abstract,externalIds",
+      "note": "Semantic Scholar open API -- returns JSON with abstract",
+      "http_code": 200,
+      "elapsed_ms": 322,
+      "body_bytes": 1046,
+      "error": "",
+      "search_hits": [
+        "ARIES",
+        "abstract"
+      ],
+      "excerpt": "[match: 'ARIES'] ...\"10.1145/128765.128770\", \"CorpusId\": 263876813}, \"title\": \"ARIES\", \"year\": 1992, \"openAccessPdf\": {\"url\": \"https://dl.acm.org/doi/pdf/10.1145/128765.128770\", \"status\": \"BRONZE\", \"license\": null, \"disclaimer\": \"Notice: The following paper fields have been elided by the publisher: {'abstract'}. Paper or abstract available at https://api.unpaywall.org/v2/10.11...",
+      "body_sha256": "9a6f29a1cbaf2ef7",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P002_doi_redirect",
+      "label": "Mohan 1992 ARIES -- DOI resolver",
+      "url": "https://doi.org/10.1145/128765.128770",
+      "note": "Follow DOI redirect; shows final landing URL",
+      "http_code": 403,
+      "elapsed_ms": 211,
+      "body_bytes": 0,
+      "error": "HTTPError: 403 Forbidden",
+      "search_hits": [],
+      "excerpt": "",
+      "body_sha256": "",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P004_wikipedia_api",
+      "label": "Meyer 1988 DbC -- Wikipedia REST API (plain text extract)",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/Design_by_contract",
+      "note": "Wikipedia REST summary endpoint -- plain text, no JS needed",
+      "http_code": 200,
+      "elapsed_ms": 173,
+      "body_bytes": 1933,
+      "error": "",
+      "search_hits": [
+        "contract"
+      ],
+      "excerpt": "[match: 'contract'] ...{\"type\":\"standard\",\"title\":\"Design by contract\",\"displaytitle\":\"<span lang=\\\"en\\\" dir=\\\"ltr\\\"><span class=\\\"mw-page-title-main\\\">Design by contract</span></span>\",\"namespace\":{\"id\":0,\"text\":\"\"},\"wikibase_item\":\"Q1200691\",\"titles\":{\"canonical\":\"Design_by_contract\",\"normalized\":\"Design by contract\",\"display\":\"<span lang=\\\"en\\\" dir=\\\"ltr\\\"...",
+      "body_sha256": "af4ba7e21e9b1171",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P004_wikipedia_parse",
+      "label": "Meyer 1988 DbC -- Wikipedia parse API (full intro)",
+      "url": "https://en.wikipedia.org/w/api.php?action=query&titles=Design_by_contract&prop=extracts&exintro=1&explaintext=1&format=json",
+      "note": "MediaWiki parse API -- returns intro section as plain text JSON",
+      "http_code": 200,
+      "elapsed_ms": 203,
+      "body_bytes": 1230,
+      "error": "",
+      "search_hits": [
+        "contract",
+        "precondition",
+        "postcondition",
+        "obligation"
+      ],
+      "excerpt": "[match: 'contract'] ...batchcomplete\":\"\",\"query\":{\"normalized\":[{\"from\":\"Design_by_contract\",\"to\":\"Design by contract\"}],\"pages\":{\"39289\":{\"pageid\":39289,\"ns\":0,\"title\":\"Design by contract\",\"extract\":\"Design by contract (DbC), also known as contract programming, programming by contract and design-by-contract programming, is an approach for designing software.\\nIt prescribes that s...",
+      "body_sha256": "a276cd43ad4e11e4",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P004_semanticscholar_book",
+      "label": "Meyer 1988 DbC -- Semantic Scholar (ISBN lookup)",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ISBN:9780136291558?fields=title,authors,year,abstract,externalIds",
+      "note": "Semantic Scholar ISBN lookup for Meyer 1988",
+      "http_code": 429,
+      "elapsed_ms": 260,
+      "body_bytes": 0,
+      "error": "HTTPError: 429 ",
+      "search_hits": [],
+      "excerpt": "",
+      "body_sha256": "",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P005_springer",
+      "label": "Merkle 1987 CRYPTO -- Springer chapter page",
+      "url": "https://link.springer.com/chapter/10.1007/3-540-48184-2_32",
+      "note": "Springer LNCS chapter page; abstract often in meta tags",
+      "http_code": 200,
+      "elapsed_ms": 1475,
+      "body_bytes": 227283,
+      "error": "",
+      "search_hits": [
+        "Merkle",
+        "hash",
+        "signature",
+        "tree",
+        "conventional"
+      ],
+      "excerpt": "[match: 'Merkle'] ...of modular...\"/> <meta name=\"citation_author\" content=\"Merkle, Ralph C.\"/> <meta name=\"citation_author_institution\" content=\"Elxsi\"/> <meta name=\"citation_publisher\" content=\"Springer, Berlin, Heidelberg\"/> <meta name=\"citation_springer_api_url\" content=\"http://api.springer.com/xmldata/jats?q=doi:10.1007/3-540-48184-2_32&amp;api_key=\"/>...",
+      "body_sha256": "d4b6d37677138583",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P005_semanticscholar",
+      "label": "Merkle 1987 CRYPTO -- Semantic Scholar API",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/DOI:10.1007/3-540-48184-2_32?fields=title,authors,year,abstract,externalIds",
+      "note": "Semantic Scholar open API",
+      "http_code": 200,
+      "elapsed_ms": 157,
+      "body_bytes": 919,
+      "error": "",
+      "search_hits": [
+        "Merkle",
+        "signature",
+        "abstract"
+      ],
+      "excerpt": "[match: 'Merkle'] ..., \"externalIds\": {\"MAG\": \"1600255172\", \"DBLP\": \"conf/crypto/Merkle87\", \"DOI\": \"10.1007/3-540-48184-2_32\", \"CorpusId\": 28484604}, \"title\": \"A Digital Signature Based on a Conventional Encryption Function\", \"year\": 1987, \"openAccessPdf\": {\"url\": \"https://link.springer.com/content/pdf/10.1007/3-540-48184-2_32.pdf\", \"status\": \"BRONZE\", \"license\": null, \"disclaim...",
+      "body_sha256": "1f7b528efa9d9cd3",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "P005_doi_redirect",
+      "label": "Merkle 1987 CRYPTO -- DOI resolver",
+      "url": "https://doi.org/10.1007/3-540-48184-2_32",
+      "note": "Follow DOI redirect",
+      "http_code": 200,
+      "elapsed_ms": 1690,
+      "body_bytes": 227283,
+      "error": "",
+      "search_hits": [
+        "Merkle",
+        "hash",
+        "signature"
+      ],
+      "excerpt": "[match: 'Merkle'] ...of modular...\"/> <meta name=\"citation_author\" content=\"Merkle, Ralph C.\"/> <meta name=\"citation_author_institution\" content=\"Elxsi\"/> <meta name=\"citation_publisher\" content=\"Springer, Berlin, Heidelberg\"/> <meta name=\"citation_springer_api_url\" content=\"http://api.springer.com/xmldata/jats?q=doi:10.1007/3-540-48184-2_32&amp;api_key=\"/>...",
+      "body_sha256": "690a7fd2419bba33",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "G001_godot",
+      "label": "Godot HTTPRequest -- official stable docs",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_httprequest.html",
+      "note": "Should contain class description sentence",
+      "http_code": 200,
+      "elapsed_ms": 299,
+      "body_bytes": 1353638,
+      "error": "",
+      "search_hits": [
+        "HTTPRequest",
+        "HTTP requests",
+        "HTTPClient",
+        "ability"
+      ],
+      "excerpt": "[match: 'HTTPRequest'] ...dth, initial-scale=1\" /> <meta property=\"og:title\" content=\"HTTPRequest\" /> <meta property=\"og:type\" content=\"website\" /> <meta property=\"og:url\" content=\"https://docs.godotengine.org/en/stable/classes/class_httprequest.html\" /> <meta property=\"og:site_name\" content=\"Godot Engine documentation\" /> <meta property=\"og:description\" content=\"Inherits: Node&lt; O...",
+      "body_sha256": "087d29ed6e0072be",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "G002_godot",
+      "label": "Godot ProjectSettings -- official stable docs",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_projectsettings.html",
+      "note": "Should contain class description sentence",
+      "http_code": 200,
+      "elapsed_ms": 307,
+      "body_bytes": 2694099,
+      "error": "",
+      "search_hits": [
+        "ProjectSettings",
+        "everywhere",
+        "get_setting"
+      ],
+      "excerpt": "[match: 'ProjectSettings'] ...dth, initial-scale=1\" /> <meta property=\"og:title\" content=\"ProjectSettings\" /> <meta property=\"og:type\" content=\"website\" /> <meta property=\"og:url\" content=\"https://docs.godotengine.org/en/stable/classes/class_projectsettings.html\" /> <meta property=\"og:site_name\" content=\"Godot Engine documentation\" /> <meta property=\"og:description\" content=\"Inherits: Ob...",
+      "body_sha256": "2f4d6e8c7b6b623a",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "G003_godot",
+      "label": "Godot CanvasLayer -- official stable docs",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html",
+      "note": "Should contain class description sentence",
+      "http_code": 200,
+      "elapsed_ms": 251,
+      "body_bytes": 1311415,
+      "error": "",
+      "search_hits": [
+        "CanvasLayer",
+        "separate",
+        "children"
+      ],
+      "excerpt": "[match: 'CanvasLayer'] ...dth, initial-scale=1\" /> <meta property=\"og:title\" content=\"CanvasLayer\" /> <meta property=\"og:type\" content=\"website\" /> <meta property=\"og:url\" content=\"https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html\" /> <meta property=\"og:site_name\" content=\"Godot Engine documentation\" /> <meta property=\"og:description\" content=\"Inherits: Node&lt; O...",
+      "body_sha256": "9fbb30684e39bf66",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "G004_godot",
+      "label": "Godot InputEvent -- official stable docs",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_inputevent.html",
+      "note": "Should contain description of position property",
+      "http_code": 200,
+      "elapsed_ms": 244,
+      "body_bytes": 1322322,
+      "error": "",
+      "search_hits": [
+        "InputEvent",
+        "position",
+        "viewport",
+        "coordinate"
+      ],
+      "excerpt": "[match: 'InputEvent'] ...dth, initial-scale=1\" /> <meta property=\"og:title\" content=\"InputEvent\" /> <meta property=\"og:type\" content=\"website\" /> <meta property=\"og:url\" content=\"https://docs.godotengine.org/en/stable/classes/class_inputevent.html\" /> <meta property=\"og:site_name\" content=\"Godot Engine documentation\" /> <meta property=\"og:description\" content=\"Inherits: Resource&lt;...",
+      "body_sha256": "03f3fc6325de05c4",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    },
+    {
+      "id": "G004b_godot_os",
+      "label": "Godot OS.shell_open -- official stable docs",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_os.html",
+      "note": "Should contain shell_open description",
+      "http_code": 200,
+      "elapsed_ms": 307,
+      "body_bytes": 1489519,
+      "error": "",
+      "search_hits": [
+        "shell_open",
+        "file manager",
+        "URL"
+      ],
+      "excerpt": "[match: 'shell_open'] ...ref=\"#class-os-method-shell-open\"><span class=\"std std-ref\">shell_open</span></a>(uri: <a class=\"reference internal\" href=\"class_string.html#class-string\"><span class=\"std std-ref\">String</span></a>)</p></td> </tr> <tr class=\"row-even\"><td><p><a class=\"reference internal\" href=\"class_%40globalscope.html#enum-globalscope-error\"><span class=\"std std-ref\">Error...",
+      "body_sha256": "10360e9c4c101162",
+      "fetched_at": "2026-07-12T12:00:01.705546+00:00"
+    }
+  ]
+}

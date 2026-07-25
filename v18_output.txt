@@ -1,0 +1,79 @@
+
+======================================================================
+STEP 0: PRECONDITIONS – verify essential files exist
+======================================================================
+  Godot project dir: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project
+  Aircraft dir     : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/assets/aircraft  exists: True
+  GLB model        : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/assets/aircraft/cesna_airplane.glb  exists: True  sha256: d56a1533fbb8ecd50a9ffdb5a0fe456478ce48dc1d32948ea57ad2d5681f553c
+  plane.gd script  : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/plane.gd  exists: True  sha256: 3930d700b65e4083faa3ab555db5ad18994960a74c4fe27a9fedf8512b5f45e1
+
+======================================================================
+STEP 1: SEARCH FOR ANY SCENE FILE REFERENCING THE GLB
+======================================================================
+  Found 2 .tscn file(s) that reference cesna_airplane.glb:
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/audit_logs/main.tscn  (size: 654 bytes)
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scenes/main.tscn  (size: 1694 bytes)
+
+======================================================================
+STEP 2: SEARCH FOR ANY FILE NAMED airplane.tscn
+======================================================================
+  Found 0 file(s) named airplane.tscn:
+  ❌ No airplane.tscn found anywhere under the project tree.
+  This is the direct root cause: the scene file is missing.
+
+======================================================================
+STEP 3: SEARCH FOR ANY SCENE WITH 'plane' OR 'cessna' IN NAME
+======================================================================
+  Found 23 .tscn file(s) with 'plane' or 'cessna' in name:
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/audit_logs/test_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.disabled/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.disabled/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.old/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_final/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_final/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_final2/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_final2/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_reconcile/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_reconcile/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_repos/godot_aerodynamic_physics/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/external_repos/godot_aerodynamic_physics/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_aerodynamic_physics_cache/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_aerodynamic_physics_cache/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/demo/aircraft_examples/demo_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scenes/test_plane.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/upstream_aero_check/demo/aircraft_examples/cessna172/cessna172.tscn
+    - /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/upstream_aero_check/demo/aircraft_examples/demo_plane.tscn
+
+======================================================================
+STEP 4: CHECK WHAT THE GAME EXPECTS (main.tscn and project.godot)
+======================================================================
+  main.tscn content lines containing 'airplane' or 'plane':
+       4: [ext_resource type="PackedScene" uid="uid://cw7o7k7f8bgep" path="res://assets/aircraft/cesna_airplane.glb" id="2_cessna"]
+
+  project.godot lines containing 'airplane' or 'plane':
+
+======================================================================
+STEP 5: CHECK IF THE GLB IS IMPORTED AND HAS A SCENE CACHE
+======================================================================
+  Found imported scene cache: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn
+  This is the engine's internal conversion of the GLB.
+  It is NOT a user-editable scene and should not be used directly.
+
+======================================================================
+VERDICT (facts only – interpretation follows)
+======================================================================
+  ❌ ROOT CAUSE: airplane.tscn is missing from the project.
+  The game tries to load 'res://assets/aircraft/airplane.tscn' but it does not exist.
+  The GLB model exists and is correctly named, but no scene wraps it.
+
+  🔍 Options to resolve:
+    1. If a backup of airplane.tscn exists elsewhere, copy it to the correct location.
+    2. If no backup exists, create a minimal scene that loads the GLB and attaches plane.gd.
+    3. Modify the game to load the GLB directly (requires code changes).
+
+DONE. Upload v18_output.txt for further analysis.

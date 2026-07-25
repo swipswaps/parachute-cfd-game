@@ -1,0 +1,100 @@
+[DIAG] _physics_process: camera target set to character (state: 2)
+
+[VERBATIM] CFD wind: speed 1.21083989266525 kts, dir 0°, gust 1.21083989266525
+
+[VERBATIM] DIAGNOSIS turning block executed
+
+[DIAG] _turn_input = 0.0
+
+[DIAG] _poll_controls: ENTER, state=2
+
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+
+[DIAG] _poll_controls: EXIT
+
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=86 (V), mods=none, physical=false, location=unspecified, pressed=true, echo=false
+
+[VERBATIM] INPUT: action=reserve (V)
+
+2026-07-15T04:10:19 [INFO] InputManager ready
+
+2026-07-15T04:10:19 [INFO] InputMap.has_action('restart') = true
+
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 16:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 13-19 (offending line 16):
+
+           13: 	"cutaway": KEY_X,
+
+           14: 	"reserve": KEY_V,
+
+           15: 	"flare": KEY_F,
+
+      >>   16: 	"restart": KEY_R,
+
+           17: 	"pause": KEY_ESCAPE,
+
+           18: }
+
+           19: 
+
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 16:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 13-19 (offending line 16):
+
+           13: 	"cutaway": KEY_X,
+
+           14: 	"reserve": KEY_V,
+
+           15: 	"flare": KEY_F,
+
+      >>   16: 	"restart": KEY_R,
+
+           17: 	"pause": KEY_ESCAPE,
+
+           18: }
+
+           19: 
+
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 16:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 13-19 (offending line 16):
+
+           13: 	"cutaway": KEY_X,
+
+           14: 	"reserve": KEY_V,
+
+           15: 	"flare": KEY_F,
+
+      >>   16: 	"restart": KEY_R,
+
+           17: 	"pause": KEY_ESCAPE,
+
+           18: }
+
+           19: 
+
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 9:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 6-12 (offending line 9):
+
+            6: const ACTIONS: Dictionary = {
+
+            7: 	"deploy": KEY_SPACE,
+
+            8: 	"turnleft": KEY_Q,
+
+      >>    9: 	"turnright": KEY_E,
+
+           10: 	"cyclecamera": KEY_C,
+

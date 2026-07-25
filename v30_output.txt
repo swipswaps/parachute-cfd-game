@@ -1,0 +1,92 @@
+MODE: APPLY
+
+======================================================================
+STEP 0: Preconditions
+======================================================================
+  Found _create_plane() in backup at line 1363
+  Current file does NOT have _create_plane() – will insert.
+  _create_plane() call NOT present in _ready() – will insert.
+  End of _ready() at line 391
+
+--- Current _ready() end (lines 388-392) ---
+ 388: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+ 389: # ------------------------------------------------------------------
+ 390: 
+ 391: 
+ 392: func _input(event):
+
+======================================================================
+STEP 1: Extract _create_plane() function from backup
+======================================================================
+  Extracted 21 lines for _create_plane()
+
+--- Backup _create_plane() function (lines 1363-1382) ---
+1363: func _create_plane():
+1364: 	if not Engine.is_editor_hint():
+1365: 		var plane_scene = load("res://scenes/test_plane.tscn")
+1366: 		if plane_scene:
+1367: 			var plane = plane_scene.instantiate()
+1368: 			add_child(plane)
+1369: 			plane.global_position = _character.global_position + Vector3(0, 5, 0)
+1370: 			print("[VERBATIM] Plane created at ", plane.global_position)
+1371: 			# FIX_PLANE_MATERIAL: ensure visible, scaled, and material set
+1372: 			plane.visible = true
+1373: 			plane.scale = Vector3(1, 1, 1)
+1374: 			if plane.get_child_count() > 0:
+1375: 				var child = plane.get_child(0)
+1376: 				if child is MeshInstance3D and child.mesh:
+1377: 					var mat = StandardMaterial3D.new()
+1378: 					mat.albedo_color = Color(1, 1, 1)
+1379: 					mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+1380: 					child.material_override = mat
+1381: 					print("[DIAG] Plane material set to white")
+1382: 		else:
+  Will insert _create_plane() function before line 1587 (current line: func _fetch_real_wind():)
+
+======================================================================
+STEP 2: Perform edits
+======================================================================
+  Backup written: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.backup_20260706_055109
+  Inserted _create_plane() function block at line 1587
+  Inserted call '_create_plane()' at line 391
+  ✅ Read-After-Write verified.
+
+======================================================================
+STEP 3: Show updated lines
+======================================================================
+
+  Updated _ready() ending (showing last 10 lines):
+
+--- Updated _ready() ending (lines 382-392) ---
+ 382: 	print("[VERBATIM] HUD initialised")
+ 383: 
+ 384: 
+ 385: # ------------------------------------------------------------------
+ 386: # Input handling (mouse wheel and SPACE)
+ 387: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
+ 388: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+ 389: # ------------------------------------------------------------------
+ 390: 
+ 391: _create_plane()
+ 392: 
+
+  _create_plane() function inserted:
+
+--- _create_plane() function (first 15 lines) (lines 1588-1602) ---
+1588: func _create_plane():
+1589: 	if not Engine.is_editor_hint():
+1590: 		var plane_scene = load("res://scenes/test_plane.tscn")
+1591: 		if plane_scene:
+1592: 			var plane = plane_scene.instantiate()
+1593: 			add_child(plane)
+1594: 			plane.global_position = _character.global_position + Vector3(0, 5, 0)
+1595: 			print("[VERBATIM] Plane created at ", plane.global_position)
+1596: 			# FIX_PLANE_MATERIAL: ensure visible, scaled, and material set
+1597: 			plane.visible = true
+1598: 			plane.scale = Vector3(1, 1, 1)
+1599: 			if plane.get_child_count() > 0:
+1600: 				var child = plane.get_child(0)
+1601: 				if child is MeshInstance3D and child.mesh:
+1602: 					var mat = StandardMaterial3D.new()
+
+DONE. If applied, please run the game to verify the airplane appears.

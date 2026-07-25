@@ -1,0 +1,42 @@
+name: GDScript CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gdtk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install gdtoolkit
+        run: pip install "gdtoolkit==4.*"
+
+      - name: Parse check
+        run: gdparse godot_project/scripts/build_terrain.gd -p
+
+      - name: Lint
+        run: gdlint godot_project/scripts/build_terrain.gd
+
+      - name: Format check
+        run: gdformat --check godot_project/scripts/build_terrain.gd
+
+  scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Run duplicate scanner
+        run: python3 scan_gd.py godot_project/scripts/build_terrain.gd

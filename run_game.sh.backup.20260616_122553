@@ -1,0 +1,2 @@
+#!/bin/bash
+./bin/Godot_v4.6.2-stable_linux.x86_64 --rendering-driver opengl3 --path godot_project 2>&1 | tee /tmp/godot_run.log

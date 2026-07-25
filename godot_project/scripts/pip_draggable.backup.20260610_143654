@@ -1,0 +1,51 @@
+# PATH: godot_project/scripts/pip_draggable.gd
+# WHAT: Attach to the PiP panel (SubViewportContainer) to make it draggable.
+#       Saves position to ConfigFile and restores on next launch.
+# WHY:  R105 (ConfigFile for user settings) + R107 (draggable UI with _gui_input).
+# SOURCE (Tier 2): Godot 4 ConfigFile documentation
+# URL: https://docs.godotengine.org/en/stable/classes/class_configfile.html
+# VERBATIM: "ConfigFile helper class to parse and generate INI-style configuration files."
+# SOURCE (Tier 2): Godot 4 GUI dragging example
+# URL: https://docs.godotengine.org/en/stable/tutorials/ui/gui_drag_and_drop.html
+# VERBATIM: "For custom dragging, use Control._gui_input() to detect mouse button events
+#            and update the control's position."
+
+extends SubViewportContainer
+
+var dragging: bool = false
+var drag_offset: Vector2
+
+func _ready() -> void:
+    print("[VERBATIM] ENTER pip_draggable _ready")
+    var config = ConfigFile.new()
+    if config.load("user://pip_position.cfg") == OK:
+        var x = config.get_value("pip", "x", 20)
+        var y = config.get_value("pip", "y", 20)
+        position = Vector2(x, y)
+        print("[VERBATIM] loaded pip position: ", position)
+    else:
+        print("[VERBATIM] no saved position, using default (20,20)")
+    print("[VERBATIM] EXIT pip_draggable _ready")
+
+func _gui_input(event: InputEvent) -> void:
+    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+        if event.pressed:
+            dragging = true
+            drag_offset = get_global_mouse_position() - position
+            print("[VERBATIM] drag started")
+            get_viewport().set_input_as_handled()
+        else:
+            dragging = false
+            var config = ConfigFile.new()
+            config.set_value("pip", "x", int(position.x))
+            config.set_value("pip", "y", int(position.y))
+            config.save("user://pip_position.cfg")
+            print("[VERBATIM] drag ended, saved: ", position)
+    elif event is InputEventMouseMotion and dragging:
+        var new_pos = get_global_mouse_position() - drag_offset
+        var viewport_size = get_viewport().get_visible_rect().size
+        new_pos.x = clamp(new_pos.x, 0, viewport_size.x - size.x)
+        new_pos.y = clamp(new_pos.y, 0, viewport_size.y - size.y)
+        position = new_pos
+        get_viewport().set_input_as_handled()
+# IMPLEMENTATION COMPLETE

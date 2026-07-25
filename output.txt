@@ -1,0 +1,445 @@
+[owner@192.168.1.152-20260703-080019 parachute-cfd-game]$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[owner@192.168.1.152-20260703-080019 parachute-cfd-game]$ cat > tag_and_audit_live_vs_backup.py << 'EOF'
+#!/usr/bin/env python3
+"""
+tag_and_audit_live_vs_backup.py
+WHAT: adds an is_live_path column to component_registry (ALTER TABLE
+      ADD COLUMN, additive only -- no existing column touched), sets it
+      False for any relative_path containing the same backup-history
+      markers already used by diff_all_tscn_backups.py earlier this
+      session (old_copies, broken_backup, external_backups, .OFF,
+      .disabled, .old, .pre_final, .pre_reconcile), then re-runs the
+      self-collision query scoped to is_live_path=1 only.
+WHY: the last run's "swipswaps/parachute-cfd-game (local)" self-
+      collisions are very likely the same old_copies/.broken_backup
+      duplicate addon trees already identified this session, ingested
+      because teach_db_component_graph.py's rglob had no exclusion
+      filter. Per Definition of Done, "taught" isn't met while genuine
+      duplicates and known backup noise are indistinguishable in the
+      data.
+ASSUMES: run from parachute-cfd-game/ or reachable from it; the
+         component_registry table from the prior run already exists.
+VERIFIES WITH: real before/after row counts for is_live_path=1 vs 0,
+               and the self-collision query re-run scoped to live-only,
+               so any REMAINING duplicate is a genuine finding, not noise.
+"""
+import sqlite3
+import sys
+from pathlib import Path
+
+EXCLUDE_MARKERS = [
+    "old_copies", "broken_backup", "external_backups", "/BACKUP/",
+    ".OFF", ".disabled", ".old", ".pre_final", ".pre_reconcile",
+]
+
+db_candidates = [c for c in Path(".").rglob("parachute_mutations.db") if c.stat().st_size > 0]
+if not db_candidates:
+    print("PRECONDITION FAILED: no non-empty parachute_mutations.db found", file=sys.stderr)
+    sys.exit(1)
+db_candidates.sort(key=lambda p: p.stat().st_size, reverse=True)
+db_path = db_candidates[0]
+print(f"=== Using: {db_path} ===\n")
+
+conn = sqlite3.connect(str(db_path))
+cur = conn.cursor()
+
+cur.execute("PRAGMA table_info(component_registry)")
+cols = [r[1] for r in cur.fetchall()]
+if "is_live_path" not in cols:
+    print("Adding is_live_path column (additive, ALTER TABLE ADD COLUMN only)...")
+    cur.execute("ALTER TABLE component_registry ADD COLUMN is_live_path INTEGER")
+    conn.commit()
+else:
+    print("is_live_path column already present.")
+
+cur.execute("SELECT id, relative_path FROM component_registry WHERE source_repo LIKE '%local%'")
+rows = cur.fetchall()
+print(f"\n=== Tagging {len(rows)} local-project row(s) ===")
+live_count, backup_count = 0, 0
+for row_id, rel_path in rows:
+    is_live = 0 if any(m in rel_path for m in EXCLUDE_MARKERS) else 1
+    cur.execute("UPDATE component_registry SET is_live_path = ? WHERE id = ?", (is_live, row_id))
+    if is_live:
+        live_count += 1
+    else:
+        backup_count += 1
+conn.commit()
+print(f"  live: {live_count}  backup-history noise: {backup_count}")
+
+print("\n=== Self-collisions WITHIN swipswaps/parachute-cfd-game, live-only ===")
+cur.execute("""
+    SELECT class_name, COUNT(*), GROUP_CONCAT(relative_path, ' || ')
+    FROM component_registry
+    WHERE source_repo LIKE '%local%' AND is_live_path = 1 AND class_name IS NOT NULL
+    GROUP BY class_name HAVING COUNT(*) > 1
+""")
+real_dupes = cur.fetchall()
+if real_dupes:
+    print(f"  {len(real_dupes)} GENUINE live-tree duplicate(s) -- worth investigating each:")
+    for name, n, paths in real_dupes:
+        print(f"  {name} x{n}: {paths}")
+else:
+    print("  None -- prior 'duplicates' were entirely backup-history noise, now excluded.")
+
+conn.close()
+EOF
+python3 tag_and_audit_live_vs_backup.py
+=== Using: parachute_mutations.db ===
+
+Adding is_live_path column (additive, ALTER TABLE ADD COLUMN only)...
+
+=== Tagging 372 local-project row(s) ===
+  live: 123  backup-history noise: 249
+
+=== Self-collisions WITHIN swipswaps/parachute-cfd-game, live-only ===
+  17 GENUINE live-tree duplicate(s) -- worth investigating each:
+  AeroAtmosphere3D x2: addons/godot_aerodynamic_physics/aero_atmosphere_3d/aero_atmosphere_3d.gd || addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_atmosphere_3d.gd
+  AeroBody3D x7: addons/godot_aerodynamic_physics/aero_body_3d.gd || addons/godot_aerodynamic_physics/core/aero_body_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_sphere_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_cyclic_propeller_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_thruster_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/drag_influencer/aero_drag_influencer.gd
+  AeroBuoyancy3D x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_3d.gd
+  AeroBuoyancyMesh3D x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd
+  AeroControlComponent x2: addons/godot_aerodynamic_physics/controls/aero_control_component.gd || addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd
+  AeroControlConfig x2: addons/godot_aerodynamic_physics/controls/aero_control_config.gd || addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd
+  AeroControlConfigAxis x2: addons/godot_aerodynamic_physics/controls/aero_control_config_axis.gd || addons/godot_aerodynamic_physics/core/controls/aero_control_config_axis.gd
+  AeroInfluencerControlAxisConfig x2: addons/godot_aerodynamic_physics/controls/aero_influencer_control_axis_config.gd || addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd
+  AeroInfluencerControlConfig x2: addons/godot_aerodynamic_physics/controls/aero_influencer_control_config.gd || addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd
+  AeroMover3D x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_mover_3d/aero_mover_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_mover_3d.gd
+  AeroPropeller3D x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd
+  AeroSurface3D x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_surface_3d/aero_surface_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_3d.gd
+  AeroSurfaceConfig x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd
+  AeroWaterAtmosphere3D x2: addons/godot_aerodynamic_physics/aero_atmosphere_3d/aero_water_atmosphere_3d/aero_water_atmosphere_3d.gd || addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_water_atmosphere_3d/aero_water_atmosphere_3d.gd
+  FlightAssist x2: addons/godot_aerodynamic_physics/core/flight_assist.gd || addons/godot_aerodynamic_physics/flight_assist.gd
+  ManualAeroSurface3D x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd
+  ManualAeroSurfaceConfig x2: addons/godot_aerodynamic_physics/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd || addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd
+[owner@192.168.1.152-20260703-080022 parachute-cfd-game]$ #can you read this?
+[owner@192.168.1.152-20260703-080032 parachute-cfd-game]$ cat ~/.bashrc 
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+# Custom dynamic prompt showing IP + time-date
+function custom_prompt() {
+    local user ipaddr timestamp color
+    
+    user=$(whoami)
+    ipaddr=$(hostname -I | awk '{print $1}')
+    local timestamp
+    timestamp=$(date +"%Y%m%d-%H%M%S")
+    if [[ -n "${SSH_CONNECTION-}" ]]; then
+        color="\[\e[0;32m\]"  # Dark green for SSH
+    else
+        color="\[\e[1;32m\]"  # Bright green for local
+    fi
+
+    PS1="${color}[${user}@${ipaddr}-${timestamp} \W]\$\[\e[0m\] "
+#    PS1="[\u@${ipaddr}-${timestamp} \W]\\$ "
+#    PS1="\[\e[0;32m\][\u@${ipaddr}-${timestamp} \W]\\$\[\e[0m\] "
+#    PS1="\[\e[1;32m\][owner@${ipaddr}-${timestamp} \W]\$\[\e[0m\] "
+}
+PROMPT_COMMAND=custom_prompt
+export PATH=$HOME/bin:$PATH
+
+# Force i965 VA-API driver (fixes VLC hardware decoding)
+export LIBVA_DRIVER_NAME=i965
+
+# OpenFOAM manual activation
+#alias ofsrc="source /usr/lib/openfoam/openfoam2512/etc/bashrc"
+#source /usr/lib/openfoam/openfoam2512/etc/bashrc
+export PATH="$HOME/.cargo/bin:$PATH"
+export GTK_THEME=Adwaita
+export GTK_ICON_THEME_FALLBACK=1
+export GTK_MODULES=""
+export KDE_DEBUG=1
+(reverse-i-search)`': 
+(reverse-i-search)`x': cat > tag_and_audit_live_vs_backup.py << 'EOF'
+#!/usr/bin/env python3
+"""
+tag_and_audit_live_vs_backup.py
+WHAT: adds an is_live_path column to component_registry (ALTER TABLE
+      ADD COLUMN, additive only -- no existing column touched), sets it
+      False for any relative_path containing the same backup-history
+      markers already used by diff_all_tscn_backups.py earlier this
+      session (old_copies, broken_backup, external_backups, .OFF,
+      .disabled, .old, .pre_final, .pre_reconcile), then re-runs the
+      self-collision query scoped to is_live_path=1 only.
+WHY: the last run's "swipswaps/parachute-cfd-game (local)" self-
+      collisions are very likely the same old_copies/.broken_backup
+      duplicate addon trees already identified this session, ingested
+      because teach_db_component_graph.py's rglob had no exclusion
+      filter. Per Definition of Done, "taught" isn't met while genuine
+      duplicates and known backup noise are indistinguishable in the
+      data.
+ASSUMES: run from parachute-cfd-game/ or reachable from it; the
+         component_registry table from the prior run already exists.
+VERIFIES WITH: real before/after row counts for is_live_path=1 vs 0,
+               and the self-collision query re-run scoped to live-only,
+               so any REMAINING duplicate is a genuine finding, not noise.
+"""
+import sqlite3
+import sys
+from pathlib import Path
+
+EXCLUDE_MARKERS = [
+    "old_copies", "broken_backup", "external_backups", "/BACKUP/",
+    ".OFF", ".disabled", ".old", ".pre_final", ".pre_reconcile",
+]
+
+db_candidates = [c for c in Path(".").rglob("parachute_mutations.db") if c.stat().st_size > 0]
+if not db_candidates:
+    print("PRECONDITION FAILED: no non-empty parachute_mutations.db found", file=sys.stderr)
+    sys.exit(1)
+db_candidates.sort(key=lambda p: p.stat().st_size, reverse=True)
+db_path = db_candidates[0]
+print(f"=== Using: {db_path} ===\n")
+
+conn = sqlite3.connect(str(db_path))
+cur = conn.cursor()
+
+cur.execute("PRAGMA table_info(component_registry)")
+cols = [r[1] for r in cur.fetchall()]
+if "is_live_path" not in cols:
+    print("Adding is_live_path column (additive, ALTER TABLE ADD COLUMN only)...")
+    cur.execute("ALTER TABLE component_registry ADD COLUMN is_live_path INTEGER")
+    conn.commit()
+else:
+    print("is_live_path column already present.")
+
+cur.execute("SELECT id, relative_path FROM component_registry WHERE source_repo LIKE '%local%'")
+rows = cur.fetchall()
+print(f"\n=== Taggincg {len(rows)} local-project row(s) ===")
+live_count, backup_count = 0, 0
+for row_id, rel_path in rows:
+    is_live = 0 if any(m in rel_path for m in EXCLUDE_MARKERS) else 1
+    cur.execute("UPDATE component_registry SET is_live_path = ? WHERE id = ?", (is_live, row_id))
+    if is_live:
+        live_count += 1
+    else:
+        backup_count += 1
+conn.commit()
+print(f"  live: {live_count}  backup-history noise: {backup_count}")
+
+print("\n=== Self-collisions WITHIN swipswaps/parachute-cfd-game, live-only ===")
+cur.execute("""
+    SELECT class_name, COUNT(*), GROUP_CONCAT(relative_path, ' || ')
+    FROM component_registry
+    WHERE source_repo LIKE '%local%' AND is_live_path = 1 AND class_name IS NOT NULL
+    GROUP BY class_name HAVING COUNT(*) > 1
+""")
+real_dupes = cur.fetchall()
+if real_dupes:
+    print(f"  {len(real_dupes)} GENUINE live-tree duplicate(s) -- worth investigating each:")
+    for name, n, paths in real_dupes:
+        print(f"  {name} x{n}: {paths}")
+else:
+    print("  None -- prior 'duplicates' were entirely backup-history noise, now excluded.")
+
+conn.close()
+EOF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     l
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                  c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      i': xclip -selection clipboard -o > output.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[owner@192.168.1.152-20260703-080344 parachute-cfd-game]$ xclip -selection clipboard -o > output.txt
+[owner@192.168.1.152-20260703-080406 parachute-cfd-game]$ xclip -selection clipboard -o |
+magick \
+    -background black \
+    -fill white \
+    -font DejaVu-Sans-Mono \
+    -pointsize 14 \
+    text:- \
+    terminal_0002.png
+[owner@192.168.1.152-20260703-080436 parachute-cfd-game]$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

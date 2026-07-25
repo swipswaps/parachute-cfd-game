@@ -1,0 +1,52 @@
+[
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd",
+    "old": "\t\t[2, 0, 0, n1.x, n2.x]",
+    "new": "\t\t[2, 0, 0, n1.x, n2.x],"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd",
+    "old": "\t\t[0, 2, 0, n1.y, n2.y]",
+    "new": "\t\t[0, 2, 0, n1.y, n2.y],"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd",
+    "old": "\t\t[0, 0, 2, n1.z, n2.z]",
+    "new": "\t\t[0, 0, 2, n1.z, n2.z],"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd",
+    "old": "\t\t[n1.x, n1.y, n1.z, 0, 0]",
+    "new": "\t\t[n1.x, n1.y, n1.z, 0, 0],"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/core/flight_assist.gd",
+    "old": "\t\tatan2(local_direction_target.y, -local_direction_target.z)",
+    "new": "\t\tatan2(local_direction_target.y, -local_direction_target.z),"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/core/flight_assist.gd",
+    "old": "\t\tatan2(-local_direction_target.x, -local_direction_target.z)",
+    "new": "\t\tatan2(-local_direction_target.x, -local_direction_target.z),"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd",
+    "old": "\t\tAeroControlConfigAxis.new(\"pitch\", -1.0, 1.0, \"ui_up\", \"ui_down\")",
+    "new": "\t\tAeroControlConfigAxis.new(\"pitch\", -1.0, 1.0, \"ui_up\", \"ui_down\"),"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd",
+    "old": "\t\tAeroControlConfigAxis.new(\"yaw\")",
+    "new": "\t\tAeroControlConfigAxis.new(\"yaw\"),"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd",
+    "old": "\t\tAeroControlConfigAxis.new(\"roll\", -1.0, 1.0, \"ui_left\", \"ui_right\")",
+    "new": "\t\tAeroControlConfigAxis.new(\"roll\", -1.0, 1.0, \"ui_left\", \"ui_right\"),"
+  },
+  {
+    "file": "godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd",
+    "old": "\t\tAeroControlConfigAxis.new(\"throttle\", 0.0, 1.0, \"ui_page_up\", \"ui_page_down\", true)",
+    "new": "\t\tAeroControlConfigAxis.new(\"throttle\", 0.0, 1.0, \"ui_page_up\", \"ui_page_down\", true),"
+  }
+]

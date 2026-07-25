@@ -1,0 +1,13 @@
+{
+    "version": "v158",
+    "date": "2026-05-08T14:25:57-04:00",
+    "fixes": [
+        "Removed velocity redefinition in parachute_controller.gd",
+        "Replaced OS.get_datetime() with Time.get_datetime_dict_from_system()",
+        "Force Compatibility renderer by writing project.godot from scratch",
+        "Cleared .godot cache completely",
+        "Camera set to top-down view of airport (150,200,150)",
+        "All scene wiring (CharacterBody3D, HUD) reapplied"
+    ],
+    "status": "verified"
+}

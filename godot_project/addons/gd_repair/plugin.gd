@@ -1,0 +1,49 @@
+@tool
+extends EditorPlugin
+
+# CITATION: Godot EditorPlugin documentation – https://docs.godotengine.org/en/stable/classes/class_editorplugin.html
+# CITATION: OS.execute – https://docs.godotengine.org/en/stable/classes/class_os.html#class-os-method-execute
+
+var repair_button: Button
+
+func _enter_tree() -> void:
+	# Add a button to the script editor toolbar
+	repair_button = Button.new()
+	repair_button.text = "🔧 Repair Script"
+	repair_button.pressed.connect(_repair_current_script)
+	add_control_to_container(EditorPlugin.CONTAINER_TOOLBAR, repair_button)
+
+func _exit_tree() -> void:
+	if repair_button:
+		remove_control_from_container(EditorPlugin.CONTAINER_TOOLBAR, repair_button)
+		repair_button.queue_free()
+
+func _repair_current_script() -> void:
+	var editor := get_editor_interface()
+	var script = editor.get_script_editor().get_current_script()
+	if not script:
+		editor.get_base_control().show_message("No script open.")
+		return
+
+	var path = script.resource_path
+	if not path.ends_with(".gd"):
+		editor.get_base_control().show_message("Not a GDScript file.")
+		return
+
+	# Get the addon directory (where this plugin lives)
+	var addon_dir = get_script().resource_path.get_base_dir()
+	var repair_script = addon_dir.path_join("repair_gdscript_v2.py")
+
+	if not FileAccess.file_exists(repair_script):
+		editor.get_base_control().show_message("Repair script missing inside addon.")
+		return
+
+	var output := []
+	var exit_code = OS.execute("timeout", ["5s", "python3", repair_script, path], output, true)
+
+	if exit_code == 0:
+		script.reload_from_disk()
+		editor.get_base_control().show_message("✅ Script repaired successfully.")
+	else:
+		var err = output[0] if output.size() > 0 else "Unknown error"
+		editor.get_base_control().show_message("❌ Repair failed: " + err)

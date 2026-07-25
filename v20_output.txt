@@ -1,0 +1,2017 @@
+[DISPLAY] Using existing display: :0.0
+[ENV] Using DISPLAY=:0.0
+[PATCH] Auto‑start disabled by user preference
+[PATCH] Auto‑start disabled by user preference
+[SETUP] godot binary: /usr/bin/godot
+[SETUP] project dir:  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project
+[RUN] /usr/bin/godot --path godot_project --verbose
+[RUN] stall threshold: 30.0s   timeout: 120s
+[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)
+========================================================================
+[DB] Using table: files_to_fix
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Unrecognized output string "misc2" in mapping:
+030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+SDL: Init OK!
+Xshape 1.1 detected.
+Xinerama 1.1 detected.
+Xrandr 1.6 detected.
+Xrender 0.11 detected.
+Xinput 2.2 detected.
+XInput: Refreshing devices.
+XInput: No touch devices found.
+Detecting GPUs, set DRI_PRIME in the environment to override GPU detection logic.
+Only one GPU found, using default.
+Failed loading custom cursor: crossed_circle
+DBus 1.16.2 detected.
+Using "default" pen tablet driver...
+Shader 'CanvasSdfShaderGLES3' SHA256: 4178a370fca21ad6216db6f7823dc24d65f8d4ad71442bbaa5d6f9a230a081ea
+Shader 'SkeletonShaderGLES3' SHA256: 8bc0ec35c83978cd6d65ef8fc16df8e916ba1e2a9d5a98423fd53815bae40b65
+Shader 'ParticlesShaderGLES3' SHA256: 6afaaf25f8938f1e43e69699472011afc51b674c0df4cd381d188953d85ec5a3
+Shader 'ParticlesCopyShaderGLES3' SHA256: 39392086598b90ead64d3323c81c8ade94c690b12d308ef31d5b9690c172fb22
+Shader 'CopyShaderGLES3' SHA256: 997ec09347cd52d2f6dc09d2a1ab366d3ba8485a46f43f593451013172c4c0ad
+Shader 'CubemapFilterShaderGLES3' SHA256: 32dcf4d8e16f18e32b807a2d1406cca20c37a1e6fcccf8420addb836c4d08aa5
+Shader 'GlowShaderGLES3' SHA256: a6700f3ac665fc4867995c9fcc2052c36df9c7d4909f0d5b8d1092726671dbd0
+Shader 'PostShaderGLES3' SHA256: 6eedbef0b87035bc14ebaf4f413c9e32fa64d5e88a36f1d51dbd0c2be5e54df3
+Shader 'FeedShaderGLES3' SHA256: bddb9e1271cb1ff96bb0f53b92f2724c49e525ede46d8de0d776819eca048a2d
+Shader 'CanvasShaderGLES3' SHA256: f4ec43ced4296bc56a0508da1fd428b360690cb08bcc44b1135a42a01b3844af
+Shader 'CanvasOcclusionShaderGLES3' SHA256: 578a45ce760a0ed6361559f46e9aedf93aa4cc3580d835d6dbc5ae8e4265557c
+Shader 'SceneShaderGLES3' SHA256: 23ab6aea89cc6db38dee15711362af8e7ad9c08bbe99cb758445c4ca6f910f83
+Shader 'SkyShaderGLES3' SHA256: 5d5d48528e786bc9445620d0ef25bddc8d0c7ce6aa74df01c30eb96e7c51f67e
+OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+PulseAudio 17.0.0 detected.
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context ready
+PulseAudio: Detecting channels for device: alsa_output.pci-0000_00_1b.0.analog-stereo
+PulseAudio: detected 2 output channels
+PulseAudio: audio buffer frames: 512 calculated output latency: 11ms
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2475187701
+EDITOR API HASH: 3867286884
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://scripts/DatabaseGuard.gd
+Loading resource: res://scripts/ResourceThrottle.gd
+Loading resource: res://scripts/PerformanceMonitor.gd
+Loading resource: res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd
+ERROR: Attempt to open script 'res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd' resulted in error 'File not found'.
+   at: load_source_code (modules/gdscript/gdscript.cpp:1127)
+Failed loading resource: res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd
+ERROR: Failed loading resource: res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd.
+   at: _load (core/io/resource_loader.cpp:343)
+ERROR: Failed to instantiate an autoload, can't load from path: res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd.
+   at: start (main/main.cpp:4434)
+Loading resource: res://scripts/SqliteDb.gd
+SCRIPT ERROR: Parse Error: Expected indented block after function declaration.
+          at: GDScript::reload (res://scripts/SqliteDb.gd:24)
+ERROR: Failed to load script "res://scripts/SqliteDb.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+ERROR: Failed to instantiate an autoload, script 'res://scripts/SqliteDb.gd' does not inherit from 'Node'.
+   at: start (main/main.cpp:4440)
+Loading resource: res://scripts/SqliteWatchdog.gd
+Loading resource: res://scripts/StructuredLogger.gd
+Loading resource: res://scripts/InputManager.gd
+Loading resource: res://scripts/GameIntegrity.gd
+Loading resource: res://scripts/altimeter_hud.gd
+Loading resource: res://scripts/forensic_hud.gd
+Loading resource: res://scripts/audit.gd
+Loading resource: res://scripts/wind_field.gd
+SCRIPT ERROR: Parse Error: Expected indented block after function declaration.
+          at: GDScript::reload (res://scripts/wind_field.gd:22)
+ERROR: Failed to load script "res://scripts/wind_field.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+ERROR: Failed to instantiate an autoload, script 'res://scripts/wind_field.gd' does not inherit from 'Node'.
+   at: start (main/main.cpp:4440)
+Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn
+Loading resource: res://scripts/build_terrain.gd
+Loading resource: res://assets/aircraft/cesna_airplane.glb
+Loading resource: res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn
+Loading resource: res://assets/aircraft/cesna_airplane_2.png
+Loading resource: res://.godot/imported/cesna_airplane_2.png-a0ae2ab0bf25959dd0beafc4e856bc3b.s3tc.ctex
+Loading resource: res://assets/aircraft/cesna_airplane_0.png
+Loading resource: res://.godot/imported/cesna_airplane_0.png-e0456c27d48acd63e1dd01ab23117de6.s3tc.ctex
+Loading resource: res://assets/aircraft/cesna_airplane_1.png
+Loading resource: res://.godot/imported/cesna_airplane_1.png-40e4f0bad9835f0987c7e03e2e3ca5b0.s3tc.ctex
+Loading resource: res://assets/characters/Hanging under canopy.fbx
+Loading resource: res://.godot/imported/Hanging under canopy.fbx-c73660c39ec7fed679e6d39964282322.scn
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: SqliteDb not found, will retry
+[VERBATIM] DatabaseGuard: retry scheduled in 1000 ms
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: SqliteDb not available
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: SqliteDb not available; skipping scan.
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+2026-07-06T05:27:49 [INFO] InputManager ready
+2026-07-06T05:27:49 [INFO] InputMap.has_action('restart') = true
+[VERBATIM] 2026-07-06T05:27:49 GameIntegrity autoload initialized
+[VERBATIM] 2026-07-06T05:27:49 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] 2026-07-06T05:27:49 ENTER _ready gate=none
+[VERBATIM] Baked colours loaded: 3145728
+[VERBATIM] Terrain created: 1048576 vertices
+[VERBATIM] Runways added
+[VERBATIM] Character position: (0.0, 0.0, 0.0)
+[VERBATIM] Character scale: (1.0, 1.0, 1.0)
+[VERBATIM] ENTER _load_character gate=none
+Loading resource: res://assets/characters/parachutist.fbx
+Loading resource: res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn
+[VERBATIM] FBX loaded
+[VERBATIM] Children of FBX instance: [Skeleton3D:<Skeleton3D#36926654072>, AnimationPlayer:<AnimationPlayer#36976985733>]
+[VERBATIM] Left arm bone found index 8
+[VERBATIM] Right arm bone found index 32
+[VERBATIM] Stopped AnimationPlayer
+[VERBATIM] EXIT _load_character ok=true
+Loading resource: res://assets/aircraft/cesna_airplane.glb
+Loading resource: res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn
+[VERBATIM] Airplane loaded from res://assets/aircraft/cesna_airplane.glb
+[VERBATIM] FlightController _ready
+[VERBATIM] FlightController attached to character
+[VERBATIM] Camera attached
+[VERBATIM] HUD initialised
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+2026-07-06T05:28:00 [INFO] InputManager: key=Alt code=4194328
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1853.8, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1852.6, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1851.4, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1850.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1849.0, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1847.8, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1846.6, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1845.4, -100.0)
+[VERBATIM] _process position: (100.0, 1844.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1844.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1843.0, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1841.801, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1840.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1839.401, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1838.201, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1837.001, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1835.801, -100.0)
+[VERBATIM] _process position: (100.0, 1834.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1834.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1833.401, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1832.201, -100.0)
+[VERBATIM] _process position: (100.0, 1831.001, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1831.001, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1829.801, -100.0)
+[VERBATIM] _process position: (100.0, 1828.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1828.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1827.401, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1826.201, -100.0)
+[VERBATIM] _process position: (100.0, 1825.001, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1825.001, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1823.801, -100.0)
+[VERBATIM] _process position: (100.0, 1822.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1822.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1821.401, -100.0)
+[VERBATIM] _process position: (100.0, 1820.201, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1820.201, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1819.001, -100.0)
+[VERBATIM] _process position: (100.0, 1817.802, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1817.802, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1816.602, -100.0)
+[VERBATIM] _process position: (100.0, 1815.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1815.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1814.202, -100.0)
+[VERBATIM] _process position: (100.0, 1813.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1813.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1811.802, -100.0)
+[VERBATIM] _process position: (100.0, 1810.602, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1810.602, -100.0)
+[VERBATIM] _process position: (100.0, 1809.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1809.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1808.202, -100.0)
+[VERBATIM] _process position: (100.0, 1807.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1807.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1805.802, -100.0)
+[VERBATIM] _process position: (100.0, 1804.602, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1804.602, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1803.402, -100.0)
+[VERBATIM] _process position: (100.0, 1802.202, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1802.202, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1801.002, -100.0)
+[VERBATIM] _process position: (100.0, 1799.802, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1799.802, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1798.602, -100.0)
+[VERBATIM] _process position: (100.0, 1797.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1797.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1796.202, -100.0)
+[VERBATIM] _process position: (100.0, 1795.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1795.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1793.802, -100.0)
+[VERBATIM] _process position: (100.0, 1792.603, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1792.603, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1791.403, -100.0)
+[VERBATIM] _process position: (100.0, 1790.203, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1790.203, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1789.003, -100.0)
+[VERBATIM] _process position: (100.0, 1787.803, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1787.803, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1786.603, -100.0)
+[VERBATIM] _process position: (100.0, 1785.403, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1785.403, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1784.203, -100.0)
+[VERBATIM] _process position: (100.0, 1783.003, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1783.003, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1781.803, -100.0)
+[VERBATIM] DatabaseGuard: recovery attempt 1/5
+[VERBATIM] DatabaseGuard: retry scheduled in 2000 ms
+[VERBATIM] _process position: (100.0, 1780.603, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1780.603, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1779.403, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1778.203, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1777.003, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1775.803, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1774.603, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1773.403, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1772.203, -100.0)
+[VERBATIM] _process position: (100.0, 1771.003, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1771.003, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1769.803, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1768.604, -100.0)
+[VERBATIM] _process position: (100.0, 1767.404, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1767.404, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1766.204, -100.0)
+[VERBATIM] _process position: (100.0, 1765.004, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1765.004, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1763.804, -100.0)
+[VERBATIM] _process position: (100.0, 1762.604, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1762.604, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1761.404, -100.0)
+[VERBATIM] _process position: (100.0, 1760.204, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1760.204, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1759.004, -100.0)
+[VERBATIM] _process position: (100.0, 1757.804, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1757.804, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1756.604, -100.0)
+[VERBATIM] _process position: (100.0, 1755.404, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1755.404, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1754.204, -100.0)
+[VERBATIM] _process position: (100.0, 1753.004, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1753.004, -100.0)
+[VERBATIM] _process position: (100.0, 1751.804, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1751.804, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1750.604, -100.0)
+[VERBATIM] _process position: (100.0, 1749.404, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1749.404, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1748.204, -100.0)
+[VERBATIM] _process position: (100.0, 1747.004, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1747.004, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1745.804, -100.0)
+[VERBATIM] _process position: (100.0, 1744.604, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1744.604, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1743.405, -100.0)
+[VERBATIM] _process position: (100.0, 1742.205, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1742.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1741.005, -100.0)
+[VERBATIM] _process position: (100.0, 1739.805, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1739.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1738.605, -100.0)
+[VERBATIM] _process position: (100.0, 1737.405, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1737.405, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1736.205, -100.0)
+[VERBATIM] _process position: (100.0, 1735.005, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1735.005, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1733.805, -100.0)
+[VERBATIM] _process position: (100.0, 1732.605, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1732.605, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1731.405, -100.0)
+[VERBATIM] _process position: (100.0, 1730.205, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1730.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1729.005, -100.0)
+[VERBATIM] _process position: (100.0, 1727.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1727.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1726.605, -100.0)
+[VERBATIM] _process position: (100.0, 1725.405, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1725.405, -100.0)
+[VERBATIM] _process position: (100.0, 1724.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1724.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1723.005, -100.0)
+[VERBATIM] _process position: (100.0, 1721.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1721.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1720.605, -100.0)
+[VERBATIM] _process position: (100.0, 1719.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1719.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1718.206, -100.0)
+[VERBATIM] _process position: (100.0, 1717.006, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1717.006, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1715.806, -100.0)
+[VERBATIM] _process position: (100.0, 1714.606, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1714.606, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1713.406, -100.0)
+[VERBATIM] _process position: (100.0, 1712.206, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1712.206, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1711.006, -100.0)
+[VERBATIM] _process position: (100.0, 1709.806, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1709.806, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1708.606, -100.0)
+[VERBATIM] _process position: (100.0, 1707.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1707.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1706.206, -100.0)
+[VERBATIM] _process position: (100.0, 1705.006, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1705.006, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1703.806, -100.0)
+[VERBATIM] _process position: (100.0, 1702.606, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1702.606, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1701.406, -100.0)
+[VERBATIM] _process position: (100.0, 1700.206, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1700.206, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1699.006, -100.0)
+[VERBATIM] _process position: (100.0, 1697.806, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1697.806, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1696.606, -100.0)
+[VERBATIM] _process position: (100.0, 1695.406, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1695.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1694.207, -100.0)
+[VERBATIM] _process position: (100.0, 1693.007, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1693.007, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1691.807, -100.0)
+[VERBATIM] _process position: (100.0, 1690.607, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1690.607, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1689.407, -100.0)
+[VERBATIM] _process position: (100.0, 1688.207, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1688.207, -100.0)
+[VERBATIM] _process position: (100.0, 1687.007, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1687.007, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1685.807, -100.0)
+[VERBATIM] _process position: (100.0, 1684.607, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1684.607, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1683.407, -100.0)
+[VERBATIM] _process position: (100.0, 1682.207, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1682.207, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1681.007, -100.0)
+[VERBATIM] _process position: (100.0, 1679.807, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[VERBATIM] Deploying canopy from flight_controller
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[STATE] build_terrain.gd:413 -> GameState.OPENING_ANIM
+[STATE] build_terrain.gd:412 -> GameState.OPENING_ANIM
+[STATE] build_terrain.gd:411 -> GameState.OPENING_ANIM
+[STATE] build_terrain.gd:1310 -> GameState.OPENING_ANIM
+[STATE] build_terrain.gd:1304 -> GameState.OPENING_ANIM
+[STATE] build_terrain.gd:1298 -> GameState.OPENING_ANIM
+[STATE] build_terrain.gd:1292 -> GameState.OPENING_ANIM
+[VERBATIM] Rip cord pulled at alt=1654.80712890625
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+2026-07-06T05:28:07 [INFO] InputManager: FALLBACK - Space key pressed, deploying canopy
+[VERBATIM] _physics_process position: (100.0, 1679.807, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1679.507, -100.0)
+[VERBATIM] _process position: (100.0, 1679.207, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1679.207, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1678.907, -100.0)
+[VERBATIM] _process position: (100.0, 1678.607, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1678.607, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1678.307, -100.0)
+[VERBATIM] _process position: (100.0, 1678.007, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1678.007, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1677.707, -100.0)
+[VERBATIM] _process position: (100.0, 1677.407, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1677.407, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1677.107, -100.0)
+[VERBATIM] _process position: (100.0, 1676.807, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1676.807, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1676.507, -100.0)
+[VERBATIM] _process position: (100.0, 1676.207, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1676.207, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1675.906, -100.0)
+[VERBATIM] _process position: (100.0, 1675.606, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1675.606, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1675.306, -100.0)
+[VERBATIM] _process position: (100.0, 1675.006, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1675.006, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1674.706, -100.0)
+[VERBATIM] _process position: (100.0, 1674.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1674.406, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1674.106, -100.0)
+[VERBATIM] _process position: (100.0, 1673.806, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1673.806, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1673.506, -100.0)
+[VERBATIM] _process position: (100.0, 1673.206, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1673.206, -100.0)
+[VERBATIM] _process position: (100.0, 1672.906, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1672.906, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1672.606, -100.0)
+[VERBATIM] _process position: (100.0, 1672.306, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1672.306, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1672.006, -100.0)
+[VERBATIM] _process position: (100.0, 1671.706, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1671.706, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1671.406, -100.0)
+[VERBATIM] _process position: (100.0, 1671.106, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1671.106, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1670.806, -100.0)
+[VERBATIM] _process position: (100.0, 1670.506, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1670.506, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1670.206, -100.0)
+[VERBATIM] _process position: (100.0, 1669.906, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1669.906, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1669.605, -100.0)
+[VERBATIM] _process position: (100.0, 1669.305, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1669.305, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1669.005, -100.0)
+[VERBATIM] DatabaseGuard: recovery attempt 2/5
+[VERBATIM] DatabaseGuard: retry scheduled in 4000 ms
+[VERBATIM] _process position: (100.0, 1668.705, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1668.705, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1668.405, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1668.105, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1667.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1667.505, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1667.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1666.905, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1666.605, -100.0)
+[VERBATIM] _process position: (100.0, 1666.305, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1666.305, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1666.005, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1665.705, -100.0)
+[VERBATIM] _process position: (100.0, 1665.405, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1665.405, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1665.105, -100.0)
+[VERBATIM] _process position: (100.0, 1664.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1664.805, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1664.505, -100.0)
+[VERBATIM] _process position: (100.0, 1664.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1664.205, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1663.905, -100.0)
+[VERBATIM] _process position: (100.0, 1663.604, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1663.604, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1663.304, -100.0)
+[VERBATIM] _process position: (100.0, 1663.004, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1663.004, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1662.704, -100.0)
+[VERBATIM] _process position: (100.0, 1662.404, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1662.404, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1662.104, -100.0)
+[VERBATIM] _process position: (100.0, 1661.804, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1661.804, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1661.504, -100.0)
+[VERBATIM] _process position: (100.0, 1661.204, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1661.204, -100.0)
+[VERBATIM] _process position: (100.0, 1660.904, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1660.904, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1660.604, -100.0)
+[VERBATIM] _process position: (100.0, 1660.304, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1660.304, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1660.004, -100.0)
+[VERBATIM] _process position: (100.0, 1659.704, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1659.704, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1659.404, -100.0)
+[VERBATIM] _process position: (100.0, 1659.104, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1659.104, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1658.804, -100.0)
+[VERBATIM] _process position: (100.0, 1658.504, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1658.504, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1658.204, -100.0)
+[VERBATIM] _process position: (100.0, 1657.904, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1657.904, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1657.604, -100.0)
+[VERBATIM] _process position: (100.0, 1657.303, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1657.303, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1657.003, -100.0)
+[VERBATIM] _process position: (100.0, 1656.703, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1656.703, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1656.403, -100.0)
+[VERBATIM] _process position: (100.0, 1656.103, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1656.103, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1655.803, -100.0)
+[VERBATIM] _process position: (100.0, 1655.503, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1655.503, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1655.203, -100.0)
+[VERBATIM] _process position: (100.0, 1654.903, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1654.903, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1654.603, -100.0)
+[VERBATIM] _process position: (100.0, 1654.303, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1654.303, -100.0)
+[VERBATIM] _process position: (100.0, 1654.003, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1654.003, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1653.703, -100.0)
+[VERBATIM] _process position: (100.0, 1653.403, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1653.403, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1653.103, -100.0)
+[VERBATIM] _process position: (100.0, 1652.803, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1652.803, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1652.503, -100.0)
+[VERBATIM] _process position: (100.0, 1652.203, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1652.203, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1651.903, -100.0)
+[VERBATIM] _process position: (100.0, 1651.603, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1651.603, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1651.302, -100.0)
+[VERBATIM] _process position: (100.0, 1651.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1651.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1650.702, -100.0)
+[VERBATIM] _process position: (100.0, 1650.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1650.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1650.102, -100.0)
+[VERBATIM] _process position: (100.0, 1649.802, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1649.802, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1649.502, -100.0)
+[VERBATIM] _process position: (100.0, 1649.202, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1649.202, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1648.902, -100.0)
+[VERBATIM] _process position: (100.0, 1648.602, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1648.602, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1648.302, -100.0)
+[VERBATIM] _process position: (100.0, 1648.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1648.002, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1647.702, -100.0)
+[VERBATIM] _process position: (100.0, 1647.402, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1647.402, -100.0)
+[VERBATIM] _process position: (100.0, 1647.102, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1647.102, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1646.802, -100.0)
+[VERBATIM] _process position: (100.0, 1646.502, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1646.502, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1646.202, -100.0)
+[VERBATIM] _process position: (100.0, 1645.902, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1645.902, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1645.602, -100.0)
+[VERBATIM] _process position: (100.0, 1645.302, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1645.302, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1645.001, -100.0)
+[VERBATIM] _process position: (100.0, 1644.701, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1644.701, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1644.401, -100.0)
+[VERBATIM] _process position: (100.0, 1644.101, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1644.101, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1643.801, -100.0)
+[VERBATIM] _process position: (100.0, 1643.501, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1643.501, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1643.201, -100.0)
+[VERBATIM] _process position: (100.0, 1642.901, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1642.901, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1642.601, -100.0)
+[VERBATIM] _process position: (100.0, 1642.301, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1642.301, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1642.001, -100.0)
+[VERBATIM] _process position: (100.0, 1641.701, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1641.701, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1641.401, -100.0)
+[VERBATIM] _process position: (100.0, 1641.101, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1641.101, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1640.801, -100.0)
+[VERBATIM] _process position: (100.0, 1640.501, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1640.501, -100.0)
+[VERBATIM] _process position: (100.0, 1640.201, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1640.201, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1639.901, -100.0)
+[VERBATIM] _process position: (100.0, 1639.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1639.601, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1639.301, -100.0)
+[VERBATIM] _process position: (100.0, 1639.0, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1639.0, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1638.7, -100.0)
+[VERBATIM] _process position: (100.0, 1638.4, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1638.4, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1638.1, -100.0)
+[VERBATIM] _process position: (100.0, 1637.8, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1637.8, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1637.5, -100.0)
+[VERBATIM] _process position: (100.0, 1637.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1637.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1636.9, -100.0)
+[VERBATIM] _process position: (100.0, 1636.6, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1636.6, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1636.3, -100.0)
+[VERBATIM] _process position: (100.0, 1636.0, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1636.0, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1635.7, -100.0)
+[VERBATIM] _process position: (100.0, 1635.4, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1635.4, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1635.1, -100.0)
+[VERBATIM] _process position: (100.0, 1634.8, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1634.8, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1634.5, -100.0)
+[VERBATIM] _process position: (100.0, 1634.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1634.2, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1633.9, -100.0)
+[VERBATIM] _process position: (100.0, 1633.6, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1633.6, -100.0)
+[VERBATIM] _process position: (100.0, 1633.3, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1633.3, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1633.0, -100.0)
+[VERBATIM] _process position: (100.0, 1632.699, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1632.699, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1632.399, -100.0)
+[VERBATIM] _process position: (100.0, 1632.099, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1632.099, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1631.799, -100.0)
+[VERBATIM] _process position: (100.0, 1631.499, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1631.499, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1631.199, -100.0)
+[VERBATIM] _process position: (100.0, 1630.899, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1630.899, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1630.599, -100.0)
+[VERBATIM] _process position: (100.0, 1630.299, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1630.299, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1629.999, -100.0)
+[VERBATIM] _process position: (100.0, 1629.699, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1629.699, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1629.399, -100.0)
+[VERBATIM] _process position: (100.0, 1629.099, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1629.099, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1628.799, -100.0)
+[VERBATIM] _process position: (100.0, 1628.499, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1628.499, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1628.199, -100.0)
+[VERBATIM] _process position: (100.0, 1627.899, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1627.899, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1627.599, -100.0)
+[VERBATIM] _process position: (100.0, 1627.299, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1627.299, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1626.999, -100.0)
+[VERBATIM] _process position: (100.0, 1626.698, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1626.698, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1626.398, -100.0)
+[VERBATIM] _process position: (100.0, 1626.098, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1626.098, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1625.798, -100.0)
+[VERBATIM] _process position: (100.0, 1625.498, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1625.498, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1625.198, -100.0)
+[VERBATIM] _process position: (100.0, 1624.898, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1624.898, -100.0)
+[VERBATIM] _process position: (100.0, 1624.598, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1624.598, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1624.298, -100.0)
+[VERBATIM] _process position: (100.0, 1623.998, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1623.998, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1623.698, -100.0)
+[VERBATIM] _process position: (100.0, 1623.398, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1623.398, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1623.098, -100.0)
+[VERBATIM] _process position: (100.0, 1622.798, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1622.798, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1622.498, -100.0)
+[VERBATIM] _process position: (100.0, 1622.198, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1622.198, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1621.898, -100.0)
+[VERBATIM] _process position: (100.0, 1621.598, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1621.598, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1621.298, -100.0)
+[VERBATIM] _process position: (100.0, 1620.998, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1620.998, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1620.698, -100.0)
+[VERBATIM] _process position: (100.0, 1620.397, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1620.397, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1620.097, -100.0)
+[VERBATIM] _process position: (100.0, 1619.797, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1619.797, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1619.497, -100.0)
+[VERBATIM] _process position: (100.0, 1619.197, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1619.197, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1618.897, -100.0)
+[VERBATIM] _process position: (100.0, 1618.597, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1618.597, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1618.297, -100.0)
+[VERBATIM] _process position: (100.0, 1617.997, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1617.997, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1617.697, -100.0)
+[VERBATIM] _process position: (100.0, 1617.397, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1617.397, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1617.097, -100.0)
+[VERBATIM] _process position: (100.0, 1616.797, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1616.797, -100.0)
+[VERBATIM] _process position: (100.0, 1616.497, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1616.497, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1616.197, -100.0)
+[VERBATIM] _process position: (100.0, 1615.897, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1615.897, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1615.597, -100.0)
+[VERBATIM] _process position: (100.0, 1615.297, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1615.297, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1614.997, -100.0)
+[VERBATIM] _process position: (100.0, 1614.697, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1614.697, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1614.396, -100.0)
+[VERBATIM] _process position: (100.0, 1614.096, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1614.096, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1613.796, -100.0)
+[VERBATIM] _process position: (100.0, 1613.496, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1613.496, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1613.196, -100.0)
+[VERBATIM] _process position: (100.0, 1612.896, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1612.896, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1612.596, -100.0)
+[VERBATIM] _process position: (100.0, 1612.296, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1612.296, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1611.996, -100.0)
+[VERBATIM] _process position: (100.0, 1611.696, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1611.696, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1611.396, -100.0)
+[VERBATIM] _process position: (100.0, 1611.096, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1611.096, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1610.796, -100.0)
+[VERBATIM] _process position: (100.0, 1610.496, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1610.496, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1610.196, -100.0)
+[VERBATIM] _process position: (100.0, 1609.896, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1609.896, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1609.596, -100.0)
+[VERBATIM] _process position: (100.0, 1609.296, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1609.296, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1608.996, -100.0)
+[VERBATIM] _process position: (100.0, 1608.696, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1608.696, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1608.396, -100.0)
+[VERBATIM] _process position: (100.0, 1608.095, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1608.095, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1607.795, -100.0)
+[VERBATIM] _process position: (100.0, 1607.495, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1607.495, -100.0)
+[VERBATIM] _process position: (100.0, 1607.195, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1607.195, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1606.895, -100.0)
+[VERBATIM] _process position: (100.0, 1606.595, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1606.595, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1606.295, -100.0)
+[VERBATIM] _process position: (100.0, 1605.995, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1605.995, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1605.695, -100.0)
+[VERBATIM] _process position: (100.0, 1605.395, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1605.395, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1605.095, -100.0)
+[VERBATIM] _process position: (100.0, 1604.795, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1604.795, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1604.495, -100.0)
+[VERBATIM] _process position: (100.0, 1604.195, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1604.195, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1603.895, -100.0)
+[VERBATIM] _process position: (100.0, 1603.595, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1603.595, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1603.295, -100.0)
+[VERBATIM] _process position: (100.0, 1602.995, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1602.995, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1602.695, -100.0)
+[VERBATIM] _process position: (100.0, 1602.395, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1602.395, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1602.094, -100.0)
+[VERBATIM] _process position: (100.0, 1601.794, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1601.794, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1601.494, -100.0)
+[VERBATIM] _process position: (100.0, 1601.194, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1601.194, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1600.894, -100.0)
+[VERBATIM] _process position: (100.0, 1600.594, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1600.594, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1600.294, -100.0)
+[VERBATIM] _process position: (100.0, 1599.994, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1599.994, -100.0)
+[VERBATIM] _process position: (100.0, 1599.694, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1599.694, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1599.394, -100.0)
+[VERBATIM] _process position: (100.0, 1599.094, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1599.094, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1598.794, -100.0)
+[VERBATIM] _process position: (100.0, 1598.494, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1598.494, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1598.194, -100.0)
+[VERBATIM] _process position: (100.0, 1597.894, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1597.894, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1597.594, -100.0)
+[VERBATIM] _process position: (100.0, 1597.294, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1597.294, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1596.994, -100.0)
+[VERBATIM] DatabaseGuard: recovery attempt 3/5
+[VERBATIM] DatabaseGuard: retry scheduled in 8000 ms
+[VERBATIM] _process position: (100.0, 1596.694, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1596.694, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1596.394, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1596.094, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1595.793, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1595.493, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1595.193, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1594.893, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1594.593, -100.0)
+[VERBATIM] _process position: (100.0, 1594.293, -100.0)
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:392 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1292 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1287 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1282 _input/_unhandled_input triggered
+[INPUT] build_terrain.gd:1277 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+[VERBATIM] _physics_process position: (100.0, 1594.293, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1593.993, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1593.693, -100.0)
+[VERBATIM] _process position: (100.0, 1593.393, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1593.393, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1593.093, -100.0)
+[VERBATIM] _process position: (100.0, 1592.793, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1592.793, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1592.493, -100.0)
+[VERBATIM] _process position: (100.0, 1592.193, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1592.193, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1591.893, -100.0)
+[VERBATIM] _process position: (100.0, 1591.593, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1591.593, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1591.293, -100.0)
+[VERBATIM] _process position: (100.0, 1590.993, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1590.993, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1590.693, -100.0)
+[VERBATIM] _process position: (100.0, 1590.393, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1590.393, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1590.093, -100.0)
+[VERBATIM] _process position: (100.0, 1589.792, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1589.792, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1589.492, -100.0)
+[VERBATIM] _process position: (100.0, 1589.192, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1589.192, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1588.892, -100.0)
+[VERBATIM] _process position: (100.0, 1588.592, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1588.592, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1588.292, -100.0)
+[VERBATIM] _process position: (100.0, 1587.992, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1587.992, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1587.692, -100.0)
+[VERBATIM] _process position: (100.0, 1587.392, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1587.392, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1587.092, -100.0)
+[VERBATIM] _process position: (100.0, 1586.792, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1586.792, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1586.492, -100.0)
+[VERBATIM] _process position: (100.0, 1586.192, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1586.192, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1585.892, -100.0)
+[VERBATIM] _process position: (100.0, 1585.592, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1585.592, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1585.292, -100.0)
+[VERBATIM] _process position: (100.0, 1584.992, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1584.992, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1584.692, -100.0)
+[VERBATIM] _process position: (100.0, 1584.392, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1584.392, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1584.092, -100.0)
+[VERBATIM] _process position: (100.0, 1583.792, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1583.792, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1583.491, -100.0)
+[VERBATIM] _process position: (100.0, 1583.191, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1583.191, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1582.891, -100.0)
+[VERBATIM] _process position: (100.0, 1582.591, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1582.591, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1582.291, -100.0)
+[VERBATIM] _process position: (100.0, 1581.991, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1581.991, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1581.691, -100.0)
+[VERBATIM] _process position: (100.0, 1581.391, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1581.391, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1581.091, -100.0)
+[VERBATIM] _process position: (100.0, 1580.791, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1580.791, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1580.491, -100.0)
+[VERBATIM] _process position: (100.0, 1580.191, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1580.191, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1579.891, -100.0)
+[VERBATIM] _process position: (100.0, 1579.591, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1579.591, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1579.291, -100.0)
+[VERBATIM] _process position: (100.0, 1578.991, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1578.991, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1578.691, -100.0)
+[VERBATIM] _process position: (100.0, 1578.391, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1578.391, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1578.091, -100.0)
+[VERBATIM] _process position: (100.0, 1577.791, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1577.791, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1577.49, -100.0)
+[VERBATIM] _process position: (100.0, 1577.19, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1577.19, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1576.89, -100.0)
+[VERBATIM] _process position: (100.0, 1576.59, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1576.59, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1576.29, -100.0)
+[VERBATIM] _process position: (100.0, 1575.99, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1575.99, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1575.69, -100.0)
+[VERBATIM] _process position: (100.0, 1575.39, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1575.39, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1575.09, -100.0)
+[VERBATIM] _process position: (100.0, 1574.79, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1574.79, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1574.49, -100.0)
+[VERBATIM] _process position: (100.0, 1574.19, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1574.19, -100.0)
+[VERBATIM] _process position: (100.0, 1573.89, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1573.89, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1573.59, -100.0)
+[VERBATIM] _process position: (100.0, 1573.29, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1573.29, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1572.99, -100.0)
+[VERBATIM] _process position: (100.0, 1572.69, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1572.69, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1572.39, -100.0)
+[VERBATIM] _process position: (100.0, 1572.09, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1572.09, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1571.79, -100.0)
+[VERBATIM] _process position: (100.0, 1571.49, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1571.49, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1571.189, -100.0)
+[VERBATIM] _process position: (100.0, 1570.889, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1570.889, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1570.589, -100.0)
+[VERBATIM] _process position: (100.0, 1570.289, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1570.289, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1569.989, -100.0)
+[VERBATIM] _process position: (100.0, 1569.689, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1569.689, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1569.389, -100.0)
+[VERBATIM] _process position: (100.0, 1569.089, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1569.089, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1568.789, -100.0)
+[VERBATIM] _process position: (100.0, 1568.489, -100.0)
+[VERBATIM] _physics_process position: (100.0, 1568.489, -100.0)
+[VERBATIM] _process position: (100.0, 1568.189, -100.0)
+[VERBATIM] DatabaseGuard: _exit_tree called
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+PulseAudio: context terminated
+[INFO] EOF from Godot; process likely finished.
+
+[SUMMARY] autostall.py finished.
+[SUMMARY] Process terminated by script.
+[SUMMARY] Runtime: 31.8s
+[SUMMARY] Diagnostics data preserved in stall_report.json
+========================================================================
+MODE: APPLY
+
+======================================================================
+STEP 0: PRECONDITIONS – verify target file and line uniqueness
+======================================================================
+  Found 1 occurrence(s) of the old line in /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+  ✅ Exactly one occurrence – proceeding.
+
+  Affected line with context (lines 626-629):
+       625: 
+       626: 	# ---------- AIRPLANE LOADING (diagnostic) ----------
+    >> 627: 	var plane_path = "res://assets/aircraft/airplane.tscn"
+       628: 	if FileAccess.file_exists(plane_path):
+       629: 		var plane_scene = load(plane_path)
+       630: 		if plane_scene:
+
+======================================================================
+STEP 1: GUARDED REPLACEMENT
+======================================================================
+  Backup written: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.backup_20260706_052747
+  Replacement applied.
+  ✅ Read-After-Write verified.
+
+======================================================================
+STEP 2: VERIFICATION – run the game to see if the airplane appears
+======================================================================
+  Running autostall.py to test the game...
+  autostall.py exit code: 0
+  Game ran successfully. Check the output for airplane presence.
+
+======================================================================
+VERDICT
+======================================================================
+  ✅ The load path has been changed from .tscn to .glb.
+  The game should now load the airplane model.
+  Next step: run the game and verify the airplane appears at 6000 ft.
+
+DONE. Upload v20_output.txt for review.

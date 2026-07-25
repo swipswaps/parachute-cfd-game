@@ -1,0 +1,1591 @@
+[owner@192.168.1.152-20260619-152055 parachute-cfd-game]$ history 
+ 1430  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+# Delete lines 504-506 (0-indexed 503-505)
+del lines[503:506]
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Removed lines 504-506.")
+EOF
+
+ 1431  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/splash.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+new_lines = []
+for line in lines:
+    # Replace the problematic lines
+    if "GameIntegrity.check_and_repair()" in line:
+        line = line.replace("GameIntegrity.check_and_repair()", "var gi = GameIntegrity.new(); gi.check_and_repair()")
+    if "GameIntegrity.integrity_check_completed" in line:
+        line = line.replace("GameIntegrity.integrity_check_completed", "gi.integrity_check_completed")
+    # Also ensure preload exists (we already added it)
+    new_lines.append(line)
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Fixed splash.gd GameIntegrity usage.")
+EOF
+
+ 1432  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/wind_field.gd")
+content = path.read_text(encoding="utf-8")
+if "func _log" not in content:
+    # Insert after the class declaration (first line)
+    lines = content.splitlines()
+    insert_pos = 0
+    for i, line in enumerate(lines):
+        if line.startswith("class_name") or line.startswith("extends"):
+            insert_pos = i+1
+            break
+    # If no class_name/extends, insert after first line
+    if insert_pos == 0:
+        insert_pos = 1
+    lines.insert(insert_pos, "\nfunc _log(msg):\n    print(msg)")
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print("Added _log function to wind_field.gd")
+else:
+    print("_log already exists.")
+EOF
+
+ 1433  python3 scripts/repair_runner.py
+ 1434  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1435  clear
+ 1436  grep -n "exit_trigger" godot_project/scripts/build_terrain.gd
+ 1437  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+
+# We'll rename any 'exit_trigger' that appears after the plane code comment
+# to 'plane_exit_trigger', but only if it's in the plane block.
+# A safe approach: find the line that has "var exit_trigger" after "Plane / Cessna setup"
+new_lines = []
+in_plane_block = False
+for line in lines:
+    if "# === Plane / Cessna setup ===" in line:
+        in_plane_block = True
+    if in_plane_block and "var exit_trigger" in line:
+        line = line.replace("var exit_trigger", "var plane_exit_trigger")
+    if in_plane_block and "exit_trigger" in line and "plane_exit_trigger" not in line:
+        # Also rename any usage of exit_trigger to plane_exit_trigger
+        line = line.replace("exit_trigger", "plane_exit_trigger")
+    # Stop at the end of the block (optional, but we can just let it run)
+    new_lines.append(line)
+
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Renamed exit_trigger to plane_exit_trigger in plane block.")
+EOF
+
+ 1438  gdparse godot_project/scripts/build_terrain.gd
+ 1439  python3 scripts/repair_runner.py
+ 1440  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1441  clear
+ 1442  grep -n "exit_trigger" godot_project/scripts/build_terrain.gd
+ 1443  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+
+# We'll rename any 'exit_trigger' that appears after the plane code comment
+# to 'plane_exit_trigger', but only if it's in the plane block.
+# A safe approach: find the line that has "var exit_trigger" after "Plane / Cessna setup"
+new_lines = []
+in_plane_block = False
+for line in lines:
+    if "# === Plane / Cessna setup ===" in line:
+        in_plane_block = True
+    if in_plane_block and "var exit_trigger" in line:
+        line = line.replace("var exit_trigger", "var plane_exit_trigger")
+    if in_plane_block and "exit_trigger" in line and "plane_exit_trigger" not in line:
+        # Also rename any usage of exit_trigger to plane_exit_trigger
+        line = line.replace("exit_trigger", "plane_exit_trigger")
+    # Stop at the end of the block (optional, but we can just let it run)
+    new_lines.append(line)
+
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Renamed exit_trigger to plane_exit_trigger in plane block.")
+EOF
+
+ 1444  gdparse godot_project/scripts/build_terrain.gd
+ 1445  python3 scripts/repair_runner.py
+ 1446  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1447  clear
+ 1448  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+# Delete lines 511-512 (0-indexed 510-511)
+# We'll delete the second occurrence of the exit_trigger block
+new_lines = []
+trigger_count = 0
+for line in lines:
+    if "plane_exit_trigger" in line and "Area3D.new()" in line:
+        trigger_count += 1
+        if trigger_count == 2:
+            # Skip this line and the next line (the .name assignment)
+            continue
+    # Also skip the next line if we skipped the declaration
+    # We'll just remove two lines after the first occurrence
+    # Simpler: delete lines 511-513 (inclusive)
+    # We'll do it by index, since we know the numbers
+    pass
+# More straightforward: delete lines 511-512 by slicing
+del lines[510:513]  # lines 511, 512, 513 (0-indexed 510,511,512)
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Removed duplicate plane_exit_trigger block.")
+EOF
+
+ 1449  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+# Delete lines 511-513 (0-indexed 510,511,512)
+# Actually, the error says line 513 is the declaration, so we remove that and the next line?
+# Let's just remove the second occurrence of the two lines.
+# We'll find the second occurrence of "var plane_exit_trigger" and remove that line and the next line.
+new_lines = []
+skip_next = False
+count = 0
+for line in lines:
+    if "var plane_exit_trigger" in line:
+        count += 1
+        if count == 2:
+            skip_next = True
+            continue
+    if skip_next:
+        # Remove the next line too (the .name assignment)
+        skip_next = False
+        continue
+    new_lines.append(line)
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Removed duplicate plane_exit_trigger block.")
+EOF
+
+ 1450  gdparse godot_project/scripts/build_terrain.gd
+ 1451  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1452  clear
+ 1453  head -1 godot_project/scripts/build_terrain.gd
+ 1454  grep -m1 "^extends" ../parachute-cfd-game_0003/godot_project/scripts/build_terrain.gd
+ 1455  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+# If no extends line, insert one at line 0
+if not any(line.startswith("extends") for line in lines):
+    lines.insert(0, "extends Node3D")
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print("Added extends Node3D")
+EOF
+
+ 1456  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1457  clear
+ 1458  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+# Replace the first line if it says extends Node3D
+if lines and lines[0].startswith("extends"):
+    lines[0] = "extends Node"
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print("Changed extends to Node")
+EOF
+
+ 1459  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+if lines and lines[0].startswith("extends"):
+    lines[0] = "extends Node"
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print("Changed extends to Node")
+EOF
+
+ 1460  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1461  clear
+ 1462  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run.log
+ 1463  clear
+ 1464  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+
+# Insert debug prints at key points:
+# After terrain creation, after camera setup, after plane creation.
+new_lines = []
+for line in lines:
+    new_lines.append(line)
+    if "var plane = Node3D.new()" in line:
+        new_lines.append("    print('[VERBATIM] Plane node created')")
+    if "add_child(plane)" in line and "plane" in line:
+        new_lines.append("    print('[VERBATIM] Plane added to scene')")
+    if "_camera.position" in line and "Vector3" in line:
+        new_lines.append("    print('[VERBATIM] Camera position set: ', _camera.position)")
+    if "_terrain" in line and "add_child" in line and "_terrain" in line:
+        new_lines.append("    print('[VERBATIM] Terrain added to scene')")
+    # Also after terrain generation
+    if "var _terrain" in line:
+        new_lines.append("    print('[VERBATIM] Terrain mesh generated')")
+
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Added debug prints to build_terrain.gd")
+EOF
+
+ 1465  clear
+ 1466  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log
+ 1467  clear
+ 1468  head -20 godot_project/scenes/main.tscn | grep -E "ext_resource|node|script"
+ 1469  grep -A2 "script" godot_project/scenes/main.tscn
+ 1470  cp ../parachute-cfd-game_0003/godot_project/scenes/main.tscn godot_project/scenes/main.tscn
+ 1471  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_final.log
+ 1472  clear
+ 1473  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scenes/main.tscn")
+content = path.read_text()
+# Remove the uid attribute from ext_resource lines
+import re
+content = re.sub(r'uid="uid://[^"]+"\s+', '', content)
+path.write_text(content)
+print("Removed invalid UID from main.tscn")
+EOF
+
+ 1474  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_clean.log
+ 1475  #no change
+ 1476  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if "func _ready():" in line:
+        lines.insert(i+1, '    print("[VERBATIM] _ready() called")')
+        break
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Added _ready() entry print")
+EOF
+
+ 1477  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_clean.log
+ 1478  clear
+ 1479  # Backup current broken copies
+ 1480  mv godot_project/scenes godot_project/scenes.broken
+ 1481  mv godot_project/scripts godot_project/scripts.broken
+ 1482  # Copy fresh from backup
+ 1483  cp -r ../parachute-cfd-game_0003/godot_project/scenes godot_project/
+ 1484  cp -r ../parachute-cfd-game_0003/godot_project/scripts godot_project/
+ 1485  # Re‑apply our fixes (indentation, duplicate removal, etc.) – we have Python scripts for those
+ 1486  python3 scripts/fix_all_indentation_errors.py  # or our manual fixes
+ 1487  python3 scripts/restore_plane.py               # but the plane is already there
+ 1488  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if line.startswith("extends"):
+        lines.insert(i+1, 'print("[VERBATIM] build_terrain.gd TOP LEVEL loaded")')
+        break
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Added top-level print")
+EOF
+
+ 1489  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_top.log
+ 1490  grep "TOP LEVEL" /tmp/godot_run_top.log
+ 1491  clear
+ 1492  # Remove the current broken project (but keep your scripts and notes)
+ 1493  cd ~/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac
+ 1494  mv parachute-cfd-game parachute-cfd-game.broken
+ 1495  # Copy the working backup
+ 1496  cp -r parachute-cfd-game_0003 parachute-cfd-game
+ 1497  # Now go into the new copy and remove the old cache
+ 1498  cd parachute-cfd-game
+ 1499  rm -rf godot_project/.godot/
+ 1500  # Re-import and launch
+ 1501  cd godot_project && godot --import --quit && cd ..
+ 1502  bash run_game_debug.sh 2>&1 | tee /tmp/godot_working.log
+ 1503  clear
+ 1504  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+
+# Find the line with "EXIT _ready ok=true"
+exit_line = None
+for i, line in enumerate(lines):
+    if "EXIT _ready ok=true" in line:
+        exit_line = i
+        break
+
+if exit_line is None:
+    print("ERROR: Could not find EXIT _ready line")
+    exit(1)
+
+# The plane code (indented with one tab, as it will be inside _ready)
+plane_code = """
+\t# === Plane / Cessna setup ===
+\tvar plane = Node3D.new()
+\tplane.name = "Plane"
+\tadd_child(plane)
+\tplane.add_to_group("plane")
+\t# Load aircraft model from assets
+\tvar plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+\tif plane_scene and plane_scene is PackedScene:
+\t\tvar aircraft = plane_scene.instantiate()
+\t\tplane.add_child(aircraft)
+\t\taircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+\t\tprint("[VERBATIM] Cessna model loaded.")
+\telse:
+\t\tprint("[VERBATIM] Failed to load Cessna model")
+\tvar plane_collision = CollisionShape3D.new()
+\tplane_collision.shape = BoxShape3D.new()
+\tplane_collision.shape.size = Vector3(3, 1, 10)
+\tplane.add_child(plane_collision)
+\tvar plane_exit_trigger = Area3D.new()
+\tplane_exit_trigger.name = "ExitTrigger"
+"""
+
+# Insert the code before the exit line
+lines.insert(exit_line, plane_code)
+
+# Also add "var plane" at the top if not already declared
+if not any("var plane" in line and "Node3D" in line for line in lines[:50]):
+    # Insert after the last var declaration before the first function
+    insert_pos = 0
+    for i, line in enumerate(lines):
+        if line.startswith("var "):
+            insert_pos = i+1
+        if line.startswith("func "):
+            break
+    lines.insert(insert_pos, "var plane: Node3D = null")
+
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Plane code inserted successfully.")
+EOF
+
+ 1505  gdparse godot_project/scripts/build_terrain.gd
+ 1506  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_plane.log
+ 1507  clear
+ 1508  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+
+# Find where character is added (search for "_character" and "add_child")
+for i, line in enumerate(lines):
+    if "_character" in line and "add_child" in line:
+        # Replace with reparenting to plane
+        lines[i] = lines[i].replace("add_child(_character)", "plane.add_child(_character)")
+        print("Reparented character to plane")
+        break
+
+# Also add the exit trigger connection (after the trigger is created)
+for i, line in enumerate(lines):
+    if "plane_exit_trigger.name = \"ExitTrigger\"" in line:
+        # Insert a line to connect the signal
+        lines.insert(i+1, '\tplane_exit_trigger.body_entered.connect(_on_exit_trigger_body_entered)')
+        print("Added exit trigger connection")
+        break
+
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Patched build_terrain.gd")
+EOF
+
+ 1509  rm -rf godot_project/.godot/ && cd godot_project && godot --import --quit && cd ..
+ 1510  clear
+ 1511  python3 << 'EOF'
+from pathlib import Path
+import re
+
+# 1. Fix build_terrain.gd: remove the connect line
+bt = Path("godot_project/scripts/build_terrain.gd")
+lines = bt.read_text(encoding="utf-8").splitlines()
+new_lines = []
+for line in lines:
+    if "plane_exit_trigger.body_entered.connect" in line:
+        continue
+    new_lines.append(line)
+bt.write_text("\n".join(new_lines), encoding="utf-8")
+print("Removed connect line from build_terrain.gd")
+
+# 2. game_manager.gd: add _log function if missing
+gm = Path("godot_project/scripts/game_manager.gd")
+content = gm.read_text(encoding="utf-8")
+if "func _log" not in content:
+    # Insert after class declaration
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("class_name") or line.startswith("extends"):
+            lines.insert(i+1, "func _log(msg):\n    print(msg)")
+            break
+    gm.write_text("\n".join(lines), encoding="utf-8")
+    print("Added _log to game_manager.gd")
+
+# 3. wind_field.gd: add _log
+wf = Path("godot_project/scripts/wind_field.gd")
+content = wf.read_text(encoding="utf-8")
+if "func _log" not in content:
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("class_name") or line.startswith("extends"):
+            lines.insert(i+1, "func _log(msg):\n    print(msg)")
+            break
+    wf.write_text("\n".join(lines), encoding="utf-8")
+    print("Added _log to wind_field.gd")
+
+# 4. splash.gd: add preload for GameIntegrity
+sp = Path("godot_project/scripts/splash.gd")
+lines = sp.read_text(encoding="utf-8").splitlines()
+has_preload = any("GameIntegrity" in line and "preload" in line for line in lines)
+if not has_preload:
+    insert_pos = 0
+    for i, line in enumerate(lines):
+        if line.startswith("extends"):
+            insert_pos = i+1
+            break
+    lines.insert(insert_pos, "const GameIntegrity = preload(\"res://scripts/GameIntegrity.gd\")")
+    sp.write_text("\n".join(lines), encoding="utf-8")
+    print("Added preload to splash.gd")
+
+# 5. validate_scene.gd: fix find_child arguments (remove extra argument)
+vs = Path("godot_project/scripts/validate_scene.gd")
+content = vs.read_text(encoding="utf-8")
+# Replace find_child(..., "some_string") with find_child(..., true) or remove the extra arg
+# The error indicates 4 arguments, but max 3. Usually find_child(pattern, recursive, owned)
+# We'll replace any call with 4 args by removing the 4th (likely a string)
+content = re.sub(r'find_child\(([^,]+),\s*([^,]+),\s*([^,]+),\s*"[^"]+"\)', r'find_child(\1, \2, \3)', content)
+vs.write_text(content, encoding="utf-8")
+print("Fixed validate_scene.gd")
+
+# 6. (Optional) comment out broken line in add_input_actions.gd
+# Not critical for the main game, but we can skip it.
+print("All fixes applied.")
+EOF
+
+ 1512  for f in godot_project/scripts/*.gd; do gdparse "$f" || echo "Failed: $f"; done
+ 1513  rm -rf godot_project/.godot/
+ 1514  cd godot_project && godot --import --quit && cd ..
+ 1515  bash run_game_debug.sh 2>&1 | tee /tmp/godot_fixed.log
+ 1516  xclip -sel clip -o |tee ../notes/6241ff27-6549-4256-8943-22bdbe9b8f0a_0204.txt
+ 1517  xclip -sel clip -o |tee generate_fix_0206.py
+ 1518  python3 generate_fix_0206.py 2>&1 | tee /tmp/fix_0206.log
+ 1519  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_0206.log
+ 1520  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if "plane.add_child(_character)" in line:
+        lines[i] = "    add_child(_character)"
+        print("Reverted reparenting.")
+        break
+path.write_text("\n".join(lines), encoding="utf-8")
+EOF
+
+ 1521  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if "plane.add_child(_character)" in line:
+        lines[i] = "    add_child(_character)"
+        print("Reverted reparenting.")
+        break
+path.write_text("\n".join(lines), encoding="utf-8")
+EOF
+
+ 1522  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+
+# Find a good spot to insert the function (after other functions)
+insert_pos = len(lines)
+for i in range(len(lines)-1, -1, -1):
+    if lines[i].strip().startswith("func ") and not lines[i].strip().startswith("func _ready"):
+        insert_pos = i+1
+        break
+
+# The _create_plane function from backup
+plane_func = """
+func _create_plane():
+    _log("[VERBATIM] Creating plane node...")
+    var plane = CharacterBody3D.new()
+    plane.name = "FlyingPlane"
+    var plane_script = load("res://scripts/plane.gd")
+    if plane_script:
+        plane.set_script(plane_script)
+        plane.process_mode = PROCESS_MODE_ALWAYS
+        if plane.has_method("test_plane_process"):
+            plane.test_plane_process()
+        else:
+            print("[VERBATIM] plane: test_plane_process method not found")
+        _log("[VERBATIM] Plane script attached")
+    else:
+        _log("[VERBATIM] WARNING: plane.gd not found")
+    add_child(plane)
+    plane.add_to_group("plane")
+    # Load aircraft model from assets
+    var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+    if plane_scene and plane_scene is PackedScene:
+        var aircraft = plane_scene.instantiate()
+        plane.add_child(aircraft)
+        aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+        print("[VERBATIM] Cessna model loaded.")
+    else:
+        print("[VERBATIM] Failed to load Cessna model")
+    var plane_collision = CollisionShape3D.new()
+    plane_collision.shape = BoxShape3D.new()
+    plane_collision.shape.size = Vector3(3, 1, 10)
+    plane.add_child(plane_collision)
+    var exit_trigger = Area3D.new()
+    exit_trigger.name = "ExitTrigger"
+    plane.add_child(exit_trigger)
+    var trigger_collision = CollisionShape3D.new()
+    trigger_collision.shape = BoxShape3D.new()
+    trigger_collision.shape.size = Vector3(2, 2, 2)
+    trigger_collision.position = Vector3(1.5, 0, -2)
+    exit_trigger.add_child(trigger_collision)
+    # Connect the signal
+    exit_trigger.body_entered.connect(_on_exit_trigger_body_entered)
+    return plane
+"""
+
+# Insert the function
+lines.insert(insert_pos, plane_func)
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Inserted _create_plane function.")
+EOF
+
+ 1523  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if "_load_character" in line:
+        # Insert a line before that to create the plane
+        lines.insert(i, '    var plane = _create_plane()')
+        # Also we need to store plane in a member variable for later use
+        # Insert a line to assign to a member variable
+        lines.insert(i+1, '    _plane = plane')
+        break
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Added plane creation before character load.")
+EOF
+
+ 1524  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+insert_pos = 0
+for i, line in enumerate(lines):
+    if line.startswith("var ") and not line.startswith("var _plane"):
+        insert_pos = i+1
+    if line.startswith("func "):
+        break
+if insert_pos > 0:
+    lines.insert(insert_pos, "var _plane: Node3D = null")
+    path.write_text("\n".join(lines), encoding="utf-8")
+    print("Added _plane member variable.")
+EOF
+
+ 1525  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+for i, line in enumerate(lines):
+    if "_plane = plane" in line:
+        lines.insert(i+1, '    plane.position = Vector3(0, 4000, 0)  # start at altitude')
+        break
+path.write_text("\n".join(lines), encoding="utf-8")
+print("Set plane position to 4000m.")
+EOF
+
+ 1526  python3 << 'EOF'
+from pathlib import Path
+path = Path("godot_project/scripts/build_terrain.gd")
+lines = path.read_text(encoding="utf-8").splitlines()
+new_lines = []
+skip = False
+for line in lines:
+    if "# === Plane / Cessna setup ===" in line:
+        skip = True
+        continue
+    if skip and "add_child(plane)" in line:
+        skip = False
+        continue
+    if not skip:
+        new_lines.append(line)
+path.write_text("\n".join(new_lines), encoding="utf-8")
+print("Removed duplicate plane setup block.")
+EOF
+
+ 1527  gdparse godot_project/scripts/build_terrain.gd
+ 1528  bash run_game_debug.sh 2>&1 | tee /tmp/godot_final.log
+ 1529  ls -lat
+ 1530  clear
+ 1531  ls -lat
+ 1532  Clear
+ 1533  clear
+ 1534  pwd
+ 1535  cat generate_fix_0206.py
+ 1536  python3 generate_fix_0207.py
+ 1537  sqlite3 godot_project/parachute_mutations.db "SELECT fix_id, already_applied, description, applied_at FROM mutations;"
+ 1538  python3 generate_fix_0208.py
+ 1539  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_0208.log
+ 1540  clear
+ 1541  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0209.txt
+ 1542  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0212.txt
+ 1543  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0213.txt
+ 1544  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0214.txt
+ 1545  clear
+ 1546  cat f739a574-87b3-4957-bd6b-3bf5e00cadd0_0213.txt
+ 1547  clear
+ 1548  cat ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0213.txt
+ 1549  cat ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0214.txt
+ 1550  cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0212.txt
+ 1551  clear
+ 1552  ls -la ../notes/*6a3411be-fec0-83ea-8474-a9ebf140c4a9*
+ 1553  ls -la *6a3411be-fec0-83ea-8474-a9ebf140c4a9*
+ 1554  xclip -sel clip -o |tee ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0215.txt
+ 1555  clear
+ 1556  cat ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0215.txt
+ 1557  clear
+ 1558  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0217.txt
+ 1559  clear
+ 1560  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0228.txt
+ 1561  clear
+ 1562  python3 generate_fix_0210.py 
+ 1563  clear
+ 1564  python3 python3 diagnose_line_2048.py 
+ 1565  python3 diagnose_line_2048.py 
+ 1566  clear
+ 1567  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0230.txt
+ 1568  cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0230.txt
+ 1569  clear
+ 1570  xclip -sel clip -o |tee ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0231.txt
+ 1571  clear
+ 1572  cat ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0231.txt
+ 1573  cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0230.txt
+ 1574  clear
+ 1575  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0232.txt
+ 1576  cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0230.txt
+ 1577  cat ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0231.txt
+ 1578  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0233.txt
+ 1579  clear
+ 1580  ls -lat ../notes/
+ 1581  clear
+ 1582  python3 generate_fix_0211.py 
+ 1583  clear
+ 1584  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0240.txt
+ 1585  clear
+ 1586  cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0240.txt
+ 1587  clear
+ 1588  xclip -sel clip -o |tee ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0241.txt
+ 1589  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0242.txt
+ 1590  clear
+ 1591  cat ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0241.txt
+ 1592  cat ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0242.txt
+ 1593  clear
+ 1594  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0252.txt
+ 1595  clear
+ 1596  cat ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0252.txt
+ 1597  clear
+ 1598  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0255.txt
+ 1599  clear
+ 1600  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0255.txt
+ 1601  clear && pwd && cat ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0255.txt
+ 1602  clear
+ 1603  python3 generate_fix_0212.py 
+ 1604  python3 generate_fix_0213.py 
+ 1605  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0257.txt
+ 1606  clear && pwd && cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0257.txt
+ 1607  xclip -sel clip -o |tee ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0258.txt
+ 1608  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0260.txt
+ 1609  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0262.txt
+ 1610  python3 generate_fix_0214.py 
+ 1611  clear
+ 1612  python3 generate_fix_0214.py 
+ 1613  python3 generate_fix_0215.py 
+ 1614  python3 generate_fix_0216.py 
+ 1615  clear
+ 1616  python3 generate_fix_0217.py 
+ 1617  clear
+ 1618  bash diagnose_plane_visibility.sh 
+ 1619  clear
+ 1620  python3 generate_fix_0218.py 
+ 1621  clear
+ 1622  bash diagnose_camera_controller.sh 
+ 1623  clear
+ 1624  #python3 generate_fix_0219.py 
+ 1625  history 
+ 1626  python3 generate_fix_0219.py 
+ 1627  clear
+ 1628  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0277.txt
+ 1629  clear && pwd && cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0277.txt
+ 1630  clear
+ 1631  xclip -sel clip -o |tee ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0278.txt
+ 1632  xclip -sel clip -o |tee ../notes/6840c543-7d26-4c90-b3e0-64169ee96f0a_0282.txt
+ 1633  clear
+ 1634  python3 generate_fix_0220.py
+ 1635  mv scripts/generate_fix_0220.py .
+ 1636  python3 generate_fix_0220.py
+ 1637  locate plane.gd
+ 1638  clear
+ 1639  sqlite3 godot_project/parachute_mutations.db ".tables"
+ 1640  sqlite3 godot_project/parachute_mutations.db ".schema"
+ 1641  SELECT rule_id, variant, result FROM ab_experiments ORDER BY rule_id, variant;
+ 1642  clear
+ 1643  # 1. Save the script as setup_exponential_improvement.py in your project root.
+ 1644  # 2. Make it executable.
+ 1645  chmod +x setup_exponential_improvement.py
+ 1646  # 3. Run it.
+ 1647  python3 setup_exponential_improvement.py
+ 1648  # 4. Follow the "Next steps" instructions.
+ 1649  pre-commit install   # activates hooks on every commit
+ 1650  pytest               # runs your tests (once you write them)
+ 1651  docker build -t parachute-repair .   # builds containerized Godot environment
+ 1652  nano alembic.ini 
+ 1653  nano migrations/env.py 
+ 1654  cat migrations/env.py 
+ 1655  cat alembic.ini 
+ 1656  alembic revision --autogenerate -m "initial_schema"
+ 1657  nano migrations/env.py 
+ 1658  alembic revision --autogenerate -m "initial_schema"
+ 1659  cat migrations/env.py 
+ 1660  sqlite3 godot_project/parachute_mutations.db .schema > current_schema.sql
+ 1661  # 1. Create an empty migration
+ 1662  alembic revision -m "initial_schema"
+ 1663  # This creates a file in migrations/versions/ like: xxxx_initial_schema.py
+ 1664  sqlite3 godot_project/parachute_mutations.db .schema > current_schema.sql
+ 1665  cat migrations/versions/9ae85679bed8_initial_schema.py 
+ 1666  nano migrations/versions/9ae85679bed8_initial_schema.py 
+ 1667  cat migrations/versions/9ae85679bed8_initial_schema.py 
+ 1668  clear
+ 1669  cat migrations/versions/9ae85679bed8_initial_schema.py 
+ 1670  clear
+ 1671  alembic upgrade head
+ 1672  pre-commit install
+ 1673  pre-commit run --all-files
+ 1674  pytest -v
+ 1675  rm migrations/versions/808e929b4bca_initial_schema.py
+ 1676  nano migrations/versions/9ae85679bed8_initial_schema.py 
+ 1677  alembic upgrade head
+ 1678  cat migrations/versions/9ae85679bed8_initial_schema.py 
+ 1679  chmod +x fix_alembic.py
+ 1680  python3 fix_alembic.py
+ 1681  python3 generate_fix_0220.py
+ 1682  sqlite3 godot_project/parachute_mutations.db "SELECT rule_id, variant, result FROM gdscript_rule_test_results ORDER BY rule_id, variant;"
+ 1683  clear
+ 1684  python3 generate_fix_0220_v2.py
+ 1685  clear
+ 1686  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1687  clear
+ 1688  tail -100 /tmp/godot_run_*.log   # or /tmp/godot_manual.log
+ 1689  sqlite3 godot_project/parachute_mutations.db "
+INSERT INTO gdscript_rule_test_results
+(session_id, rule_id, file_path, test_type, variant, result, elapsed_s, tested_at)
+VALUES (
+    (SELECT id FROM sessions WHERE session_label = '0220'),
+    'VR013',
+    'scripts/build_terrain.gd',
+    'godot_launch',
+    'B',
+    'PASS',
+    0,
+    datetime('now')
+);
+"
+ 1690  SELECT rule_id,
+ 1691         COUNT(CASE WHEN variant = 'A' AND result = 'FAIL' THEN 1 END) AS A_fail,
+ 1692         COUNT(CASE WHEN variant = 'B' AND result = 'PASS' THEN 1 END) AS B_pass
+ 1693  FROM gdscript_rule_test_results
+ 1694  GROUP BY rule_id
+ 1695  ORDER BY rule_id;
+ 1696  clear
+ 1697  sqlite3 godot_project/parachute_mutations.db "
+SELECT rule_id,
+       COUNT(CASE WHEN variant = 'A' AND result = 'FAIL' THEN 1 END) AS A_fail,
+       COUNT(CASE WHEN variant = 'B' AND result = 'PASS' THEN 1 END) AS B_pass
+FROM gdscript_rule_test_results
+GROUP BY rule_id
+ORDER BY rule_id;
+"
+ 1698  sqlite3 godot_project/parachute_mutations.db "
+SELECT rule_id,
+       COUNT(CASE WHEN variant = 'A' AND result = 'FAIL' THEN 1 END) AS A_fail,
+       COUNT(CASE WHEN variant = 'B' AND result = 'PASS' THEN 1 END) AS B_pass
+FROM gdscript_rule_test_results
+GROUP BY rule_id
+ORDER BY rule_id;
+"
+ 1699  sqlite3 godot_project/parachute_mutations.db "
+INSERT INTO gdscript_rule_test_results
+(session_id, rule_id, file_path, test_type, variant, result, elapsed_s, tested_at)
+VALUES (
+    (SELECT id FROM sessions WHERE session_label = '0220'),
+    'VR010',
+    'godot_project/scripts/plane.gd',
+    'godot_launch',
+    'B',
+    'PASS',
+    0,
+    datetime('now')
+);
+"
+ 1700  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1701  clear
+ 1702  python3 fix_vr014.py
+ 1703  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1704  clear
+ 1705  python3 fix_vr014_v2.py
+ 1706  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1707  sqlite3 godot_project/parachute_mutations.db "
+INSERT INTO gdscript_rule_test_results
+(session_id, rule_id, file_path, test_type, variant, result, elapsed_s, tested_at)
+VALUES (
+    (SELECT id FROM sessions WHERE session_label = '0220'),
+    'VR014',
+    'scripts/build_terrain.gd',
+    'godot_launch',
+    'B',
+    'PASS',
+    0,
+    datetime('now')
+);
+"
+ 1708  clear
+ 1709  INSERT INTO recovery_graph (session_id, parent_rule_id, child_rule_id, notes, added_at)
+ 1710  SELECT id, 'VR006', 'VR014', 'Empty body fix revealed undefined _find_parachute_controller()', datetime('now')
+ 1711  FROM sessions WHERE session_label = '0220';
+ 1712  python3 fix_vr014_v2.py
+ 1713  clear
+ 1714  cat skills_0074.json |grep \ sed
+ 1715  clear
+ 1716  python3 move_vr014_helpers.py
+ 1717  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1718  clear
+ 1719  cat skills_0074.json |grep \ sed
+ 1720  cat ../notes/evasion_list_0002.txt 
+ 1721  head -20 godot_project/scripts/build_terrain.gd
+ 1722  grep -n "_find_parachute_controller" godot_project/scripts/build_terrain.gd
+ 1723  sed -n '2080,2100p' godot_project/scripts/build_terrain.gd
+ 1724  head -30 godot_project/scripts/build_terrain.gd
+ 1725  grep -n "_find_parachute_controller" godot_project/scripts/build_terrain.gd
+ 1726  awk 'NR>=2080 && NR<=2100' godot_project/scripts/build_terrain.gd
+ 1727  python3 fix_vr014_insert.py
+ 1728  clear
+ 1729  python3 fix_vr014_final.py
+ 1730  clear
+ 1731  # Show all lines containing "_find_parachute_controller" with context
+ 1732  grep -C2 "_find_parachute_controller" scripts/build_terrain.gd
+ 1733  python3 fix_vr014_force.py
+ 1734  #This will insert the helpers regardless of false positives.
+ 1735  cat ../notes/evasion_list_0002.txt 
+ 1736  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1737  python3 diagnose_build_terrain_whitespace.py
+ 1738  python3 fix_vr014_correct.py
+ 1739  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1740  python3 fix_vr014_indent.py
+ 1741  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1742  chmod +x fix_vr014_final.sh
+ 1743  ./fix_vr014_final.sh
+ 1744  python3 fix_vr014_definitive.py
+ 1745  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1746  clear
+ 1747  python3 normalize_all_indents.py
+ 1748  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1749  clear
+ 1750  python3 fix_pass_indent.py
+ 1751  python3 run_verification_gate.sh   # or the script that runs gdparse
+ 1752  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1753  python3 fix_all_indents_safely.py
+ 1754  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1755  python3 fix_overindent.py
+ 1756  clear
+ 1757  # Install gdtoolkit (if not already installed)
+ 1758  pip install gdtoolkit
+ 1759  # Dry‑run to see what would change
+ 1760  gdformat --check godot_project/scripts/
+ 1761  # Apply formatting to all .gd files
+ 1762  gdformat godot_project/scripts/
+ 1763  # Check if the backup exists
+ 1764  ls -la ../parachute-cfd-game_0003/
+ 1765  # If it exists, copy the entire scripts folder
+ 1766  cp -r ../parachute-cfd-game_0003/godot_project/scripts/* godot_project/scripts/
+ 1767  gdparse godot_project/scripts/build_terrain.gd
+ 1768  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1769  clear
+ 1770  python3 diagnose_runtime.py
+ 1771  python3 fix_runtime.py
+ 1772  bash run_game_debug.sh 2>&1 | tee /tmp/godot_manual.log
+ 1773  ALTER TABLE mutations ADD COLUMN verified INTEGER DEFAULT 0;
+ 1774  clear
+ 1775  sqlite3 godot_project/parachute_mutations.db "ALTER TABLE mutations ADD COLUMN verified INTEGER DEFAULT 0;"
+ 1776  python3 fix_runtime_validated.py
+ 1777  clear
+ 1778  awk '/func _create_plane\(\):/,/^}/' godot_project/scripts/build_terrain.gd
+ 1779  grep -n "func _create_plane" godot_project/scripts/build_terrain.gd
+ 1780  # then look at that line number + 50 lines
+ 1781  cat godot_project/scripts/build_terrain.gd |grep plane
+ 1782  python3 fix_runtime_final.py
+ 1783  ALTER TABLE mutations ADD COLUMN content_before TEXT;
+ 1784  ALTER TABLE mutations ADD COLUMN content_after TEXT;
+ 1785  python3 fix_with_db_control.py
+ 1786  python3 revert_to_last_verified.py
+ 1787  python3 remove_invalid_block.py
+ 1788  clear
+ 1789  xclip -sel clip -o |tee ../notes/f739a574-87b3-4957-bd6b-3bf5e00cadd0_0300.txt
+ 1790  python3 recover_and_fix_0220.py
+ 1791  clear
+ 1792  python3 generate_fix_0221.py 
+ 1793  clear
+ 1794  xclip -sel clip -o |tee ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0307.txt
+ 1795  cat ../notes/170503e8-9a5c-47d2-9263-c52d053826ce_0307.txt
+ 1796  xclip -sel clip -o |tee ../notes/6a3411be-fec0-83ea-8474-a9ebf140c4a9_0308.txt
+ 1797  xclip -sel clip -o |tee ../notes/fc767f32-351f-4e9e-b4ad-6f7d5614df0a_0309.txt
+ 1798  clear
+ 1799  python3 generate_fix_0221.py 
+ 1800  clear
+ 1801  python3 generate_fix_0222.py 
+ 1802  clear
+ 1803  xclip -sel clip -o |tee ../notes/51dae8be-f825-4028-b9f0-97f42a9c6987_0310.txt
+ 1804  xclip -sel clip -o |tee generate_fix_0223.py
+ 1805  clear
+ 1806  cat ../notes/51dae8be-f825-4028-b9f0-97f42a9c6987_0310.txt
+ 1807  cat generate_fix_0223.py
+ 1808  python3 generate_fix_0223.py
+ 1809  sqlite3 parachute_mutations.db "
+SELECT rule_id, gdparse_result, game_ran, sha_after
+FROM fix_results
+WHERE session_id = 19;
+ 1810  clear
+ 1811  xclip -sel clip -o |tee ../notes/fc767f32-351f-4e9e-b4ad-6f7d5614df0a_0311.txt
+ 1812  python3 generate_fix_0223.py
+ 1813  cat ../notes/fc767f32-351f-4e9e-b4ad-6f7d5614df0a_0311.txt |grep 0223
+ 1814  clear 
+ 1815  xclip -sel clip -o |tee generate_fix_0224.py
+ 1816  clear && pwd && cat ../notes/fc767f32-351f-4e9e-b4ad-6f7d5614df0a_0311.txt |grep 0223
+ 1817  cat generate_fix_0224.py
+ 1818  clear 
+ 1819  cat generate_fix_0224.py
+ 1820  clear
+ 1821  #python3 generate_fix_0224.py
+ 1822  clear
+ 1823  xclip -sel clip -o |tee ../notes/fc767f32-351f-4e9e-b4ad-6f7d5614df0a_0316.txt 
+ 1824  clear
+ 1825  cat ../notes/fc767f32-351f-4e9e-b4ad-6f7d5614df0a_0316.txt 
+ 1826  cat generate_fix_0224.py
+ 1827  python3 generate_fix_0224.py
+ 1828  clear
+ 1829  #python3 generate_fix_0225.py
+ 1830  xclip -sel clip -o |tee generate_fix_0225.py
+ 1831  python3 generate_fix_0225.py
+ 1832  clear
+ 1833  cat godot_project/scripts/build_terrain.gd |grep _create_plane()
+ 1834  cat godot_project/scripts/build_terrain.gd |grep _create_
+ 1835  cat godot_project/scripts/build_terrain.gd |grep plane
+ 1836  clear
+ 1837  # WHY: PATCH_BEFORE '\tadd_child(plane)' had 0 occurrences in build_terrain.gd.
+ 1838  #      The actual line adding plane to the scene may use different indentation,
+ 1839  #      a different variable name, or a different method. This diagnostic finds it.
+ 1840  # ASSUMES: build_terrain.gd exists at confirmed path
+ 1841  #          (Document 4: "[INFO] Session 21 | DB: /home/owner/.../parachute_mutations.db"
+ 1842  #           and Document 3 F20 applied sha_before=33315dd90b44dd9e)
+ 1843  # VERIFIES WITH: output shows the exact line(s) — paste verbatim in next message.
+ 1844  grep -n "add_child\|plane\s*=\s*\|plane\.show\|plane\.visible\|_plane\b\|PlaneScene\|plane_scene\|PLANE\b"     godot_project/scripts/build_terrain.gd     | grep -i "plane"     | head -60
+ 1845  clear
+ 1846  xclip -sel clip -o |tee generate_fix_0230.py
+ 1847  mv generate_fix_0230.py generate_fix_0226.py 
+ 1848  clear
+ 1849  python3 generate_fix_0226.py 
+ 1850  clear
+ 1851  xclip -sel clip -o |tee generate_fix_0227.py
+ 1852  python3 generate_fix_0227.py
+ 1853  clear
+ 1854  xclip -sel clip -o ../notes/51dae8be-f825-4028-b9f0-97f42a9c6987_0320.txt
+ 1855  clear
+ 1856  xclip -sel clip -o ../notes/1fa469b4-c1c7-4b13-adfe-738275770e1e_0321.txt
+ 1857  clear
+ 1858  xclip -sel clip -o ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1859  cat ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1860  xclip -sel clip -o ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1861  cat ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1862  xclip -sel clip -o -tee ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1863  cat ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1864  xclip -sel clip -o |tee ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1865  cat ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0322.txt
+ 1866  clear
+ 1867  python3 generate_fix_0227.py 
+ 1868  clear
+ 1869  xclip -sel clip -o |tee generate_fix_0228.py
+ 1870  python3 generate_fix_0228.py
+ 1871  clear
+ 1872  xclip -sel clip -o |tee ../notes/71731717-b66c-474f-93d7-3167a970e4c4_0340.txt
+ 1873  ls -la ../notes/71731717-b66c-474f-93d7-3167a970e4c4_0340.txt
+ 1874  ls -la *.db
+ 1875  ls -la godot_project/ |grep .db
+ 1876  ls -la godot_project/assets/ |grep .db
+ 1877  ls -la godot_project/addons/ |grep .db
+ 1878  grep -RniE 'mutation|mutate|repair|fix|rollback|recovery|parser|ast|token' godot_project --include="*.gd"
+ 1879  grep -RniE 'mutation|mutate|repair|fix|rollback|recovery|parser|ast|token' godot_clearproject --include="*.gd"
+ 1880  sed -n '1,260p' godot_project/scripts/SqliteDb.gd
+ 1881  sed -n '1,350p' godot_project/scripts/GameIntegrity.gd
+ 1882  sed -n '1,350p' godot_project/addons/gd_repair/repair_gdscript_v2.py
+ 1883  sqlite3 parachute_mutations.db ".tables"
+ 1884  sqlite3 parachute_mutations.db ".schema"
+ 1885  sed -n '1,260p' godot_project/scripts/SqliteDb.gd
+ 1886  sqlite3 parachute_mutations.db ".tables"
+ 1887  sqlite3 parachute_mutations.db ".schema"
+ 1888  xclip -sel clip -o |tee ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0323.txt
+ 1889  clear
+ 1890  sed -n '1,260p' godot_project/scripts/SqliteDb.gd
+ 1891  clear
+ 1892  sed -n '1,350p' godot_project/scripts/GameIntegrity.gd
+ 1893  sed -n '1,350p' godot_project/addons/gd_repair/repair_gdscript_v2.py
+ 1894  sqlite3 parachute_mutations.db ".tables"
+ 1895  sqlite3 parachute_mutations.db ".schema"
+ 1896  clear
+ 1897  xclip -sel clip -o |tee ../notes/6a352f15-94a0-83ea-84e5-422295b0089a_0324.txt
+ 1898  clear
+ 1899  history 
+ 1900  clear
+ 1901  cat ../notes/evasion_list_0002.txt 
+ 1902  clear
+ 1903  python3 generate_fix_0229.py
+ 1904  cat generate_fix_0229.py
+ 1905  clear
+ 1906  python3 generate_fix_0229.py
+ 1907  cat generate_fix_0229.py
+ 1908  cat ../notes/evasion_list_0002.txt 
+ 1909  clear
+ 1910  python3 generate_fix_0229.py
+ 1911  clear
+ 1912  cat godot_project/project.godot
+ 1913  cat godot_project/project.godot |grep autoload
+ 1914  nano godot_project/project.godot #|grep autoload
+ 1915  cat godot_project/project.godot |grep autoload
+ 1916  cat godot_project/project.godot
+ 1917  clear
+ 1918  cat godot_project/project.godot
+ 1919  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1920  clear
+ 1921  cat godot_project/project.godot
+ 1922  python3 generate_fix_0230.py
+ 1923  #python3 generate_fix_0230.py          # applies all fixes
+ 1924  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1925  clear
+ 1926  cat ../notes/evasion_list_0002.txt 
+ 1927  python3 generate_fix_0231.py
+ 1928  clear
+ 1929  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1930  gdformat godot_project/scripts/
+ 1931  SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb
+ 1932  FROM ab_test_runs JOIN ab_test_metrics USING(run_id)
+ 1933  WHERE session_id=24
+ 1934  ORDER BY run_id DESC LIMIT 5;
+ 1935  clear
+ 1936  cat ../notes/evasion_list_0002.txt 
+ 1937  python3 generate_fix_0232.py
+ 1938  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1939  sqlite3 parachute_mutations.db <<EOF
+SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb
+FROM ab_test_runs JOIN ab_test_metrics USING(run_id)
+WHERE session_id=24
+ORDER BY run_id DESC LIMIT 5;
+EOF
+
+ 1940  sqlite3 parachute_mutations.db <<EOF
+SELECT ts, cpu_pct, io_wait_pct, vm_rss_kb
+FROM resource_contention_log
+WHERE session_id=24
+ORDER BY ts DESC LIMIT 10;
+EOF
+
+ 1941  SELECT step_id, action, file_path, before_sha, after_sha, result, ts
+ 1942  FROM orchestration
+ 1943  WHERE session_id=24 AND rule_id='VR020'
+ 1944  ORDER BY ts;
+ 1945  clear
+ 1946  cat ../notes/evasion_list_0002.txt 
+ 1947  clear
+ 1948  cat ../notes/evasion_list_0002.txt 
+ 1949  python3 generate_fix_0233.py
+ 1950  clear
+ 1951  cat ../notes/evasion_list_0002.txt 
+ 1952  python3 generate_fix_0234.py
+ 1953  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1954  clear
+ 1955  cat ../notes/evasion_list_0002.txt 
+ 1956  python3 add_undeclared_rule.py 
+ 1957  clear
+ 1958  cat ../notes/evasion_list_0002.txt 
+ 1959  clear
+ 1960  cat ../notes/evasion_list_0002.txt 
+ 1961  python3 generate_fix_0235.py
+ 1962  clear
+ 1963  cat ../notes/evasion_list_0002.txt 
+ 1964  python3 generate_fix_0236.py
+ 1965  clear
+ 1966  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1967  clear
+ 1968  cat ../notes/evasion_list_0002.txt 
+ 1969  GODOT_AB_TEST=1 python3 generate_fix_0228.py 2>&1 | tee ab_test.log
+ 1970  grep -E "ERROR|CRASH|_ready ok=true|SCRIPT ERROR" ab_test.log
+ 1971  cat ab_test.log 
+ 1972  clear
+ 1973  cat ../notes/evasion_list_0002.txt 
+ 1974  clear
+ 1975  cat ../notes/evasion_list_0002.txt 
+ 1976  python3 generate_fix_0237.py 2>&1 | tee generate_fix_0237.py.log && GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1977  python3 generate_fix_0237.py 2>&1 | tee generate_fix_0237.py.log 
+ 1978  python3 generate_fix_0237.py #2>&1 | tee generate_fix_0237.py.log 
+ 1979  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1980  cat ../notes/evasion_list_0002.txt 
+ 1981  clear
+ 1982  cat ../notes/evasion_list_0002.txt 
+ 1983  python3 generate_fix_0238.py
+ 1984  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 1985  clear
+ 1986  cat ../notes/evasion_list_0002.txt 
+ 1987  clear
+ 1988  cat ../notes/evasion_list_0002.txt 
+ 1989  python3 generate_fix_0239.py 
+ 1990  python3 generate_fix_0240.py 
+ 1991  clear
+ 1992  cat ../notes/evasion_list_0002.txt 
+ 1993  clear
+ 1994  cat ../notes/evasion_list_0002.txt 
+ 1995  python3 generate_fix_0241.py 
+ 1996  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 1997  clear
+ 1998  python3 generate_fix_0242.py 
+ 1999  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2000  clear
+ 2001  cat ../notes/evasion_list_0002.txt 
+ 2002  clear
+ 2003  python3 generate_fix_0243.py 
+ 2004  clear
+ 2005  cat ../notes/evasion_list_0002.txt 
+ 2006  clear
+ 2007  cat ../notes/evasion_list_0002.txt 
+ 2008  python3 generate_fix_0244.py 
+ 2009  clear
+ 2010  cat ../notes/evasion_list_0002.txt 
+ 2011  python3 generate_fix_0245.py 
+ 2012  clear
+ 2013  python3 generate_fix_0245.py
+ 2014  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2015  cat ../notes/evasion_list_0002.txt 
+ 2016  clear
+ 2017  cat ../notes/evasion_list_0002.txt 
+ 2018  python3 generate_fix_0246.py
+ 2019  clea
+ 2020  clear
+ 2021  cat ../notes/evasion_list_0002.txt 
+ 2022  python3 generate_fix_0247.py
+ 2023  clear
+ 2024  cat godot_project/scripts/repair_with_db.py 
+ 2025  cat ../notes/evasion_list_0002.txt 
+ 2026  clear
+ 2027  cat ../notes/evasion_list_0002.txt 
+ 2028  python3 generate_fix_0249.py
+ 2029  locate build_terrain.gd
+ 2030  clear
+ 2031  cat ../notes/evasion_list_0002.txt 
+ 2032  clear
+ 2033  python3 generate_fix_0249.py
+ 2034  clear
+ 2035  cat ../notes/evasion_list_0002.txt 
+ 2036  clear
+ 2037  cat generate_fix_0249.py |grep git
+ 2038  clear
+ 2039  # Find all copies of build_terrain.gd in the project
+ 2040  find . -name "build_terrain.gd" -exec ls -la {} \;
+ 2041  # Check the one in scripts/ and see if it matches the scene reference
+ 2042  grep -n "tex." godot_project/scripts/build_terrain.gd | head -5
+ 2043  # Check the line numbers around 2015 in that file
+ 2044  sed -n '2010,2020p' godot_project/scripts/build_terrain.gd
+ 2045  cat skills_0074.json |grep \ sed
+ 2046  sed -n '2010,2020p' godot_project/scripts/build_terrain.gd
+ 2047  cat ../notes/evasion_list_0002.txt 
+ 2048  clear
+ 2049  # A/B test metrics
+ 2050  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2051  # Resource contention
+ 2052  sqlite3 parachute_mutations.db "SELECT ts, cpu_pct, io_wait_pct, vm_rss_kb FROM resource_contention_log WHERE session_id=24 ORDER BY ts DESC LIMIT 10;"
+ 2053  # Orchestration history
+ 2054  sqlite3 parachute_mutations.db "SELECT step_id, action, file_path, before_sha, after_sha, result, ts FROM orchestration WHERE session_id=24 ORDER BY ts;"
+ 2055  cat ../notes/evasion_list_0002.txt 
+ 2056  python3 generate_fix_0251.py
+ 2057  #check stderr?? not - here is the log path or the database found and fixed from stderr and stdout and run trace extractions and line numbers and variables logged and displayed?
+ 2058  cat ../notes/evasion_list_0002.txt 
+ 2059  clear
+ 2060  cat ../notes/evasion_list_0002.txt 
+ 2061  python3 generate_fix_0252.py
+ 2062  #long delay here without display of stderr or any other status message
+ 2063  python3 generate_fix_0252.py
+ 2064  clear
+ 2065  cat ../notes/evasion_list_0002.txt 
+ 2066  python3 generate_fix_0253.py
+ 2067  cat ../notes/evasion_list_0002.txt 
+ 2068  clear
+ 2069  python3 generate_fix_0254.py
+ 2070  cat ../notes/evasion_list_0002.txt 
+ 2071  clear
+ 2072  cat ../notes/evasion_list_0002.txt 
+ 2073  clear
+ 2074  python3 generate_fix_0255.py
+ 2075  cat ../notes/evasion_list_0002.txt 
+ 2076  clear
+ 2077  sqlite3 parachute_mutations.db 'SELECT error_id, file_path, line_number, error_text, context FROM runtime_errors WHERE session_id=24 ORDER BY error_id DESC;'
+ 2078  cat ../notes/evasion_list_0002.txt 
+ 2079  clear
+ 2080  python3 generate_fix_0256.py
+ 2081  cat ../notes/evasion_list_0002.txt 
+ 2082  clear
+ 2083  cat ../notes/evasion_list_0002.txt 
+ 2084  clear
+ 2085  cat ../notes/evasion_list_0002.txt 
+ 2086  python3 generate_fix_0257.py
+ 2087  clear
+ 2088  cat ../notes/evasion_list_0002.txt 
+ 2089  clear
+ 2090  python3 generate_fix_0258.py
+ 2091  cat ../notes/evasion_list_0002.txt 
+ 2092  clear
+ 2093  verify_fix.sh
+ 2094  chmod +x verify_fix.sh 
+ 2095  bash verify_fix.sh
+ 2096  python3 generate_fix_0259.py 
+ 2097  bash verify_fix.sh
+ 2098  clear
+ 2099  cat ../notes/evasion_list_0002.txt 
+ 2100  clear
+ 2101  cat ../notes/evasion_list_0002.txt 
+ 2102  recovery_example.py
+ 2103  bash recovery_example.py
+ 2104  clear
+ 2105  cat ../notes/evasion_list_0002.txt 
+ 2106  python3 generate_fix_0260.py
+ 2107  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2108  cat generate_fix_0228.py
+ 2109  chmod +x verify_full.sh
+ 2110  ./verify_full.sh
+ 2111  clear
+ 2112  cat ../notes/evasion_list_0002.txt 
+ 2113  clear
+ 2114  cat ../notes/evasion_list_0002.txt 
+ 2115  python3 generate_fix_0261.py
+ 2116  ./verify_full.sh 
+ 2117  chmod +x verify_full.sh 
+ 2118  ./verify_full.sh 
+ 2119  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2120  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2121  clear
+ 2122  cat ../notes/evasion_list_0002.txt 
+ 2123  xclip -sel clip -o |tee verify_full.sh 
+ 2124  python3 generate_fix_0262.py
+ 2125  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2126  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN
+ 2127  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2128  cat ../notes/evasion_list_0002.txt 
+ 2129  python3 generate_fix_0263.py
+ 2130  ./verify_f
+ 2131  ./verify_full.sh 
+ 2132  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2133  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2134  cat ../notes/evasion_list_0002.txt 
+ 2135  xclip -sel clip -o |tee verify_full.sh 
+ 2136  python3 generate_fix_0264.py 
+ 2137  xclip -sel clip < godot_project/scripts/build_terrain.gd
+ 2138  clear
+ 2139  cat ../notes/evasion_list_0002.txt 
+ 2140  xclip -sel clip -o |tee verify_full.sh 
+ 2141  python3 repair_orchestrator.py
+ 2142  ./verify_full.sh 
+ 2143  cat ../notes/evasion_list_0002.txt 
+ 2144  ./verify_full.sh 
+ 2145  xclip -sel clip -o |tee verify_full.sh 
+ 2146  cat verify_full.sh 
+ 2147  ./verify_full.sh 
+ 2148  clear
+ 2149  cat ../notes/evasion_list_0002.txt 
+ 2150  python3 generate_fix_0266.py 
+ 2151  ./verify_f
+ 2152  ./verify_full.sh 
+ 2153  cat ../notes/evasion_list_0002.txt 
+ 2154  clear
+ 2155  cat ../notes/evasion_list_0002.txt 
+ 2156  clear
+ 2157  xclip -sel clip -o |tee verify_full.sh 
+ 2158  ./verify_full.sh 
+ 2159  clear
+ 2160  cat ../notes/evasion_list_0002.txt 
+ 2161  clear
+ 2162  sqlite3 -- 1. Mutation rules – detected GDScript version issues
+ 2163  CREATE TABLE IF NOT EXISTS mutation_rules (
+ 2164      rule_id TEXT PRIMARY KEY,
+ 2165      rule_name TEXT NOT NULL,
+ 2166      description TEXT NOT NULL,
+ 2167      pattern TEXT,               -- regex pattern to match error messages
+ 2168      fix_strategy TEXT NOT NULL, -- e.g., REPLACE, INSERT_AFTER
+ 2169      added_session INTEGER NOT NULL,
+ 2170      confirmed_sha TEXT,
+ 2171      citation_url TEXT,
+ 2172      compiler_phase TEXT,        -- lexer|parser|semantic|codegen|runtime
+ 2173      confidence REAL,            -- 0.0-1.0
+ 2174      introduced_version TEXT,
+ 2175      fixed_version TEXT,
+ 2176      auto_fixable INTEGER DEFAULT 1,
+ 2177      repair_cost INTEGER DEFAULT 1
+ 2178  );
+ 2179  -- Source: Aho et al. (2006) – compiler phases; Dijkstra (1959) – repair_cost ordering.
+ 2180  -- 2. Fix results – natural key ensures idempotency (Gray & Reuter 1992)
+ 2181  CREATE TABLE IF NOT EXISTS fix_results (
+ 2182      result_id INTEGER PRIMARY KEY AUTOINCREMENT,
+ 2183      session_id INTEGER NOT NULL,
+ 2184      rule_id TEXT NOT NULL REFERENCES mutation_rules(rule_id),
+ 2185      file_path TEXT NOT NULL,
+ 2186      line_number INTEGER,
+ 2187      sha_before TEXT NOT NULL,
+ 2188      sha_after TEXT NOT NULL,
+ 2189      gdparse_result TEXT CHECK(gdparse_result IN ('PASS','FAIL','SKIP')),
+ 2190      game_ran INTEGER DEFAULT 0,
+ 2191      fix_note TEXT,
+ 2192      ts TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
+ 2193      UNIQUE(session_id, rule_id, file_path, line_number)
+ 2194  );
+ 2195  -- UNIQUE natural key prevents duplicate inserts.
+ 2196  -- 3. Mutation snapshots – full content for recovery (Gray & Reuter Ch.17)
+ 2197  CREATE TABLE IF NOT EXISTS mutation_snapshots ( ... );
+ 2198  -- 4. A/B test runs – controlled experiments (Fisher 1935)
+ 2199  -- 5. A/B test metrics – dependent variables (Gregg 2021)
+ 2200  -- 6. Resource contention – USE method metrics (Gregg 2021)
+ 2201  -- 7. GDScript patch log – SHA verification
+ 2202  -- 8. Lint results – gdparse per‑file results
+ 2203  -- 9. Orchestration – state machine (Harel 1987)
+ 2204  -- 10. Runtime errors – captured stderr with context (R147)
+ 2205  -- 11. Repair sessions – track workflow
+ 2206  -- 12. User decisions – record every user action
+ 2207  -- 13. Alerts – user‑facing messages
+ 2208  -- 14. Repair actions – log every fix attempt
+ 2209  clear
+ 2210  sqlite3 -- 1. Mutation rules – detected GDScript version issues
+ 2211  CREATE TABLE IF NOT EXISTS mutation_rules (
+ 2212      rule_id TEXT PRIMARY KEY,
+ 2213      rule_name TEXT NOT NULL,
+ 2214      description TEXT NOT NULL,
+ 2215      pattern TEXT,               -- regex pattern to match error messages
+ 2216      fix_strategy TEXT NOT NULL, -- e.g., REPLACE, INSERT_AFTER
+ 2217      added_session INTEGER NOT NULL,
+ 2218      confirmed_sha TEXT,
+ 2219      citation_url TEXT,
+ 2220      compiler_phase TEXT,        -- lexer|parser|semantic|codegen|runtime
+ 2221      confidence REAL,            -- 0.0-1.0
+ 2222      introduced_version TEXT,
+ 2223      fixed_version TEXT,
+ 2224      auto_fixable INTEGER DEFAULT 1,
+ 2225      repair_cost INTEGER DEFAULT 1
+ 2226  );
+ 2227  -- Source: Aho et al. (2006) – compiler phases; Dijkstra (1959) – repair_cost ordering.
+ 2228  -- 2. Fix results – natural key ensures idempotency (Gray & Reuter 1992)
+ 2229  CREATE TABLE IF NOT EXISTS fix_results (
+ 2230      result_id INTEGER PRIMARY KEY AUTOINCREMENT,
+ 2231      session_id INTEGER NOT NULL,
+ 2232      rule_id TEXT NOT NULL REFERENCES mutation_rules(rule_id),
+ 2233      file_path TEXT NOT NULL,
+ 2234      line_number INTEGER,
+ 2235      sha_before TEXT NOT NULL,
+ 2236      sha_after TEXT NOT NULL,
+ 2237      gdparse_result TEXT CHECK(gdparse_result IN ('PASS','FAIL','SKIP')),
+ 2238      game_ran INTEGER DEFAULT 0,
+ 2239      fix_note TEXT,
+ 2240      ts TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ','now')),
+ 2241      UNIQUE(session_id, rule_id, file_path, line_number)
+ 2242  );
+ 2243  -- UNIQUE natural key prevents duplicate inserts.
+ 2244  -- 3. Mutation snapshots – full content for recovery (Gray & Reuter Ch.17)
+ 2245  CREATE TABLE IF NOT EXISTS mutation_snapshots ( ... );
+ 2246  -- 4. A/B test runs – controlled experiments (Fisher 1935)
+ 2247  -- 5. A/B test metrics – dependent variables (Gregg 2021)
+ 2248  -- 6. Resource contention – USE method metrics (Gregg 2021)
+ 2249  -- 7. GDScript patch log – SHA verification
+ 2250  -- 8. Lint results – gdparse per‑file results
+ 2251  -- 9. Orchestration – state machine (Harel 1987)
+ 2252  -- 10. Runtime errors – captured stderr with context (R147)
+ 2253  -- 11. Repair sessions – track workflow
+ 2254  -- 12. User decisions – record every user action
+ 2255  -- 13. Alerts – user‑facing messages
+ 2256  -- 14. Repair actions – log every fix attemptclear
+ 2257  clear
+ 2258  cat ../notes/evasion_list_0002.txt 
+ 2259  clear
+ 2260  cat ../notes/evasion_list_0002.txt 
+ 2261  python3 generate_fix_0267.py
+ 2262  chmod +x verify_full.sh
+ 2263  ./verify_full.sh
+ 2264  xclip -sel clip -o |tee verify_full.sh 
+ 2265  ./verify_full.sh
+ 2266  clear
+ 2267  cat ../notes/evasion_list_0002.txt 
+ 2268  xclip -sel clip -o |tee verify_full.sh 
+ 2269  python3 generate_fix_0268.py 
+ 2270  ./verify_full.sh
+ 2271  cat ../notes/evasion_list_0002.txt 
+ 2272  xclip -sel clip -o |tee verify_full.sh 
+ 2273  clear
+ 2274  cat ../notes/evasion_list_0002.txt 
+ 2275  python3 generate_fix_0269.py 
+ 2276  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log
+ 2277  ./verify_full.sh
+ 2278  clear
+ 2279  cat ../notes/evasion_list_0002.txt 
+ 2280  clear
+ 2281  cat /tmp/godot_run_debug.log
+ 2282  bash run_game_debug.sh
+ 2283  clear
+ 2284  cat ../notes/evasion_list_0002.txt 
+ 2285  ./verify_full.sh
+ 2286  python3 generate_fix_0269.py clear
+ 2287  xclip -sel clip -o |tee verify_full.sh 
+ 2288  ./verify_full.sh
+ 2289  clear
+ 2290  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2291  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24 ORDER BY run_id DESC LIMIT 5;"
+ 2292  cat ../notes/evasion_list_0002.txt 
+ 2293  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log
+ 2294  cat ../notes/evasion_list_0002.txt 
+ 2295  clear
+ 2296  cat ../notes/evasion_list_0002.txt 
+ 2297  sqlite3 parachute_mutations.db "SELECT ts, cpu_pct, io_wait_pct, vm_rss_kb FROM resource_contention_log WHERE session_id=24 ORDER BY ts DESC LIMIT 10;"
+ 2298  clear
+ 2299  sqlite3 parachute_mutations.db "SELECT ts, cpu_pct, io_wait_pct, vm_rss_kb FROM resource_contention_log WHERE session_id=24 ORDER BY ts DESC LIMIT 10;"
+ 2300  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log
+ 2301  xclip -sel clip -o |tee verify_full.sh 
+ 2302  ./verify_full.sh
+ 2303  clear
+ 2304  cat ../notes/evasion_list_0002.txt 
+ 2305  xclip -sel clip -o |tee verify_full.sh 
+ 2306  python3 generate_fix_0271.py 
+ 2307  ./verify_full.sh 
+ 2308  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log
+ 2309  ./verify_f
+ 2310  ./verify_full.sh 
+ 2311  cat /tmp/godot_run_debug.log
+ 2312  clear
+ 2313  cat ../notes/evasion_list_0002.txt 
+ 2314  xclip -sel clip -o |tee verify_full.sh 
+ 2315  python3 generate_fix_0272.py 
+ 2316  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2317  #sqlite3 parachute_mutations.db 'SELECT * FROM resource_contention_log WHERE session_id=24;'
+ 2318  sqlite3 parachute_mutations.db 'SELECT * FROM resource_contention_log WHERE session_id=24;'
+ 2319  #bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log && cat /tmp/godot_run_debug.log 
+ 2320  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log && cat /tmp/godot_run_debug.log 
+ 2321  ./verify_full.sh 
+ 2322  xclip -sel clip -o |tee verify_full.sh 
+ 2323  python3 generate_fix_0273.py 
+ 2324  ./verify_full.sh 
+ 2325  #bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log && cat /tmp/godot_run_debug.log 
+ 2326  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log && cat /tmp/godot_run_debug.log 
+ 2327  ./verify_full.sh 
+ 2328  bash run_game_debug.sh 2>&1 | tee /tmp/godot_run_debug.log && cat /tmp/godot_run_debug.log 
+ 2329  ./verify_full.sh 
+ 2330  cat ../notes/evasion_list_0002.txt 
+ 2331  cp godot_project/scripts/PerformanceMonitor.gd ../notes/
+ 2332  mv PerformanceMonitor.gd godot_project/scripts/
+ 2333  python3 generate_fix_0273.py
+ 2334  ./verify_full.sh 
+ 2335  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2336  sqlite3 parachute_mutations.db "SELECT run_id, outcome_code, ready_time_ms, rss_peak_kb FROM ab_test_runs JOIN ab_test_metrics USING(run_id) WHERE ab_test_runs.session_id=24;"
+ 2337  xclip -sel clip -o |tee verify_full.sh 
+ 2338  ./verify_full.sh 
+ 2339  cat ../notes/evasion_list_0002.txt 
+ 2340  xclip -sel clip -o |tee ../notes/71731717-b66c-474f-93d7-3167a970e4c4_0375.txt
+ 2341  clear
+ 2342  xclip -sel clip -o |tee run_extract_0229.sh
+ 2343  mv run_extract_0229.sh extract_context_0229.py
+ 2344  xclip -sel clip -o |tee run_extract_0229.sh
+ 2345  chmod +x run_extract_0229.sh
+ 2346  ./run_extract_0229.sh
+ 2347  cat ../notes/evasion_list_0002.txt 
+ 2348  clear
+ 2349  cat ../notes/evasion_list_0002.txt 
+ 2350  xclip -sel clip -o |tee extract_context_0229.py
+ 2351  xclip -sel clip -o |tee run_extract_0229.sh
+ 2352  python3 extract_context_0229.py
+ 2353  ./run_extract_0229.sh
+ 2354  clear
+ 2355  # WHY: copy downloaded file directly — avoids xclip prepending filename as line 1
+ 2356  # ASSUMES: file downloaded to ~/Downloads
+ 2357  # VERIFIES WITH: python3 extract_context_0229.py prints [OK] zip line at end
+ 2358  cp ~/Downloads/extract_context_0229.py    /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/
+ 2359  cd /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+ 2360  python3 extract_context_0229.py
+ 2361  clear
+ 2362  cat ../notes/evasion_list_0002.txt 
+ 2363  clear
+ 2364  xclip -sel clip -o |tee generate_fix_0230.py 
+ 2365  xclip -sel clip -o |tee verify_0230.sh
+ 2366  chmod +x verify_0230.sh
+ 2367  python3 generate_fix_0230.py 
+ 2368  ./verify_0230.sh
+ 2369  clear
+ 2370  cat ../notes/evasion_list_0002.txt 
+ 2371  xclip -sel clip -o |tee generate_fix_0231.py 
+ 2372  python3 generate_fix_0231.py 
+ 2373  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2374  xclip -sel clip -o |tee verify_0233.sh
+ 2375  chmod +x verify_0231.sh
+ 2376  ./verify_0231.sh
+ 2377  clear
+ 2378  cat ../notes/evasion_list_0002.txt 
+ 2379  xclip -sel clip -o |tee generate_fix_0232.py 
+ 2380  xclip -sel clip -o |tee verify_0232.sh
+ 2381  python3 generate_fix_0232.py 
+ 2382  #why pass fail and omit requested data? brevity??
+ 2383  bash verify_0232.sh
+ 2384  cat ../notes/evasion_list_0002.txt 
+ 2385  clear
+ 2386  xclip -sel clip -o |tee generate_fix_0232.py 
+ 2387  xclip -sel clip -o |tee verify_0233.sh
+ 2388  cat ../notes/evasion_list_0002.txt 
+ 2389  python3 generate_fix_0233.py 
+ 2390  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2391  bash verify_0233.sh
+ 2392  GODOT_AB_TEST=1 python3 generate_fix_0228.py
+ 2393  clear
+ 2394  cat ../notes/evasion_list_0002.txt 
+ 2395  # WHY: read the actual source before proposing any fix — Rule 24/Rule 1
+ 2396  # ASSUMES: cwd is parachute-cfd-game
+ 2397  # VERIFIES WITH: output shows exact lines causing CRASH_BEFORE_READY
+ 2398  # and exact path Godot uses for user://
+ 2399  cd /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+ 2400  echo "=== STEP 1: A/B classifier in generate_fix_0228.py ==="
+ 2401  grep -n "CRASH_BEFORE_READY\|READY_OK\|outcome\|exit_code\|ready\|AB TEST"     generate_fix_0228.py | head -60
+ 2402  echo ""
+ 2403  echo "=== STEP 2: SqliteDb.gd — what path does Godot open? ==="
+ 2404  grep -n "parachute\|user://\|open\|path\|db_path\|DB_PATH"     godot_project/scripts/SqliteDb.gd
+ 2405  echo ""
+ 2406  echo "=== STEP 3: what does user:// resolve to on this machine? ==="
+ 2407  find ~/.local/share/godot -name "*.db" 2>/dev/null
+ 2408  find ~/.local/share -maxdepth 6 -name "*.db" 2>/dev/null | grep -i parachute || echo "not found"
+ 2409  echo ""
+ 2410  echo "=== STEP 4: audit log content (most recent) ==="
+ 2411  latest=$(ls -t audit_logs/ab_test_*.log 2>/dev/null | head -1)
+ 2412  if [ -n "$latest" ]; then     echo "Log: $latest";     cat "$latest"; else     echo "no audit logs found"; fi
+ 2413  echo ""
+ 2414  echo "=== STEP 5: generate_fix_0228.py full A/B section ==="
+ 2415  awk '/=== STEP 6.*A.B/,/=== STEP 7/' generate_fix_0228.py | head -80
+ 2416  clear
+ 2417  cat /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/parachute.db
+ 2418  ls -la /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/parachute.db
+ 2419  ls -la /home/owner/.local/share/godot/app_userdata/Parachute\ Landing\ Pattern\ v314/parachute.db
+ 2420  cat /home/owner/.local/share/godot/app_userdata/Parachute\ Landing\ Pattern\ v314/parachute.db
+ 2421  clear
+ 2422  xclip -sel clip -o |tee generate_fix_0235.py 
+ 2423  xclip -sel clip -o |tee verify_0235.sh
+ 2424  python3 generate_fix_0235.py  
+ 2425  bash verify_0235.sh
+ 2426  cat ../notes/evasion_list_0002.txt 
+ 2427  chear
+ 2428  clear
+ 2429  history 
+[owner@192.168.1.152-20260619-152059 parachute-cfd-game]$

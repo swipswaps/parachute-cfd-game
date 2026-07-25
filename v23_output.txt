@@ -1,0 +1,72 @@
+
+======================================================================
+STEP 1: Character initial position in build_terrain.gd
+======================================================================
+  Found at line 329:
+     326: 	# --------------------------------------------------------------
+     327: 	_character = Node3D.new()
+     328: 	add_child(_character)
+     329: 	print("[VERBATIM] Character position: ", _character.global_position)
+     330: 	print("[VERBATIM] Character scale: ", _character.scale)
+     331: 	_character.position = Vector3(100.0, 1853.8, -100.0)
+     332: 	_load_character()
+     333: 
+
+======================================================================
+STEP 2: Camera attachment in flight_controller.gd
+======================================================================
+
+======================================================================
+STEP 3: _ready function in flight_controller.gd (camera setup)
+======================================================================
+  _ready function at line 11:
+      10: 
+      11: func _ready() -> void:
+      12:     print("[VERBATIM] FlightController _ready")
+      13: 
+      14: func _process(delta: float) -> void:
+      15:     if parent == null:
+      16:         return
+      17:     if Input.is_action_pressed("pitch"):
+      18:         _handle_pitch(delta)
+      19:     if Input.is_action_pressed("roll"):
+      20:         _handle_roll(delta)
+      21:     if Input.is_action_pressed("yaw"):
+      22:         _handle_yaw(delta)
+      23:     if Input.is_action_pressed("throttle"):
+      24:         _handle_throttle(delta)
+      25:     if Input.is_action_pressed("brake"):
+      26:         _handle_brake(delta)
+      27:     if Input.is_action_pressed("collective"):
+      28:         _handle_collective(delta)
+      29:     if Input.is_action_pressed("camera_cycle"):
+      30:         _handle_camera_cycle(delta)
+      31:     if Input.is_action_pressed("hud_toggle"):
+      32:         _handle_hud_toggle(delta)
+      33:     if Input.is_action_pressed("flight_check"):
+      34:         _handle_flight_check(delta)
+      35: 
+      36: func _input(event: InputEvent) -> void:
+      37:     print("[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered")
+      38:     print("[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered")
+      39:     # Only handle mouse and keyboard events here
+      40:     if event is InputEventMouseMotion:
+
+======================================================================
+STEP 4: Main.tscn – any Camera3D nodes or transforms
+======================================================================
+
+======================================================================
+STEP 5: Search for any position updates that could move camera
+======================================================================
+
+======================================================================
+VERDICT
+======================================================================
+  Based on the above, we will see where the camera is positioned
+  and what it is looking at. If the camera is at (0,0,0) while
+  the airplane is at (200, 1800, -200), the plane will be invisible.
+  The fix is to either move the camera to follow the plane, or
+  move the character and plane to the camera's initial position.
+
+  Upload v23_output.txt for further analysis.

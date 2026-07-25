@@ -1,0 +1,173 @@
+{
+  "_comment": "skills_0066_new_entries.json – 14 new rules R120–R133 from 2026-06-10/11 compliance enforcement session",
+  "new_rules": {
+    "R120_py_compile_gate": {
+      "rule": "Any Python script delivered must first pass `python3 -m py_compile` and the output must be shown verbatim. The script is not delivered until COMPILE_PASS is printed.",
+      "problem": "Two scripts were delivered with syntax errors; they never ran and the gates inside them never executed. A py_compile gate would have blocked them.",
+      "detector": "python3 -c \"import sys, subprocess; r=subprocess.run(['python3', '-m', 'py_compile', sys.argv[1]]); sys.exit(r.returncode)\"",
+      "verification": "Run the detector on a syntax‑correct script – exits 0. On a broken script – exits non‑zero.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session log – COMPLIANCE ENFORCEMENT block",
+        "url": "",
+        "verbatim_quote": "Python script delivered: bash_tool: python3 -m py_compile <file> && echo COMPILE_PASS"
+      }
+    },
+    "R121_diff_at_failure_site": {
+      "rule": "When a script is claimed to be a corrected version of a broken one, the fixed version must differ at the original failure site. A byte‑identical correction is a false fix.",
+      "problem": "The second broken script was byte‑identical at the f‑string line; it was delivered as the fix.",
+      "detector": "python3 -c \"import sys; old=open(sys.argv[1]).read(); new=open(sys.argv[2]).read(); assert old != new, 'FAIL: files identical'; print('PASS')\"",
+      "verification": "Run on two different files – PASS. On identical files – FAIL.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session log – COMPLIANCE ENFORCEMENT",
+        "url": "",
+        "verbatim_quote": "\"Corrected\" version of a broken file: diff <(grep -n '<failure_site>' old.py) <(grep -n '<failure_site>' new.py)"
+      }
+    },
+    "R122_no_nested_fstrings_json": {
+      "rule": "Never use nested f‑strings to generate JSON or any string containing literal braces. Use `str.format()` or `json.dumps()`.",
+      "problem": "The broken f‑string had a single `}` after a Python expression, causing a SyntaxError.",
+      "detector": "python3 -c \"import sys, re; src=open(sys.argv[1]).read(); assert not re.search(r'f\\\"[^\\\"]*\\{[^\\{\\}]*\\}[^\\\"]*\\}\\\"', src), 'Nested f‑string with brace after expression'; print('PASS')\"",
+      "verification": "Run on a script containing `f\"{x}}}\"` – FAIL. On a script using `.format()` – PASS.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session log – fix_controls_compliant.py line 290",
+        "url": "",
+        "verbatim_quote": "The previous script used an f-string like this pattern for Input Map output: f\"{act}={...}\" That approach broke because literal braces in JSON need to be escaped correctly."
+      }
+    },
+    "R123_function_body_capture_before_rewrite": {
+      "rule": "Before replacing any function, the full original body must be printed verbatim in the session. A rewrite of unread code is a placeholder.",
+      "problem": "The simplified _poll_controls was written without ever showing the original body, risking silent deletion of logic.",
+      "detector": "python3 -c \"import sys; lines=open(sys.argv[1]).read().splitlines(); in_func=False; body=[]; for l in lines: \n if l.startswith('func _poll_controls'): in_func=True\n elif in_func and l.startswith('func '): break\n elif in_func: body.append(l)\n assert body, 'FAIL: function not found'; print('PASS')\"",
+      "verification": "Run on a file containing the function – prints body lines.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session audit summary",
+        "url": "",
+        "verbatim_quote": "Full function body must be captured and printed before any rewrite."
+      }
+    },
+    "R124_input_handler_inventory": {
+      "rule": "Before patching input handling, list all handlers (`_input`, `_poll_controls`, `_unhandled_input`). All must be patched or a gap must be declared.",
+      "problem": "Only _poll_controls was rewritten; _input was left untouched, causing double‑fire.",
+      "detector": "python3 -c \"import sys; src=open(sys.argv[1]).read(); handlers=['_input', '_poll_controls', '_unhandled_input']; missing=[h for h in handlers if h not in src]; assert not missing, f'FAIL: missing handlers {missing}'; print('PASS')\"",
+      "verification": "Run on a file containing all three – PASS. If any missing – FAIL.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session log – check 124",
+        "url": "",
+        "verbatim_quote": "Identify all matching input handlers, not only _poll_controls."
+      }
+    },
+    "R125_no_sed_or_awk": {
+      "rule": "No delivered command (including read‑only) may contain `sed` or `awk`. Use Python for all file operations.",
+      "problem": "A `sed` command was suggested to read a function, violating the Python‑only rule.",
+      "detector": "grep -nE '\\bsed\\b|\\bawk\\b' \"$1\" && echo 'FAIL: sed or awk found' || echo 'PASS'",
+      "verification": "Run on a script containing `sed` – FAIL. On a Python‑only script – PASS.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – user correction",
+        "url": "",
+        "verbatim_quote": "The rule is Python-only file edits — sed is prohibited."
+      }
+    },
+    "R126_post_patch_only_markers": {
+      "rule": "Read‑back verification must check for markers that are guaranteed to be absent in the original file (e.g., `reload_current_scene`). Using a marker present in the old file (e.g., `_reset_game`) gives a false positive.",
+      "problem": "`read_back_verify` checked for `_reset_game`, which existed in the old file, so it passed even when the patch didn't apply.",
+      "detector": "python3 -c \"import sys; src=open(sys.argv[1]).read(); old=open(sys.argv[2]).read(); marker='reload_current_scene'; assert marker in src and marker not in old, 'FAIL: marker invalid or already present'; print('PASS')\"",
+      "verification": "Run with patched file and backup – PASS if marker new. Otherwise FAIL.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session audit – tautological read-back",
+        "url": "",
+        "verbatim_quote": "Tautological read-back verification: read_back_verify checked for _reset_game — a string present in the old file too."
+      }
+    },
+    "R127_warning_must_exit": {
+      "rule": "After printing `WARNING`, the script must call `sys.exit(1)` within the same branch. A warning that continues to success banner is a false success.",
+      "problem": "Scripts printed 'WARNING: Could not find _poll_controls' and then continued to IMPLEMENTATION COMPLETE.",
+      "detector": "python3 -c \"import sys, ast; src=open(sys.argv[1]).read(); tree=ast.parse(src); found=False; for node in ast.walk(tree):\n if isinstance(node, ast.If):\n  for stmt in node.body:\n   if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call) and getattr(stmt.value.func, 'id', '') == 'print':\n    if 'WARNING' in (stmt.value.args[0].s if stmt.value.args else ''):\n     exit_stmt=any(isinstance(s, ast.Expr) and isinstance(s.value, ast.Call) and getattr(s.value.func, 'id', '')=='exit' for s in node.body)\n     assert exit_stmt, 'FAIL: WARNING without sys.exit'\nprint('PASS')\"",
+      "verification": "Run on a script with `WARNING` then `sys.exit(1)` – PASS. Without exit – FAIL.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – check 127",
+        "url": "",
+        "verbatim_quote": "WARNING must be followed by sys.exit(1), not 'continue to success banner'."
+      }
+    },
+    "R128_banner_gated_by_violations": {
+      "rule": "`# IMPLEMENTATION COMPLETE` must only be printed when a `violations` counter equals zero. An unconditional banner hides failures.",
+      "problem": "The broken scripts printed IMPLEMENTATION COMPLETE even though read‑back failed.",
+      "detector": "grep -q 'if VIOLATIONS == 0:' \"$1\" && grep -q 'print(\"# IMPLEMENTATION COMPLETE\")' \"$1\" && echo 'PASS' || echo 'FAIL'",
+      "verification": "Run on a script that gates the banner on `if violations == 0:` – PASS.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – check 128",
+        "url": "",
+        "verbatim_quote": "IMPLEMENTATION COMPLETE banner gated by a violations counter equal to zero."
+      }
+    },
+    "R129_indentation_detection": {
+      "rule": "Before inserting GDScript code, detect the file's indentation (tabs or spaces) and re‑indent the inserted block to match.",
+      "problem": "The patch scripts hardcoded 4‑space indentation; the real file used tabs, causing mixed indentation parse errors.",
+      "detector": "python3 -c \"import sys; src=open(sys.argv[1]).read(); tabs='\\t' in src[:1000]; spaces='    ' in src[:1000]; assert tabs != spaces, 'FAIL: ambiguous indentation'; print('PASS' if tabs else 'indent spaces')\"",
+      "verification": "Run on a file with consistent tabs – PASS. Mixed – FAIL.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – check 129",
+        "url": "",
+        "verbatim_quote": "Indentation detection (spaces vs tabs) before writing GDScript bodies."
+      }
+    },
+    "R130_scope_declaration": {
+      "rule": "Every delivery must list each known adjacent bug as `COVERED` or `NOT COVERED`. No silent omission.",
+      "problem": "The grey‑screen bug was present in the logs but never declared out of scope; the patch scripts ignored it entirely.",
+      "detector": "grep -qE 'SCOPE:.*COVERED|NOT COVERED' \"$1\" && echo 'PASS' || echo 'FAIL'",
+      "verification": "Run on a script that contains `SCOPE: loading-screen/screenshot bug -> NOT COVERED` – PASS.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – check 130",
+        "url": "",
+        "verbatim_quote": "Scope declaration – any visible adjacent bug must be marked NOT COVERED or fixed."
+      }
+    },
+    "R131_mock_path_fidelity": {
+      "rule": "A test mock must reproduce every code path proven by the real logs. If a log line shows an action firing, the mock must have that action defined.",
+      "problem": "The mock `_input` was empty, so the dual‑handler bug passed the test but failed in production.",
+      "detector": "python3 -c \"import sys; log=open(sys.argv[1]).read(); mock=open(sys.argv[2]).read(); proven=set(re.findall(r'INPUT: action=(\\w+)', log)); missing=proven - set(re.findall(r'is_action_(just_)?pressed\\(\"\\w+\"\\)', mock)); assert not missing, f'FAIL: missing paths {missing}'; print('PASS')\"",
+      "verification": "Run with log and mock – PASS if all actions in log are mocked.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – check 131",
+        "url": "",
+        "verbatim_quote": "Mock must reproduce all code paths proven by logs (fails if log‑proven path missing)."
+      }
+    },
+    "R132_external_wrapper_gate": {
+      "rule": "Every patch script must be run through `run_patch.py` wrapper that py_compiles and smoke‑runs it in a sandbox before touching real files.",
+      "problem": "The broken scripts were never compiled or executed before delivery; the wrapper would have blocked them.",
+      "detector": "bash -c 'if [ -f run_patch.py ] && grep -q \"py_compile\" run_patch.py; then echo PASS; else echo FAIL; fi'",
+      "verification": "Check that `run_patch.py` exists and contains `py_compile` – PASS.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – check 132",
+        "url": "",
+        "verbatim_quote": "External wrapper (run_patch.py) that py_compiles and smoke‑runs any patch before touching real files."
+      }
+    },
+    "R133_json_tool_validation": {
+      "rule": "After writing any JSON file (especially a skills JSON), the script must validate it with `python3 -m json.tool`. A malformed JSON must cause the script to exit 1.",
+      "problem": "The earlier `build_skills_0066.py` only checked that `json.tool` was available, but never ran it on the output file. A trailing comma or invalid Unicode would have passed silently.",
+      "detector": "python3 -m json.tool skills_0066.json > /dev/null 2>&1 && echo 'PASS' || echo 'FAIL'",
+      "verification": "Run `python3 -m json.tool` on a valid JSON – exits 0. On an invalid JSON – exits non‑zero.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Session – missing gate analysis",
+        "url": "",
+        "verbatim_quote": "The script does not validate the output JSON with json.tool – a missing gate."
+      }
+    }
+  }
+}

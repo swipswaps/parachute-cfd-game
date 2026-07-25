@@ -1,0 +1,75 @@
+{
+  "fix_session": "0211",
+  "root_cause_confirmed": {
+    "file": "godot_project/scripts/build_terrain.gd",
+    "line": 2048,
+    "error_verbatim": "Parse Error: Expected indented block after function declaration. at: GDScript::reload (res://scripts/build_terrain.gd:2048)",
+    "confirmed_from": "diagnose_line_2048.py output (documents 9/10/11) QUATERNARY section verbatim: '2048: func decl followed by non-indented line at 2050. func: func _exit_plane():  next: func _create_plane():'",
+    "hypothesis": "A — func _exit_plane(): has no body — confirmed",
+    "eliminated": ["B (wrong depth) — F09 conversions at 2051+ are TAB×1 which is correct depth-1", "C (blank lines) — blank lines at 2049 are permitted; the issue is the next func at 2050 at depth-0", "D (F09 stripped content) — TERTIARY: zero remaining SPACE-leading lines; F09 wrote correctly"],
+    "provenance": "0204.txt line 69: 'Optionally comment out broken line in add_input_actions.gd'. A prior automated mutation removed the body of _exit_plane() when removing the _on_exit_trigger_body_entered signal connection.",
+    "false_oracle_instance": 4,
+    "gdparse_version": "4.5.0 PASS (pre-flight 0210 output)",
+    "godot_version": "4.6.3 FAIL"
+  },
+  "check_competing_answers": {
+    "0231_txt_assessment": {
+      "root_cause_correct": true,
+      "evidence_citation": "0231 correctly identified 'func _exit_plane(): followed by func _create_plane():' as empty body",
+      "proposed_fix_correct": "pass insertion — correct",
+      "missed": "Asked for 'nl -ba ... | sed' output AFTER the diagnostic already contained it verbatim — unnecessary extra diagnostic step",
+      "rule_id_collision": "Named it VR006 but VR006 is already null_node_add_child in our schema — should be VR007"
+    },
+    "0232_txt_assessment": {
+      "content": "Duplicate of diagnostic output — no additional analysis"
+    },
+    "0233_txt_assessment": {
+      "root_cause_correct": true,
+      "insert_pass_implementation": "Has scope bug in indent calculation for nested funcs — uses indent from containing scope, but for top-level funcs (indent=0) produces '\\tpass' which IS correct. Works for this specific case.",
+      "missed": "Does not handle ALL empty func bodies in one pass (processes only one func); our implementation processes all in reverse-index order"
+    }
+  },
+  "new_rule": {
+    "rule_id": "VR007",
+    "category": "parser",
+    "title": "empty_function_body",
+    "description": "GDScript 4 parser requires every func declaration to have at least one indented statement (or 'pass'). Empty body — func f(): immediately followed by another func — causes 'Expected indented block after function declaration'. The error is reported AT THE NEXT FUNC declaration, not at the empty one.",
+    "godot_version": "4.6.3",
+    "gdparse_version_misses": "4.5.0",
+    "false_oracle_instance": 4,
+    "severity": "critical",
+    "fix_strategy": "insert_pass_in_empty_body — insert '\\tpass' after func declaration; process all empty funcs in reverse-line-number order to avoid index shifting",
+    "detector_function": "detect_empty_function_body(lines) — yields (lineno, func_name, reason) for each empty func; skips blank lines AND comment-only lines between func and body",
+    "sources": [
+      {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#functions"},
+      {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#keywords", "note": "pass keyword"},
+      {"tier": 4, "url": "https://github.com/godotengine/godot/blob/master/modules/gdscript/gdscript_parser.cpp", "note": "parse_suite() requires INDENT token"},
+      {"tier": "local_log", "url": "diagnose_line_2048.py output doc 9", "quote": "QUATERNARY: 2048: func decl followed by non-indented line at 2050"}
+    ]
+  },
+  "fix": {
+    "fix_id": "F10",
+    "rule_id": "VR007",
+    "file": "godot_project/scripts/build_terrain.gd",
+    "target_line": 2048,
+    "target_func": "_exit_plane",
+    "action": "insert '\\tpass' after line 2048 (func _exit_plane():)",
+    "scope": "ALL empty func bodies in file — fix in reverse line order to avoid index shifting",
+    "idempotence": "scan for existing 'pass' in 1-3 lines after each empty func before inserting",
+    "status": "pending — run generate_fix_0211.py"
+  },
+  "confirmed_progress": {
+    "VR001_F09": "RESOLVED — 44 SPACE→TAB, zero remaining space-leading lines (TERTIARY: OK)",
+    "VR002_F03b": "RESOLVED — class_name param renamed (0208)",
+    "VR003_F02b": "RESOLVED — f-string converted (0208)",
+    "VR004_F01": "RESOLVED — find_child args reduced (0207)",
+    "VR005_F05": "RESOLVED — bounds guard applied (idempotent 0207)",
+    "VR006_F04": "RESOLVED — null add_child reverted (idempotent 0207)",
+    "VR007_F10": "PENDING — generate_fix_0211.py"
+  },
+  "next_actions": [
+    "Chunk 1 (IMMEDIATE): python3 generate_fix_0211.py — paste complete output",
+    "Chunk 2: convergence query — confirm VR007 B=PASS",
+    "Chunk 3: if game launches (screenshot shows window content, not grey), proceed to runtime debugging"
+  ]
+}

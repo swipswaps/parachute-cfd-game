@@ -1,0 +1,64 @@
+@tool
+extends Node
+# Test script: logs game state to a local file (./game_state.log)
+var log_path = "game_state.log"
+
+
+func _ready():
+	var args = OS.get_cmdline_args()
+	var run_id = 0
+	for i in range(args.size() - 1):
+		if args[i] == "--run-id":
+			run_id = int(args[i + 1])
+			break
+
+	# Wait for game to be ready
+	await get_tree().create_timer(3.0).timeout
+
+	var main = get_node("/root/Main")
+	if not main:
+		print("ERROR: Main node not found")
+		get_tree().quit()
+		return
+
+	var state = main.game_state if main.has_method("get") and main.get("game_state") != null else -1
+	var altitude = main.altitude if main.has_method("get") and main.get("altitude") != null else 0.0
+
+	var file = FileAccess.open(log_path, FileAccess.WRITE)
+	if not file:
+		print("ERROR: Could not open log file for writing")
+		get_tree().quit()
+		return
+
+	file.store_line("run_id=" + str(run_id))
+	file.store_line("initial_state=" + str(state))
+	file.store_line("initial_altitude=" + str(altitude))
+	file.close()
+
+	# Press SPACE to deploy
+	Input.action_press("ui_accept")
+	await get_tree().create_timer(0.5).timeout
+	Input.action_release("ui_accept")
+	await get_tree().create_timer(1.0).timeout
+
+	state = main.game_state if main.has_method("get") and main.get("game_state") != null else -1
+	altitude = main.altitude if main.has_method("get") and main.get("altitude") != null else 0.0
+
+	file = FileAccess.open(log_path, FileAccess.READ_WRITE)
+	if file:
+		file.seek_end()
+		file.store_line("after_state=" + str(state))
+		file.store_line("after_altitude=" + str(altitude))
+		file.close()
+	else:
+		print("ERROR: Could not append to log file")
+
+	# Take screenshot
+	var viewport = get_viewport()
+	var img = viewport.get_texture().get_image()
+	var ts = Time.get_datetime_string_from_system().replace(":", "").replace("-", "")
+	var path = "user://screenshots/test_" + ts + ".png"
+	img.save_png(path)
+	print("[TEST] Screenshot saved: ", path)
+
+	get_tree().quit()

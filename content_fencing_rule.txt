@@ -1,0 +1,62 @@
+## CONTENT FENCING / SOURCE ISOLATION
+
+The rules file must contain **only** the active rules sections and their explanatory text.  
+All other text – including the user's request phrasing, diagnostic logs, command output, or any other ephemeral conversation content – is **never** to be copied into the rules file.
+
+### Principles
+
+1. **Input/Output Isolation**  
+   The assistant must treat the user's request text as ephemeral instructions to be acted upon, **not** as content to be persisted. Only material that explicitly belongs to the rule corpus (original sections + approved new sections) may appear in the final file.
+
+2. **Structured Content Validation**  
+   Before finalizing any update to the rules file, the assistant must parse the generated content and verify that it consists **solely** of recognized section headers (`## ...`) and their associated body text. Any orphaned text not under a section header must be removed.
+
+3. **Provenance Filtering**  
+   When assembling an updated file, the assistant must start from the original file's content verbatim, then insert new sections at the designated locations – and **must never** merge in text that originated outside the original file (e.g., from the user's prompt, logs, or diagnostic output).
+
+4. **Final Sanity Check**  
+   After generating the file, the assistant must perform a diff against the original file and explicitly confirm that the only changes are the intended additions (new sections). Any unexpected differences must be flagged and corrected before delivery.
+
+### Implementation Example
+
+    # WHAT: validate that a generated rules file contains only valid sections
+    # WHY: prevents accidental leakage of user request text, logs, or other ephemera
+    def validate_rules_file(content: str, original_content: str, allowed_new_sections: list[str]) -> dict:
+        lines = content.splitlines()
+        sections = [line.strip() for line in lines if line.strip().startswith("## ")]
+        
+        # 1. Every line must belong to a section or be a recognized subsection
+        #    (e.g., code blocks, blockquotes, lists, indented text are allowed inside sections)
+        #    Orphaned paragraphs (text not under any section header) are forbidden.
+        
+        in_section = False
+        orphaned_lines = []
+        for i, line in enumerate(lines):
+            if line.strip().startswith("## "):
+                in_section = True
+                continue
+            if in_section and line.strip() == "":
+                continue  # blank lines inside sections are fine
+            if not in_section and line.strip():
+                orphaned_lines.append((i+1, line.strip()))
+        
+        if orphaned_lines:
+            return {
+                "valid": False,
+                "reason": f"Orphaned text found outside any section header at lines: {[ln for ln, _ in orphaned_lines]}"
+            }
+        
+        # 2. Verify that the only new sections are the explicitly allowed ones
+        original_sections = [line.strip() for line in original_content.splitlines() if line.strip().startswith("## ")]
+        new_sections = [s for s in sections if s not in original_sections]
+        unexpected = [s for s in new_sections if s not in allowed_new_sections]
+        if unexpected:
+            return {"valid": False, "reason": f"Unexpected new sections: {unexpected}"}
+        
+        # 3. Confirm that no original content was removed (we can check length or hash, but a simple
+        #    structural check is enough for most cases)
+        missing_originals = [s for s in original_sections if s not in sections]
+        if missing_originals:
+            return {"valid": False, "reason": f"Original sections removed: {missing_originals}"}
+        
+        return {"valid": True, "reason": "File structure is clean – only intended additions present."}

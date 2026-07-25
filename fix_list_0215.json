@@ -1,0 +1,237 @@
+{
+  "schema_version": "6.0",
+  "fix_session": "0215",
+  "project": "parachute-cfd-game / Parachute Landing Pattern v314",
+  "status": "GAME_RUNNING — full flight loop confirmed (document 14 verbatim)",
+
+  "schema_v6_additions": {
+    "new_tables": {
+      "recovery_graph": {
+        "purpose": "Captures causal fault masking — which rule's fix exposed which subsequent rule. Encodes the compiler pipeline progression as a directed graph.",
+        "columns": ["id", "session_id", "parent_rule_id", "child_rule_id", "exposed_at_session", "masked_until_session", "notes"],
+        "cs_principle": "Avizienis_2004 — error propagation; fault masking; Aho_2006_Ch1 — compiler phases expose downstream errors only when upstream phases succeed",
+        "source_tier2": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html",
+        "confirmed_instances": [
+          {"parent": "VR001", "child": "VR007", "notes": "Indent error at :303 masked empty-func error at :2048"},
+          {"parent": "VR007", "child": "VR008", "notes": "Empty-func error at :2048 masked undefined _log() at :2052"},
+          {"parent": "VR008", "child": "VR009", "notes": "_log() error at :2052 masked stale identifier at :2090 (both in _create_plane region)"}
+        ]
+      },
+      "schema_audit_log": {
+        "purpose": "Records every migrate_schema() call with before/after table list. Detects schema drift between sessions.",
+        "columns": ["id", "session_id", "tables_before", "tables_after", "columns_changed", "audited_at"],
+        "cs_principle": "Gray_Reuter_1992 — WAL: the schema itself must be logged, not just data mutations",
+        "source_tier2": "https://www.sqlite.org/pragma.html#pragma_table_info"
+      }
+    },
+    "new_constraint": {
+      "required_tables_ok": {
+        "what": "Function that ASSERTS all required tables exist before any fix runs. FATAL if any missing.",
+        "why": "Silent wrong results are worse than crashes. If gdscript_version_rules is absent, every rule records PASS — false convergence. If sessions is absent, first INSERT crashes mid-run with no DB record of what was attempted.",
+        "tables_checked": ["sessions", "mutations", "gdscript_rule_test_results", "gdscript_version_rules", "resource_contention", "rule_sources", "recovery_graph"],
+        "source_tier2": "https://docs.python.org/3/library/sqlite3.html"
+      }
+    }
+  },
+
+  "rules": [
+    {
+      "rule_id": "VR001",
+      "category": "lexer",
+      "phase": "lexical_analysis",
+      "title": "indent_mode_lock",
+      "description": "GDScript 4 lexer locks on first indented char (tab or space). Mixed indent triggers ERR_PARSE_ERROR. gdparse 4.5.0 does not implement mode-lock — confirmed false oracle.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": "4.5.0",
+      "false_oracle_instances": 3,
+      "error_message_pattern": "%Used % character for indentation instead of%",
+      "status_by_file": {
+        "build_terrain.gd": "RESOLVED (F09, 44 conversions, session 3)",
+        "plane.gd": "F09b applied by 0213 before crash. 0214 idempotence gate will confirm.",
+        "pip_draggable.gd": "F09c PENDING — tab-pass at :11 (F10b Rule 19 violation)",
+        "pip_draggable_v2.gd": "UNKNOWN — F10b inserted tab-pass into possibly space-dominant file. Not in 0214 scope."
+      },
+      "recovery_graph_parent_of": ["VR007"],
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html#indentation"},
+        {"tier": 4, "url": "https://github.com/godotengine/godot/blob/master/modules/gdscript/gdscript_tokenizer.cpp", "note": "indent_char mismatch ~line 573"},
+        {"tier": "local_log", "url": "godot_run_0208.log", "quote": "Parse Error: Used space character for indentation instead of tab as used before in the file. at: build_terrain.gd:303"},
+        {"tier": "local_log", "url": "document 14 verbatim", "quote": "Parse Error: Used space character at plane.gd:5 and tab at pip_draggable.gd:11"}
+      ]
+    },
+    {
+      "rule_id": "VR002",
+      "category": "parser",
+      "phase": "lexical_analysis",
+      "title": "reserved_keyword_as_parameter",
+      "description": "class_name is a reserved keyword in Godot 4. Lexer emits KEYWORD not NAME in parameter position.",
+      "status": "RESOLVED (F03b, session 2 — 0208)",
+      "gdparse_version_misses": "4.5.0",
+      "recovery_graph_parent_of": [],
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/classes/class_object.html#class-object-property-class-name"}
+      ]
+    },
+    {
+      "rule_id": "VR003",
+      "category": "parser",
+      "phase": "lexical_analysis",
+      "title": "python_fstring_rejection",
+      "description": "Python f-strings not valid GDScript. NAME('f') + REGULAR_STRING matches no GDScript production.",
+      "status": "RESOLVED (F02b, session 2 — 0208)",
+      "gdparse_version_misses": "4.5.0",
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_format_string.html"}
+      ]
+    },
+    {
+      "rule_id": "VR004",
+      "category": "parser",
+      "phase": "syntactic_analysis",
+      "title": "find_child_max_3_args",
+      "description": "Godot 4 Node.find_child() takes max 3 args. Godot 3 had 4.",
+      "status": "RESOLVED (F01, session 1 — 0207)",
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-find-child"}
+      ]
+    },
+    {
+      "rule_id": "VR005",
+      "category": "runtime",
+      "phase": "runtime",
+      "title": "array_bounds_hud_labels",
+      "description": "Array index 7 on 7-element array. Off-by-one fires at 60Hz.",
+      "status": "RESOLVED (F05 idempotent)",
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-size"}
+      ]
+    },
+    {
+      "rule_id": "VR006",
+      "category": "runtime",
+      "phase": "runtime",
+      "title": "null_node_add_child",
+      "description": "add_child() called on null value. Cascading failure: null plane -> null add_child -> HUD crash.",
+      "status": "RESOLVED (F04 idempotent)",
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child"}
+      ]
+    },
+    {
+      "rule_id": "VR007",
+      "category": "parser",
+      "phase": "syntactic_analysis",
+      "title": "empty_function_body",
+      "description": "func declaration with no indented body. gdparse 4.5.0 accepts empty bodies — false oracle #4.",
+      "status": "RESOLVED (F10 build_terrain.gd:2048, F10b all 10 remaining files — session 4/5)",
+      "gdparse_version_misses": "4.5.0",
+      "recovery_graph_child_of": "VR001",
+      "recovery_graph_parent_of": ["VR008"],
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#functions"},
+        {"tier": 4, "url": "https://github.com/godotengine/godot/blob/master/modules/gdscript/gdscript_parser.cpp"}
+      ]
+    },
+    {
+      "rule_id": "VR008",
+      "category": "symbol_resolution",
+      "phase": "semantic_analysis",
+      "title": "undefined_method_call",
+      "description": "_log() called in _create_plane() (lines 2052/2063/2065) but never declared in build_terrain.gd. GDScript resolves method names at parse time.",
+      "status": "RESOLVED (F11 — inject func _log() after extends clause, session 5)",
+      "recovery_graph_child_of": "VR007",
+      "recovery_graph_parent_of": [],
+      "sources": [
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#functions"},
+        {"tier": "local_log", "url": "document 13 verbatim", "quote": "Parse Error: Function _log() not found in base self. at: build_terrain.gd:2052"}
+      ]
+    },
+    {
+      "rule_id": "VR009",
+      "category": "symbol_resolution",
+      "phase": "semantic_analysis",
+      "title": "stale_identifier_reference",
+      "description": "_on_exit_trigger_body_entered referenced at :2090 but removed by prior mutation (0204 session). Symbol table lookup fails at parse time.",
+      "status": "RESOLVED (F12 — comment stale ref at :2099 after F11 shifted line numbers, session 5)",
+      "recovery_graph_child_of": "VR007",
+      "sources": [
+        {"tier": "local_log", "url": "0204.txt line 56 verbatim", "quote": "Optionally comment out broken _on_exit_trigger_body_entered line"},
+        {"tier": 2, "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#identifiers"}
+      ]
+    }
+  ],
+
+  "recovery_graph_edges": [
+    {"parent": "VR001", "child": "VR007", "masked_until": "session_3", "notes": "indent error at :303 caused parse abort before :2048 was reached"},
+    {"parent": "VR007", "child": "VR008", "masked_until": "session_4", "notes": "empty func at :2048 caused abort before _create_plane body at :2052 was parsed"},
+    {"parent": "VR007", "child": "VR009", "masked_until": "session_4", "notes": "same abort also masked :2090 stale identifier in same _create_plane region"}
+  ],
+
+  "open_issues": [
+    {
+      "id": "OI001",
+      "severity": "non_blocking",
+      "file": "pip_draggable.gd",
+      "issue": "Tab-pass at :11 in space-dominant file (F10b Rule 19 violation). F09c in 0214 will fix.",
+      "fix": "F09c in generate_fix_0214.py"
+    },
+    {
+      "id": "OI002",
+      "severity": "unknown",
+      "file": "pip_draggable_v2.gd",
+      "issue": "F10b inserted tab-pass at :6 — same Rule 19 class. Not in 0214 scope.",
+      "fix": "F09d needed in generate_fix_0215.py if confirmed broken in 0214 output"
+    },
+    {
+      "id": "OI003",
+      "severity": "audit_gap",
+      "component": "validator_results table",
+      "issue": "Never written by any fix script (sessions 1-6). gdparse PASS/FAIL results for each file are checked but not stored. False oracle history is incomplete.",
+      "fix": "Add safe_record_validator_result() after every gdparse_check() call"
+    },
+    {
+      "id": "OI004",
+      "severity": "audit_gap",
+      "component": "recovery_graph table",
+      "issue": "Table not yet created in parachute_mutations.db. The 3 confirmed causal edges have not been seeded.",
+      "fix": "Add recovery_graph CREATE TABLE and seed 3 edges in generate_fix_0215.py migrate section"
+    },
+    {
+      "id": "OI005",
+      "severity": "audit_gap",
+      "component": "schema_audit_log table",
+      "issue": "Schema changes across 6 sessions have no durable record. Cannot query what was added when.",
+      "fix": "Add schema_audit_log table and record before/after table list on every session open"
+    },
+    {
+      "id": "OI006",
+      "severity": "non_blocking",
+      "component": "stale screenshot path",
+      "issue": "ERROR: Resource file not found: user://screenshots/flight_20260618T100317.png — appears every launch. No rule entry, no DB record.",
+      "fix": "Add VR010: stale_resource_path rule; handle in _show_loading_screen or accept as known non-blocking"
+    }
+  ],
+
+  "database_integrity_checks": {
+    "required_before_any_fix": [
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='sessions'",
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='mutations'",
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='gdscript_rule_test_results'",
+      "SELECT COUNT(*) FROM gdscript_version_rules WHERE error_message_pattern IS NOT NULL -- must be > 0",
+      "SELECT rule_id FROM gdscript_version_rules WHERE rule_id IN ('VR001','VR007','VR008','VR009') -- all 4 must return rows"
+    ],
+    "what_happens_if_absent": {
+      "sessions": "FATAL CRASH — first INSERT raises OperationalError immediately",
+      "mutations": "CRASH in safe_record_mutation() when PRAGMA returns [] and INSERT generates empty column list",
+      "gdscript_rule_test_results": "SILENT SKIP — safe_record_rule_test() catches error and prints [WARN]",
+      "gdscript_version_rules_empty": "SILENT WRONG RESULT — all rules recorded PASS because matched={}"
+    }
+  },
+
+  "next_chunks": [
+    {"chunk": 1, "action": "python3 generate_fix_0214.py", "critical_outputs": ["[SKIP idempotent] plane.gd", "gdparse PASS: pip_draggable.gd", "[RECORDED] variant=B rule=VR001 result=PASS", "rss_mb > 2"]},
+    {"chunk": 2, "action": "sqlite3 queries", "commands": ["SELECT .tables", "SELECT rule_id, title FROM gdscript_version_rules ORDER BY rule_id", "SELECT r.rule_id, r.variant, r.result FROM gdscript_rule_test_results r JOIN sessions s ON s.id=r.session_id ORDER BY r.rule_id, r.variant"]},
+    {"chunk": 3, "action": "generate_fix_0215.py: add recovery_graph table + seed 3 edges; add validator_results writes; add pip_draggable_v2.gd to F09d; add required_tables_ok() guard at startup"},
+    {"chunk": 4, "action": "confirm pip_draggable_v2.gd status from 0214 game output — appears in error log?"}
+  ]
+}

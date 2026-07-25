@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# run_game_debug.sh – launch with pre‑flight and post‑run context extraction.
+# R055, R106, R107, R108, R140–R143, R146, R147.
+
+set -uo pipefail
+
+# ── LOCATE PROJECT ───────────────────────────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/godot_project/project.godot" ]]; then
+    PROJECT_DIR="$SCRIPT_DIR/godot_project"
+elif [[ -f "$SCRIPT_DIR/project.godot" ]]; then
+    PROJECT_DIR="$SCRIPT_DIR"
+else
+    echo "[ERROR] Cannot find project.godot in $SCRIPT_DIR or $SCRIPT_DIR/godot_project"
+    exit 1
+fi
+echo "[INFO] Project: $PROJECT_DIR"
+
+# ── PRE-FLIGHT CHECK ──────────────────────────────────────────────────────
+echo "[INFO] Running pre-flight check..."
+python3 "$SCRIPT_DIR/preflight_with_context.py" || {
+    echo "[ERROR] Pre-flight check failed. Fix the issues above."
+    exit 1
+}
+echo "[INFO] Pre-flight check passed."
+
+# ── LOCATE GODOT BINARY ────────────────────────────────────────────────────
+find_godot() {
+    if [[ -n "${GODOT_BIN:-}" ]] && command -v "$GODOT_BIN" &>/dev/null; then
+        echo "$GODOT_BIN"; return 0
+    fi
+    local candidates=(
+        "godot4" "godot"
+        "/usr/local/bin/godot4" "/usr/bin/godot4"
+        "$HOME/.local/bin/godot4"
+        "flatpak run org.godotengine.Godot"
+    )
+    for c in "${candidates[@]}"; do
+        if command -v "$c" &>/dev/null 2>&1 || [[ -x "$c" ]]; then
+            echo "$c"; return 0
+        fi
+    done
+    return 1
+}
+
+GODOT=$(find_godot) || {
+    echo "[ERROR] Godot 4 binary not found."
+    echo "        Set GODOT_BIN=/path/to/godot4 or install Godot 4."
+    exit 1
+}
+echo "[INFO] Godot binary: $GODOT"
+
+# ── LOG FILE ─────────────────────────────────────────────────────────────────
+LOGFILE="/tmp/godot_run_$(date +%Y%m%d_%H%M%S).log"
+echo "[INFO] Full log: $LOGFILE"
+echo "[INFO] Launching game..."
+echo ""
+echo "=========================================="
+echo "  CONTROLS (after window gets focus):"
+echo "  SPACE       = deploy canopy (~4000 ft)"
+  F           = exit plane
+echo "  Q / E       = turn left / right"
+echo "  C           = cycle camera"
+echo "  H           = toggle HUD"
+echo "  Tab         = flight check"
+echo "  X           = cutaway"
+echo "  V           = reserve"
+echo "  F           = flare"
+echo "  R           = restart"
+echo "  Escape      = pause"
+echo "=========================================="
+echo ""
+
+# ── LAUNCH GODOT ────────────────────────────────────────────────────────────
+$GODOT --path "$PROJECT_DIR" 2>&1 | tee "$LOGFILE" &
+GODOT_PID=$!
+echo "[INFO] Godot PID: $GODOT_PID"
+
+# ── AUTO-FOCUS (xdotool) ──────────────────────────────────────────────────
+if command -v xdotool &>/dev/null; then
+    echo "[INFO] Waiting for Godot window..."
+    FOCUSED=false
+    for i in $(seq 1 16); do
+        sleep 0.5
+        WID=$(xdotool search --name "Parachute\|Godot\|parachute" 2>/dev/null | head -1)
+        if [[ -n "$WID" ]]; then
+            xdotool windowfocus --sync "$WID" 2>/dev/null && {
+                echo "[INFO] Window focused (ID=$WID) — press SPACE to deploy"
+                FOCUSED=true
+                break
+            }
+        fi
+    done
+    if ! $FOCUSED; then
+        echo "[WARN] Could not auto-focus window after 8s"
+        echo "[WARN] Click the game window manually, then press SPACE"
+    fi
+fi
+
+# ── WAIT FOR GAME TO EXIT ──────────────────────────────────────────────────
+wait $GODOT_PID 2>/dev/null
+
+# ── POST-RUN ERROR CONTEXT EXTRACTION ────────────────────────────────────
+echo ""
+echo "[INFO] Checking for runtime errors in the log..."
+python3 "$SCRIPT_DIR/error_context_extractor.py"
+
+echo ""
+echo "[INFO] Game exited. Full log: $LOGFILE"
+echo "[INFO] Last 20 diagnostic lines:"
+grep -E "deploy|OPENING|DIAGNOSIS|INPUT|turn|flare|cutaway|reserve|ERROR|POLL: [a-z]" \
+    "$LOGFILE" | tail -20

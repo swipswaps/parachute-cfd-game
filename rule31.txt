@@ -1,0 +1,35 @@
+## 31. TABS ONLY FOR INDENTATION (NO SPACES)
+
+All GDScript (and any other source file) MUST use the tab character (0x09)
+for leading indentation. Spaces are strictly forbidden for indentation.
+
+RATIONALE:
+- Godot's GDScript parser can be sensitive to mixed indentation.
+- Consistent tabs prevent "Used space character for indentation" errors.
+- The project has historically suffered from mixed indentation; this rule
+  codifies a permanent fix.
+
+ENFORCEMENT:
+1. Every `.gd` file must pass a check for leading spaces.
+2. A pre‑commit hook (or CI step) MUST scan all `.gd` files and reject any
+   line that starts with a space (except lines that are completely empty).
+3. `godot --check-only` MUST pass without indentation‑related parse errors.
+
+CODE VERIFICATION SCRIPT (to be run before commit):
+
+```bash
+check_indentation() {
+    local file="$1"
+    # Check for lines that start with spaces (not tabs)
+    if grep -q "^ " "$file"; then
+        echo "FAIL: $file contains leading spaces (must use tabs)."
+        return 1
+    fi
+    # Check for mixed indentation (tabs followed by spaces or vice versa)
+    if grep -q -E "^[[:space:]]+[ ]" "$file"; then
+        echo "FAIL: $file has mixed indentation (tabs and spaces on same line)."
+        return 1
+    fi
+    return 0
+}
+#YOU STILL OMITTED THE EOF!!

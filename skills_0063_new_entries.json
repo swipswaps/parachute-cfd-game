@@ -1,0 +1,31 @@
+{
+  "new_rules": {
+    "R024_recurrence_stop_and_diagnose": {
+      "rule": "When the same error string appears in /tmp/godot_run.log or /tmp/patch_error_history.json for the second or subsequent time, the LLM MUST stop proposing fixes and emit exactly: 'R024: this error has occurred N times. ONE diagnostic command follows. No fix.' Then give exactly one command whose output distinguishes the candidate root causes. The log_analyzer.py R024 TRIGGERED block is the mechanical enforcement. If R024 TRIGGERED appears in log_analyzer output, the next response must be a diagnostic only.",
+      "problem": "Session 0081 doc 3 verbatim: 'ImportError: cannot import name datetime from pathlib' appeared a THIRD time after R112 was written to prevent it. R024 was never invoked. The rule existed only in the system prompt as prose — no code gate enforced it. The log_analyzer R024 TRIGGERED block is now the gate.",
+      "detector": "python3 -c \"\nimport json; from pathlib import Path\nh = Path('/tmp/patch_error_history.json')\nif not h.exists(): print('R024 SKIP: no history'); exit(0)\nd = json.loads(h.read_text())\nfrom collections import Counter\nc = Counter(d['errors'])\nrep = [(e,n) for e,n in c.items() if n>=2]\nif rep:\n    print('R024 TRIGGERED:', rep[0][1], 'x', rep[0][0][:60]); exit(1)\nprint('R024 PASS: no recurring errors')\n\"",
+      "verification": "Detector exits 0 and prints 'R024 PASS'. If it exits 1 (R024 TRIGGERED), the next response must contain exactly one diagnostic command and no fix attempt. Confirmed need: session 0081 doc 3 verbatim: 'ImportError: cannot import name datetime from pathlib' — third recurrence, R024 never invoked.",
+      "citation": {
+        "tier": "Tier 1",
+        "source": "System prompt Rule 24 — WHEN THE SAME SYMPTOM PERSISTS AFTER TWO FIXES",
+        "url": "",
+        "verbatim_quote": "Do not propose fix N+1 for a symptom that has persisted through fixes N-1 and N without first running a diagnostic that confirms the root cause."
+      }
+    },
+    "R118_log_analyzer_must_scan_gdparse_and_verify_tee": {
+      "rule": "log_analyzer.py must do all of the following before printing IMPLEMENTATION COMPLETE: (1) scan /tmp/gdparse_output.log for error lines if the file exists; (2) verify 'tee /tmp/godot_run.log' is present in run_game.sh (R106 gate); (3) use history expiry slice before Counter() call (R115); (4) contain no dead imports — every imported name must appear in the function body. The AST detector below checks all four conditions.",
+      "problem": "Session 0081 doc 3 verbatim: 'Doesn\\'t scan gdparse output — only checks godot_run.log, not /tmp/gdparse_output.log'; 'Doesn\\'t check run_game.sh for tee — R106 gate not enforced'; 're imported but never used — dead import'. Three of four defects had no corresponding rule. R115 covered only the expiry defect.",
+      "detector": "python3 -c \"\nimport ast, sys; from pathlib import Path\nsrc = Path('/tmp/build_log_analyzer.py').read_text()\ntree = ast.parse(src)\nassert 'gdparse_output.log' in src, 'FAIL: no gdparse scan'\nassert 'tee /tmp/godot_run.log' in src, 'FAIL: no R106 tee check'\nimports=set()\nfor n in ast.walk(tree):\n    if isinstance(n,ast.Import):\n        for a in n.names: imports.add(a.asname or a.name.split('.')[0])\n    if isinstance(n,ast.ImportFrom):\n        for a in n.names: imports.add(a.asname or a.name)\nimport re\nused=set(re.findall(r'[a-zA-Z_][a-zA-Z0-9_]*',src))\ndead=imports-used-{'__main__'}\nassert not dead, f'FAIL dead imports: {dead}'\nprint('R118 PASS')\n\"",
+      "verification": "Detector prints 'R118 PASS'. All four conditions confirmed in log_analyzer source before run_game.sh invokes it.",
+      "citation": {
+        "tier": "Tier 2",
+        "source": "Python ast module — ast.walk()",
+        "url": "https://docs.python.org/3/library/ast.html#ast.walk",
+        "verbatim_quote": "ast.walk(node): Recursively yield all descendant nodes in the tree starting at node."
+      }
+    }
+  },
+  "new_techniques": [],
+  "new_search_ux_improvements": [],
+  "_note": "Structural issues in skills_0062.json to address manually: (1) R103 duplicate key — R103_tee_all_godot_output should be renumbered R119; (2) R093 and R094 missing from numbering sequence (gap between R092 and R095); (3) 12 rules have shell-only or comment-only detectors — acceptable as bash one-liners, not prose, per detector format check."
+}

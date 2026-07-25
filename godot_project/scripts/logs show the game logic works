@@ -1,0 +1,34 @@
+@tool
+extends SceneTree
+
+func _init():
+    print("[VERBATIM] Screenshot capture script started")
+    # Wait for the scene to fully load
+    await self.process_frame
+    await self.create_timer(3.0).timeout
+    
+    # Get the main viewport
+    var viewport = self.root.get_viewport()
+    var camera = viewport.get_camera_3d()
+    if camera:
+        print("[VERBATIM] Camera found: ", camera.name)
+        print("[VERBATIM] Camera current: ", camera.current)
+        print("[VERBATIM] Camera position: ", camera.global_position)
+        print("[VERBATIM] Camera rotation: ", camera.rotation)
+    else:
+        print("[VERBATIM] No active camera found!")
+    
+    # Take screenshot
+    var img = viewport.get_texture().get_image()
+    var timestamp = Time.get_datetime_string_from_system().replace(":", "-")
+    var path = "user://screenshot_" + timestamp + ".png"
+    img.save_png(path)
+    print("[VERBATIM] Screenshot saved to: ", path)
+    
+    # Also save to project folder for easy access
+    var proj_path = "res://screenshot_" + timestamp + ".png"
+    img.save_png(proj_path)
+    print("[VERBATIM] Also saved to: ", proj_path)
+    
+    print("[VERBATIM] Capture complete. Quitting.")
+    # self.quit()

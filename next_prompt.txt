@@ -1,0 +1,16 @@
+Verification summary:
+- All edits were applied (if in apply mode) or simulated (dry-run).
+- For each .gd file, gdparse baseline and regression were run.
+- Read-after-write sha256sum confirmed changes.
+- Backups are in the timestamped directory.
+
+To verify manually, run:
+  gdparse scripts/forensic_hud.gd
+  gdparse scripts/forensic_hud_0001.gd
+  gdparse scripts/InputManager.gd
+  gdparse addons/godot_aerodynamic_physics/utils/plugin_utils.gd
+  gdparse addons/godot_aerodynamic_physics/utils/pid.gd
+
+And check the diffs against backups in $BACKUP_DIR.
+
+Next steps: run the game and test F3 toggling and dragging.

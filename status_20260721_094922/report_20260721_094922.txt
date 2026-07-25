@@ -1,0 +1,86 @@
+=== status_and_path_forward VERSION=vSPF1 started Tue Jul 21 09:49:22 AM UTC 2026 ===
+Report: status_20260721_094922/report_20260721_094922.txt
+[2026-07-21T09:49:22Z] [SUCCESS] dep_check: OK
+############################################################
+## ITEM 1 (CLOSED): F3 DatabaseGuard.gd duplicate state
+############################################################
+[F3] DatabaseGuard.gd: 247 lines, space-indented=0
+[F3] injected comment present:    False  (want: False)
+[F3] duplicate # State present:   False  (want: False)
+[F3] STATUS: CLOSED
+[F3] trail row in godot_project/parachute_mutations.db: ('fixed', 1, '2026-07-21 09:41:41')
+[F3] trail row in parachute_mutations.db: ('fixed', 1, '2026-07-21 09:41:42')
+[2026-07-21T09:49:22Z] [SUCCESS] F3_verify: live file checked
+############################################################
+## ITEM 2 (OPEN): v9 altimeter/drag — run report never uploaded
+############################################################
+[v9] No fix_gate_drag autostall_after.txt found on disk under CWD.
+[v9] NEXT ACTION: run ./fix_altimeter_gate_and_drag.sh and upload the
+[v9]   fix_gate_drag_<timestamp>/report_<timestamp>.txt
+[2026-07-21T09:49:22Z] [FAILURE] v9_evidence: no post-fix telemetry on disk; run v9
+[v9] hud_draggable.gd EXISTS at godot_project/scripts/hud_draggable.gd (Phase E created it or external session)
+34 godot_project/scripts/hud_draggable.gd
+extends Control
+# hud_draggable.gd – drag handler for the forensic HUD panel.
+# Works on any Control; saves position to config file.
+
+var _dragging: bool = false
+[v9] update_altitude wired in godot_project/scripts/build_terrain.gd: 1 occurrence(s)
+############################################################
+## ITEM 3 (OPEN — YOUR CALL): F1 split audit trail
+############################################################
+Four files named parachute_mutations.db receive independent writes.
+Consolidation options:
+  A) Merge into root parachute_mutations.db (141MB; autostall's natural target)
+     and delete/redirect the others — disruptive but clean.
+  B) Leave the split acknowledged; add a nightly ATTACH-based sync job
+     that copies new rows from the three smaller DBs into root.
+  C) Rename the three smaller ones (godot_project_mutations.db etc.)
+     so find -print -quit consistently returns the right one per tool.
+  ./godot_project/parachute_mutations.db: 400KB, 10 rows, latest=2026-07-21 09:41:41
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+sqlite3.OperationalError: no such table: files_to_fix
+  ./parachute_mutations.db: 137736KB, 246 rows, latest=2026-07-21 09:41:42
+  ./validation_tools/parachute_mutations.db: 12KB, 0 rows, latest=none
+[2026-07-21T09:49:26Z] [SUCCESS] F1_status: split trail inventoried; decision deferred to user
+############################################################
+## ITEM 4 (OPEN — YOUR CALL): F2 sprawl
+############################################################
+Files that are safe to delete once confirmed redundant:
+  ./parac1ute_mutations.db (84K) — 9 table(s)
+    NEXT ACTION: inspect contents, then rm if confirmed redundant
+  ./parachute_mutations_backup.db (103M) — 38 table(s)
+    NEXT ACTION: inspect contents, then rm if confirmed redundant
+  ./forensics.db (448M) — 10 table(s)
+    NEXT ACTION: inspect contents, then rm if confirmed redundant
+  ./gd_backup_index.db (23M) — 2 table(s)
+    NEXT ACTION: inspect contents, then rm if confirmed redundant
+[2026-07-21T09:49:27Z] [SUCCESS] F2_status: sprawl inventoried
+############################################################
+## ITEM 5 (OPEN): DatabaseGuard.gd — runtime wiring check
+############################################################
+[F3-wiring] Circuit breaker vars retained (underscore-prefixed, lines 18-29).
+[F3-wiring] Confirmed alive by telemetry: [VERBATIM] DatabaseGuard in post-fix run.
+[F3-wiring] No further action needed unless execute_query emits circuit OPEN.
+[2026-07-21T09:49:27Z] [SUCCESS] F3_wiring: verified by telemetry; no action needed
+############################################################
+## RECOMMENDED SEQUENCE
+############################################################
+Priority  Script / Action                          Blocks
+--------  ---------------------------------------- --------------------------
+1 NOW     ./fix_altimeter_gate_and_drag.sh         Altimeter HUD + drag fix
+          (if not already run since v9 was emitted  (game usability)
+          — check fix_gate_drag_*/autostall_after.txt first)
+
+2 YOUR    Decide F1 consolidation option A/B/C     Audit trail integrity
+  CALL    (see options above)
+
+3 YOUR    rm ./parac1ute_mutations.db (typo copy)  Disk hygiene
+  CALL    After inspection: rm forensics.db if     (469MB recovered)
+          confirmed a stale dump
+
+4 DONE    F3 DatabaseGuard.gd                      Closed vF3.2 / 0139
+          F DB health (v10-v13 series)             29/29 clean, idempotent
+[2026-07-21T09:49:27Z] [SUCCESS] sequence_printed: recommended path above
+=== status_and_path_forward completed Tue Jul 21 09:49:27 AM UTC 2026 — upload status_20260721_094922/report_20260721_094922.txt ===

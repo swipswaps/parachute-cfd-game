@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://test_plane"]
+
+[ext_resource type="Material" path="res://assets/terrain/default_material.tres" id="1_mat"]
+[ext_resource type="ArrayMesh" path="res://assets/terrain/test_plane.obj" id="2_mesh"]
+
+[node name="Plane" type="MeshInstance3D"]
+	[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+	root_node = NodePath("..")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("2_mesh")
+material_override = ExtResource("1_mat")
+visible = true
+layers = 1

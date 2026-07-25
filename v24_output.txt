@@ -1,0 +1,247 @@
+
+======================================================================
+STEP 1: Search ALL .gd files for 'Camera' (creation, attachment)
+======================================================================
+  Found 63 camera references.
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/test_minimal.gd:6
+       4: func _init():
+       5: 	print("Test started")
+       6: 	var camera = Camera3D.new()
+       7: 	camera.current = true
+       8: 	var cube = MeshInstance3D.new()
+       9: 	cube.mesh = BoxMesh.new()
+      10: 	var mat = StandardMaterial3D.new()
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:113
+     111: 	# Source (Tier 2 — Node.find_children):
+     112: 	#   https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-find-children
+     113: 	var cam_results: Array = scene.find_children("*", "Camera3D", true, false)
+     114: 	if cam_results.is_empty():
+     115: 		print("[WARN] No Camera3D in editor scene (expected — runtime created).")
+     116: 		print("       Run game, check: [VERBATIM] Camera position: (x, y, z)")
+     117: 		print("       After FIX-C: offset should be (0, 4, 8) from character.")
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:115
+     113: 	var cam_results: Array = scene.find_children("*", "Camera3D", true, false)
+     114: 	if cam_results.is_empty():
+     115: 		print("[WARN] No Camera3D in editor scene (expected — runtime created).")
+     116: 		print("       Run game, check: [VERBATIM] Camera position: (x, y, z)")
+     117: 		print("       After FIX-C: offset should be (0, 4, 8) from character.")
+     118: 		warn_count += 1
+     119: 	else:
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:116
+     114: 	if cam_results.is_empty():
+     115: 		print("[WARN] No Camera3D in editor scene (expected — runtime created).")
+     116: 		print("       Run game, check: [VERBATIM] Camera position: (x, y, z)")
+     117: 		print("       After FIX-C: offset should be (0, 4, 8) from character.")
+     118: 		warn_count += 1
+     119: 	else:
+     120: 		var cam: Node = cam_results[0]
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:121
+     119: 	else:
+     120: 		var cam: Node = cam_results[0]
+     121: 		if cam is Camera3D:
+     122: 			print("[PASS] Camera3D: '%s' at %s" % [cam.name, cam.global_position])
+     123: 			pass_count += 1
+     124: 			if character != null and character is Node3D:
+     125: 				var dist: float = cam.global_position.distance_to(character.global_position)
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:122
+     120: 		var cam: Node = cam_results[0]
+     121: 		if cam is Camera3D:
+     122: 			print("[PASS] Camera3D: '%s' at %s" % [cam.name, cam.global_position])
+     123: 			pass_count += 1
+     124: 			if character != null and character is Node3D:
+     125: 				var dist: float = cam.global_position.distance_to(character.global_position)
+     126: 				print("[INFO] Camera-character distance: %.1f units" % dist)
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:126
+     124: 			if character != null and character is Node3D:
+     125: 				var dist: float = cam.global_position.distance_to(character.global_position)
+     126: 				print("[INFO] Camera-character distance: %.1f units" % dist)
+     127: 				if dist < 0.5:
+     128: 					print("[FAIL] Camera inside character — will render nothing.")
+     129: 					fail_count += 1
+     130: 				else:
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:128
+     126: 				print("[INFO] Camera-character distance: %.1f units" % dist)
+     127: 				if dist < 0.5:
+     128: 					print("[FAIL] Camera inside character — will render nothing.")
+     129: 					fail_count += 1
+     130: 				else:
+     131: 					print("[PASS] Camera distance OK (%.1f units)." % dist)
+     132: 					pass_count += 1
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/validate_scene.gd:131
+     129: 					fail_count += 1
+     130: 				else:
+     131: 					print("[PASS] Camera distance OK (%.1f units)." % dist)
+     132: 					pass_count += 1
+     133: 
+     134: 	# ------------------------------------------------------------------
+     135: 	# CHECK 3: InputMap actions
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/debug_components_editor.gd:19
+      17: 	var camera = find_camera(root)
+      18: 	if camera:
+      19: 		print("--- Camera3D ---")
+      20: 		print("  Name: ", camera.name)
+      21: 		print("  Global position: ", camera.global_position)
+      22: 		print("  Rotation (deg): ", rad_to_deg(camera.rotation.x), ", ", rad_to_deg(camera.rotation.y), ", ", rad_to_deg(camera.rotation.z))
+      23: 		print("  FOV: ", camera.fov)
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/debug_components_editor.gd:27
+      25: 		print("  Current: ", camera.current)
+      26: 	else:
+      27: 		print("ERROR: No Camera3D found")
+      28: 		# 2. WorldEnvironment
+      29: 	var world_env = find_node_by_class(root, "WorldEnvironment")
+      30: 	if world_env and world_env.environment:
+      31: 		var env = world_env.environment
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/debug_components_editor.gd:106
+     104: 
+     105: # Helper functions
+     106: func find_camera(node: Node) -> Camera3D:
+     107: 	if node is Camera3D and node.current:
+     108: 		return node
+     109: 	for child in node.get_children():
+     110: 		var found = find_camera(child)
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/gd_repair/debug_components_editor.gd:107
+     105: # Helper functions
+     106: func find_camera(node: Node) -> Camera3D:
+     107: 	if node is Camera3D and node.current:
+     108: 		return node
+     109: 	for child in node.get_children():
+     110: 		var found = find_camera(child)
+     111: 		if found:
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/debug_components.gd:14
+      12: 	var camera = Engine.get_main_loop().root.get_viewport().get_camera_3d()
+      13: 	if camera:
+      14: 		print("--- Camera ---")
+      15: 		print("  Position: ", camera.global_position)
+      16: 		print(
+      17: 			"  Rotation (deg): ",
+      18: 			rad_to_deg(camera.rotation.x),
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd:129
+     127: 	#       grey-screen session.
+     128: 	# Source: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+     129: 	var camera: Camera3D = scene.find_child("*", "Camera3D", true, false) as Camera3D
+     130: 	if camera == null:
+     131: 		print("[WARN] No Camera3D found in editor scene.")
+     132: 		print("       Camera may be instantiated at runtime. Check logs for:")
+     133: 		print("       '[VERBATIM] Camera position:' after FIX-22 runs.")
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd:131
+     129: 	var camera: Camera3D = scene.find_child("*", "Camera3D", true, false) as Camera3D
+     130: 	if camera == null:
+     131: 		print("[WARN] No Camera3D found in editor scene.")
+     132: 		print("       Camera may be instantiated at runtime. Check logs for:")
+     133: 		print("       '[VERBATIM] Camera position:' after FIX-22 runs.")
+     134: 		warn_count += 1
+     135: 	else:
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd:132
+     130: 	if camera == null:
+     131: 		print("[WARN] No Camera3D found in editor scene.")
+     132: 		print("       Camera may be instantiated at runtime. Check logs for:")
+     133: 		print("       '[VERBATIM] Camera position:' after FIX-22 runs.")
+     134: 		warn_count += 1
+     135: 	else:
+     136: 		var cam_pos: Vector3 = camera.global_position
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd:133
+     131: 		print("[WARN] No Camera3D found in editor scene.")
+     132: 		print("       Camera may be instantiated at runtime. Check logs for:")
+     133: 		print("       '[VERBATIM] Camera position:' after FIX-22 runs.")
+     134: 		warn_count += 1
+     135: 	else:
+     136: 		var cam_pos: Vector3 = camera.global_position
+     137: 		print("[PASS] Camera3D found: %s at %s" % [camera.name, cam_pos])
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd:137
+     135: 	else:
+     136: 		var cam_pos: Vector3 = camera.global_position
+     137: 		print("[PASS] Camera3D found: %s at %s" % [camera.name, cam_pos])
+     138: 		pass_count += 1
+     139: 		if character != null and character is Node3D:
+     140: 			var dist: float = cam_pos.distance_to(character.global_position)
+     141: 			print("[INFO] Camera distance to character: %.1f units" % dist)
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd:141
+     139: 		if character != null and character is Node3D:
+     140: 			var dist: float = cam_pos.distance_to(character.global_position)
+     141: 			print("[INFO] Camera distance to character: %.1f units" % dist)
+     142: 			if dist < 0.1:
+     143: 				print("[FAIL] Camera is at the same position as character -- will see nothing.")
+     144: 				fail_count += 1
+     145: 			elif dist > 500.0:
+  ... 43 more matches not shown
+
+======================================================================
+STEP 2: List backups of build_terrain.gd
+======================================================================
+  Found 21 backup(s) of build_terrain.gd:
+    2026-07-01T17:07:45.922603  build_terrain.gd.backup
+    2026-07-01T12:35:00.924152  build_terrain.gd.bak
+    2026-06-30T23:57:17.221040  build_terrain.gd.20260701_083444.bak
+    2026-06-30T23:56:05.946992  build_terrain.gd.20260630_235717.bak
+    2026-06-30T23:52:48.918080  build_terrain.gd.20260630_235605.bak
+    2026-06-30T23:50:25.320326  build_terrain.gd.20260630_235248.bak
+    2026-06-30T23:40:32.723976  build_terrain.gd.20260630_235025.bak
+    2026-06-30T23:38:37.652774  build_terrain.gd.20260630_234032.bak
+    2026-06-30T23:36:22.620828  build_terrain.gd.20260630_233837.bak
+    2026-06-30T23:34:30.402629  build_terrain.gd.20260630_233622.bak
+
+======================================================================
+STEP 3: Diff current build_terrain.gd vs most recent backup before 2026-07-06
+======================================================================
+  Comparing with: build_terrain.gd.backup
+  Difference at line 4:
+    Current: 
+    Backup:  extends Node
+  Difference at line 5:
+    Current: class_name BuildTerrain
+    Backup:  # ------------------------------------------------------------------
+  Difference at line 6:
+    Current: extends Node
+    Backup:  # Required string (R064)
+  Difference at line 7:
+    Current: 
+    Backup:  # ------------------------------------------------------------------
+  Difference at line 8:
+    Current: 
+    Backup:  const LegLabel = "LEG"
+  Difference at line 13:
+    Current: 
+    Backup:  enum GameState {
+  Difference at line 14:
+    Current: enum GameState {
+    Backup:  	FREEFALL,
+  Difference at line 15:
+    Current: 	FREEFALL,
+    Backup:  	OPENING_ANIM,
+  Difference at line 16:
+    Current: 	OPENING_ANIM,
+    Backup:  	DIAGNOSIS,
+  Difference at line 17:
+    Current: 	DIAGNOSIS,
+    Backup:  	LANDED,
+  ... more differences not shown
+
+======================================================================
+VERDICT
+======================================================================
+  The camera references above show where the camera is created.
+  If no 'Camera' code is found in the scripts, the camera may be
+  defined in the scene (main.tscn) but not connected.
+  The backups listed above can be used to restore a working version.
+
+  Upload v24_output.txt for further analysis.

@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[node name="MinimalTest" type="Node"]
+	[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+	root_node = NodePath("..")
+script = ExtResource("1")
+
+[ext_resource type="Script" path="res://scripts/minimal.gd" id="1"]

@@ -1,0 +1,80 @@
+AUDIT REPORT - Sat Jul 11 01:08:37 AM EDT 2026
+========================
+
+Total referenced files: 249
+Referenced but missing: 37
+
+Critical Issues:
+❌ Main scene 'res://scenes/main.tscn' missing
+   ❌ *res://scripts/SqliteDb.gd (missing)
+   ❌ *res://scripts/DatabaseGuard.gd (missing)
+   ❌ *res://scripts/ResourceThrottle.gd (missing)
+   ❌ *res://scripts/PerformanceMonitor.gd (missing)
+   ❌ *res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd (missing)
+   ❌ *res://scripts/InputManager.gd (missing)
+   ❌ *res://scripts/GameIntegrity.gd (missing)
+   ❌ *res://scripts/forensic_hud.gd (missing)
+   ❌ *res://scripts/audit.gd (missing)
+   ❌ * (missing)
+   ❌ *res://autoloads/ErrorLogger.gd (missing)
+   ❌ *res://autoloads/CursorManager.gd (missing)
+   ❌ *res://autoloads/Gamification.gd (missing)
+   ❌ *res://autoloads/ErrorBus.gd (missing)
+   ❌ * (missing)
+   ❌  (missing)
+   ❌ Color(1, 1, 1, 1) (missing)
+   ❌ 1.0 (missing)
+   ❌ Color(0.3, 0.5, 0.7, 1) (missing)
+   ❌ res://addons/godot-sqlite/gdsqlite.gdextension (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 32, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 81, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 69, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 67, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 72, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 16777218, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 88, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 86, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 70, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 82, pressed: true, type: key } ] } (missing)
+   ❌ { deadzone: 0.5, events: [ { key: 16777217, pressed: true, type: key } ] } (missing)
+   ❌ key://Space (missing)
+   ❌ key://Down (missing)
+   ❌ { (missing)
+   ❌ { (missing)
+   ⚠️ textures/ (missing)
+   ⚠️ sprites/ (missing)
+   ⚠️ sounds/ (missing)
+   ⚠️ music/ (missing)
+   ⚠️ fonts/ (missing)
+   ⚠️ models/ (missing)
+   ⚠️ shaders/ (missing)
+
+Missing referenced files (first 20):
+addons
+addons/
+addons/godot_aerodynamic_physics/demo/aircraft_examples/b2/b2.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/berkut/berkut.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/blackhawk/blackhawk.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/boat/boat.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/catalina/catalina.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/cessna172/cessna172.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/demo_plane.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/f14/f14_mouse_control.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/f14/f14.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/floaty_ball/Buoyancy
+addons/godot_aerodynamic_physics/demo/aircraft_examples/floaty_ball/floaty_ball.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/missile/aim-9.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/quadcopter.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/sailboat/sailboat.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/su57/su57.tscn\
+addons/godot_aerodynamic_physics/demo/aircraft_examples/tilt_rotor/v22.tscn\
+addons/godot_aerodynamic_physics/demo/misc_demo_assets/camera
+addons/godot_aerodynamic_physics/utils/node_utils.gd\
+
+Site map generated in site_map.txt
+
+Suggested fixes:
+1. Re-add all missing files from backup or recreate them.
+2. Define a main scene if missing.
+3. Ensure all autoload scripts exist.
+4. Add asset folders and populate with required assets.

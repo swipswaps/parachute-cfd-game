@@ -1,0 +1,20 @@
+{
+  "schema": "prf.fixlist.v1",
+  "description": "v105: Fixes configparser failure when setting Godot renderer. Also persists the fix list JSON as a text file.",
+  "steps": [
+    {
+      "id": "GODOT-CONFIGPARSER-001",
+      "severity": "CRITICAL",
+      "name": "Switch Godot renderer without using configparser",
+      "issue": "Godot's project.godot has top-level 'config_version=5' before any section header, causing configparser to fail with MissingSectionHeaderError.",
+      "fix_applied": "Use sed or Python string replacement to set rendering/renderer/rendering_method to 'gl_compatibility'."
+    },
+    {
+      "id": "FIXLIST-PERSIST-001",
+      "severity": "HIGH",
+      "name": "Persist the JSON fix list as a local text file",
+      "issue": "The JSON fix list was not stored in the repo.",
+      "fix_applied": "Write the full v105 JSON to parachute-fixlist-v105.json."
+    }
+  ]
+}

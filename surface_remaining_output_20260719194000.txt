@@ -1,0 +1,104 @@
+======================================================================
+PART 2 (fixed): find the actual most-recent stall_report.json via
+locate, then grep ONLY that file for the PiP adoption failure line
+(autostall.py's own printed message confirms it writes exactly this
+file, so this is the correct target -- not a guess)
+======================================================================
+Located: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/stall_report.json
+[2026-07-19T23:40:01Z] [SUCCESS] part2_pip_failure_search: checked /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/stall_report.json
+
+======================================================================
+PART 3: drag code comparison -- forensic_hud.gd vs forensic_panel.gd
+(targeted paths only, no recursive walk)
+======================================================================
+--- forensic_hud.gd: all drag-related lines ---
+13:#     transform -- dragging the root's global_position moves NOTHING on
+18:#     swallowed by set_input_as_handled(), breaking the PiP drag too.
+24:# Controls: F3 toggles the panel. Left-click + drag anywhere on the panel
+60:var _dragging: bool = false
+61:var _drag_offset: Vector2 = Vector2.ZERO
+108:	# Delegate mouse events to _gui_input (which handles dragging)
+390:			_dragging = true
+391:			_drag_offset = mb.position - _panel.position
+393:		elif not mb.pressed and _dragging:
+394:			_dragging = false
+396:	if event is InputEventMouseMotion and _dragging:
+397:		_panel.position = event.position - _drag_offset
+
+--- forensic_panel.gd: all drag-related lines ---
+120:func _get_drag_data(at_position: Vector2) -> Dictionary:
+[2026-07-19T23:40:01Z] [SUCCESS] part3_drag_comparison: grep completed on both known file paths
+
+======================================================================
+PART 4a (fixed via locate): all files referencing 8765
+======================================================================
+/home/owner/.cache/chromium/Default/Cache/Cache_Data/243aa5c9eaf8765f_0
+/home/owner/.cache/chromium/Default/Cache/Cache_Data/76505ab68765cab7_0
+/home/owner/.cache/chromium/Default/Cache/Cache_Data/cd248765b054077d_0
+/home/owner/.cache/chromium/Default/Code Cache/js/402edc7b8876548e_0
+/home/owner/.cache/chromium/Default/Code Cache/js/aeb38765f09cb4a3_0
+/home/owner/.cache/maliit-keyboard/qmlcache/6db85e3b7b9a2a4585792937f5d9eb3e0fd38765.qmlc
+/home/owner/.cache/mesa_shader_cache/54/4705d8765a81fb2146adc37ccc6af69503328e
+/home/owner/.cache/mesa_shader_cache/b2/221f00413886884e787656f98d2b50a38a1270
+/home/owner/.cache/mesa_shader_cache/cd/a17aba2409122eb8f28b9fc4423402d6787653
+/home/owner/.cache/mesa_shader_cache/e2/9c1f78aa40c08765ae83a229632066ff6b4370
+/home/owner/.cache/mesa_shader_cache/f4/b9922e542359db4a79f837d71876559172337c
+/home/owner/.cache/mesa_shader_cache/fe/0fd81ec867e2953ebe31b470e87771cf2b8765
+/home/owner/.cache/mozilla/firefox/o4xmnt1w.default-release-1782226671403/cache2/entries/504C68FBA7575E46EBB6A8765655A2C77A19AD43
+/home/owner/.cache/mozilla/firefox/o4xmnt1w.default-release-1782226671403/cache2/entries/A8765D91CAB9D7557C519CA10A69D8C1A1AC8D43
+/home/owner/.cache/mozilla/firefox/o4xmnt1w.default-release-1782226671403/cache2/entries/B3D28E687655BDA7BC2ABC14AF241D6492C30059
+/home/owner/.cache/pip/http-v2/f/3/1/a/e/f31ae3b9e5330c31dd69798102c015534a21485487654ce23092fdb7
+/home/owner/.cache/pip/http-v2/f/3/1/a/e/f31ae3b9e5330c31dd69798102c015534a21485487654ce23092fdb7.body
+/home/owner/.cache/tracker3/files/errors/14a55abe88aba3445f222eb1187654a3
+/home/owner/.cache/tracker3/files/errors/30d726c6eb7876575ed747c6954493cd
+/home/owner/.mozilla/firefox/o4xmnt1w.default-release-1782226671403/storage/default/https+++mail.google.com/cache/morgue/192/{f82b9556-b399-4c3f-af49-29e6b87652c0}.final
+/home/owner/.npm/_cacache/content-v2/sha512/42/d4/8c36dc0edbd63f9196deec4b2eb3ad10abd224fa0d7c9c46cdf8aa0cb15232ceab50afb2312601e22e836b2ba2fcbd5876567101001c2d50142283eeaece
+/home/owner/.npm/_cacache/content-v2/sha512/65/fe/47d8ac6ddb18d3bdb26f3f66562c4202c40ea3fa1026333225ca9cb8c5c060d6f2959f1f3d5b2d066d2fa47f9730095145cdd0858765d20853542d2e9cb3
+/home/owner/.npm/_cacache/content-v2/sha512/ab/ad/28c372069a05306f123ca962de9ca3d2a222a3fe8434ac7c2f17210d3855599cafb1d1d6487651e5130a854387787d37e1291a6fbdefab65999cc9431ead
+/home/owner/.npm/_cacache/content-v2/sha512/ca/a8/f1aee306050276806e07b6366d01f5c0ac7a266b30c7a05c05166659974afb3dda3ba822172aa28765cf327a8320cc927ea4eea91041daf95eeecd696b01
+/home/owner/.npm/_cacache/content-v2/sha512/d4/74/3f6fba20314c47b5e49d9e74039d4e69f862c0de0ec6f14268d8893380ec48c5c84bedb321079acc7194631321d6fd8765373c719b413de6d00aa6d913d8
+/home/owner/.npm/_cacache/index-v5/9f/f5/87658b017c0f9abd74b0f1b7b03785cc33a7f5163f3a08cbf0111abb1b65
+/home/owner/.npm/_cacache/index-v5/de/65/e2aa018ddf50fda255d93a8765f0d980e29131c129ee4b7810ed4ff0a76d
+/home/owner/.var/app/org.godotengine.Godot/cache/mesa_shader_cache/a1/f0e12306fb22f91bb487652c56c24fafee5bdfd9c8e156cff68f3ea268460e
+/home/owner/Desktop/Old Firefox Data/cbsdw5km.default-release/storage/default/https+++hpanel.hostinger.com/cache/morgue/3/{97b87656-29b1-46c3-83bf-cd03e1c73603}.final
+/home/owner/Desktop/Old Firefox Data/lfjs9uzm.default-release-1781009320109/storage/default/https+++www.perplexity.ai/cache/morgue/128/{22355019-bd43-4d76-8765-8a6da30fc880}.final
+[2026-07-19T23:40:01Z] [SUCCESS] part4a_locate_8765: locate query for '8765' (capped at 30 results)
+
+======================================================================
+PART 4b: DB references to hub/8765 (targeted, same as before -- this
+part did not stall last time, no change needed)
+======================================================================
+--- parachute_mutations.db ---
+  source_snapshots.content: 1 matching row(s)
+  files_to_fix.file_path: 2 matching row(s)
+  files_to_fix.error_text: 1 matching row(s)
+  autohealactions.timestamp: 1 matching row(s)
+  gd_patch_registry.content_hash_after: 1 matching row(s)
+  auto_heal_actions.id: 1 matching row(s)
+  auto_heal_actions.timestamp: 13 matching row(s)
+  auto_heal_actions.stdout: 45 matching row(s)
+  tool_audit.timestamp: 2 matching row(s)
+  flight_controller_recon.id: 7 matching row(s)
+  flight_controller_recon_v2.id: 1 matching row(s)
+  diagnostic_log.context_before: 1 matching row(s)
+  diagnostic_log.context_after: 1 matching row(s)
+  restore_log.context_before: 2 matching row(s)
+  restore_log.context_after: 2 matching row(s)
+  function_index.function_name: 1 matching row(s)
+  gdeye_diag.captured_at: 4 matching row(s)
+--- fixes.db ---
+--- forensics.db ---
+  events.id: 38 matching row(s)
+  events.content_hash: 175 matching row(s)
+  events.ts: 28 matching row(s)
+  events.file_path: 19 matching row(s)
+  events.detail: 243 matching row(s)
+  files_to_fix.file_path: 1 matching row(s)
+  files_to_fix.error_text: 2 matching row(s)
+[2026-07-19T23:41:21Z] [SUCCESS] part4b_db_surface: column-level scan completed for 3 known DBs
+
+======================================================================
+PART 4c: is the hub server (port 8765) reachable right now?
+======================================================================
+PORT 8765: OPEN -- something is listening
+[2026-07-19T23:41:22Z] [SUCCESS] part4c_port_check: live socket connect attempt

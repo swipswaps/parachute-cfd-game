@@ -1,0 +1,109 @@
+plane_0002.gd:5: #   signal "jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)"
+scratch_formatting_test/FlightAssist_0.gd:251: 	#var normal_acceleration = local_acceleration_vector.z
+scratch_formatting_test/FlightAssist_1.gd:251: 	#var normal_acceleration = local_acceleration_vector.z
+scratch_inline_tab_diag/FlightAssist_0.gd:251: 	#var normal_acceleration = local_acceleration_vector.z
+scratch_inline_tab_diag/FlightAssist_1.gd:232: 		#var normal_acceleration = local_acceleration_vector.z
+scratch_reconstruct_test/FlightAssist_core.gd:251: 	#var normal_acceleration = local_acceleration_vector.z
+scratch_reconstruct_test/FlightAssist_corrupted.gd:232: 		#var normal_acceleration = local_acceleration_vector.z
+scratch_iterative_test/FlightAssist_core.gd:251: 	#var normal_acceleration = local_acceleration_vector.z
+scratch_iterative_test/FlightAssist_working.gd:232: 	#var normal_acceleration = local_acceleration_vector.z
+godot_source/modules/gdscript/tests/scripts/runtime/features/compare_builtin_equals_null.gd:96: 	# Signal
+godot_source/modules/gdscript/tests/scripts/runtime/features/compare_builtin_not_equals_null.gd:96: 	# Signal
+godot_source/modules/gdscript/tests/scripts/runtime/features/compare_null_equals_builtin.gd:92: 	# Signal
+godot_source/modules/gdscript/tests/scripts/runtime/features/compare_null_not_equals_builtin.gd:92: 	# Signal
+godot_source/modules/gdscript/tests/scripts/runtime/features/self_destruction.gd:42: 	# Signal handling.
+godot_source/modules/gdscript/tests/scripts/parser/features/bitwise_operators.gd:31: 	# Enum value must be casted to an integer. Otherwise, a parser error is emitted.
+godot_source/modules/gdscript/tests/scripts/parser/features/super.gd:14: 	#var prefix = "SAT"
+godot_source/modules/gdscript/tests/scripts/parser/features/super.gd:26: 	#var prefix = "SN"
+godot_source/modules/gdscript/tests/scripts/analyzer/features/enum_is_treated_as_int.gd:1: # Enum is equivalent to int for comparisons and operations.
+upstream_aero_check/core/aero_body_3d.gd:564: #func get_linear_acceleration() -> Vector3:
+upstream_aero_check/core/aero_body_3d.gd:568: #func get_angular_acceleration() -> Vector3:
+upstream_aero_check/core/flight_assist.gd:244: 	#var normal_acceleration = local_acceleration_vector.z
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:404: #var updated_properties := get_property_conversion_info()
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:405: #func get_property_conversion_info() -> Dictionary:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:412: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:418: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:424: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:430: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:436: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:444: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:452: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:460: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:468: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:476: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:484: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:492: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:500: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:508: 	#func(value) -> void:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:518: #func _get_property_list() -> Array[Dictionary]:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:519: 	#var array : Array[Dictionary] = []
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:520: 	#var updated_properties := get_property_conversion_info()
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:522: 		#var property_info : Array = updated_properties[property]
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:531: #func _set(property: StringName, value: Variant) -> bool:
+upstream_aero_check/core/aero_influencer_3d/aero_influencer_3d.gd:533: 		#var property_info : Array = updated_properties[property]
+upstream_aero_check/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:149: 		#var mesh := CSGSphere3D.new()
+upstream_aero_check/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:186: #var cached_buoyancy_force : Vector3 = Vector3.ZERO
+upstream_aero_check/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:187: #var cached_buoyancy_torque : Vector3 = Vector3.ZERO
+upstream_aero_check/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd:29: 	#var exhaust_pressure : float = 0.0 #will need to use fuel combustion expansion ratio
+external_repos/godot_aerodynamic_physics/core/aero_body_3d.gd:564: #func get_linear_acceleration() -> Vector3:
+external_repos/godot_aerodynamic_physics/core/aero_body_3d.gd:568: #func get_angular_acceleration() -> Vector3:
+external_repos/godot_aerodynamic_physics/core/flight_assist.gd:244: 	#var normal_acceleration = local_acceleration_vector.z
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:404: #var updated_properties := get_property_conversion_info()
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:405: #func get_property_conversion_info() -> Dictionary:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:412: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:418: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:424: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:430: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:436: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:444: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:452: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:460: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:468: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:476: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:484: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:492: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:500: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:508: 	#func(value) -> void:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:518: #func _get_property_list() -> Array[Dictionary]:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:519: 	#var array : Array[Dictionary] = []
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:520: 	#var updated_properties := get_property_conversion_info()
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:522: 		#var property_info : Array = updated_properties[property]
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:531: #func _set(property: StringName, value: Variant) -> bool:
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd:533: 		#var property_info : Array = updated_properties[property]
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:149: 		#var mesh := CSGSphere3D.new()
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:186: #var cached_buoyancy_force : Vector3 = Vector3.ZERO
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:187: #var cached_buoyancy_torque : Vector3 = Vector3.ZERO
+external_repos/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd:29: 	#var exhaust_pressure : float = 0.0 #will need to use fuel combustion expansion ratio
+external_repos/godot-simplified-flightsim/example/Example2_Complex.gd:54: 		#var altitude_progress_towards_limit_normalized = clamp(aircraft.local_altitude / AltitudeOfZeroDensity, 0.0, 1.0) # 1.0 when at limit, 0.0 when sea level
+godot_aerodynamic_physics_cache/core/aero_body_3d.gd:576: #func get_linear_acceleration() -> Vector3:
+godot_aerodynamic_physics_cache/core/aero_body_3d.gd:580: #func get_angular_acceleration() -> Vector3:
+godot_aerodynamic_physics_cache/core/flight_assist.gd:251: 	#var normal_acceleration = local_acceleration_vector.z
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:428: #var updated_properties := get_property_conversion_info()
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:429: #func get_property_conversion_info() -> Dictionary:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:436: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:442: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:448: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:454: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:460: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:468: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:476: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:484: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:492: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:500: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:508: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:516: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:524: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:532: #func(value) -> void:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:542: #func _get_property_list() -> Array[Dictionary]:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:543: #var array : Array[Dictionary] = []
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:544: #var updated_properties := get_property_conversion_info()
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:546: #var property_info : Array = updated_properties[property]
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:555: #func _set(property, value) -> bool:
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_influencer_3d.gd:557: #var property_info : Array = updated_properties[property]
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:149: 		#var mesh := CSGSphere3D.new()
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:184: #var cached_buoyancy_force  = Vector3.ZERO
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd:185: #var cached_buoyancy_torque  = Vector3.ZERO
+godot_aerodynamic_physics_cache/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd:31: 	#var exhaust_pressure : float = 0.0 #will need to use fuel combustion expansion ratio
+godot_project/scripts/InputManager.gd:93: #		var plane = get_node_or_null("/root/Main/FlyingPlane")
+godot_project/scripts/forensic_hud.gd.gd:9: #   var forensic = load("res://scripts/forensic_hud.gd").new()
+godot_project/scripts/forensic_hud_0001.gd:22: #   extends Node, builds its own CanvasLayer child, and uses event.position

@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""
+script_scanner.py – Runs the game with display, streams output live,
+and prints error diagnostics immediately. No timeout – runs until stopped.
+Detects errors and stops the game to offer fixes.
+"""
+
+import os
+import re
+import sys
+import subprocess
+import time
+import shutil
+import select
+import fcntl
+from pathlib import Path
+from typing import List, Dict, Tuple, Optional
+from datetime import datetime, timezone
+
+CONTEXT_LINES = 3
+PROJECT_DIR = "../godot_project"
+GODOT_BIN = shutil.which("godot") or "/usr/bin/godot"
+
+def log_result(operation: str, success: bool, detail: str) -> None:
+    ts = datetime.now(timezone.utc).isoformat()
+    status = "SUCCESS" if success else "FAILURE"
+    print(f"[{ts}] [{status}] {operation}: {detail}", file=sys.stderr)
+
+def scan_all_scripts(project_dir: Path) -> List[Dict]:
+    """
+    Launches the Godot game normally (with display), streams output,
+    and captures any errors live. No timeout – runs until process exits or user interrupts.
+    When a SCRIPT ERROR is seen, it stops the game and returns the error.
+    """
+    project_dir = Path(project_dir).absolute()
+    cmd = [GODOT_BIN, "--path", str(project_dir), "--verbose"]
+    print(f"\n[RUN] Running game: {' '.join(cmd)}")
+    print("[RUN] Press Ctrl+C to stop.\n")
+
+    env = os.environ.copy()
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        universal_newlines=True,
+        env=env
+    )
+    fd = proc.stdout.fileno()
+    flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+    fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+
+    output_lines = []
+    issues = []
+    error_detected = False
+
+    try:
+        while True:
+            if proc.poll() is not None:
+                print("\n[RUN] Game process exited.")
+                break
+
+            rlist, _, _ = select.select([fd], [], [], 1.0)
+            if rlist:
+                try:
+                    data = os.read(fd, 4096).decode('utf-8', errors='replace')
+                except BlockingIOError:
+                    continue
+                if not data:
+                    break
+                for line in data.splitlines():
+                    print(line)
+                    sys.stdout.flush()
+                    output_lines.append(line)
+                    if len(output_lines) > 2000:
+                        output_lines.pop(0)
+                    # ---- DETECT ERROR AND STOP GAME ----
+                    if "SCRIPT ERROR" in line or "Parse Error" in line:
+                        gd_file, gd_line = extract_file_and_line(output_lines)
+                        if gd_file and gd_line:
+                            print_error_diagnostic(gd_file, gd_line, project_dir)
+                            print("\n[ACTION] Error detected. Stopping game to offer fix...")
+                            proc.terminate()
+                            time.sleep(1)
+                            if proc.poll() is None:
+                                proc.kill()
+                            try:
+                                remaining, _ = proc.communicate(timeout=2)
+                                if remaining:
+                                    for rem_line in remaining.splitlines():
+                                        print(rem_line)
+                                        output_lines.append(rem_line)
+                            except subprocess.TimeoutExpired:
+                                pass
+                            error_detected = True
+                            break
+                if error_detected:
+                    break
+    except KeyboardInterrupt:
+        print("\n[RUN] Interrupted by user. Stopping game...")
+        proc.terminate()
+        proc.wait()
+
+    proc.wait()
+
+    issues = parse_all_errors(output_lines, project_dir)
+    log_result("scan_all_scripts", True, f"Found {len(issues)} issues")
+    return issues
+
+def extract_file_and_line(lines: List[str]) -> Tuple[Optional[str], Optional[int]]:
+    for line in reversed(lines[-10:]):
+        match = re.search(r'res://([^:]+):(\d+)', line)
+        if match:
+            return match.group(1), int(match.group(2))
+    return None, None
+
+def print_error_diagnostic(file_path: str, line_num: int, project_dir: Path):
+    p = project_dir / file_path
+    if not p.exists():
+        p = project_dir / "scripts" / Path(file_path).name
+    if not p.exists():
+        print(f"      [WARNING] File not found: {file_path}")
+        return
+    lines = p.read_text().splitlines()
+    total = len(lines)
+    if line_num < 1 or line_num > total:
+        print(f"      [WARNING] line {line_num} out of range (file has {total} lines)")
+        return
+    start = max(0, line_num - CONTEXT_LINES - 1)
+    end = min(total, line_num + CONTEXT_LINES)
+    print(f"      [SOURCE] {p} lines {start+1}-{end} (offending line {line_num}):")
+    for i in range(start, end):
+        prefix = ">> " if i == line_num - 1 else "   "
+        print(f"      {prefix}{i+1:4d}: {lines[i]}")
+
+def parse_all_errors(lines: List[str], project_dir: Path) -> List[Dict]:
+    issues = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if "SCRIPT ERROR" in line or "Parse Error" in line or "ERROR:" in line:
+            match = re.search(r'res://([^:]+):(\d+)', line)
+            if not match:
+                for j in range(1, 4):
+                    if i + j < len(lines):
+                        next_line = lines[i + j]
+                        match = re.search(r'res://([^:]+):(\d+)', next_line)
+                        if match:
+                            break
+            if match:
+                file_path = match.group(1)
+                line_num = int(match.group(2))
+                full_path = project_dir / file_path
+                if not full_path.exists():
+                    full_path = project_dir / "scripts" / Path(file_path).name
+                issue = {
+                    'file': str(full_path),
+                    'line': line_num,
+                    'type': 'parse_error',
+                    'message': line.strip(),
+                    'context': get_context(full_path, line_num)
+                }
+                issues.append(issue)
+        i += 1
+    return issues
+
+def get_context(filepath: Path, line_num: int, context: int = CONTEXT_LINES) -> List[str]:
+    if not filepath.exists():
+        return []
+    lines = filepath.read_text().splitlines()
+    start = max(0, line_num - context - 1)
+    end = min(len(lines), line_num + context)
+    return lines[start:end]
+
+def print_diagnostic(issue: Dict):
+    print(f"📄 File: {issue['file']}")
+    print(f"📍 Line {issue['line']}: {issue['message']}")
+    ctx = issue.get('context', [])
+    if ctx:
+        print("📖 Context (±3 lines):")
+        start_line = max(1, issue['line'] - 3)
+        for i, line in enumerate(ctx, start=start_line):
+            prefix = ">>> " if i == issue['line'] else "    "
+            print(f"{prefix}{i:4d}: {line}")
+    else:
+        print("(No context available)")

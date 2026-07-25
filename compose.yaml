@@ -1,0 +1,15 @@
+services:
+  influxdb:
+    image: influxdb:2.7
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=parachute-metrics
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin123
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+      - INFLUXDB_INIT_TOKEN=admin123
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+volumes:
+  influxdb_data:

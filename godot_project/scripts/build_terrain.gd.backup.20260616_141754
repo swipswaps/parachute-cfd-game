@@ -1,0 +1,739 @@
+# # CANVAS_LAYER_FIX - No CanvasLayer to adjust
+
+# # TERRAIN_PRESERVE
+# WARNING: Do not remove or alter the terrain texture loading code below.
+# The terrain uses satellite imagery and baked colors. Changing these will break visual fidelity.
+# Any changes to terrain material must preserve the existing albedo_texture and vertex_color settings.
+
+# # TYPING_FIX
+# build_terrain.gd – final complete with rendering fixes
+extends Node
+const InputManager = preload("res://scripts/InputManager.gd")
+
+# # THREADED_LOADING
+var _loading_complete = false
+
+func _load_async(path: String):
+    ResourceLoader.load_threaded_request(path)
+    while true:
+        var status = ResourceLoader.load_threaded_get_status(path)
+        if status == ResourceLoader.THREAD_LOAD_LOADED:
+            _loading_complete = true
+            break
+        elif status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+            pass  # not available in Godot 4.6.2
+            await get_tree().process_frame
+        else:
+            print("[VERBATIM] Failed to load ", path)
+            break
+    return ResourceLoader.load_threaded_get(path)
+
+
+const LEG_LABEL = "LEG"
+enum GameState { FREEFALL, OPENING_ANIM, DIAGNOSIS, LANDED, GAME_OVER }
+var _exited = false  # track if player has exited the plane
+
+var _game_state: GameState = GameState.FREEFALL
+
+var _character: CharacterBody3D
+var _hud_labels := []
+var _hud_layer: CanvasLayer
+var _focus_label: Label
+var _frame_count := 0
+
+var _cam_angle_idx: int = 0
+var _cam_cycle_held: bool = false
+var _hud_toggle_held: bool = false
+var _hud_visible: bool = true
+
+var _score: int = 0
+var _score_label: Label
+var _leaderboard: Array = []
+const MAX_LEADERBOARD_ENTRIES: int = 10
+enum MissionType { TRAINING, ADVANCED, EXPERT }
+var _current_mission: MissionType = MissionType.TRAINING
+var _mission_objectives: Dictionary = {}
+var _mission_completed: bool = false
+var _achievements: Dictionary = {
+    "first_jump": false, "perfect_landing": false, "malfunction_ace": false, "rapid_ep": false
+}
+var _notification_label: Label
+
+var _loading_layer: CanvasLayer = null
+var _loading_texture_rect: TextureRect = null
+var _screenshot_library: Array[String] = []
+var _current_screenshot_index: int = 0
+
+var _wind_base_speed: float = 8.0
+var _wind_base_direction: int = 120
+var _wind_turbulence: float = 2.0
+var _wind_gust_time: float = 0.0
+var _wind_current_gust: float = 0.0
+
+var _buildings: Array = []
+var _trees: Array = []
+
+var _pip_viewport: SubViewport
+var _pip_camera: Camera3D
+var _pip_canopy_node: Node3D
+var _main_canopy_node: Node3D
+var _wind_label: Label
+var _pip_layer: CanvasLayer
+
+var _velocity_vec := Vector3.ZERO
+var _forward_speed = 0.0
+var _turn_input = 0.0
+var _max_speed = 30.0
+var _accel = 15.0
+var _turn_force = 5.0
+var _gravity = 9.8
+var _descent_rate = 0.0
+
+# ------------------------------------------------------------------
+func _log(msg: String):
+    print("[VERBATIM] " + msg)
+    if _notification_label:
+        _notification_label.text = msg
+        _notification_label.add_theme_color_override(
+            "font_color",
+            Color(1, 0, 0) if "ERROR" in msg or "FATAL" in msg else Color(1, 0.8, 0)
+        )
+
+func _ready():
+    # # LABEL_SIZE_FIX - ensure all existing labels have minimum size
+    for child in get_tree().get_nodes_in_group("hud_labels"):
+        if child is Label:
+            child.custom_minimum_size = Vector2(200, 20)
+
+    call_deferred("load_and_run_debugger")
+        # Force viewport to draw solid background
+    var viewport = get_viewport()                # Source: Node.get_viewport()
+    viewport.transparent_bg = false              # Source: Viewport.transparent_bg
+
+    _log(Time.get_datetime_string_from_system() + " ENTER _ready")
+# _init_screenshot_library()  # removed by 0062
+# _show_loading_screen()  # removed by 0062
+    # ========== RENDERING FIXES ==========
+    # WorldEnvironment: BG_SKY pattern from fbcosentino/godot-simplified-flightsim
+    # default_env.tres: background_mode=2, sky=SubResource
+    # Code equivalent — same result as editor-created WorldEnvironment .tres file
+    # Source: https://docs.godotengine.org/en/stable/classes/class_environment.html
+    var sky_material = ProceduralSkyMaterial.new()
+    sky_material.sky_top_color = Color(0.3, 0.5, 0.9)
+    sky_material.sky_horizon_color = Color(0.7, 0.85, 1.0)
+    sky_material.ground_bottom_color = Color(0.2, 0.15, 0.1)
+    sky_material.ground_horizon_color = Color(0.5, 0.45, 0.35)
+    var sky = Sky.new()
+    sky.sky_material = sky_material
+    var env = Environment.new()
+    # # ENV_SKY_FIX
+    sky.sky_material = sky_material
+    env.background_mode = Environment.BG_SKY
+    env.sky = sky
+
+    env.background_mode = Environment.BG_SKY
+    env.sky = sky
+    env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+    env.ambient_light_energy = 1.0
+    var world_env = WorldEnvironment.new()
+    world_env.name = "WorldEnvironment"
+    world_env.environment = env
+    add_child(world_env)
+    _log("[VERBATIM] WorldEnvironment added")
+
+    # 2. Directional light
+    var dir_light = DirectionalLight3D.new()
+    dir_light.name = "DirectionalLight"
+    dir_light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+    add_child(dir_light)
+    _log("[VERBATIM] Directional light added")
+    # =====================================
+
+    # --------------------------------------------------------------
+    # Terrain generation (full heightmap + baked colours)
+    # --------------------------------------------------------------
+    var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+    if not file:
+        _log("[VERBATIM] ERROR: heightmap_512.raw not found")
+        return
+    var data = file.get_buffer(file.get_length())
+    file.close()
+    var baked = PackedByteArray()
+    var bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+    if bf:
+        baked = bf.get_buffer(3145728)
+        bf.close()
+        _log("[VERBATIM] Baked colours loaded: " + str(baked.size()))
+    else:
+        _log("[VERBATIM] BAKE FALLBACK")
+    var verts = []
+    var uvs = []
+    const W = 1024
+    const H = 1024
+    const MAX_ELEV = 80.0
+    const SCALE_XZ = 4000.0
+    for z in range(H):
+        for x in range(W):
+            var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+            var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+            var idx = (z * W + x) * 2
+            var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+            var py = (float(raw) / 65535.0) * MAX_ELEV
+            verts.push_back(Vector3(px, py, pz))
+            uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
+    var indices = []
+    for z in range(H - 1):
+        for x in range(W - 1):
+            var a = z * W + x
+            var b = a + 1
+            var c = a + W
+            var d = c + 1
+            indices.append_array([a, c, b, b, c, d])
+    var st = SurfaceTool.new()
+    st.begin(Mesh.PRIMITIVE_TRIANGLES)
+    st.set_color(Color(1.0, 1.0, 1.0, 1.0))
+    for i in range(verts.size()):
+        var ci = i * 3
+        var cr = float(baked[ci]) / 255.0 if ci < baked.size() else 0.5
+        var cg = float(baked[ci + 1]) / 255.0 if ci + 1 < baked.size() else 0.5
+        var cb = float(baked[ci + 2]) / 255.0 if ci + 2 < baked.size() else 0.5
+        st.set_color(Color(cr, cg, cb, 1.0))
+        st.set_uv(uvs[i])
+        st.add_vertex(verts[i])
+    for idx in indices:
+        st.add_index(idx)
+    st.generate_normals()
+    st.generate_tangents()
+    var terrain_mesh = st.commit()
+    var terrain_inst = MeshInstance3D.new()
+    terrain_inst.mesh = terrain_mesh
+    # Override terrain material to bright green unshaded (makes it visible)
+    var terrain_mat = StandardMaterial3D.new()
+    terrain_mat.albedo_color = Color(0.2, 0.8, 0.2)
+    terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    terrain_inst.material_override = terrain_mat
+    add_child(terrain_inst)
+    _log("[VERBATIM] Terrain created with forced bright green material")
+
+    # Runways
+    add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+    add_child(_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+    add_child(_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35)))
+    _log("[VERBATIM] Runways added")
+
+    # Drop zone
+    var dz = MeshInstance3D.new()
+    var cyl = CylinderMesh.new()
+    cyl.top_radius = 3.0
+    cyl.bottom_radius = 3.0
+    cyl.radial_segments = 32
+    dz.mesh = cyl
+    dz.position = Vector3(0.0, 25.0, 0.0)
+    var dz_mat = StandardMaterial3D.new()
+    dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+    dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+    dz.material_override = dz_mat
+    add_child(dz)
+    _log("[VERBATIM] Drop zone created")
+
+    # World camera (detached from player) to see the plane
+    world_cam.far = 20000.0
+    world_cam.position = Vector3(0, 6050, -80)
+    world_cam.look_at(Vector3(0, 6000, 0), Vector3.UP)
+    world_cam.current = true
+    add_child(world_cam)
+    _log('[VERBATIM] World camera attached, looking at plane')
+
+    _load_faa_obstacles()
+
+    # HUD
+    _create_hud()
+
+    # Plane (created before player)
+    _create_plane()
+
+    # Player
+    _create_player()
+
+    # Subsystems
+    _fetch_real_wind()
+    _setup_pip_overlay()
+    _init_achievements()
+    _init_mission()
+    _init_leaderboard()
+    _init_controller()
+    _init_sentry()
+    _randomize_malfunction()
+    _log("[VERBATIM] Initial malfunction: " + _malfunction_name())
+    # Add InputManager node for input handling
+    var input_manager = InputManager.new()
+    add_child(input_manager)
+    _log("[VERBATIM] InputManager added to scene")
+    _log("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+# _hide_loading_screen()  # removed by 0062
+# await timer 3.0  # removed by 0061
+# _check_parachute_controller()  # removed by 0061
+    # # diagnostic_dump.gd removed (moved to broken_scripts_archive)
+
+    # Capture a single screenshot for debugging
+# await timer 5.0  # removed by 0061
+# img capture  # removed by 0061
+# save screenshot  # removed by 0061
+# print screenshot  # removed by 0061
+# _log("[VERBATIM] ... EXIT _ready ok=true")  # removed by 0061
+# ------------------------------------------------------------------
+func _create_plane():
+    _log("[VERBATIM] Creating plane node...")
+    var plane = CharacterBody3D.new()
+    plane.name = "FlyingPlane"
+    var plane_script = load("res://scripts/plane.gd")
+    if plane_script:
+        plane.set_script(plane_script)
+        plane.process_mode = PROCESS_MODE_ALWAYS
+        if plane.has_method("test_plane_process"):
+            plane.test_plane_process()
+        else:
+            print("[VERBATIM] plane: test_plane_process method not found")
+        _log("[VERBATIM] Plane script attached")
+    else:
+        _log("[VERBATIM] WARNING: plane.gd not found")
+    add_child(plane)
+    plane.add_to_group("plane")
+    # Load aircraft model from assets
+    var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+    if plane_scene and plane_scene is PackedScene:
+        var aircraft = plane_scene.instantiate()
+        plane.add_child(aircraft)
+        aircraft.scale = Vector3(1, 1, 1)  # Adjust if needed
+        print("[VERBATIM] Cessna model loaded.")
+    else:
+        print("[VERBATIM] Failed to load Cessna model")
+    var plane_collision = CollisionShape3D.new()
+    plane_collision.shape = BoxShape3D.new()
+    plane_collision.shape.size = Vector3(3, 1, 10)
+    plane.add_child(plane_collision)
+    var exit_trigger = Area3D.new()
+    exit_trigger.name = "ExitTrigger"
+    plane.add_child(exit_trigger)
+    var trigger_collision = CollisionShape3D.new()
+    trigger_collision.shape = BoxShape3D.new()
+    trigger_collision.shape.size = Vector3(2, 2, 2)
+    trigger_collision.position = Vector3(1.5, 0, -2)
+    exit_trigger.add_child(trigger_collision)
+    plane.global_position = Vector3(0, 6000, 0)
+    _log("[VERBATIM] Plane created at altitude 6000")
+
+func _create_player():
+    _character = CharacterBody3D.new()
+    _character.gravity_scale = 0.0  # no gravity until exit
+    _character.velocity = Vector3.ZERO
+    _character.name = "Player"
+    var controller_script = load("res://scripts/parachute_controller.gd")
+    if not controller_script:
+        _log("[VERBATIM] WARN: parachute_controller.gd not loaded – using fallback mesh")
+        var fallback_mesh = MeshInstance3D.new()
+        # Load parachutist model (instead of box placeholder)
+        var player_scene = load("res://assets/characters/parachutist.glb")
+        if player_scene and player_scene is PackedScene:
+            var player_model = player_scene.instantiate()
+            _character.add_child(player_model)
+            player_model.scale = Vector3(1, 1, 1)  # Adjust if needed
+            print("[VERBATIM] Parachutist model loaded.")
+        else:
+            print("[VERBATIM] Failed to load parachutist model")
+        fallback_mesh.mesh.size = Vector3(0.8, 1.8, 0.8)
+        var mat = StandardMaterial3D.new()
+        mat.albedo_color = Color(1, 0.5, 0)
+        fallback_mesh.material_override = mat
+        _character.add_child(fallback_mesh)
+# FALLBACK_MESH_GUARD
+    if not controller_script:
+        _log("[VERBATIM] ERROR: parachute_controller.gd not loaded - using fallback mesh")
+        var box = MeshInstance3D.new()
+        box.mesh = BoxMesh.new()
+        box.mesh.size = Vector3(0.8, 1.8, 0.8)
+        var mat = StandardMaterial3D.new()
+        mat.albedo_color = Color(1, 0.5, 0)
+        box.material_override = mat
+        _character.add_child(box)
+    if not controller_script:
+        _log("[VERBATIM] ERROR: parachute_controller.gd not loaded - using fallback mesh")
+        var box = MeshInstance3D.new()
+        box.mesh = BoxMesh.new()
+        box.mesh.size = Vector3(0.8, 1.8, 0.8)
+        var mat = StandardMaterial3D.new()
+        mat.albedo_color = Color(1, 0.5, 0)
+        box.material_override = mat
+        _character.add_child(box)
+    if controller_script:
+        _character.set_script(controller_script)
+        _log("[VERBATIM] Parachute controller attached")
+    else:
+        _log("[VERBATIM] ERROR: Could not load parachute_controller.gd")
+
+    var collision = CollisionShape3D.new()
+    var capsule = CapsuleShape3D.new()
+    capsule.radius = 0.5
+    capsule.height = 1.8
+    collision.shape = capsule
+    _character.add_child(collision)
+
+    _character.add_child(cam)
+    # Fix: move camera to see the plane
+    _log("[VERBATIM] Camera added to player, current=true")
+
+    # Attach a point light to the camera to guarantee illumination
+    var point_light = OmniLight3D.new()
+    point_light.light_color = Color(1, 1, 1)
+    point_light.omni_range = 2000
+    point_light.position = Vector3(0, 2, 0)
+    _character.add_child(point_light)
+    _log("[VERBATIM] Point light attached to camera")
+
+    var canopy = MeshInstance3D.new()
+    canopy.mesh = SphereMesh.new()
+    canopy.mesh.radius = 0.6
+    canopy.mesh.height = 1.0
+    canopy.scale = Vector3(3.0, 3.0, 3.0)
+    canopy.position = Vector3(0, 3.2, 0)
+    canopy.name = "canopy_model"
+    canopy.visible = false
+    _character.add_child(canopy)
+
+    add_child(_character)
+    # World camera to see the plane
+    var world_cam = Camera3D.new()
+    world_cam.far = 20000.0
+    world_cam.position = Vector3(0, 6050, -80)
+    world_cam.look_at(Vector3(0, 6000, 0), Vector3.UP)
+    world_cam.current = true
+    add_child(world_cam)
+    _log("[VERBATIM] World camera attached, looking at plane")
+    # World camera to see the plane
+# (duplicate removed)
+    world_cam.far = 20000.0
+    world_cam.position = Vector3(0, 6050, -80)
+    world_cam.look_at(Vector3(0, 6000, 0), Vector3.UP)
+    world_cam.current = true
+    add_child(world_cam)
+    _log("[VERBATIM] World camera attached, looking at plane")
+    _character.global_position = Vector3(0, 6000, 0)
+    _log("[VERBATIM] Player added to scene tree")
+    call_deferred("_connect_player_signals")
+
+func _connect_player_signals():
+    await get_tree().process_frame
+    if _character and _character.has_signal("landed"):
+        _character.landed.connect(_on_landed)
+        _character.malfunction_triggered.connect(_on_malfunction)
+    # FIX: connect the plane\'s jump signal to the player
+    var plane = get_node_or_null("FlyingPlane")
+    if plane and plane.has_signal("jumped_from_plane"):
+        plane.jumped_from_plane.connect(_character._on_jumped_from_plane)
+        _log("[VERBATIM] Plane signal connected")
+    else:
+        _log("[VERBATIM] WARNING: Plane or signal not found")
+        _log("[VERBATIM] Player signals connected")
+
+func _check_parachute_controller():
+    var diag_path = "user://parachute_diag.txt"
+    if not FileAccess.file_exists(diag_path):
+        _log("[VERBATIM] FATAL: No parachute diagnostic file.")
+        _log("[VERBATIM] WARNING: parachute diagnostic missing - skipping assert")
+    else:
+        var f = FileAccess.open(diag_path, FileAccess.READ)
+        if not f:
+            _log("[VERBATIM] ERROR: could not open file — file missing or locked")
+            return
+        var content = f.get_as_text()
+        _log("[VERBATIM] Parachute controller diagnostic:\n" + content)
+
+# ------------------------------------------------------------------
+# Helper functions (runway, HUD, achievements, etc.)
+# ------------------------------------------------------------------
+func _create_runway(pos: Vector3, length: float, width: float, heading: float, color: Color) -> MeshInstance3D:
+    var mi = MeshInstance3D.new()
+    var box = BoxMesh.new()
+    box.size = Vector3(width, 0.5, length)
+    var mat = StandardMaterial3D.new()
+    mat.albedo_color = color
+    mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    mi.mesh = box
+    mi.material_override = mat
+    mi.position = pos
+    mi.rotation_degrees.y = heading
+    return mi
+
+func _load_faa_obstacles() -> void:
+    pass
+
+func _create_hud():
+    _hud_layer = CanvasLayer.new()
+    _hud_layer.layer = 1
+    add_child(_hud_layer)
+    var font = ThemeDB.fallback_font
+    var label_names = ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+    for i in range(8):
+        var lbl = Label.new()
+        lbl.add_theme_font_override("font", font)
+        lbl.add_theme_font_size_override("font_size", 14)
+        lbl.add_theme_color_override("font_color", Color(0, 1, 0))
+        lbl.position = Vector2(50, 10 + i * 22)
+        lbl.custom_minimum_size = Vector2(220, 20)
+        lbl.text = label_names[i] + ": --"
+        _hud_layer.add_child(lbl)
+        _hud_labels.append(lbl)
+    _score_label = Label.new()
+    _score_label.add_theme_font_override("font", font)
+    _score_label.add_theme_font_size_override("font_size", 16)
+    _score_label.add_theme_color_override("font_color", Color(1, 1, 0))
+    _score_label.position = Vector2(10, 200)
+    _hud_layer.add_child(_score_label)
+    _notification_label = Label.new()
+    _notification_label.add_theme_font_override("font", font)
+    _notification_label.add_theme_font_size_override("font_size", 16)
+    _notification_label.add_theme_color_override("font_color", Color(1, 0.8, 0))
+    _notification_label.position = Vector2(400, 20)
+    _hud_layer.add_child(_notification_label)
+    _log("[VERBATIM] HUD created")
+
+func _on_landed(safe: bool):
+    if safe:
+        _calculate_score()
+        _game_state = GameState.LANDED
+    else:
+        _game_state = GameState.GAME_OVER
+    _show_notification("Landed! Score: " + str(_score))
+
+func _on_malfunction(type: String):
+    _show_notification("Malfunction: " + type)
+
+func _calculate_score():
+    var distance = _character.global_position.length()
+    var landing_speed = abs(_character.velocity.length())
+    var distance_penalty = int(distance * 10)
+    var speed_penalty = int(landing_speed * 5) if landing_speed > 3.0 else 0
+    _score = 1000 - distance_penalty - speed_penalty
+    _score = max(0, _score)
+    _show_notification("Score: " + str(_score))
+    _score_label.text = "SCORE: " + str(_score)
+    _update_leaderboard()
+
+func _init_leaderboard():
+    _log("[VERBATIM] ENTER _init_leaderboard")
+    if FileAccess.file_exists("user://leaderboard.save"):
+        var file = FileAccess.open("user://leaderboard.save", FileAccess.READ)
+        if not file:
+            _log("[VERBATIM] ERROR: could not open leaderboard.save — file missing or locked")
+            return
+        var content = file.get_as_text()
+        _leaderboard = JSON.parse_string(content)
+        file.close()
+    else:
+        _leaderboard = []
+
+func _update_leaderboard():
+    var entry = {"score": _score, "date": Time.get_datetime_string_from_system()}
+    _leaderboard.append(entry)
+    _leaderboard.sort_custom(func(a, b): return a["score"] > b["score"])
+    if _leaderboard.size() > MAX_LEADERBOARD_ENTRIES:
+        _leaderboard.resize(MAX_LEADERBOARD_ENTRIES)
+    var file = FileAccess.open("user://leaderboard.save", FileAccess.WRITE)
+    if not file:
+        _log("[VERBATIM] ERROR: could not open leaderboard.save — file missing or locked")
+        return
+    file.store_string(JSON.stringify(_leaderboard))
+    file.close()
+
+func _init_achievements():
+    _log("[VERBATIM] ENTER _init_achievements")
+    if FileAccess.file_exists("user://achievements.save"):
+        var file = FileAccess.open("user://achievements.save", FileAccess.READ)
+        if not file:
+            _log("[VERBATIM] ERROR: could not open achievements.save — file missing or locked")
+            return
+        var content = file.get_as_text()
+        var saved = JSON.parse_string(content)
+        if saved:
+            for key in saved:
+                if _achievements.has(key):
+                    _achievements[key] = saved[key]
+        file.close()
+    _display_achievements()
+
+func _unlock_achievement(achievement_id: String):
+    if _achievements.has(achievement_id) and not _achievements[achievement_id]:
+        _achievements[achievement_id] = true
+        _log("[VERBATIM] Achievement unlocked: " + achievement_id)
+        _show_notification("Achievement unlocked: " + achievement_id)
+        var file = FileAccess.open("user://achievements.save", FileAccess.WRITE)
+        if not file:
+            _log("[VERBATIM] ERROR: could not open achievements.save — file missing or locked")
+            return
+        file.store_string(JSON.stringify(_achievements))
+        file.close()
+
+func _display_achievements():
+    var unlocked = []
+    for key in _achievements:
+        if _achievements[key]:
+            unlocked.append(key)
+    if unlocked.size() > 0:
+        _log("[VERBATIM] Unlocked achievements: " + str(unlocked))
+
+func _init_mission():
+    _log("[VERBATIM] ENTER _init_mission")
+    _mission_objectives = {
+        MissionType.TRAINING: {"name": "Training", "target_score": 500, "target_malfunction": 0},
+        MissionType.ADVANCED: {"name": "Advanced", "target_score": 800, "target_malfunction": 1},
+        MissionType.EXPERT: {"name": "Expert", "target_score": 950, "target_malfunction": null}
+    }
+    _update_mission_ui()
+
+func _update_mission_ui():
+    var mission_info = _mission_objectives[_current_mission]
+    _notification_label.text = "Mission: " + mission_info["name"] + " | Target Score: " + str(mission_info["target_score"])
+
+func _check_mission_completion():
+    if _mission_completed:
+        return
+    var mission_info = _mission_objectives[_current_mission]
+    if _score >= mission_info["target_score"]:
+        if mission_info["target_malfunction"] == null or int(_malfunction) == mission_info["target_malfunction"]:
+            _mission_completed = true
+            _show_notification("Mission completed: " + mission_info["name"])
+            match _current_mission:
+                MissionType.TRAINING:
+                    _current_mission = MissionType.ADVANCED
+                MissionType.ADVANCED:
+                    _current_mission = MissionType.EXPERT
+                MissionType.EXPERT:
+                    pass
+            _update_mission_ui()
+
+func _show_notification(text: String):
+    _notification_label.text = text
+    var timer = get_tree().create_timer(3.0)
+    timer.timeout.connect(func(): _notification_label.text = "")
+
+func _process(_delta):
+    # HEARTBEAT: every 5 seconds (~300 frames)
+    if Engine.get_process_frames() % 300 == 0:
+        _log("[VERBATIM] Game loop running (heartbeat)")
+    # Direct key check (bypasses InputMap)
+    if Input.is_key_pressed(KEY_SPACE):
+        _log("[VERBATIM] SPACE key pressed directly")
+    if not _character:
+        _log("[VERBATIM] WARN: _character is null — skipping block")
+        return
+    var alt = _character.global_position.y - 25.0
+    _hud_labels[0].text = "ALT: %.0f ft" % max(0, alt)
+    var speed_kts = _character.velocity.length() * 1.94384
+    _hud_labels[1].text = "SPD: %.0f kts" % speed_kts
+    _frame_count += 1
+    if _frame_count % 1800 == 0:
+        _update_weather()
+    _check_mission_completion()
+
+enum MalfunctionType { GOOD, LINE_TWISTS, BAG_LOCK, LINE_OVER, PILOT_IN_TOW }
+var _malfunction: MalfunctionType = MalfunctionType.GOOD
+func _randomize_malfunction():
+    var r = randi() % 5
+    match r:
+        0: _malfunction = MalfunctionType.GOOD
+        1: _malfunction = MalfunctionType.LINE_TWISTS
+        2: _malfunction = MalfunctionType.BAG_LOCK
+        3: _malfunction = MalfunctionType.LINE_OVER
+        4: _malfunction = MalfunctionType.PILOT_IN_TOW
+func _malfunction_name() -> String:
+    match _malfunction:
+        MalfunctionType.GOOD: return "GOOD"
+        MalfunctionType.LINE_TWISTS: return "LINE TWISTS"
+        MalfunctionType.BAG_LOCK: return "BAG LOCK"
+        MalfunctionType.LINE_OVER: return "LINE OVER"
+        MalfunctionType.PILOT_IN_TOW: return "PILOT IN TOW"
+    return "UNKNOWN"
+
+func _update_weather():
+    _fetch_real_wind()
+    _log("[VERBATIM] Weather updated: speed=%.1f kts dir=%d°" % [_wind_base_speed, _wind_base_direction])
+func _fetch_real_wind():
+    _wind_base_speed     = randf_range(3.0, 15.0)
+    _wind_base_direction = randi_range(0, 359)
+    _log("[VERBATIM] Wind: %.1f kts @ %d°" % [_wind_base_speed, _wind_base_direction])
+func _setup_pip_overlay():
+    _log("[VERBATIM] PIP overlay: disabled (single viewport mode)")
+func _init_controller():
+    _log("[VERBATIM] ENTER _init_controller")
+func _init_sentry():
+    _log("[VERBATIM] ENTER _init_sentry")
+func _init_screenshot_library():
+    _log("[VERBATIM] ENTER _init_screenshot_library")
+    if not DirAccess.dir_exists_absolute("user://screenshots"):
+        DirAccess.make_dir_recursive_absolute("user://screenshots")
+    _screenshot_library.clear()
+func _show_loading_screen():
+    _log("[VERBATIM] ENTER _show_loading_screen")
+    _loading_layer = CanvasLayer.new()
+    add_child(_loading_layer)
+    var label = Label.new()
+    label.text = "Loading..."
+    _loading_layer.add_child(label)
+func _hide_loading_screen():
+    if _loading_layer:
+        _loading_layer.queue_free()
+        _loading_layer = null
+
+
+func load_and_run_debugger():
+    var dbg = load("res://scripts/debug_components.gd")
+    if dbg and dbg.has_method("run"):
+        dbg.run()
+    else:
+        print("ERROR: debug_components.gd not found")
+
+func _exit_plane():
+    if _exited:
+        return
+    _exited = true
+    _character.gravity_scale = 1.0
+    _character.velocity = Vector3(0, -2, 0)  # small initial downward velocity
+    print(Time.get_datetime_string_from_system() + " [INFO] Player exited the plane.")
+
+
+    if _exited:
+        return
+    _exited = true
+    _character.gravity_scale = 1.0
+    _character.velocity = Vector3(0, -2, 0)
+    print(Time.get_datetime_string_from_system() + " [INFO] Player exited the plane.")
+
+
+func _unhandled_input(event):
+    if event is InputEventKey and event.pressed:
+        if event.keycode == KEY_E:
+            _exit_plane()
+        if event.keycode == KEY_SPACE:
+            if _exited:
+                var plane = get_node_or_null("FlyingPlane")
+                if plane and plane.has_method("jump_from_plane"):
+                    plane.jump_from_plane()
+            else:
+                print(Time.get_datetime_string_from_system() + " [INFO] Cannot deploy canopy while inside plane.")
+# IMPLEMENTATION COMPLETE
+
+func _unhandled_input(event):
+    if event is InputEventKey and event.pressed:
+        if event.keycode == KEY_E:
+            _exit_plane()
+        # Space is handled by InputManager, but we can also handle it here
+        # to ensure it only works after exit.
+        if event.keycode == KEY_SPACE:
+            if _exited:
+                # Call the plane's jump_from_plane (which emits signal)
+                var plane = get_node_or_null("FlyingPlane")
+                if plane and plane.has_method("jump_from_plane"):
+                    plane.jump_from_plane()
+            else:
+                print(Time.get_datetime_string_from_system() + " [INFO] Cannot deploy canopy while inside plane.")

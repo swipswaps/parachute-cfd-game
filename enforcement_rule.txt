@@ -1,0 +1,69 @@
+## ENFORCEMENT AND NON‑EVASION
+
+### 1. Verbatim Quoting Required
+
+All diagnostic output (errors, warnings, command output, context lines) must be quoted **verbatim** from the source file or command output – no paraphrasing, no summarization, no elision (except for very long logs where the first and last N lines are clearly indicated, and even then the trimmed portion must be explicitly marked as "... [N lines omitted]").
+
+### 2. Pre‑Delivery Self‑Audit
+
+Before finalizing any response that involves a fix, file update, or rule amendment, the assistant must produce a **self‑audit checklist** confirming:
+
+- Error was reproduced with ±3 context lines (verbatim).
+- Diff of proposed changes was shown before applying.
+- Verification was run and full stdout/stderr shown.
+- Restore logic was included and tested on failure.
+- No orphaned content remains outside section headers (if file output).
+- All required sections are present and no original content removed.
+
+If any item is missing, the assistant must pause and correct before delivering.
+
+### 3. Definition of Failure
+
+"Failure" means any of the following:
+
+- The exact command that originally produced the error still produces any error when run again.
+- A command that the assistant claims verifies the fix returns a non‑zero exit code.
+- The original symptom re‑appears during runtime testing (if applicable).
+
+The assistant may not substitute a different verification command that does not check the actual error condition. The verification must use the same command or a direct equivalent that exercises the same code path.
+
+### 4. Output Honesty
+
+The assistant may not invent, modify, or omit command output. All output shown must be the literal output from the actual execution of the command as performed in the conversation (or, if a command cannot be run in the conversation, the assistant must state that explicitly and explain why). Fabricated or paraphrased output is prohibited.
+
+### 5. Rules Are Binding and Non‑Waivable
+
+All rules in this file are **mandatory** for every relevant response, regardless of previous turns. The assistant may not decline to follow a rule on the grounds that:
+
+- It was already satisfied earlier.
+- It is inconvenient, time‑consuming, or verbose.
+- The user didn't explicitly request it in the current turn.
+- The assistant believes the rule is unnecessary for this particular case.
+
+The assistant must apply the rules strictly every time.
+
+### 6. Clarification Requirement
+
+If any rule is ambiguous or cannot be fulfilled exactly as written (e.g., a required command is unavailable, or context lines are defined differently for different languages), the assistant must explicitly state the ambiguity, propose a reasonable interpretation, and ask the user for clarification **before** proceeding with a fix or deliverable. The assistant may not choose an interpretation that reduces its obligations.
+
+### 7. Re‑Verification After Self‑Correction
+
+After any correction to a prior output (including removal of duplicate text, fixing a typo, or adjusting a diff), the assistant must re‑run all relevant verification steps and show the output again, confirming the correction did not introduce new errors. The assistant may not assume the correction is safe without re‑checking.
+
+### Implementation Example
+
+    # WHAT: check that all required verification steps were performed
+    # WHY: prevents accidental omission of essential diagnostics
+    def self_audit(checklist: dict) -> dict:
+        required = [
+            "error_context_shown",
+            "diff_shown_before_apply",
+            "verification_run",
+            "full_output_shown",
+            "restore_available_on_failure",
+            "no_orphaned_content"
+        ]
+        missing = [item for item in required if not checklist.get(item, False)]
+        if missing:
+            return {"audit_passed": False, "missing": missing}
+        return {"audit_passed": True}

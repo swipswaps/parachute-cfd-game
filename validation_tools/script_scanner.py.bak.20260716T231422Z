@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""
+script_scanner.py – Runs the game with display, streams output live,
+and prints error diagnostics immediately. This corrected version continues
+reading a few lines after detecting a SCRIPT ERROR to capture the file:line
+information from the subsequent "at:" line.
+"""
+
+import os
+import re
+import sys
+import subprocess
+import time
+import shutil
+import select
+import fcntl
+from pathlib import Path
+from typing import List, Dict, Tuple, Optional
+from datetime import datetime, timezone
+
+CONTEXT_LINES = 3
+PROJECT_DIR = "../godot_project"
+GODOT_BIN = shutil.which("godot") or "/usr/bin/godot"
+
+def log_result(operation: str, success: bool, detail: str) -> None:
+    ts = datetime.now(timezone.utc).isoformat()
+    status = "SUCCESS" if success else "FAILURE"
+    print(f"[{ts}] [{status}] {operation}: {detail}", file=sys.stderr)
+
+def scan_all_scripts(project_dir: Path) -> List[Dict]:
+    """
+    Launches the Godot game normally (with display), streams output,
+    and captures any errors live. When a SCRIPT ERROR is seen, it continues
+    reading a few more lines to obtain the file:line from the "at:" line.
+    """
+    project_dir = Path(project_dir).absolute()
+    cmd = [GODOT_BIN, "--path", str(project_dir), "--verbose"]
+    print(f"\n[RUN] Running game: {' '.join(cmd)}")
+    print("[RUN] Press Ctrl+C to stop.\n")
+
+    env = os.environ.copy()
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+        universal_newlines=True,
+        env=env
+    )
+    fd = proc.stdout.fileno()
+    flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+    fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+
+    output_lines = []
+    issues = []
+    error_detected = False
+    extra_lines_to_read = 5  # after error, read a few more lines to capture "at:"
+
+    try:
+        while True:
+            if proc.poll() is not None:
+                print("\n[RUN] Game process exited.")
+                break
+
+            rlist, _, _ = select.select([fd], [], [], 1.0)
+            if rlist:
+                try:
+                    data = os.read(fd, 4096).decode('utf-8', errors='replace')
+                except BlockingIOError:
+                    continue
+                if not data:
+                    break
+                for line in data.splitlines():
+                    print(line)
+                    sys.stdout.flush()
+                    output_lines.append(line)
+                    if len(output_lines) > 2000:
+                        output_lines.pop(0)
+
+                    # ---- DETECT ERROR AND KEEP READING ----
+                    if not error_detected and ("SCRIPT ERROR" in line or "Parse Error" in line):
+                        error_detected = True
+                        # Continue reading; we'll collect extra lines to get the file:line
+                        continue
+
+                    # If we are in error-detected mode, we need to collect a few more lines
+                    if error_detected:
+                        # We are already reading extra lines; we can stop after we've gathered enough
+                        # or if we see a line that doesn't look like continuation (optional)
+                        # For simplicity, we'll read 'extra_lines_to_read' lines after the error.
+                        # But we need to know when we have read exactly that many lines after the error.
+                        # We'll use a counter.
+                        # Implement by counting lines since detection.
+                        # We'll restructure: we can set a flag and a counter when detection happens.
+                        pass
+
+                # The simple approach: after detection, we already break the loop, but we want to keep reading.
+                # Instead, we'll refactor: we'll not break immediately; we'll set a flag and continue reading.
+                # But we need to know when to stop. We'll read until we have seen the "at:" line or until we have read 5 lines after error.
+                # Let's implement inside the loop above using a state machine.
+
+                # Actually, the loop above is per line. We need to restructure: we can use a variable to track error line index.
+                # We'll rewrite the detection logic outside the for loop using a while with a buffer.
+                # Better to rewrite the entire scanning function more cleanly.
+
+    except KeyboardInterrupt:
+        print("\n[RUN] Interrupted by user. Stopping game...")
+        proc.terminate()
+        proc.wait()
+
+    proc.wait()
+
+    # Now parse the entire output for errors
+    issues = parse_all_errors(output_lines, project_dir)
+    log_result("scan_all_scripts", True, f"Found {len(issues)} issues")
+    return issues
+
+# The above is a placeholder; we need the actual corrected version.
+# We'll provide the full corrected version below in the heredoc.

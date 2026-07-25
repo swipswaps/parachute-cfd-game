@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://2x8ydvgorknl"]
+[ext_resource type="Script" path="res://scripts/parachute_controller.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/plane.gd" id="1"]
+
+[ext_resource type="Script" uid="uid://cxqygebka2esx" path="res://scripts/splash.gd" id="1_splash"]
+
+[sub_resource type="BoxMesh" id="1"]
+[node name="SplashScreen" type="Control" unique_id=883355950]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_splash")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1933792820]
+layout_mode = 1
+expand_mode = 1
+stretch_mode = 4
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=64151810]
+layout_mode = 1
+offset_left = 100.0
+offset_top = 540.0
+offset_right = 500.0
+offset_bottom = 560.0
+[node name="Plane" type="CharacterBody3D" parent="."]
+script = ExtResource("1")
+groups = ["plane"]
+
+[node name="Skydiver" type="CharacterBody3D" parent="."]
+script = ExtResource("2")
+
+[node name="Canopy" type="MeshInstance3D" parent="Skydiver"]
+groups = ["canopy"]
+mesh = SubResource("1")
+

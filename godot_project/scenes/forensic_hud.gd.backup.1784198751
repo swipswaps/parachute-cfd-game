@@ -1,0 +1,120 @@
+extends CanvasLayer
+
+# Displays a forensic HUD with recent parse errors and repair metrics.
+# Attach this script to a CanvasLayer node in your game.
+
+const DB_PATH := "res://parachute_mutations.db"
+
+var db: SQLite
+
+func _ready() -> void:
+	update_hud()
+
+func update_hud() -> void:
+	if not _ensure_db():
+		return
+
+	var label = $Label
+	if not label:
+		# Create a label if not present
+		label = Label.new()
+		label.name = "Label"
+		label.position = Vector2(10, 10)
+		label.size = Vector2(800, 600)
+		add_child(label)
+
+	var text := "--- Forensic HUD ---\n"
+
+	# Recent parse errors (last 5)
+	var error_query := """
+		SELECT timestamp, file_path, error_text, fix_applied
+		FROM parse_errors
+		ORDER BY id DESC
+		LIMIT 5
+	"""
+	var errors = db.query(error_query)
+	text += "\nRecent Errors:\n"
+	if errors and errors.size() > 0:
+		for row in errors:
+			text += "%s | %s | %s\n" % [row["timestamp"], row["file_path"], row["fix_applied"]]
+	else:
+		text += "  No errors logged.\n"
+
+	# Repair metrics
+	var metrics_query := """
+		SELECT rule_id, attempts, successes, failures
+		FROM repair_metrics
+	"""
+	var metrics = db.query(metrics_query)
+	text += "\nRepair Metrics:\n"
+	if metrics and metrics.size() > 0:
+		for row in metrics:
+			text += "Rule %d: attempts=%d, successes=%d, failures=%d\n" % [
+				row["rule_id"], row["attempts"], row["successes"], row["failures"]
+			]
+	else:
+		text += "  No metrics available.\n"
+
+	# Also show last autoheal action
+	var heal_query := """
+		SELECT timestamp, file_path, success, raw_output
+		FROM autohealactions
+		ORDER BY id DESC
+		LIMIT 1
+	"""
+	var heal = db.query(heal_query)
+	if heal and heal.size() > 0:
+		var row = heal[0]
+		text += "\nLast AutoHeal: %s | %s | success=%s | %s\n" % [
+			row["timestamp"], row["file_path"], row["success"], row["raw_output"]
+		]
+
+	label.text = text
+	db.close_db()
+
+func _ensure_db() -> bool:
+	if not FileAccess.file_exists(DB_PATH):
+		push_error("Database not found at ", DB_PATH)
+		return false
+
+	db = SQLite.new()
+	db.path = DB_PATH
+	db.open_db()
+	if not db.is_open():
+		push_error("Failed to open database.")
+		return false
+	return true
+
+# You can call update_hud() periodically or after each error
+func refresh() -> void:
+	update_hud()
+
+
+
+# ---------------------------------------------------------------------------
+# DRAG FUNCTIONALITY (added by patch_forensic_hud.sh)
+# ---------------------------------------------------------------------------
+
+func _log_result(operation: String, success: bool, detail: String) -> void:
+    var ts = Time.get_datetime_string_from_system(true)
+    var status = "SUCCESS" if success else "FAILURE"
+    print("[%s] [%s] %s: %s" % [ts, status, operation, detail])
+
+
+func _handle_mouse_button(event: InputEventMouseButton) -> void:
+    if event.button_index != MOUSE_BUTTON_LEFT:
+        return
+    if event.pressed:
+        _is_dragging = true
+        _drag_offset = get_global_mouse_position() - global_position
+        _log_result("drag_start", true, "offset=%s" % _drag_offset)
+    else:
+        _is_dragging = false
+        _log_result("drag_stop", true, "")
+
+func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
+    global_position = get_global_mouse_position() - _drag_offset
+    var vp = get_viewport().get_visible_rect().size
+    var rect = get_rect()
+    global_position.x = clamp(global_position.x, 0, vp.x - rect.size.x)
+    global_position.y = clamp(global_position.y, 0, vp.y - rect.size.y)

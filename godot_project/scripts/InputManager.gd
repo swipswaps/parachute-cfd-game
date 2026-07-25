@@ -22,6 +22,18 @@ func _ready() -> void:
 	if not InputMap.has_action("ui_accept"):
 		pass
 
+	# Headless auto-start: simulate ui_accept ONCE at boot, only for
+	# actual --headless CLI runs. Moved out of _input() (this session) —
+	# it was gated on GODOT_HEADLESS env var, which autostall.py sets
+	# to "1" unconditionally on every run, interactive or not, so the
+	# old code re-fired (with an await mid-_input()!) on every single
+	# key/mouse event. Same fix pattern as build_terrain.gd Defect 3.
+	if "--headless" in OS.get_cmdline_args():
+		await get_tree().process_frame
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] InputManager auto‑start triggered.")
+
 
 # ------------------------------------------------------------------
 # FILTERED INPUT HANDLING
@@ -44,33 +56,30 @@ func _input(event: InputEvent) -> void:
 			print("[INPUT] ui_cancel pressed")
 		elif InputMap.has_action("restart") and event.is_action_pressed("restart"):
 			print("[INPUT] restart pressed")
-		# Add more actions as needed
-		# You can also handle unhandled events separately
-		ErrorLogger._forward_error("Input action missing", {"action": "ui_accept"})
+		else:
+			# FIX (this session): was unconditional — fired even when
+			# ui_accept/ui_cancel/restart matched above, falsely
+			# reporting a missing action on every keypress. Now only
+			# the genuine unmatched-action fallback.
+			ErrorLogger._forward_error("Input action missing", {"action": "ui_accept"})
 	print(Time.get_datetime_string_from_system() + " [INFO] InputManager ready")
 	print(
 		Time.get_datetime_string_from_system() + " [INFO] InputMap.has_action('restart') = ",
 		InputMap.has_action("restart"),
 	)
 	# Ensure all actions exist - now handled by project.godot
-
-	# Headless auto‑start: simulate SPACE press
-	if OS.get_environment("GODOT_HEADLESS") == "1":
-		# Wait a frame to ensure everything is ready
-		await get_tree().process_frame
-		Input.action_press("ui_accept")
-		Input.action_release("ui_accept")
-		print("[VERBATIM] InputManager auto‑start triggered.")
+	# Headless auto-start moved to _ready() (this session) — see there.
 
 
 func _unhandled_input(event) -> void:
-	print("[INPUT] InputManager.gd:16 _input/_unhandled_input triggered")
-	print("[INPUT] InputManager.gd:16 _input/_unhandled_input triggered")
-	print("[INPUT] InputManager.gd:16 _input/_unhandled_input triggered")
-	print("[INPUT] InputManager.gd:9 _input/_unhandled_input triggered")
-	print("[INPUT] InputManager.gd:9 _input/_unhandled_input triggered")
-	print("[INPUT] InputManager.gd:9 _input/_unhandled_input triggered")
-	print("[INPUT] InputManager.gd:9 _input/_unhandled_input triggered")
+	# FIX (this session): 7 duplicate prints removed. Their literal
+	# text ("InputManager.gd:16" / "InputManager.gd:9") was being
+	# misread by autostall.py's error extractor as a real file:line
+	# reference, producing false "[STALL SOURCE]" dumps of the inert
+	# ACTIONS dict on every deploy/restart/etc. No crash was ever
+	# occurring — confirmed via session_20260723_174844.txt showing
+	# normal gameplay immediately before/after each false alarm.
+	print("[INPUT] unhandled_input triggered")
 	# FALLBACK: direct keycode check for R
 	if event is InputEventKey and event.pressed and event.keycode == 82:
 		print(

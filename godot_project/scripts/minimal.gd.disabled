@@ -1,0 +1,45 @@
+# minimal.gd – Test rendering with a simple scene
+extends Node
+
+func _ready():
+	print("[TEST] Creating minimal scene")
+
+	# Green ground plane
+	var ground = MeshInstance3D.new()
+	ground.mesh = PlaneMesh.new()
+	ground.scale = Vector3(20, 1, 20)
+	var ground_mat = StandardMaterial3D.new()
+	ground_mat.albedo_color = Color.GREEN
+	ground.material_override = ground_mat
+	add_child(ground)
+
+	# Red cube at origin
+	var cube = MeshInstance3D.new()
+	cube.mesh = BoxMesh.new()
+	cube.mesh.size = Vector3(1, 1, 1)
+	var cube_mat = StandardMaterial3D.new()
+	cube_mat.albedo_color = Color.RED
+	cube.material_override = cube_mat
+	add_child(cube)
+	cube.position = Vector3(0, 0.5, 0)
+
+	# Camera
+	var camera = Camera3D.new()
+	camera.position = Vector3(5, 5, 5)
+	camera.look_at(Vector3(0, 0, 0))
+	camera.current = true
+	add_child(camera)
+
+	# Light
+	var light = DirectionalLight3D.new()
+	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+	add_child(light)
+
+	print("[TEST] Scene ready")
+
+	# Take screenshot after 2 seconds
+	await get_tree().create_timer(2.0).timeout
+	var img = get_viewport().get_texture().get_image()
+	img.save_png("res://minimal_screenshot.png")
+	print("[TEST] Screenshot saved to minimal_screenshot.png")
+	# get_tree().quit()  # removed by generate_self_healing_0044

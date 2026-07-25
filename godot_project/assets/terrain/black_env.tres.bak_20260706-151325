@@ -1,0 +1,14 @@
+[gd_resource type="Environment" format=3]
+
+[resource]
+background_mode = 1
+background_sky = SubResource("Sky_blue")
+ambient_light_color = Color(0.4, 0.6, 1, 1)
+ambient_light_energy = 1.0
+
+[sub_resource type="Sky" id="Sky_blue"]
+sky_material = SubResource("SkyMat_blue")
+
+[sub_resource type="SkyMaterial" id="SkyMat_blue"]
+use_custom_sky_color = true
+custom_sky_color = Color(0.2, 0.6, 1.0, 1)

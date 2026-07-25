@@ -1,0 +1,126 @@
+{
+  "fix_session": "0210",
+  "database_schema_version": "5.0",
+  "schema_changelog": {
+    "v4_from_0209": "sessions, mutations, gdparse_results, gdscript_version_rules, gdscript_rule_test_results",
+    "v5_additions_from_0228_review": [
+      "rule_sources — evidence attribution per rule (official_docs, forum, github, local_log)",
+      "validators — tool version registry (gdparse, godot, python)",
+      "validator_results — per-tool per-file result with disagreement flag",
+      "resource_contention — dedicated /proc telemetry table (separate from test results)",
+      "pid_tuning — PID nice/ionice adjustment log",
+      "fixes — fix entity table (separate from fix_mutations which records instances)"
+    ],
+    "bugs_fixed_in_0228": [
+      "normalize_indent_to_tabs used replace(' ','\\t') producing 4 tabs per 4-space indent; corrected to leading//SPACES_PER_TAB",
+      "run_game_and_record used proc.pid (shell PID) not Godot PID; corrected to parse [INFO] Godot PID: NNN",
+      "sessions.session_label UNIQUE prevents re-entry; changed to INSERT OR IGNORE + SELECT"
+    ]
+  },
+  "rules": [
+    {
+      "rule_id": "VR001",
+      "category": "lexer",
+      "title": "indent_mode_lock",
+      "description": "GDScript 4 lexer locks on first indented line char (tab or space). Any subsequent line with different leading char is ERR_PARSE_ERROR. gdparse 4.5.0 does not implement this mode-lock.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": "4.5.0",
+      "severity": "critical",
+      "fix_strategy": "normalize_indent_to_dominant — detect dominant char from first indented line; convert minority-char lines using indent_depth // SPACES_PER_TAB tabs",
+      "sources": [
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_styleguide.html#indentation"},
+        {"type": "github", "url": "https://github.com/godotengine/godot/blob/master/modules/gdscript/gdscript_tokenizer.cpp", "note": "indent_char mismatch detection ~line 573"},
+        {"type": "local_log", "url": "godot_run_0208.log", "quote": "Parse Error: Used space character for indentation instead of tab as used before in the file. at: build_terrain.gd:303"}
+      ],
+      "confirmed_false_oracle": "gdparse 4.5.0 PASS (0208 pre-flight) vs Godot 4.6.3 FAIL (same run)"
+    },
+    {
+      "rule_id": "VR002",
+      "category": "parser",
+      "title": "reserved_keyword_as_parameter",
+      "description": "class_name is a reserved keyword and built-in Object property in Godot 4. Lexer emits KEYWORD not NAME in parameter position. gdparse 4.5.0 does not include class_name in its parameter-position reserved set.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": "4.5.0",
+      "severity": "critical",
+      "fix_strategy": "rename_reserved_param — rename all parameter-position uses of class_name to cls_name; do NOT rename file-scope class_name declarations",
+      "sources": [
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/classes/class_object.html#class-object-property-class-name"},
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html#keywords"},
+        {"type": "local_log", "url": "0204.txt:265", "quote": "Parse Error: Expected parameter name. at: debug_components_editor.gd:135"},
+        {"type": "local_log", "url": "0207 output", "quote": "gdparse PASS: debug_components_editor.gd (false oracle — same file Godot rejected)"}
+      ],
+      "confirmed_false_oracle": "gdparse 4.5.0 PASS (0207 F03 block) vs Godot 4.6.3 FAIL (0204 line 265)"
+    },
+    {
+      "rule_id": "VR003",
+      "category": "parser",
+      "title": "python_fstring_in_gdscript",
+      "description": "Python f-string syntax (f'...' or f\"...\") is not valid GDScript. Lexer tokenizes 'f' as NAME, then REGULAR_STRING in expression position is unexpected. GDScript uses % operator or str() + concatenation.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": "4.5.0",
+      "severity": "high",
+      "fix_strategy": "convert_fstring_to_gdscript_concat — replace f\"{var}\" with str(var); f\"{a}{b}\" with str(a) + str(b)",
+      "sources": [
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_format_string.html"},
+        {"type": "local_log", "url": "0207 output", "quote": "Unexpected token Token('REGULAR_STRING', '\"  - {action}\"') at line 44, column 16. Previous tokens: [Token('NAME', 'f')]"}
+      ],
+      "confirmed_false_oracle": "gdparse 4.5.0 FAIL (correctly caught); Godot 4.6.3 also FAIL — NOT a false oracle for this rule"
+    },
+    {
+      "rule_id": "VR004",
+      "category": "parser",
+      "title": "find_child_max_3_args",
+      "description": "Godot 4 Node.find_child() takes max 3 args: (pattern, recursive=true, owned=true). Godot 3 had 4 args including mask. String in bool position (arg 2) also fails.",
+      "godot_version": "4.0",
+      "gdparse_version_misses": "unknown",
+      "severity": "high",
+      "fix_strategy": "reduce_find_child_args — strip args 2-4; Godot 4 defaults are safe",
+      "sources": [
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-find-child"},
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/tutorials/migrating/upgrading_to_godot_4.html"},
+        {"type": "local_log", "url": "0204.txt:280-285", "quote": "Parse Error: Too many arguments for 'find_child()'. Expected at most 3 but received 4. at: validate_scene.gd:122"}
+      ]
+    },
+    {
+      "rule_id": "VR005",
+      "category": "runtime",
+      "title": "array_bounds_hud_labels",
+      "description": "Array index 7 accessed on array with 7 elements (indices 0-6). Off-by-one. Fires at 60Hz in _physics_process — log amplification DoS.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": "N/A — runtime error, not parse",
+      "severity": "high",
+      "fix_strategy": "bounds_guard — wrap access in if _hud_labels.size() > 7:",
+      "sources": [
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-size"},
+        {"type": "local_log", "url": "0204.txt:450-8075", "quote": "SCRIPT ERROR: Out of bounds get index '7' (on base: 'Array') at: _physics_process build_terrain.gd:1626"}
+      ]
+    },
+    {
+      "rule_id": "VR006",
+      "category": "runtime",
+      "title": "null_node_add_child",
+      "description": "add_child() called on null value — target node not initialized before use. Cascading failure: null plane -> null add_child -> character not placed -> HUD crash.",
+      "godot_version": "4.6.3",
+      "gdparse_version_misses": "N/A — runtime error",
+      "severity": "critical",
+      "fix_strategy": "revert_or_null_guard — revert plane.add_child(_character) to add_child(_character) if plane is not initialized before line 303",
+      "sources": [
+        {"type": "official_docs", "url": "https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child"},
+        {"type": "local_log", "url": "0204.txt:443-444", "quote": "SCRIPT ERROR: Cannot call method 'add_child' on a null value. at: _ready build_terrain.gd:303"}
+      ]
+    }
+  ],
+  "fixes": [
+    {"fix_id": "F09",  "rule_id": "VR001", "file": "scripts/build_terrain.gd",                       "action": "normalize_indent_to_dominant", "status": "pending"},
+    {"fix_id": "F02b", "rule_id": "VR003", "file": "scripts/add_input_actions.gd",                   "action": "convert_fstring_to_gdscript_concat", "status": "applied_0208"},
+    {"fix_id": "F03b", "rule_id": "VR002", "file": "addons/gd_repair/debug_components_editor.gd",    "action": "rename_reserved_param", "status": "applied_0208"},
+    {"fix_id": "F01",  "rule_id": "VR004", "file": "scripts/validate_scene.gd",                      "action": "reduce_find_child_args", "status": "applied_0207"},
+    {"fix_id": "F05",  "rule_id": "VR005", "file": "scripts/build_terrain.gd:1626",                  "action": "bounds_guard", "status": "applied_0206_idempotent"},
+    {"fix_id": "F04",  "rule_id": "VR006", "file": "scripts/build_terrain.gd:303",                   "action": "revert_plane_add_child", "status": "applied_0207_idempotent"}
+  ],
+  "next_chunk": {
+    "chunk_1": "python3 diagnose_build_terrain.py — confirm which lines have wrong indent; paste complete output",
+    "chunk_2": "python3 generate_fix_0210.py — applies F09 with merged schema v5; runs A/B test",
+    "chunk_3": "convergence query — confirm VR001 A=FAIL B=PASS in gdscript_rule_test_results"
+  }
+}

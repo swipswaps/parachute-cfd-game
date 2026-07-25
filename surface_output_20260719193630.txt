@@ -1,0 +1,89 @@
+======================================================================
+PART 1: altimeter_hud.gd -- full source, verbatim
+======================================================================
+     1	extends CanvasLayer
+     2	# ==========================================================================
+     3	# altimeter_hud.gd
+     4	#
+     5	# Purpose: simple ALT/VARIO panel, draggable, F4 toggle.
+     6	# WHY this rewrite: the prior version (transcript 17417-17479) triggered
+     7	#   "Nodes with non-equal opposite anchors will have their size overridden
+     8	#   after _ready()." (transcript 17593-17597, points at altimeter_hud.gd:23)
+     9	# because vbox had anchor_right=1.0 anchor_bottom=1.0 AND an explicit size
+    10	# assignment in _ready() -- Godot's Control layout rewrites size after
+    11	# _ready() when opposite anchors differ. Fix: use anchors only (no explicit
+    12	# size) so the vbox fills the panel deterministically, and defer the panel
+    13	# child add so anchor propagation is stable.
+    14	# ==========================================================================
+    15	
+    16	var panel: Panel
+    17	var vbox: VBoxContainer
+    18	var altitude_label: Label
+    19	var vario_label: Label
+    20	var dragging: bool = false
+    21	var drag_offset: Vector2 = Vector2.ZERO
+    22	
+    23	func _ready() -> void:
+    24		panel = Panel.new()
+    25		panel.size = Vector2(200, 100)
+    26		panel.position = Vector2(50, 200)
+    27		add_child(panel)
+    28		panel.visible = true
+    29		print("[ALTIMETER] panel visible set to true")
+    30	
+    31		vbox = VBoxContainer.new()
+    32		# Use anchors that fully fill the panel, and DO NOT also set size --
+    33		# setting both is what produced the "non-equal opposite anchors" warning.
+    34		vbox.anchor_left = 0.0
+    35		vbox.anchor_top = 0.0
+    36		vbox.anchor_right = 1.0
+    37		vbox.anchor_bottom = 1.0
+    38		vbox.offset_left = 4
+    39		vbox.offset_top = 4
+    40		vbox.offset_right = -4
+    41		vbox.offset_bottom = -4
+    42		panel.add_child(vbox)
+    43	
+    44		altitude_label = Label.new()
+    45		altitude_label.text = "ALT: 0 ft"
+    46		vbox.add_child(altitude_label)
+    47	
+    48		vario_label = Label.new()
+    49		vario_label.text = "VARIO: 0.0 m/s"
+    50		vbox.add_child(vario_label)
+    51	
+    52		panel.visible = true
+    53	
+    54	func _input(event: InputEvent) -> void:
+    55		if event is InputEventKey and event.pressed and not event.echo:
+    56			if event.keycode == KEY_F4:
+    57				panel.visible = not panel.visible
+    58				get_viewport().set_input_as_handled()
+    59				return
+    60	
+    61		if event is InputEventMouseButton:
+    62			var mb := event as InputEventMouseButton
+    63			if mb.button_index == MOUSE_BUTTON_LEFT:
+    64				var pos: Vector2 = mb.position
+    65				var rect := Rect2(panel.position, panel.size)
+    66				if mb.pressed and rect.has_point(pos):
+    67					dragging = true
+    68					drag_offset = pos - panel.position
+    69					get_viewport().set_input_as_handled()
+    70				elif not mb.pressed:
+    71					dragging = false
+    72	
+    73		if event is InputEventMouseMotion and dragging:
+    74			var mm := event as InputEventMouseMotion
+    75			panel.position = mm.position - drag_offset
+    76			get_viewport().set_input_as_handled()
+    77	
+    78	func update_altitude(alt_ft: float, vario: float = 0.0) -> void:
+    79		altitude_label.text = "ALT: %d ft" % int(round(alt_ft))
+    80		vario_label.text = "VARIO: %.2f m/s" % vario
+[2026-07-19T23:36:31Z] [SUCCESS] part1_altimeter: godot_project/scripts/altimeter_hud.gd shown in full (80 lines)
+
+======================================================================
+PART 2: search last autostall run for PiP adoption failure message
+======================================================================
+Most recent candidate log: run_output_20260719183647.txt

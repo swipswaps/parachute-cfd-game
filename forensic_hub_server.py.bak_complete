@@ -1,0 +1,325 @@
+from urllib.parse import urlparse
+#!/usr/bin/env python3
+# forensic_hub_server.py -- stdlib-only HTTP server for the forensic HUD.
+#
+# Serves exactly the four endpoints forensic_hud.gd polls:
+#   /api/gamification  -> level, xp, streak, success_rate, pokedex_*,
+#                         unresolved_parse_errors, achievements
+#   /api/leaderboard   -> [{name, error_class, wins, trials, win_rate, ucb1}]
+#   /api/citations     -> {principles: [...], godot_docs: [...]}
+#   /api/integrity     -> {quick_check}
+#
+# Data source: parachute_mutations.db opened READ-ONLY via
+# file:PATH?mode=ro URI -- this server can never mutate the DB.
+# Schema is introspected at runtime with PRAGMA table_info; nothing
+# is assumed. Missing tables degrade to db_unavailable=true, which
+# forensic_hud.gd already handles ("hub OK, DB unavailable").
+#
+# Run: python3 forensic_hub_server.py 2>&1 | tee hub_server.log
+
+import json
+import math
+import sqlite3
+import sys
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+PORT = 8765
+
+# Candidate DB locations, largest existing file wins.
+DB_CANDIDATES = [
+    Path("parachute_mutations.db"),
+    Path("godot_project/scripts/parachute_mutations.db"),
+]
+
+
+def find_db():
+    existing = [p for p in DB_CANDIDATES if p.exists()]
+    if not existing:
+        return None
+    return max(existing, key=lambda p: p.stat().st_size)
+
+
+def db_connect_ro(path):
+    # mode=ro: read-only URI -- server can never write the DB
+    uri = "file:%s?mode=ro" % path
+    return sqlite3.connect(uri, uri=True)
+
+
+def table_columns(conn, table):
+    try:
+        rows = conn.execute("PRAGMA table_info(%s)" % table).fetchall()
+        return [r[1] for r in rows]
+    except sqlite3.Error:
+        return []
+
+
+def has_table(conn, table):
+    row = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+        (table,),
+    ).fetchone()
+    return row is not None
+
+
+def pick(cols, *names):
+    # Return the first column name present, or None.
+    for n in names:
+        if n in cols:
+            return n
+    return None
+
+
+def api_gamification(conn):
+    out = {}
+    if not has_table(conn, "auto_heal_actions"):
+        return {"db_unavailable": True}
+    cols = table_columns(conn, "auto_heal_actions")
+    success_col = pick(cols, "success", "succeeded", "ok")
+    total = conn.execute("SELECT COUNT(*) FROM auto_heal_actions").fetchone()[0]
+    out["xp"] = total
+    out["level"] = 1 + total // 5000
+    if success_col:
+        wins = conn.execute(
+            "SELECT COUNT(*) FROM auto_heal_actions WHERE %s=1" % success_col
+        ).fetchone()[0]
+        out["success_rate"] = round(wins / total, 4) if total else 0.0
+        # streak: longest run of consecutive successes by id order
+        streak = best = 0
+        for (s,) in conn.execute(
+            "SELECT %s FROM auto_heal_actions ORDER BY rowid" % success_col
+        ):
+            streak = streak + 1 if s == 1 else 0
+            best = max(best, streak)
+        out["streak"] = best
+    if has_table(conn, "parse_error_log"):
+        pcols = table_columns(conn, "parse_error_log")
+        res_col = pick(pcols, "resolved", "fixed", "closed")
+        total_pe = conn.execute("SELECT COUNT(*) FROM parse_error_log").fetchone()[0]
+        if res_col:
+            unresolved = conn.execute(
+                "SELECT COUNT(*) FROM parse_error_log WHERE %s=0" % res_col
+            ).fetchone()[0]
+            out["unresolved_parse_errors"] = unresolved
+            out["pokedex_caught"] = total_pe - unresolved
+        out["pokedex_known"] = total_pe
+    achievements = []
+    if out.get("xp", 0) > 0:
+        achievements.append("first_heal")
+    if out.get("success_rate", 0) >= 0.35:
+        achievements.append("healer_35pct")
+    if out.get("streak", 0) >= 50:
+        achievements.append("streak_50")
+    out["achievements"] = achievements
+    return out
+
+
+def api_leaderboard(conn):
+    if not has_table(conn, "strategy_rewards"):
+        return []
+    cols = table_columns(conn, "strategy_rewards")
+    name_col = pick(cols, "strategy_name", "strategy", "name")
+    class_col = pick(cols, "error_class", "class", "category")
+    wins_col = pick(cols, "wins")
+    trials_col = pick(cols, "total_trials", "trials", "attempts")
+    if not (name_col and wins_col and trials_col):
+        return []
+    sel_class = class_col if class_col else "''"
+    rows = conn.execute(
+        "SELECT %s, %s, %s, %s FROM strategy_rewards"
+        % (name_col, sel_class, wins_col, trials_col)
+    ).fetchall()
+    total_trials = sum(r[3] for r in rows) or 1
+    board = []
+    for name, eclass, wins, trials in rows:
+        wr = round(wins / trials, 4) if trials else 0.0
+        # UCB1: mean + sqrt(2 ln N / n)
+        ucb1 = round(
+            wr + math.sqrt(2.0 * math.log(max(total_trials, 2)) / max(trials, 1)), 4
+        )
+        board.append(
+            {
+                "name": name,
+                "error_class": eclass or "",
+                "wins": wins,
+                "trials": trials,
+                "win_rate": wr,
+                "ucb1": ucb1,
+            }
+        )
+    board.sort(key=lambda r: r["ucb1"], reverse=True)
+    return board
+
+
+def api_citations():
+    # Real, verified sources only -- from the project working rules.
+    return {
+        "principles": [
+            {
+                "id": "DOD",
+                "label": "Definition of Done (Scrum Guide 2020)",
+                "verbatim": "If a Product Backlog item does not meet the Definition of Done, it cannot be released.",
+                "applies_to": "every fix must be re-tested before declared done",
+                "url": "https://www.scrum.org/resources/blog/getting-started-definition-done-dod",
+            },
+            {
+                "id": "DBC",
+                "label": "Design by Contract (Meyer)",
+                "verbatim": "DbC's 'fail hard' property simplifies the debugging of contract behavior.",
+                "applies_to": "count==1 precondition guards on every edit",
+                "url": "https://en.wikipedia.org/wiki/Design_by_contract",
+            },
+            {
+                "id": "RAW",
+                "label": "Read-after-Write Consistency",
+                "verbatim": "if a write is accepted, the next read will include that write.",
+                "applies_to": "sha256 read-back after every file write",
+                "url": "https://www.geeksforgeeks.org/system-design/strong-vs-eventual-consistency-in-system-design/",
+            },
+            {
+                "id": "SD",
+                "label": "Scientific Debugging (Zeller)",
+                "verbatim": "Test the hypothesis by experiments.",
+                "applies_to": "no third fix attempt without a discriminating diagnostic",
+                "url": "https://dev.to/hectorw_tt/why-programs-fail-a-guide-to-systematic-debugging-by-andreas-zeller-a-book-review-24h8",
+            },
+            {
+                "id": "TOIL",
+                "label": "Toil Elimination (SRE ch.5)",
+                "verbatim": "Toil is the kind of work that tends to be manual, repetitive, automatable.",
+                "applies_to": "if it can be typed, it MUST be scripted",
+                "url": "https://cloud.google.com/blog/products/management-tools/identifying-and-tracking-toil-using-sre-principles",
+            },
+        ],
+        "godot_docs": [
+            {
+                "id": "GD-CL",
+                "label": "CanvasLayer is independent of parent transform",
+                "verbatim": "Canvas drawing layer... independent of the tree order.",
+                "applies_to": "forensic_hud.gd drags _panel.position, not root global_position",
+                "url": "https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html",
+            },
+            {
+                "id": "GD-IND",
+                "label": "GDScript indentation rules",
+                "verbatim": "GDScript uses indentation to define the scope.",
+                "applies_to": "tabs throughout, gdparse as syntax oracle",
+                "url": "https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html",
+            },
+        ],
+    }
+
+
+def api_integrity(conn):
+    row = conn.execute("PRAGMA quick_check").fetchone()
+    return {"quick_check": row[0] if row else "unknown"}
+
+
+class Handler(BaseHTTPRequestHandler):
+    def _send_json(self, obj, code=200):
+        body = json.dumps(obj).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def do_GET(self):
+
+        parsed = urlparse(self.path)
+        if parsed.path == "/":
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html")
+            self.end_headers()
+            html = """<!DOCTYPE html>
+<html>
+<head><title>Forensic Hub</title>
+<style>
+body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
+h1 { color: #0f0; }
+table { border-collapse: collapse; margin: 20px 0; }
+td, th { border: 1px solid #0f0; padding: 8px; }
+th { background: #222; }
+a { color: #0ff; }
+.section { margin-bottom: 30px; }
+</style>
+</head>
+<body>
+<h1>🔍 Forensic Hub Dashboard</h1>
+<div id="gamification" class="section"><h2>Gamification</h2><pre id="gam-data">Loading...</pre></div>
+<div id="leaderboard" class="section"><h2>Leaderboard</h2><pre id="leader-data">Loading...</pre></div>
+<div id="citations" class="section"><h2>Citations</h2><pre id="cite-data">Loading...</pre></div>
+<div id="integrity" class="section"><h2>Integrity</h2><pre id="integ-data">Loading...</pre></div>
+<script>
+(async function() {
+    const endpoints = {
+        gam: '/api/gamification',
+        leader: '/api/leaderboard',
+        cite: '/api/citations',
+        integ: '/api/integrity'
+    };
+    for (const [key, url] of Object.entries(endpoints)) {
+        try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+            document.getElementById(key + '-data').textContent = JSON.stringify(data, null, 2);
+        } catch(e) {
+            document.getElementById(key + '-data').textContent = 'Error: ' + e.message;
+        }
+    }
+})();
+</script>
+</body>
+</html>"""
+            self.wfile.write(html.encode())
+            return
+        db_path = find_db()
+        try:
+            if self.path == "/api/citations":
+                self._send_json(api_citations())
+                return
+            if db_path is None:
+                self._send_json({"db_unavailable": True})
+                return
+            conn = db_connect_ro(db_path)
+            try:
+                if self.path == "/api/gamification":
+                    self._send_json(api_gamification(conn))
+                elif self.path == "/api/leaderboard":
+                    self._send_json(api_leaderboard(conn))
+                elif self.path == "/api/integrity":
+                    self._send_json(api_integrity(conn))
+                else:
+                    self._send_json({"error": "unknown endpoint", "path": self.path}, 404)
+            finally:
+                conn.close()
+        except Exception as exc:
+            self._send_json({"error": str(exc)}, 500)
+
+    def log_message(self, fmt, *args):
+        # Verbatim request logging to stdout -- never suppressed
+        sys.stdout.write("%s - %s\n" % (self.address_string(), fmt % args))
+        sys.stdout.flush()
+
+
+def main():
+    db_path = find_db()
+    print("[HUB] DB: %s" % (db_path if db_path else "NOT FOUND (degraded mode)"))
+    if db_path:
+        print("[HUB] DB size: %d bytes" % db_path.stat().st_size)
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    except OSError as exc:
+        print("[HUB] FAILED to bind 127.0.0.1:%d -- %s" % (PORT, exc))
+        print("[HUB] Another hub instance may already be running.")
+        sys.exit(1)
+    print("[HUB] Serving on http://127.0.0.1:%d" % PORT)
+    print("[HUB] Endpoints: /api/gamification /api/leaderboard /api/citations /api/integrity")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("[HUB] Stopped.")
+
+
+if __name__ == "__main__":
+    main()

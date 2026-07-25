@@ -1,0 +1,15 @@
+{
+  "new_rules": {
+    "R147": {
+      "rule": "When an automated script (e.g., a patch script, audit script, or build script) encounters an error (non-zero exit, exception, parse failure), it must automatically extract the relevant lines from the source file around the error location and print them to the log with a `[VERBATIM]` prefix. At minimum, it must print 3 lines before and 3 lines after the error line (or the entire function if the error is within a function). The extraction must be done programmatically, not manually. This ensures that debugging information is available in the log without requiring the user to manually extract context.",
+      "problem": "Error logs often only contain a line number, but not the surrounding code. This forces the user to manually open the file and extract context, slowing down debugging. Automated scripts should produce self-contained error reports.",
+      "detector": "grep -A3 -B3 'ERROR.*\\.gd:\\d+' /tmp/log.txt | grep -E '\\.gd:\\d+' && echo 'PASS: context lines found' || echo 'FAIL: no context lines around error'",
+      "verification": "Trigger a script error (e.g., by running gdparse on a malformed file) and check that the log contains the file path and at least 6 lines of context around the error line (3 before, 3 after).",
+      "citation": {
+        "source": "Extension of R146 based on the 2026-06-16 debugging session",
+        "verbatim_quote": "When the error at line 399 was reported, the user had to manually run a Python command to extract the surrounding lines. This rule forces that extraction to be automatic."
+      }
+    }
+  },
+  "new_techniques": []
+}

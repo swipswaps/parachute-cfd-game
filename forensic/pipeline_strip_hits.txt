@@ -1,0 +1,51 @@
+5:# VERSION: 6.5.167 – Fix indentation after screenshot stripping; remove input-action fix.
+10:#   [FIX-167-001] After stripping screenshot code, run gdformat to fix indentation.
+168:    if not line.strip():
+187:        if pgrep.returncode == 0 and pgrep.stdout.strip():
+188:            return int(pgrep.stdout.strip().split()[-1])
+272:                wchan = f.read().strip()
+323:        if pgrep.returncode != 0 or not pgrep.stdout.strip():
+326:        pids = pgrep.stdout.strip().split()
+335:    if pgrep.returncode == 0 and pgrep.stdout.strip():
+336:        remaining = pgrep.stdout.strip().split()
+346:        if pgrep2.returncode == 0 and pgrep2.stdout.strip():
+347:            print(f"[KILL-FATAL] {len(pgrep2.stdout.strip().split())} Godot processes remain after all attempts.", flush=True)
+408:def _remove_rust_stub():
+553:    _remove_rust_stub()
+611:            print(f"[INIT] {line.rstrip()}", flush=True)
+1061:        print(f"[{tool_name}] {line.rstrip()}", flush=True)
+1143:                        results["warnings"].append((script_path, "gdlint", line.strip()))
+1152:                        results["warnings"].append((script_path, "gdradon", line.strip()))
+1159:                            results["warnings"].append((script_path, "gdstyle", line.strip()))
+1168:                                results["warnings"].append((script_path, "gdcli", line.strip()))
+1195:# The input-action name replacement is removed entirely because it is
+1356:def strip_screenshot_code_from_build_terrain():
+1365:    # Remove lines containing "save_png"
+1368:    removed = 0
+1370:        if "save_png" in line:
+1371:            print(f"[STRIP] Removing line: {line.strip()}", flush=True)
+1372:            removed += 1
+1375:    if removed == 0:
+1385:    if "save_png" in new_content:
+1386:        print("[STRIP-ERROR] save_png still present after stripping!", flush=True)
+1387:        new_content = re.sub(r'^.*save_png.*$', '', new_content, flags=re.MULTILINE)
+1390:    if "save_png" in new_content:
+1391:        print("[STRIP-FATAL] Could not remove save_png line. Manual intervention required.", flush=True)
+1403:    # Write the stripped content
+1405:    _r082_verify(target, new_content, "build_terrain.gd stripped")
+1414:        print("[STRIP-ERROR] File fails gdparse after stripping and formatting.", flush=True)
+1418:    print("[STRIP] Successfully removed save_png, added headless guard, and fixed indentation.", flush=True)
+1477:        print(line.rstrip(), flush=True)
+1621:                # Now strip screenshot code if present
+1623:                if "save_png" in content:
+1624:                    print("[GATE-WARN] save_png still present after restore – stripping.", flush=True)
+1625:                    return strip_screenshot_code_from_build_terrain()
+1637:    if "save_png" in content:
+1638:        print("[GATE-WARN] build_terrain.gd contains 'save_png' – will strip it.", flush=True)
+1639:        if not strip_screenshot_code_from_build_terrain():
+1641:        # Re-read after strip and verify
+1643:        if "save_png" in content:
+1644:            print("[GATE-FAIL] save_png still present after strip.", flush=True)
+1657:    print("[FIX-167-001] Run gdformat after stripping screenshot code to fix indentation.")
+1747:    # Pre-flight gate: restore and strip
+1780:    # [FIX-167-002] Input-action fix removed entirely

@@ -1,0 +1,339 @@
+=== 1. Schema creation (CREATE TABLE) ===
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 27-32 ---
+  27: 		CREATE TABLE IF NOT EXISTS throttle_log (
+  28: 			id INTEGER PRIMARY KEY AUTOINCREMENT,
+  29: 			operation TEXT NOT NULL UNIQUE,
+  30: 			attempt_count INTEGER DEFAULT 0,
+  31: 			last_attempt TEXT,
+  32: 			backoff_seconds INTEGER DEFAULT 30,
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 58-63 ---
+  58: 		"CREATE TABLE IF NOT EXISTS issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0)"
+  59: 	)
+  60: 	_query(
+  61: 		"CREATE TABLE IF NOT EXISTS screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL)"
+  62: 	)
+  63: 	_query(
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 61-66 ---
+  61: 		"CREATE TABLE IF NOT EXISTS screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL)"
+  62: 	)
+  63: 	_query(
+  64: 		"CREATE TABLE IF NOT EXISTS parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending')"
+  65: 	)
+  66: 	print("[VERBATIM] DB tables ensured")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 64-69 ---
+  64: 		"CREATE TABLE IF NOT EXISTS parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending')"
+  65: 	)
+  66: 	print("[VERBATIM] DB tables ensured")
+  67: 
+  68: 
+  69: func insert_issue(symptom: String, root_cause: String, fix_applied: String, verified: int = 0) -> void:
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2589-2594 ---
+2589: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2590: 	var key = (
+2591: 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+2592: 	)
+2593: 	db._query(
+2594: 		(
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2610-2615 ---
+2610: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2611: 	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+2612: 	if result and result.size() > 0:
+2613: 		_cam_distance = float(result[0]["value"])
+2614: 		print("[CAMERA] Loaded plane camera distance from DB: ", _cam_distance)
+2615: 	else:
+
+--- autostall.py lines 430-696 ---
+ 430:                 CREATE TABLE IF NOT EXISTS error_blocks (
+ 431:                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+ 432:                     file_path TEXT NOT NULL,
+ 433:                     line_number INTEGER NOT NULL,
+ 434:                     error_text TEXT,
+ 435:                     context TEXT,
+ 436:                     status TEXT DEFAULT 'new',
+ 437:                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ 438:                     UNIQUE(file_path, line_number)
+ 439:                 )
+ 440:             ''')
+ 441:             p = Path(file_path)
+ 442:             lines = p.read_text().splitlines() if p.exists() else []
+ 443:             start = max(0, line_num - CONTEXT_LINES - 1)
+ 444:             end = min(len(lines), line_num + CONTEXT_LINES)
+ 445:             context_lines = [f"{i+1:4d}: {lines[i]}" for i in range(start, end)] if lines else []
+ 446:             context_str = "\n".join(context_lines)
+ 447:             sql = """
+ 448:                 INSERT OR REPLACE INTO error_blocks (file_path, line_number, error_text, context, status)
+ 449:                 VALUES (?, ?, ?, ?, ?)
+ 450:             """
+ 451:             cursor.execute(sql, (file_path, line_num, lines[line_num-1].strip() if lines else message, context_str, status))
+ 452:             conn.commit()
+ 453:             print("[DB] Stored error in 'error_blocks'")
+ 454:         conn.close()
+ 455:     except Exception as e:
+ 456:         print(f"[DB] Error: {e}")
+ 457: 
+ 458: # ------------------------------------------------------------------
+ 459: # Diagnostic tools (prioritized) – run only once
+ 460: # ------------------------------------------------------------------
+ 461: _diagnostics_run = False
+ 462: 
+ 463: def run_diagnostics(pid: int) -> Dict[str, Any]:
+ 464:     global _diagnostics_run
+ 465:     if _diagnostics_run:
+ 466:         return {"skipped": "Diagnostics already run this session"}
+ 467:     _diagnostics_run = True
+ 468: 
+ 469:     results = {}
+ 470:     proc_info = {}
+ 471:     try:
+ 472:         with open(f"/proc/{pid}/status", "r") as f:
+ 473:             proc_info["status"] = f.read()
+ 474:     except:
+ 475:         proc_info["status"] = "unavailable"
+ 476:     try:
+ 477:         with open(f"/proc/{pid}/wchan", "r") as f:
+ 478:             proc_info["wchan"] = f.read().strip()
+ 479:     except:
+ 480:         proc_info["wchan"] = "unavailable"
+ 481:     try:
+ 482:         with open(f"/proc/{pid}/cmdline", "rb") as f:
+ 483:             proc_info["cmdline"] = f.read().replace(b'\0', b' ').decode('utf-8')
+ 484:     except:
+ 485:         proc_info["cmdline"] = "unavailable"
+ 486:     results["proc_info"] = proc_info
+ 487: 
+ 488:     if tool_available("gdb"):
+ 489:         results["gdb"] = run_cmd(["gdb", "-batch", "-p", str(pid), "-ex", "thread apply all bt"])
+ 490:     else:
+ 491:         results["gdb"] = "gdb not installed"
+ 492: 
+ 493:     if tool_available("strace"):
+ 494:         results["strace"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "strace", "-p", str(pid), "-s", "256"])
+ 495:     else:
+ 496:         results["strace"] = "strace not installed"
+ 497: 
+ 498:     if tool_available("lsof"):
+ 499:         results["lsof"] = run_cmd(["lsof", "-p", str(pid)])
+ 500:     else:
+ 501:         results["lsof"] = "lsof not installed"
+ 502: 
+ 503:     if tool_available("perf"):
+ 504:         record_cmd = ["perf", "record", "-g", "-p", str(pid), "-o", "/tmp/perf.data", "--", "sleep", str(TOOL_TIMEOUT)]
+ 505:         run_cmd(record_cmd, timeout=TOOL_TIMEOUT+1)
+ 506:         report_cmd = ["perf", "report", "-i", "/tmp/perf.data", "--stdio", "--max-stack", "10", "-n"]
+ 507:         results["perf"] = run_cmd(report_cmd, timeout=3)
+ 508:     else:
+ 509:         results["perf"] = "perf not installed"
+ 510: 
+ 511:     if tool_available("ltrace"):
+ 512:         results["ltrace"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "ltrace", "-p", str(pid), "-s", "256"])
+ 513:     else:
+ 514:         results["ltrace"] = "ltrace not installed"
+ 515: 
+ 516:     if tool_available("iotop"):
+ 517:         results["iotop"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "iotop", "-p", str(pid), "-b", "-n", "1"])
+ 518:     else:
+ 519:         results["iotop"] = "iotop not installed"
+ 520: 
+ 521:     if tool_available("top"):
+ 522:         results["top"] = run_cmd(["top", "-b", "-n", "1", "-p", str(pid)])
+ 523:     else:
+ 524:         results["top"] = "top not installed"
+ 525: 
+ 526:     if tool_available("sysdig"):
+ 527:         results["sysdig"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "sysdig", "-p", "%proc.name %proc.pid %evt.type", "proc.pid=" + str(pid)])
+ 528:     else:
+ 529:         results["sysdig"] = "sysdig not installed"
+ 530:     if tool_available("vmstat"):
+ 531:         results["vmstat"] = run_cmd(["vmstat", "1", "2"])
+ 532:     else:
+ 533:         results["vmstat"] = "vmstat not installed"
+ 534:     if tool_available("iostat"):
+ 535:         results["iostat"] = run_cmd(["iostat", "-x", "1", "2"])
+ 536:     else:
+ 537:         results["iostat"] = "iostat not installed"
+ 538:     if tool_available("netstat"):
+ 539:         results["netstat"] = run_cmd(["netstat", "-tunap"])
+ 540:     else:
+ 541:         results["netstat"] = "netstat not installed"
+ 542:     if tool_available("ss"):
+ 543:         results["ss"] = run_cmd(["ss", "-tunap"])
+ 544:     else:
+ 545:         results["ss"] = "ss not installed"
+ 546: 
+ 547:     if tool_available("tree"):
+ 548:         results["tree"] = run_cmd(["tree", "-L", "2", PROJECT_DIR])
+ 549:     else:
+ 550:         results["tree"] = "tree not installed"
+ 551: 
+ 552:     return results
+ 553: 
+ 554: def print_diagnostic_summary(results: Dict[str, Any]):
+ 555:     if "skipped" in results:
+ 556:         print("[DIAG] Skipped (already run this session).")
+ 557:         return
+ 558:     print("\n=== DIAGNOSTIC SUMMARY ===")
+ 559:     print(f"PID: {results.get('pid', 'N/A')}")
+ 560:     wchan = results.get('proc_info', {}).get('wchan', 'N/A')
+ 561:     print(f"wchan: {wchan}")
+ 562: 
+ 563:     strace_out = results.get('strace', '')
+ 564:     if strace_out and "TIMEOUT" not in strace_out:
+ 565:         lines = strace_out.splitlines()
+ 566:         print("Strace (last 3 lines):")
+ 567:         for line in lines[-3:]:
+ 568:             print(f"  {line[:120]}")
+ 569:     else:
+ 570:         print("Strace: unavailable")
+ 571: 
+ 572:     lsof_out = results.get('lsof', '')
+ 573:     if lsof_out and "TIMEOUT" not in lsof_out:
+ 574:         print("Lsof: open files (non‑memory, non‑pipe):")
+ 575:         for line in lsof_out.splitlines():
+ 576:             if "REG" in line or "DIR" in line:
+ 577:                 print(f"  {line[:120]}")
+ 578:     else:
+ 579:         print("Lsof: unavailable")
+ 580: 
+ 581:     perf_out = results.get('perf', '')
+ 582:     if perf_out and "TIMEOUT" not in perf_out:
+ 583:         print("Perf top functions:")
+ 584:         count = 0
+ 585:         for line in perf_out.splitlines():
+ 586:             if "." in line and "[" in line and "]" in line:
+ 587:                 print(f"  {line[:100]}")
+ 588:                 count += 1
+ 589:                 if count >= 3:
+ 590:                     break
+ 591:     else:
+ 592:         print("Perf: unavailable")
+ 593: 
+ 594:     gdb_out = results.get('gdb', '')
+ 595:     if gdb_out and "TIMEOUT" not in gdb_out:
+ 596:         print("GDB (first 5 lines of backtrace):")
+ 597:         count = 0
+ 598:         for line in gdb_out.splitlines():
+ 599:             if "#" in line:
+ 600:                 print(f"  {line[:120]}")
+ 601:                 count += 1
+ 602:                 if count >= 5:
+ 603:                     break
+ 604:     else:
+ 605:         print("GDB: unavailable")
+ 606: 
+ 607:     for tool in ["ltrace", "iotop", "top", "sysdig", "vmstat", "iostat", "netstat", "ss", "tree"]:
+ 608:         if tool in results and "TIMEOUT" not in results[tool] and "not installed" not in results[tool]:
+ 609:             print(f"{tool.capitalize()}: ran successfully (output in JSON report)")
+ 610: 
+ 611:     print(f"Full report saved to stall_report.json")
+ 612: 
+ 613: # ------------------------------------------------------------------
+ 614: # Main: launch Godot with proper display, monitor, heal, and report
+ 615: # ------------------------------------------------------------------
+ 616: def main():
+ 617:     # Ensure a valid display (starts Xvfb if needed)
+ 618:     display_ok, xvfb_proc, display = ensure_display()
+ 619:     if display_ok:
+ 620:         os.environ["DISPLAY"] = display
+ 621:         print(f"[ENV] Using DISPLAY={display}")
+ 622:     else:
+ 623:         print("[ENV] No valid display – Godot will likely use dummy renderer.")
+ 624:         print("[ENV] Diagnostics may be limited, but the script will continue.")
+ 625:         # Keep existing DISPLAY or unset it
+ 626: 
+ 627:     # Apply auto-start patch before launching Godot
+ 628:     success, msg = apply_auto_start_patch()
+ 629:     if success:
+ 630:         print(f"[PATCH] {msg}")
+ 631:     else:
+ 632:         print(f"[PATCH] Failed: {msg} (continuing anyway)")
+ 633: 
+ 634:     os.environ["GODOT_HEADLESS"] = "1"   # Still used for auto‑start trigger
+ 635: 
+ 636:     print("[SETUP] godot binary:", GODOT_BIN)
+ 637:     print("[SETUP] project dir: ", os.path.abspath(PROJECT_DIR))
+ 638:     print("[RUN] /usr/bin/godot --path godot_project --verbose")
+ 639:     print("[RUN] stall threshold: {}s   timeout: {}s".format(STALL_THRESHOLD, TIMEOUT))
+ 640:     print("[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)")
+ 641:     print("="*72)
+ 642: 
+ 643:     # Do NOT use  – we want rendering to work with the display
+ 644:     cmd = [GODOT_BIN, "--path", PROJECT_DIR, "--verbose"]
+ 645:     # If we have a display, we can also add --display-driver x11 (optional)
+ 646:     # but Godot will auto-detect.
+ 647: 
+ 648:     proc = subprocess.Popen(
+ 649:         cmd,
+ 650:         stdout=subprocess.PIPE,
+ 651:         stderr=subprocess.STDOUT,
+ 652:         text=True,
+ 653:         bufsize=1,
+ 654:         universal_newlines=True,
+ 655:         env=os.environ
+ 656:     )
+ 657: 
+ 658:     fd = proc.stdout.fileno()
+ 659:     flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+ 660:     fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+ 661: 
+ 662:     start_time = time.time()
+ 663:     last_output_time = time.time()
+ 664:     stall_reported = False
+ 665:     output_buffer = []
+ 666:     partial_line = b''
+ 667:     godot_pid = None
+ 668: 
+ 669:     last_heartbeat = time.time()
+ 670:     stall_handled = False
+ 671:     fix_attempted_this_run = False
+ 672:     game_completed = False
+ 673:     grace_until = 0.0
+ 674: 
+ 675:     error_table = get_error_table()
+ 676:     print(f"[DB] Using table: {error_table}")
+ 677: 
+ 678:     while True:
+ 679:         elapsed = time.time() - start_time
+ 680:         if elapsed > TIMEOUT:
+ 681:             print(f"\n[TIMEOUT] reached {TIMEOUT}s. Terminating.")
+ 682:             proc.terminate()
+ 683:             break
+ 684: 
+ 685:         if proc.poll() is not None:
+ 686:             print("[INFO] Godot process exited on its own.")
+ 687:             break
+ 688: 
+ 689:         rlist, _, _ = select.select([fd], [], [], STALL_THRESHOLD)
+ 690:         if rlist:
+ 691:             try:
+ 692:                 data = os.read(fd, 4096)
+ 693:             except BlockingIOError:
+ 694:                 continue
+ 695:             if not data:
+ 696:                 print("[INFO] EOF from Godot; process likely finished.")
+
+=== 2. Schema display (PRAGMA table_info, .schema) ===
+=== 3. Insert operations with line_number column ===
+--- autostall.py lines 420-425 ---
+ 420:         if cursor.fetchone():
+ 421:             sql = """
+ 422:                 INSERT OR REPLACE INTO files_to_fix (file_path, line_number, error_text, status)
+ 423:                 VALUES (?, ?, ?, ?)
+ 424:             """
+ 425:             cursor.execute(sql, (file_path, line_num, message, status))
+
+--- autostall.py lines 446-451 ---
+ 446:             context_str = "\n".join(context_lines)
+ 447:             sql = """
+ 448:                 INSERT OR REPLACE INTO error_blocks (file_path, line_number, error_text, context, status)
+ 449:                 VALUES (?, ?, ?, ?, ?)
+ 450:             """
+ 451:             cursor.execute(sql, (file_path, line_num, lines[line_num-1].strip() if lines else message, context_str, status))
+
+=== 4. Select operations reading line_number ===
+=== Scan complete ===
+Results saved to db_management_blocks.txt

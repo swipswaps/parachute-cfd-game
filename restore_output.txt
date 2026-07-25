@@ -1,0 +1,68 @@
+
+======================================================================
+STEP 0: Precondition checks
+======================================================================
+  Live project.godot      : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/project.godot  (sha256: 0c2d933ac760f1acec137e4348be0a0d7e76c3725330aa3db49cef58d307e3f7)
+  Candidate project.godot : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0008a/godot_project/project.godot  (sha256: 73edaa8b8903ebc2cea4b11a15f64f6c16d741dfd019145e48d7b457484728b3)
+  Live file has exactly one [autoload] section – OK.
+
+======================================================================
+STEP 1: Extract candidate [autoload] block
+======================================================================
+  Candidate [autoload] block extracted (18 lines):
+      1: [autoload]
+      2: 
+      3: DatabaseGuard="*res://scripts/DatabaseGuard.gd"
+      4: ResourceThrottle="*res://scripts/ResourceThrottle.gd"
+      5: PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+      6: aero_units="*res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd"
+      7: #Databaseinfrastructure-LOADFIRST#Coredatabase
+      8: SqliteDb="*res://scripts/SqliteDb.gd"
+      9: SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+     10: #Monitoring(usesDatabaseGuardandResourceThrottle)#LoggingandutilitiesStructuredLogger="*res://scripts/StructuredLogger.gd"
+    ... (8 more lines)
+  Candidate contains SqliteDb – OK.
+
+======================================================================
+STEP 2: Replace live [autoload] section with candidate block
+======================================================================
+  Backup written: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/project.godot.backup_20260706_050256
+  Live project.godot overwritten with new [autoload] section.
+
+======================================================================
+STEP 3: Read-After-Write verification
+======================================================================
+  Read-back matches written content – OK.
+  SqliteDb is present in the new [autoload] section – OK.
+
+======================================================================
+STEP 4: Verification – syntax / engine check
+======================================================================
+  Found Godot executable: godot
+  Could not run Godot check: Command '['godot', '--headless', '--check-only', '--path', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project']' timed out after 30 seconds
+
+======================================================================
+STEP 5: New [autoload] section (verbatim)
+======================================================================
+[autoload]
+
+DatabaseGuard="*res://scripts/DatabaseGuard.gd"
+ResourceThrottle="*res://scripts/ResourceThrottle.gd"
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+aero_units="*res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd"
+#Databaseinfrastructure-LOADFIRST#Coredatabase
+SqliteDb="*res://scripts/SqliteDb.gd"
+SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+#Monitoring(usesDatabaseGuardandResourceThrottle)#LoggingandutilitiesStructuredLogger="*res://scripts/StructuredLogger.gd"
+InputManager="*res://scripts/InputManager.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+#HUDandUIAltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+#PhysicsandenvironmentWindField="*res://scripts/wind_field.gd"
+AeroUnits="*uid://5vah4ayrdxci"
+
+
+DONE. The live project.godot has been updated.
+Please run a Godot build/test to confirm the fix works at runtime.
+Upload restore_output.txt for the log.

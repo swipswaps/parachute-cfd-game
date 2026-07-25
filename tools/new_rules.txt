@@ -1,0 +1,38 @@
+## EXACT ERROR VERIFICATION
+
+Definition: After applying a fix, the verification step must confirm that the specific original error message no longer appears — not just any error at the same line number.
+
+Rationale: A fix might resolve one error but introduce another on the same line. Checking only the line number would produce a false positive and violate the Definition of Done. The only reliable proof is the absence of the exact error text that was originally observed.
+
+Implementation template (Python):
+
+    def verify_exact_error_absent(scanner_output: str, original_error_text: str) -> bool:
+        """Return True if original_error_text is not found in scanner output."""
+        log_result("verify_exact_error", True, f"Checking for '{original_error_text}'")
+        return original_error_text not in scanner_output
+
+Enforcement:
+- Every fix script must capture the original error text (verbatim) before applying any change.
+- After the fix, the same scanner command must be re-run, and the script must assert that the original error text is absent from stdout/stderr.
+- A simple check like `if "forensic_hud.gd" in line and "260" in line` is not acceptable — the exact error message must be matched.
+
+---
+
+## TIMESTAMPED BACKUPS (amendment to SELF‑HEALING WITH VERIFIABLE BACKUPS)
+
+Amendment: Add the following bullet to rule 22 (SELF‑HEALING WITH VERIFIABLE BACKUPS):
+
+    "The backup path must include a timestamp (e.g., %Y%m%d%H%M%S) to ensure multiple backups are preserved and not overwritten. This enables forensic analysis and rollback to any previous state."
+
+Implementation template (Python):
+
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    backup_path = f"{target_path}.bak.{timestamp}"
+    shutil.copy2(target_path, backup_path)
+
+Rationale: Without a timestamp, each run overwrites the previous backup, destroying evidence of earlier states and violating auditability. Timestamped backups provide a complete history of all changes.
+
+Enforcement:
+- Any script that creates a backup must use a timestamp in the backup filename.
+- The SHA‑256 checksum of each backup must be logged (as already required by SELF‑HEALING WITH VERIFIABLE BACKUPS).

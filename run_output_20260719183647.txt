@@ -1,0 +1,60 @@
+[2026-07-19T22:36:47.946004+00:00] [SUCCESS] check_dependencies: python3, sqlite3 found
+[2026-07-19T22:36:47.946475+00:00] [FAILURE] lint_undefined_symbols: godot_project/autoloads/forensic_panel.gd: undefined symbols: ['_build_ui', '_on_hub_reply', '_process', '_query']
+[2026-07-19T22:36:47.946593+00:00] [FAILURE] fix_adopt_pip_rename: expected call sites not found exactly once (site1=0, site2=0) -- refusing
+[2026-07-19T22:36:47.946938+00:00] [FAILURE] lint_undefined_symbols: godot_project/autoloads/forensic_panel.gd: undefined symbols: ['_build_ui', '_on_hub_reply', '_process', '_query']
+[2026-07-19T22:36:47.969347+00:00] [FAILURE] search_backups: 0 candidate file(s) found via glob
+[2026-07-19T22:36:47.969409+00:00] [FAILURE] search_backups: _build_ui in 0 file(s), _on_hub_reply in 0 file(s)
+[2026-07-19T22:36:47.970116+00:00] [SUCCESS] check_gd_backup_index: tables: ['files', 'refs']
+[2026-07-19T22:36:47.970328+00:00] [FAILURE] hard_gate: BLOCKED -- missing: ['symptom_reproduced_before_fix', 'fix_applied']
+======================================================================
+PRE-FLIGHT LINT (Rule #35 -- mandatory going forward)
+======================================================================
+
+--- UNDEFINED-SYMBOL LINT GATE: godot_project/autoloads/forensic_panel.gd ---
+  defined functions:  ['_adopt_pip_container', '_get_drag_data', '_ready', '_try_adopt_later']
+  called identifiers: ['_adopt_pip_container', '_build_ui', '_get_drag_data', '_on_hub_reply', '_process', '_query', '_ready', '_try_adopt_later']
+  [UNDEFINED] _build_ui
+  [UNDEFINED] _on_hub_reply
+  [UNDEFINED] _process
+  [UNDEFINED] _query
+
+======================================================================
+PART A: rename _adopt_pip -> _adopt_pip_container (2 call sites)
+======================================================================
+
+======================================================================
+PART B: full undefined-symbol lint (post Part A)
+======================================================================
+
+--- UNDEFINED-SYMBOL LINT GATE: godot_project/autoloads/forensic_panel.gd ---
+  defined functions:  ['_adopt_pip_container', '_get_drag_data', '_ready', '_try_adopt_later']
+  called identifiers: ['_adopt_pip_container', '_build_ui', '_get_drag_data', '_on_hub_reply', '_process', '_query', '_ready', '_try_adopt_later']
+  [UNDEFINED] _build_ui
+  [UNDEFINED] _on_hub_reply
+  [UNDEFINED] _process
+  [UNDEFINED] _query
+
+======================================================================
+PART C: searching backups for _build_ui / _on_hub_reply definitions
+======================================================================
+
+Candidates with _build_ui defined:     []
+Candidates with _on_hub_reply defined: []
+
+gd_backup_index.db tables: ['files', 'refs']
+
+======================================================================
+SUMMARY
+======================================================================
+  Pre-flight undefined symbols:  ['_build_ui', '_on_hub_reply', '_process', '_query']
+  _adopt_pip rename: before=False applied=False after=False
+  Post-fix undefined symbols:    ['_build_ui', '_on_hub_reply', '_process', '_query']
+  Backup candidates for _build_ui:     []
+  Backup candidates for _on_hub_reply:  []
+
+======================================================================
+HARD GATE (Part A rename only -- _build_ui/_on_hub_reply are
+still genuinely undefined and are NOT gated as fixed here)
+======================================================================
+HARD GATE BLOCKED: HARD GATE FAILED: missing evidence for ['symptom_reproduced_before_fix', 'fix_applied']
+HARD GATE FAILED: missing evidence for ['symptom_reproduced_before_fix', 'fix_applied']

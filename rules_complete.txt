@@ -1,0 +1,883 @@
+# =============================================================================
+# COMPLETE RULESET (All 25 sections restored)
+# =============================================================================
+# CODE EXAMPLES TAKE PRECEDENCE over prose.
+# Every rule below shows the required implementation pattern first,
+# followed by concise explanatory text.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# LOGGING CONVENTION
+# -----------------------------------------------------------------------------
+# CODE (Python):
+import sys, datetime
+
+def log_result(operation: str, success: bool, detail: str) -> None:
+    ts = datetime.datetime.utcnow().isoformat()
+    status = "SUCCESS" if success else "FAILURE"
+    print(f"[{ts}] [{status}] {operation}: {detail}", file=sys.stderr)
+
+# CODE (Bash):
+# log_result() { ts=$(date -u +%Y-%m-%dT%H:%M:%SZ); status="FAILURE"; [ "$2" = "true" ] && status="SUCCESS"; echo "[$ts] [$status] $1: $3" >&2; }
+
+# PROSE: Every gated operation logs success/failure to stderr with timestamp.
+# Called on both success and failure paths – no silent branches.
+
+# -----------------------------------------------------------------------------
+# EVIDENTIAL GROUNDING
+# -----------------------------------------------------------------------------
+# CODE:
+import sqlite3
+
+def confirm_tables(db_path: str) -> list:
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    tables = cur.fetchall()
+    conn.close()
+    if tables:
+        log_result("confirm_tables", True, f"{len(tables)} table(s) found: {tables}")
+    else:
+        log_result("confirm_tables", False, "no tables found — do not assume schema")
+    return tables
+
+# PROSE: Every factual claim about data/system state traces to an actual command
+# that was run – not memory, not pattern matching. Show the command and its output.
+
+# -----------------------------------------------------------------------------
+# ROOT CAUSE ANALYSIS
+# -----------------------------------------------------------------------------
+# CODE:
+def diagnose(error_output: str) -> str:
+    if "No such file or directory" in error_output:
+        cause = "upstream step never created the expected file"
+    elif "Permission denied" in error_output:
+        cause = "execute bit or ownership mismatch, not a logic bug"
+    else:
+        cause = "unconfirmed — do not fix yet, gather more evidence"
+    log_result("diagnose", cause != "unconfirmed — do not fix yet, gather more evidence", cause)
+    return cause
+
+# PROSE: State what's broken and how you know (5 Whys style). Do not propose a fix
+# until the underlying cause is identified.
+
+# -----------------------------------------------------------------------------
+# DEFINITION OF DONE
+# -----------------------------------------------------------------------------
+# CODE:
+def is_done(task_result: dict) -> bool:
+    done = (
+        task_result.get("symptom_reproduced_before_fix") is True
+        and task_result.get("fix_applied") is True
+        and task_result.get("symptom_reproduced_after_fix") is False
+    )
+    log_result("is_done", done, f"criteria: {task_result}")
+    return done
+
+# PROSE: Work is complete only when it meets explicit, agreed criteria:
+# reproduce error, apply fix, verify error is gone.
+
+# -----------------------------------------------------------------------------
+# DYNAMIC-OVER-STATIC VERIFICATION
+# -----------------------------------------------------------------------------
+# CODE (Bash):
+# bash -n "<SCRIPT_PATH>"
+# if [ $? -eq 0 ]; then
+#     log_result "syntax_check" "true" "syntax OK on <SCRIPT_PATH> — this does NOT prove runtime correctness"
+# else
+#     log_result "syntax_check" "false" "syntax check failed on <SCRIPT_PATH>"
+# fi
+# bash "<SCRIPT_PATH>" --dry-run   # the step that actually proves something
+# rc=$?
+# if [ $rc -eq 0 ]; then
+#     log_result "dry_run" "true" "exit code $rc"
+# else
+#     log_result "dry_run" "false" "exit code $rc"
+# fi
+
+# PROSE: Static analysis (syntax) is necessary but insufficient. Always run a
+# dry-run or actual test that exercises the runtime path.
+
+# -----------------------------------------------------------------------------
+# DEV/PROD PARITY
+# -----------------------------------------------------------------------------
+# CODE:
+def confirm_real_bytes(path: str) -> bytes:
+    with open(path, "rb") as f:
+        real_bytes = f.read()
+    has_tabs = b"\t" in real_bytes
+    log_result("confirm_real_bytes", True, f"read {len(real_bytes)} real bytes, tabs_present={has_tabs}")
+    return real_bytes
+
+# PROSE: Test environments must mirror the real target (Twelve‑Factor methodology).
+# Never assume content – read actual bytes.
+
+# -----------------------------------------------------------------------------
+# DESIGN BY CONTRACT
+# -----------------------------------------------------------------------------
+# CODE:
+def guarded_replace(text: str, old: str, new: str) -> str:
+    count = text.count(old)
+    if count != 1:
+        log_result("guarded_replace", False, f"expected 1 match, found {count} — refusing")
+        raise AssertionError(f"PRECONDITION VIOLATED: expected 1 match, found {count}")
+    result = text.replace(old, new)
+    log_result("guarded_replace", True, "exactly 1 match replaced")
+    return result
+
+# PROSE: Preconditions must be satisfied by caller; postconditions guaranteed by
+# callee. Violations fail hard (Meyer's DbC).
+
+# -----------------------------------------------------------------------------
+# GUARDED, STRUCTURED EDITS
+# -----------------------------------------------------------------------------
+# CODE:
+import subprocess
+
+def guarded_edit_and_verify(path: str, old: str, new: str, validate_cmd: list) -> dict:
+    with open(path, "r") as f:
+        text = f.read()
+
+    count = text.count(old)
+    if count != 1:
+        log_result("guarded_edit_and_verify", False, f"expected 1 match, found {count}")
+        return {"success": False, "reason": f"expected 1 match, found {count} — refusing to guess"}
+
+    text = text.replace(old, new, 1)
+    with open(path, "w") as f:
+        f.write(text)
+
+    with open(path, "r") as f:
+        written = f.read()
+    if written != text:
+        log_result("guarded_edit_and_verify", False, "read-back mismatch after write")
+        return {"success": False, "reason": "read-back does not match what was written"}
+
+    result = subprocess.run(validate_cmd, capture_output=True, text=True)
+    success = result.returncode == 0
+    log_result("guarded_edit_and_verify", success,
+               f"validator exit={result.returncode} stderr={result.stderr.strip() or '(empty)'}")
+    return {
+        "success": success,
+        "exit_code": result.returncode,
+        "stdout": result.stdout,
+        "stderr": result.stderr,
+    }
+
+# PROSE: No sed – full stop. Use Python with explicit precondition (text.count == 1)
+# and read-back verification. No set -e, no output discarding (2>/dev/null). Check $? explicitly.
+
+# -----------------------------------------------------------------------------
+# OBSERVABILITY / VERBATIM REPORTING
+# -----------------------------------------------------------------------------
+# CODE:
+import subprocess
+
+def run_and_report(cmd: list) -> subprocess.CompletedProcess:
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    log_result("run_and_report", result.returncode == 0,
+               f"cmd={cmd} exit={result.returncode}")
+    print("STDOUT:", result.stdout)
+    print("STDERR:", result.stderr)   # shown even if empty
+    print("EXIT:", result.returncode)
+    return result
+
+# PROSE: Show command's real stdout/stderr verbatim – no paraphrase. Full output
+# always shown, never truncated.
+
+# -----------------------------------------------------------------------------
+# READ-AFTER-WRITE CONSISTENCY
+# -----------------------------------------------------------------------------
+# CODE:
+def write_and_confirm(path: str, new_content: str) -> bool:
+    with open(path, "w") as f:
+        f.write(new_content)
+    with open(path, "r") as f:
+        written = f.read()
+    ok = written == new_content
+    log_result("write_and_confirm", ok, "read-back matches" if ok else "read-back MISMATCH")
+    if not ok:
+        raise AssertionError("READ-AFTER-WRITE FAILED: written content does not match")
+    return ok
+
+# PROSE: After a write is accepted, the very next read must reflect it.
+# Do not trust success just because no error was raised.
+
+# -----------------------------------------------------------------------------
+# VERIFICATION BEFORE DELIVERY
+# -----------------------------------------------------------------------------
+# CODE:
+import subprocess
+
+def verify_fix(validate_cmd: list) -> bool:
+    result = subprocess.run(validate_cmd, capture_output=True, text=True)
+    ok = result.returncode == 0
+    log_result("verify_fix", ok, result.stdout.strip() or result.stderr.strip() or "(no output)")
+    if not ok:
+        raise AssertionError(f"NOT VERIFIED — validator still fails: {result.stderr}")
+    return ok
+
+# PROSE: A fix is not done when written – only when run against real input and
+# the output is shown. Use the same command that originally failed.
+
+# -----------------------------------------------------------------------------
+# DIAGNOSTIC TRANSPARENCY
+# -----------------------------------------------------------------------------
+# CODE:
+def show_error_context(lines: list, error_line: int, context: int = 3) -> None:
+    start, end = max(0, error_line - context), min(len(lines), error_line + context + 1)
+    for i in range(start, end):
+        prefix = ">>> " if i == error_line else "    "
+        print(f"{prefix}{i+1:4d}: {lines[i].rstrip()}")
+    log_result("show_error_context", True, f"showed lines {start+1}-{end}")
+
+# PROSE: For every proposed fix, show: exact error with 3 lines context,
+# diff before applying, full stdout/stderr of verification, restore on failure.
+# All run as a single script.
+
+# -----------------------------------------------------------------------------
+# RETRIEVAL-AUGMENTED GENERATION
+# -----------------------------------------------------------------------------
+# CODE:
+def make_claim(topic: str, search_results: list) -> str:
+    if not search_results:
+        log_result("make_claim", False, f"no verified source for: {topic}")
+        return f"No verified source found for: {topic}. Stated as general knowledge only."
+    top = search_results[0]
+    log_result("make_claim", True, f"source: {top['url']}")
+    return f"{topic} — Source: {top['url']} — \"{top['quote'][:100]}\""
+
+# PROSE: Combine internal knowledge with retrieved sources at generation time.
+# Cite actual URLs and quotes; never backfill citations.
+
+# -----------------------------------------------------------------------------
+# TRUST BOUNDARY AWARENESS
+# -----------------------------------------------------------------------------
+# CODE (Bash):
+# # Nothing follows a command block meant for the user's own terminal —
+# # trailing prose crosses the same trust boundary once pasted.
+# echo "this is the only thing that runs"
+
+# PROSE: Be explicit about where data crosses from less-trusted to more-trusted
+# execution contexts.
+
+# -----------------------------------------------------------------------------
+# SCIENTIFIC DEBUGGING
+# -----------------------------------------------------------------------------
+# CODE:
+def next_step(attempt_number: int, hypotheses: list) -> str:
+    if attempt_number >= 2:
+        step = f"STOP — run a diagnostic that discriminates between: {hypotheses}"
+        log_result("next_step", False, step)
+    else:
+        step = f"Test hypothesis #{attempt_number}: {hypotheses[attempt_number]}"
+        log_result("next_step", True, step)
+    return step
+
+# PROSE: Zeller's method: observe failure, hypothesize, predict, test, repeat.
+# After two failed hypotheses, stop and gather discriminating evidence.
+
+# -----------------------------------------------------------------------------
+# TOIL ELIMINATION
+# -----------------------------------------------------------------------------
+# CODE:
+import subprocess
+
+def capture_background_progress(log_path: str, lines: int = 20) -> str:
+    result = subprocess.run(["tail", "-n", str(lines), log_path], capture_output=True, text=True)
+    if result.stdout:
+        log_result("capture_background_progress", True, f"read {len(result.stdout.splitlines())} lines")
+        return result.stdout
+    log_result("capture_background_progress", False, f"log not yet written: {log_path}")
+    return f"(log not yet written: {log_path})"
+
+# Gating for complete fixes (generic template):
+import shutil, subprocess
+
+def run_gated_fix(target_path: str, find_issues, apply_fix, validate_cmd: list) -> int:
+    backup_path = target_path + ".backup"
+    issues = find_issues(target_path)
+    if not issues:
+        log_result("run_gated_fix", True, "no issues found")
+        return 0
+
+    shutil.copy2(target_path, backup_path)
+    apply_fix(target_path, issues)
+
+    result = subprocess.run(validate_cmd, capture_output=True, text=True)
+    if result.returncode == 0:
+        log_result("run_gated_fix", True, f"fixed {len(issues)} issue(s), verification passed")
+        return 0
+
+    shutil.copy2(backup_path, target_path)
+    log_result("run_gated_fix", False,
+               f"verification failed (exit {result.returncode}), restored from backup: {result.stderr.strip()}")
+    return 1
+
+# PROSE: If it can be typed, it MUST be scripted. Automate all diagnostics and
+# fixes; never hand commands to the user to type themselves.
+
+# -----------------------------------------------------------------------------
+# FILE OUTPUT RULES (Heredoc)
+# -----------------------------------------------------------------------------
+# PROSE:
+# 1. Use a proper 'EOF' (single-quoted) heredoc to prevent shell expansion.
+# 2. Don't wrap the whole block in backticks or extra formatting.
+# 3. Don't escape characters inside the heredoc.
+# 4. Plain text, no trailing spaces or extra newlines.
+# 5. Complete, self-contained, saveable as-is.
+
+# -----------------------------------------------------------------------------
+# CONTENT FENCING / SOURCE ISOLATION
+# -----------------------------------------------------------------------------
+# CODE:
+def validate_rules_file(content: str, original_content: str, allowed_new_sections: list) -> dict:
+    lines = content.splitlines()
+    sections = [l.strip() for l in lines if l.strip().startswith("## ")]
+
+    in_section, orphaned = False, []
+    for i, line in enumerate(lines):
+        if line.strip().startswith("## "):
+            in_section = True
+            continue
+        if in_section and not line.strip():
+            continue
+        if not in_section and line.strip():
+            orphaned.append((i + 1, line.strip()))
+
+    if orphaned:
+        log_result("validate_rules_file", False, f"orphaned text at lines: {[n for n, _ in orphaned]}")
+        return {"valid": False, "reason": f"orphaned text outside any section header: {orphaned}"}
+
+    original_sections = [l.strip() for l in original_content.splitlines() if l.strip().startswith("## ")]
+    unexpected = [s for s in sections if s not in original_sections and s not in allowed_new_sections]
+    if unexpected:
+        log_result("validate_rules_file", False, f"unexpected sections: {unexpected}")
+        return {"valid": False, "reason": f"unexpected new sections: {unexpected}"}
+
+    missing = [s for s in original_sections if s not in sections]
+    if missing:
+        log_result("validate_rules_file", False, f"sections removed: {missing}")
+        return {"valid": False, "reason": f"original sections removed: {missing}"}
+
+    log_result("validate_rules_file", True, "structure clean")
+    return {"valid": True, "reason": "only intended additions present"}
+
+# PROSE: The rules file contains ONLY active rules. Ephemeral conversation content
+# (logs, hostnames, request phrasing) is never copied in. Validate structure before update.
+
+# -----------------------------------------------------------------------------
+# ENFORCEMENT AND NON-EVASION
+# -----------------------------------------------------------------------------
+# CODE:
+def self_audit(checklist: dict) -> dict:
+    required = [
+        "error_context_shown", "diff_shown_before_apply", "verification_run",
+        "full_output_shown", "restore_available_on_failure", "no_orphaned_content",
+    ]
+    missing = [item for item in required if not checklist.get(item, False)]
+    passed = not missing
+    log_result("self_audit", passed, "all items present" if passed else f"missing: {missing}")
+    return {"audit_passed": passed, "missing": missing}
+
+# PROSE:
+# 1. All diagnostic output quoted verbatim.
+# 2. Before finalizing: produce checklist showing error reproduced, diff shown, verification run.
+# 3. Definition of failure: original command still errors, or verification returns non-zero.
+# 4. Output honesty: no invented/modified/omitted output.
+# 5. Rules are binding – not waivable.
+# 6. Clarification requirement: ask if ambiguous.
+# 7. Re-verification after self-correction.
+
+# -----------------------------------------------------------------------------
+# DATABASE INSPECTION TRANSPARENCY
+# -----------------------------------------------------------------------------
+# CODE:
+import sqlite3
+
+def inspect_schema(db_path: str) -> list:
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute("SELECT name, sql FROM sqlite_master WHERE type='table'")
+    schema = cur.fetchall()
+    conn.close()
+    log_result("inspect_schema", bool(schema), f"{len(schema)} table(s): {[t[0] for t in schema]}")
+    return schema
+
+# PROSE: When inspecting a database, run schema queries directly, show verbatim output,
+# then construct the specific queries needed. Never ask the user to type commands
+# the assistant can run. Fallback only when execution access is absent.
+
+# -----------------------------------------------------------------------------
+# COMMAND INTEGRITY
+# -----------------------------------------------------------------------------
+# CODE (Bash):
+# python3 -m py_compile "<SCRIPT_PATH>"
+# if [ $? -eq 0 ]; then
+#     log_result "syntax_verify" "true" "verified: <SCRIPT_PATH>"
+# else
+#     log_result "syntax_verify" "false" "syntax error in <SCRIPT_PATH> — must fix before delivery"
+# fi
+
+# PROSE: Every command/script delivered must be syntactically correct. Use
+# bash -n / shellcheck for shell, py_compile for Python. Fix syntax before presenting.
+
+# -----------------------------------------------------------------------------
+# SELF-HEALING WITH VERIFIABLE BACKUPS
+# -----------------------------------------------------------------------------
+# CODE:
+import subprocess, hashlib, shutil
+
+def verified_restore(backup_path: str, target_path: str, expected_sha: str, validate_cmd: list) -> dict:
+    actual_sha = hashlib.sha256(open(backup_path, "rb").read()).hexdigest()
+    if actual_sha != expected_sha:
+        log_result("verified_restore", False, f"checksum mismatch: expected {expected_sha}, got {actual_sha}")
+        return {"success": False, "reason": "backup checksum mismatch — refusing to restore"}
+
+    shutil.copy2(backup_path, target_path)
+    result = subprocess.run(validate_cmd, capture_output=True, text=True)
+    success = result.returncode == 0
+    log_result("verified_restore", success,
+               f"restored from {backup_path}, validator exit={result.returncode}")
+    return {"success": success, "exit_code": result.returncode, "stdout": result.stdout, "stderr": result.stderr}
+
+# PROSE: Any automated repair that copies a backup must verify its integrity
+# (SHA-256) before use, and record the checksum.
+
+# -----------------------------------------------------------------------------
+# SHELL-LEVEL GUARD (external, not run by the assistant)
+# -----------------------------------------------------------------------------
+# CODE (Bash – user-side optional guard):
+# sed() {
+#     if [[ -n "$PS1" ]]; then
+#         echo "WARNING: sed is blocked in this shell." >&2
+#         echo "  Disable for this session: unset -f sed" >&2
+#         echo "  Use real sed directly:    /usr/bin/sed" >&2
+#         return 1
+#     fi
+#     local caller_info line script
+#     caller_info=$(caller 0)
+#     line=$(awk '{print $1}' <<<"$caller_info")
+#     script=$(awk '{print $2}' <<<"$caller_info")
+#     echo "[FAILURE] sed() blocked — script=$script line=$line args: $*" >&2
+#     if [[ -f "$script" ]]; then
+#         awk -v l="$line" 'NR>=l-3 && NR<=l+3 {printf "  %d: %s\n", NR, $0}' "$script" >&2
+#     fi
+#     kill -TERM $$
+# }
+
+# PROSE: A user-side shell function that intercepts sed calls and terminates.
+# Documented as a reference; the assistant does not rely on it.
+
+# -----------------------------------------------------------------------------
+# MECHANICAL PRE-DELIVERY GATE (executed, not self-reported)
+# -----------------------------------------------------------------------------
+# CODE (Bash – to be run on the drafted script):
+# grep -n -E '(^|[^a-zA-Z_])sed([^a-zA-Z_]|$)|2>/dev/null|set -e' "<DRAFT_PATH>"
+
+# PROSE: The assistant runs an actual grep on the real drafted content, with
+# command and full output shown. False positives are expected; the assistant
+# reviews each match in context and declares allowed (prose/definition) vs
+# forbidden (actual invocations like sed -i). The check is now a real command
+# with real output, checkable by the user.
+
+# -----------------------------------------------------------------------------
+# MECHANICAL PRE‑DELIVERY GATE (revised)
+# -----------------------------------------------------------------------------
+# CODE (Bash – self-audit snippet to insert into scripts):
+# echo "=== Self‑Audit: scanning for forbidden patterns ==="
+# SELF_SCAN=$(grep -n -E '(^|[^a-zA-Z_])sed([^a-zA-Z_]|$)|2>/dev/null|set -e|grep -q' "$0" || true)
+# if [ -n "$SELF_SCAN" ]; then
+#     echo "Audit matches found (all prose/definition – no actual mutation):"
+#     echo "$SELF_SCAN"
+#     echo "Continuing – these are the regex itself and comments, not invoked commands."
+# else
+#     echo "Audit passed – no matches."
+# fi
+
+# PROSE: This snippet is inserted after the shebang of every delivered script.
+# It scans its own source ($0) for the forbidden patterns. Matches are shown
+# verbatim, then explicitly stated to be prose/definition. The script never exits
+# on matches – false positives are expected.
+
+# -----------------------------------------------------------------------------
+# CODE COMMENTING STANDARD
+# -----------------------------------------------------------------------------
+# CODE (Bash – required header block):
+# # ============================================================================
+# # <script_name> – <one-line purpose>
+# # <detailed description>
+# #
+# # Citations (verifiable):
+# #   - <Doc/URL>
+# #   - <Doc/URL>
+# #   - ...
+# # Tools used: cp, grep, awk, diff, sqlite3, sha256sum, python3 (sed explicitly banned).
+# # Rules complied with: LOGGING CONVENTION, MECHANICAL PRE‑DELIVERY GATE, etc.
+# # ============================================================================
+
+# PROSE:
+# - Every delivered script starts with a header block (after shebang) that explains
+#   what, why, and how, with citations to authoritative sources.
+# - Inline comments: every gated operation (backup, patch, verification, DB update)
+#   must have a comment explaining which rule it complies with.
+# - Non-obvious logic must be explained directly above the code.
+# - This ensures maintainability and verifiability.
+
+# -----------------------------------------------------------------------------
+# DRY‑RUN DIAGNOSTIC PARITY
+# -----------------------------------------------------------------------------
+# CODE (Bash – excerpt):
+# if $DRY_RUN; then
+#     echo "=== DRY‑RUN: ERROR CONTEXT PREVIEW (±3 lines) ==="
+#     echo "If the test fails, the following context would be shown:"
+#     echo "From $TARGET, lines around 'func _input':"
+#     GUI_LINE=$(grep -n "^func _input" "$TARGET" | cut -d: -f1)
+#     if [ -n "$GUI_LINE" ]; then
+#         awk -v line="$GUI_LINE" 'NR>=line-3 && NR<=line+3 {printf "%4d: %s\n", NR, $0}' "$TARGET"
+#     else
+#         echo "  (could not find _input definition in $TARGET)"
+#     fi
+#     echo ""
+#     echo "Additionally, the last 20 lines of the log would be shown on failure."
+#     echo "DRY‑RUN: Would apply the above diff, clear cache, run test, and record."
+#     exit 0
+# fi
+
+# PROSE: A --dry-run mode must execute the same diagnostic commands (grep, awk)
+# and show the error context that would appear on failure – not just prose description.
+# The dry-run is a full simulation of the diagnostic phase, without applying changes.
+
+# -----------------------------------------------------------------------------
+# DATABASE LOGGING REQUIREMENT
+# -----------------------------------------------------------------------------
+# CODE (Bash – required operations):
+# DB_PATH="./parachute_mutations.db"
+#
+# init_db() {
+#     sqlite3 "$DB_PATH" <<SQL
+# CREATE TABLE IF NOT EXISTS files_to_fix (
+#     file_path TEXT,
+#     line_number INTEGER,
+#     error_text TEXT,
+#     status TEXT,
+#     attempt_count INTEGER DEFAULT 0,
+#     fixed_ts TEXT,
+#     PRIMARY KEY (file_path, line_number)
+# );
+# SQL
+#     log_result "init_db" "true" "table ensured"
+# }
+#
+# inspect_schema() {
+#     echo "=== DATABASE SCHEMA ==="
+#     sqlite3 "$DB_PATH" ".schema files_to_fix"
+#     echo ""
+#     log_result "inspect_schema" "true" "schema shown"
+# }
+#
+# show_last_attempt() {
+#     echo "=== LAST ATTEMPT FOR THIS FILE ==="
+#     sqlite3 "$DB_PATH" <<SQL
+# SELECT file_path, status, attempt_count, fixed_ts
+# FROM files_to_fix
+# WHERE file_path = '$TARGET'
+# ORDER BY fixed_ts DESC
+# LIMIT 1;
+# SQL
+#     echo ""
+# }
+#
+# record_fix() {
+#     local status="$1"
+#     local line="${2:-9999}"
+#     local error_text="${3:-auto-fix}"
+#     local ts=$(date -u +%Y-%m-%d\ %H:%M:%S)
+#
+#     sqlite3 "$DB_PATH" <<SQL
+# INSERT OR REPLACE INTO files_to_fix
+# (file_path, line_number, error_text, status, attempt_count, fixed_ts)
+# VALUES (
+#     '$TARGET',
+#     $line,
+#     '$error_text',
+#     '$status',
+#     COALESCE(
+#         (SELECT attempt_count + 1 FROM files_to_fix
+#          WHERE file_path = '$TARGET' AND line_number = $line),
+#         1
+#     ),
+#     '$ts'
+# );
+# SQL
+#     log_result "record_fix" "true" "status: $status, attempt count updated"
+# }
+#
+# verify_insertion() {
+#     echo "=== VERIFYING INSERTION ==="
+#     sqlite3 "$DB_PATH" <<SQL
+# SELECT file_path, status, attempt_count, fixed_ts
+# FROM files_to_fix
+# WHERE file_path = '$TARGET'
+# ORDER BY fixed_ts DESC
+# LIMIT 1;
+# SQL
+#     echo ""
+# }
+
+# PROSE: Every fix script must record attempts in the SQLite database
+# (parachute_mutations.db) using the files_to_fix table. Operations:
+# init_db, inspect_schema, show_last_attempt, record_fix, verify_insertion.
+# Full verbatim output shown. This ensures audit trail, attempt counting,
+# and forensic traceability.
+
+# =============================================================================
+# FINAL ENFORCEMENT SUMMARY
+# =============================================================================
+# - Code examples take precedence over prose in all cases.
+# - Tool calls (run_command, write_file, read_file) must be actual JSON calls,
+#   not simulated outputs.
+# - If a command cannot be executed, state "Cannot run: <command>" and stop.
+# - Ambiguity → ask the user; do not assume.
+# - Meta-rules involving self-grep ($0) are included as CI-friendly snippets
+#   but delegated to the script itself, not to the LLM's internal reasoning.
+# - This file is the single source of truth for assistant behavior.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# MECHANICAL GATE & USER PROMPT (MANDATORY in every delivered script)
+# -----------------------------------------------------------------------------
+# CODE (Bash – this entire block must appear in EVERY script, immediately
+# after the self-audit snippet from the previous section):
+# -----------------------------------------------------------------------------
+
+# ------------------------------------------------------------------
+# 1. Print a clear summary to the user (always shown, never silent)
+# ------------------------------------------------------------------
+echo ""
+echo "================================"
+echo "  MECHANICAL GATE SUMMARY"
+echo "================================"
+if [ -n "$SELF_SCAN" ]; then
+    echo "⚠️  The self-audit found lines matching forbidden patterns."
+    echo "   (Listed above. Review them to ensure they are prose/definitions"
+    echo "   and NOT actual invocations of 'sed', 'set -e', '2>/dev/null', etc.)"
+else
+    echo "✅ No forbidden patterns (sed, set -e, 2>/dev/null, grep -q) found."
+fi
+echo ""
+echo "Script    : $(basename "$0")"
+echo "Target    : ${TARGET:-<unspecified>}"
+echo "Action    : $(head -n1 "$0" | sed 's/^# //')"  # shows the shebang description
+echo "------------------------"
+
+# ------------------------------------------------------------------
+# 2. User prompt with explicit option to proceed (Y/y) or abort
+# ------------------------------------------------------------------
+read -p "Proceed with execution? (y/N): " confirm
+if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+    echo "Aborted by user. No changes made."
+    log_result "user_abort" "true" "User declined to run $(basename "$0")"
+    exit 0
+fi
+echo "Proceeding with execution..."
+log_result "user_consent" "true" "User confirmed execution of $(basename "$0")"
+
+# ------------------------------------------------------------------
+# 3. Reminder: The actual fix/work must come AFTER this block.
+# ------------------------------------------------------------------
+# NOTE: All gated operations (backup, edit, verify, restore, DB logging)
+#       go here. The self-audit and user prompt are now complete.
+# ------------------------------------------------------------------
+
+# PROSE:
+# - This block is **non-negotiable** – it must appear in every script delivered.
+# - It ensures the user is never surprised by what runs.
+# - The `read` command gives the user a chance to abort before any mutation occurs.
+# - The `SELF_SCAN` variable comes from the previous mandatory self-audit snippet.
+# - If the user aborts, the script exits cleanly with `log_result` recording the event.
+# - This satisfies:
+#   * MECHANICAL PRE-DELIVERY GATE (automated check is shown)
+#   * OBSERVABILITY (full summary printed)
+#   * TOIL ELIMINATION (user types nothing beyond y/N)
+#   * TRUST BOUNDARY AWARENESS (user explicitly crosses the boundary)
+#   * ENFORCEMENT AND NON-EVASION (no silent execution)
+
+# =============================================================================
+
+# =============================================================================
+# EXTERNAL ENFORCEMENT (NON-EVADABLE – MOVED OUTSIDE LLM CONTROL)
+# =============================================================================
+# The following rules are NOT optional for the assistant to "remember".
+# They are implemented as files committed to the repository, run by the
+# system (git hooks, CI), and enforced by tool calls. The assistant MUST
+# include these files in every delivery and call the validation tool.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. SYSTEM-LEVEL PRE-COMMIT HOOK (CI Enforcement)
+# -----------------------------------------------------------------------------
+# CODE (Python – to be saved as .git/hooks/pre-commit or ./scripts/ci/validate_script.py):
+# -----------------------------------------------------------------------------
+
+#!/usr/bin/env python3
+"""
+PRE-COMMIT HOOK: Validates every staged .sh and .py script against the rules.
+Blocks the commit if any required function, header, or pattern is missing.
+"""
+import os, sys, subprocess, re
+
+REQUIRED_BASH_FUNCTIONS = [
+    r"init_db\s*\(\)",
+    r"record_fix\s*\(\)",
+    r"verify_insertion\s*\(\)",
+]
+REQUIRED_HEADER_PATTERN = r"# Citations \(verifiable\):"
+REQUIRED_DRY_RUN_PATTERN = r"if \$DRY_RUN; then"
+REQUIRED_VERIFIED_RESTORE = r"verified_restore|sha256"
+
+FORBIDDEN_INVOCATIONS = [
+    r"sed -i",
+    r"2>/dev/null",
+    r"set -e",
+    r"grep -q",
+]
+
+def validate_script(filepath):
+    with open(filepath, 'r') as f:
+        content = f.read()
+
+    # 1. Check for required DB functions (if script touches sqlite3)
+    if 'sqlite3' in content:
+        for func in REQUIRED_BASH_FUNCTIONS:
+            if not re.search(func, content):
+                return False, f"Missing required function: {func}"
+
+    # 2. Check for the citation header
+    if not re.search(REQUIRED_HEADER_PATTERN, content):
+        return False, f"Missing header: '{REQUIRED_HEADER_PATTERN}'"
+
+    # 3. Check for dry-run diagnostic parity (if script has a validate_cmd)
+    if 'validate_cmd' in content and not re.search(REQUIRED_DRY_RUN_PATTERN, content):
+        return False, f"Missing dry-run block: '{REQUIRED_DRY_RUN_PATTERN}'"
+
+    # 4. Check for verified restore pattern
+    if 'backup' in content and not re.search(REQUIRED_VERIFIED_RESTORE, content):
+        return False, f"Missing verified restore (sha256/verified_restore)"
+
+    # 5. STRICT BAN: actual invocations in executable lines (not comments)
+    for pattern in FORBIDDEN_INVOCATIONS:
+        # Search only non-comment lines
+        for line in content.splitlines():
+            if line.strip().startswith('#'):
+                continue
+            if re.search(pattern, line):
+                return False, f"Forbidden invocation found: '{pattern}' in line: {line.strip()}"
+
+    return True, "All checks passed."
+
+def main():
+    files = sys.argv[1:] if len(sys.argv) > 1 else subprocess.check_output(
+        ['git', 'diff', '--cached', '--name-only', '--diff-filter=ACM']
+    ).decode().splitlines()
+
+    for f in files:
+        if f.endswith(('.sh', '.py')):
+            ok, msg = validate_script(f)
+            if not ok:
+                print(f"❌ {f}: {msg}")
+                sys.exit(1)
+            else:
+                print(f"✅ {f}: {msg}")
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()
+
+# PROSE:
+# - This hook runs on every `git commit`.
+# - It BLOCKS the commit if ANY check fails.
+# - It catches missing `log_result` calls, missing DB functions, missing headers,
+#   and – crucially – actual `sed -i`, `2>/dev/null`, `set -e`, and `grep -q`
+#   invocations that are NOT inside comments.
+# - The assistant MUST include this script in the repository (e.g., `.githooks/`).
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 2. MANDATORY TOOL CALL: validate_script(path)
+# -----------------------------------------------------------------------------
+# CODE (Tool definition – MUST be implemented by the runtime):
+# -----------------------------------------------------------------------------
+
+"""
+TOOL: validate_script
+Description: External validator that the assistant MUST call before delivering.
+Input: path (string) – path to the drafted script.
+Output: {
+    "passed": bool,
+    "failures": [{"line": int, "message": str}],
+    "checks": {
+        "db_functions": bool,
+        "citation_header": bool,
+        "dry_run": bool,
+        "verified_restore": bool,
+        "strict_ban": bool
+    }
+}
+ENFORCEMENT:
+- The assistant SHALL NOT deliver the final script until this tool returns
+  {"passed": true}.
+- If the tool returns failures, the assistant MUST show the failures verbatim,
+  correct them, re-run the tool, and only then deliver.
+- This removes the "self-reporting" loophole entirely.
+"""
+
+# PROSE (Bash equivalent for the user to implement in their environment):
+# function validate_script() {
+#     python3 ./scripts/ci/validate_script.py "$1"
+# }
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 3. STRICT MECHANICAL GATE (Removes false-positive exception)
+# -----------------------------------------------------------------------------
+# CODE (Bash – REPLACES the previous self-audit snippet):
+# -----------------------------------------------------------------------------
+
+# ---- STRICT SELF-AUDIT (FATAL on actual invocations) ----
+echo "=== STRICT SELF-AUDIT: scanning for forbidden invocations ==="
+# We grep for the patterns, but we must exclude lines that are comments or
+# the echo statements that make up the audit itself to avoid infinite recursion.
+# This version fails HARD if a forbidden invocation is found in executable code.
+FORBIDDEN=$(grep -n -E '^[^#]*\b(sed -i|2>/dev/null|set -e|grep -q)\b' "$0" | grep -v "STRICT SELF-AUDIT")
+if [ -n "$FORBIDDEN" ]; then
+    echo "❌ FATAL: Forbidden invocation found in executable code." >&2
+    echo "$FORBIDDEN" >&2
+    echo "This script violates GUARDED, STRUCTURED EDITS. Exiting." >&2
+    exit 1
+fi
+echo "✅ Strict audit passed – no forbidden invocations."
+
+# PROSE:
+# - This snippet replaces the previous "MECHANICAL PRE‑DELIVERY GATE (revised)".
+# - It does NOT allow false positives to be hand-waved away.
+# - It checks actual executable lines (ignoring comments).
+# - If `sed -i`, `2>/dev/null`, `set -e`, or `grep -q` appear outside comments,
+#   the script self-destructs before making any changes.
+# - This is the final, enforceable gate that closes the loophole.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 4. DATABASE LOGGING INTEGRATION (Commitment)
+# -----------------------------------------------------------------------------
+# PROSE:
+# All of the above (the pre-commit hook, the validate_script tool definition,
+# and this strict self-audit) MUST be committed to the game's repository under:
+#   - .git/hooks/pre-commit
+#   - scripts/ci/validate_script.py
+#   - docs/RULES_ENFORCEMENT.md
+#
+# The assistant will deliver these files as part of any fix script delivery.
+# By including them in the repository, they become part of the game's
+# infrastructure, automatically enforced on every commit and every execution.
+# =============================================================================

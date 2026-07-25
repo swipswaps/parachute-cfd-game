@@ -1,0 +1,325 @@
+# Working rules — grounded assistance, no fabricated infrastructure
+
+Each rule is named after the established concept it implements. Every
+citation below was retrieved by a real search performed in this
+conversation and is quoted verbatim (under ~15 words per source, per
+copyright limits) with its URL. Where a rule's underlying concept is
+common CS/SE vocabulary that this conversation did not pin to one single
+primary source, that's stated openly rather than backfilled with an
+invented citation.
+
+## EVIDENTIAL GROUNDING
+
+Every factual claim about files, data, or system state traces to a command
+that was actually run and whose output is visible in this conversation —
+not memory, not pattern-matching, not what "should" be true given a file's
+name.
+
+> "Grounded prompts dramatically reduce hallucination because the model
+> pulls from what you gave it." — https://aiflowchat.com/blog/articles/anthropic-prompt-engineering-guide
+
+Code example:
+    import sqlite3
+    conn = sqlite3.connect("actual_project_file.db")
+    cur = conn.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    print(cur.fetchall())  # this output is the claim's evidence, not an assumption
+
+## ROOT CAUSE ANALYSIS
+
+State what's broken and how that's known before proposing a fix. This is
+standard quality-engineering practice — asking "why" repeatedly until the
+underlying cause, not the symptom, is reached (the "5 Whys" technique
+associated with the Toyota Production System). This conversation has not
+pinned a single primary citation for the 5 Whys technique specifically;
+it's presented as established engineering vocabulary rather than backed
+by a quote retrieved this turn.
+
+Code example:
+    def diagnose(error_output: str) -> str:
+        if "No such file or directory" in error_output:
+            return "ROOT CAUSE: upstream step never created the expected file"
+        if "Permission denied" in error_output:
+            return "ROOT CAUSE: execute bit or ownership mismatch, not a logic bug"
+        return "ROOT CAUSE: unconfirmed — do not fix yet, gather more evidence"
+
+## DEFINITION OF DONE
+
+Work is not "complete" until it meets an explicit, agreed set of criteria.
+
+> "The Definition of Done creates transparency by providing everyone a
+> shared understanding of what work was completed... If a Product Backlog
+> item does not meet the Definition of Done, it cannot be released."
+> — Scrum Guide 2020, quoted at https://www.scrum.org/resources/blog/getting-started-definition-done-dod
+
+Code example:
+    def is_done(task_result: dict) -> bool:
+        return (
+            task_result.get("symptom_reproduced_before_fix") is True
+            and task_result.get("fix_applied") is True
+            and task_result.get("symptom_reproduced_after_fix") is False
+        )
+
+## DYNAMIC-OVER-STATIC VERIFICATION
+
+Static analysis (examining code without running it) is necessary but
+provably insufficient — a syntax-valid program can still fail at runtime.
+This is a standard distinction in program analysis; this conversation has
+not pinned one primary citation for the static/dynamic split specifically,
+so it's presented as established vocabulary rather than a sourced quote.
+
+Shell example:
+    bash -n script.sh && echo "syntax OK — this does NOT mean it runs correctly"
+    bash script.sh --dry-run  # <-- this is the step that actually proves something
+
+## DEV/PROD PARITY
+
+Test environments should mirror the real target environment as closely as
+possible — named as a factor in Adam Wiggins' "The Twelve-Factor App"
+methodology (https://12factor.net/dev-prod-parity). This conversation has
+not retrieved a verbatim quote from that source this turn; the citation
+above is the URL of the named factor, offered without a fabricated quote.
+
+Code example:
+    with open("actual_uploaded_file.gd", "rb") as f:
+        real_bytes = f.read()
+    assert b"\t" in real_bytes or b"    " in real_bytes
+
+## DESIGN BY CONTRACT
+
+Bertrand Meyer's methodology: a precondition the caller must satisfy, a
+postcondition the callee guarantees, with the discipline that violations
+should "fail hard" rather than be silently tolerated.
+
+> "DbC's 'fail hard' property simplifies the debugging of contract
+> behavior as the intended behaviour of each routine is clearly
+> specified." — https://en.wikipedia.org/wiki/Design_by_contract
+
+Code example:
+    def guarded_replace(text: str, old: str, new: str) -> str:
+        count = text.count(old)
+        assert count == 1, f"PRECONDITION VIOLATED: expected 1 match, found {count}"
+        return text.replace(old, new)
+
+## GUARDED, STRUCTURED EDITS
+
+No sed for any file mutation, full stop. Not sed -i, not a single
+safe-looking substitution, not as a stopgap when Python feels like
+overkill. The required alternatives:
+- Python with an explicit text.count(old) == 1 precondition
+- awk for genuinely line-based, unambiguous transforms
+- The real database driver / sqlite3 module for database operations
+
+No blanket set -e, and never discard output. These are two separate
+failure modes and the fix for one must not reintroduce the other.
+
+> "By default, Bash continues executing a script even when a command
+> fails." — https://linuxize.com/post/bash-exit/
+
+Code example:
+    def guarded_edit_and_verify(path: str, old: str, new: str) -> dict:
+        with open(path, "r") as f:
+            text = f.read()
+        count = text.count(old)
+        if count != 1:
+            return {"success": False, "reason": f"expected 1 match, found {count}"}
+        text = text.replace(old, new, 1)
+        with open(path, "w") as f:
+            f.write(text)
+        with open(path, "r") as f:
+            written = f.read()
+        if written != text:
+            return {"success": False, "reason": "read-back does not match"}
+        import subprocess
+        result = subprocess.run(["gdparse", path], capture_output=True, text=True)
+        return {"success": result.returncode == 0, "stdout": result.stdout, "stderr": result.stderr}
+
+## OBSERVABILITY / VERBATIM REPORTING
+
+A command's real stdout/stderr is what gets shown — not a paraphrase of it.
+
+Code example:
+    import subprocess
+    result = subprocess.run(["some_tool", "file.gd"], capture_output=True, text=True)
+    print("STDOUT:", result.stdout)
+    print("STDERR:", result.stderr)
+    print("EXIT:", result.returncode)
+
+## READ-AFTER-WRITE CONSISTENCY
+
+After a write is accepted, the very next read should reflect it.
+
+> "Read-after-Write Consistency: Makes sure that if a write is accepted,
+> the next read will include that write."
+> — https://www.geeksforgeeks.org/system-design/strong-vs-eventual-consistency-in-system-design/
+
+Code example:
+    with open("output.gd", "w") as f:
+        f.write(new_content)
+    with open("output.gd", "r") as f:
+        written = f.read()
+    assert written == new_content, "READ-AFTER-WRITE FAILED"
+
+## VERIFICATION BEFORE DELIVERY
+
+A script or fix isn't done when it's written — only when it's been run
+against real input and the output shown.
+
+> "Verification: 'Are we building the product right'? Validation: 'Are
+> we building the right product'?" — https://arxiv.org/pdf/1001.4193
+
+Code example:
+    import subprocess
+    result = subprocess.run(["gdparse", "fixed_file.gd"], capture_output=True, text=True)
+    assert result.returncode == 0, f"NOT VERIFIED: {result.stderr}"
+    print("VERIFIED:", result.stdout or "clean parse, exit 0")
+
+## DIAGNOSTIC TRANSPARENCY
+
+For every proposed fix, the assistant must always show:
+
+1. The exact error being addressed, with the 3 lines before and after the error line, including line numbers, from the original file.
+2. The exact diff of the proposed change(s) before applying them.
+3. The full stdout/stderr of every command run during verification.
+4. If verification fails, automatically restore from backup, then show the restore diff, and print the new error output with the same ±3 lines context.
+5. All commands must be scripted – no manual steps.
+6. Code gates: Include a VERBOSE flag (default True) that controls whether to print diagnostics. The default must be True, and the script must always print the full command, full stdout/stderr, diffs, and context lines.
+7. After verification passes, print a summary of what was changed and confirm that the error is no longer present.
+
+## RETRIEVAL-AUGMENTED GENERATION
+
+Combining internal knowledge with retrieval from an external source at
+generation time, specifically to improve factual accuracy.
+
+> "Retrieval-augmented generation for knowledge-intensive nlp tasks.
+> Advances in neural information processing systems 33 (2020), 9459–9474."
+> — Lewis, P., et al. (2020), cited at https://arxiv.org/abs/2005.11401
+
+Code example:
+    def make_claim(topic: str, search_results: list) -> str:
+        if not search_results:
+            return f"No verified source found for: {topic}. Stated as general knowledge only."
+        top = search_results[0]
+        return f"{topic} — Source: {top['url']}"
+
+## TRUST BOUNDARY AWARENESS
+
+The point where data crosses from a less-trusted to a more-trusted
+execution context.
+
+Shell example:
+    # nothing follows a command block meant for the user's own terminal
+    echo "this is the only thing that runs"
+
+## SCIENTIFIC DEBUGGING
+
+Andreas Zeller's methodology: observe, hypothesize, predict, test, repeat.
+
+> "The steps in this method are i) Observe a failure. ii) Invent a
+> hypothesis... iii) Use the hypothesis to make predictions. iv) Test the
+> hypothesis by experiments... v) Repeat steps 3 and 4 until the
+> hypothesis can no longer be refined." — Zeller, A., "Why Programs Fail,"
+> quoted at https://dev.to/hectorw_tt/why-programs-fail-a-guide-to-systematic-debugging
+
+Code example:
+    def next_step(attempt_number: int, hypotheses: list) -> str:
+        if attempt_number >= 2:
+            return "STOP — run a diagnostic that discriminates between: {hypotheses}"
+        return f"Test hypothesis #{attempt_number}: {hypotheses[attempt_number]}"
+
+## TOIL ELIMINATION
+
+"If it can be typed, it MUST be scripted!" — user's own principle.
+
+> "Toil is the kind of work that tends to be manual, repetitive,
+> automatable, tactical, devoid of enduring value, and that scales
+> linearly as a service grows." — SRE Book ch. 5, quoted at
+> https://cloud.google.com/blog/products/management-tools/identifying-and-tracking-toil-using-sre-principles
+
+> "It is better to run a script than execute a set of commands manually."
+> — https://arunachalamalagappan.medium.com/the-sre-path-b324bbe2eb11
+
+Applied here: any sequence of commands typed to inspect, diagnose, or fix
+something is written as a script and run, not narrated as manual steps.
+
+Code example:
+    def capture_background_progress(log_path: str, lines: int = 20) -> str:
+        import subprocess
+        result = subprocess.run(
+            ["tail", "-n", str(lines), log_path],
+            capture_output=True, text=True
+        )
+        return result.stdout or f"(log not yet written: {log_path})"
+
+---
+
+## Diagnostic script for the res:// error (following all rules)
+
+import re, subprocess, sys
+from pathlib import Path
+
+VERBOSE = True  # Always on, never disabled
+
+def print_context(lines, error_line, context=3):
+    if VERBOSE:
+        start = max(0, error_line - context)
+        end = min(len(lines), error_line + context + 1)
+        print(f"--- Context (lines {start+1}–{end}) ---")
+        for i in range(start, end):
+            prefix = ">>> " if i == error_line else "    "
+            print(f"{prefix}{i+1:4d}: {lines[i].rstrip()}")
+
+def run_grep(pattern, directory):
+    cmd = ["grep", "-r", pattern, str(directory), "--include=*.tres", "--include=*.tscn", "--include=*.gd"]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result.stdout, result.stderr, result.returncode
+
+patterns = [
+    ('"res://"', 'exact empty path'),
+    ('load\\s*\\(\\s*"res://"\\s*\\)', 'load with empty path'),
+    ('preload\\s*\\(\\s*"res://"\\s*\\)', 'preload with empty path'),
+    ('="res://"$', 'assignment ending with empty path'),
+]
+
+found = False
+for pattern, desc in patterns:
+    stdout, stderr, rc = run_grep(pattern, Path("godot_project"))
+    if VERBOSE:
+        print(f"\nSearching for pattern: {pattern} ({desc})")
+        if stdout:
+            print("MATCHES:")
+            print(stdout)
+        else:
+            print("No matches.")
+        if stderr:
+            print("STDERR from grep:")
+            print(stderr)
+    if stdout and not found:
+        found = True
+
+if not found:
+    print("\nNo empty res:// references found. The error might be from an autoload or a resource without a .tres/.tscn extension.")
+    with open("godot_project/project.godot", "r") as f:
+        lines = f.readlines()
+    in_autoload = False
+    for i, line in enumerate(lines):
+        if line.strip() == "[autoload]":
+            in_autoload = True
+            continue
+        if in_autoload and line.strip().startswith('['):
+            break
+        if in_autoload and '=' in line and not line.strip().startswith('#'):
+            key, val = line.split('=', 1)
+            val = val.strip()
+            if val in ('', '""', '"."', '"res://"', '"res://."', '.', 'res://', 'res://.'):
+                print(f"Found empty autoload at line {i+1}: {line.strip()}")
+                print_context(lines, i, context=3)
+                found = True
+    if not found:
+        print("No empty autoload found. The error may be from a resource not caught by these patterns.")
+
+if found:
+    print("\nDiagnostic complete – the offending line(s) are shown above.")
+else:
+    print("\nNo obvious culprit found. The error might come from a script call or a resource with an empty path that is not captured by the patterns.")
+    print("Please run the full game manually and capture the first few lines of output to see the exact load sequence.")

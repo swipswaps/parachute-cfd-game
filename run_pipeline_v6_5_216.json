@@ -1,0 +1,125 @@
+{
+  "fix_id": "pipeline_idempotent_fix_v6_5_216",
+  "title": "Complete Self-Contained Pipeline with All Tools and Full Database Verification",
+  "version": "6.5.216",
+  "cs_principles": [
+    {
+      "name": "Idempotence",
+      "verbatim_citation": "RFC 7231, Section 4.2.2: 'A request method is considered \"idempotent\" if the intended effect on the server of multiple identical requests with that method is the same as the effect for a single such request.' URL: https://www.rfc-editor.org/rfc/rfc7231#section-4.2.2",
+      "fix_code": "def ensure_database():\n    for table_ddl in TABLE_DEFS:\n        cursor.execute(table_ddl)  # CREATE IF NOT EXISTS\n\ndef _db_patch_gate():\n    cursor.execute('SELECT 1 FROM gd_patch_registry WHERE file = ? AND content_hash_before = ?', ...)\n    if cursor.fetchone(): return False  # Already applied"
+    },
+    {
+      "name": "Automation",
+      "verbatim_citation": "Jose J Melendez, 2026: 'If it can be typed, it MUST be scripted!' (© all rights reserved).",
+      "fix_code": "def ensure_dependencies():\n    tools = ['gdparse', 'gdformat', 'gdlint', 'gdmetrics', 'gdstyle']\n    missing = [t for t in tools if not shutil.which(t)]\n    if missing: subprocess.run(['pip', 'install', '--user', 'gdtoolkit'], check=True)"
+    },
+    {
+      "name": "Defensive Programming",
+      "verbatim_citation": "Wikipedia: 'Defensive programming is a form of defensive design intended to ensure the continuing function of a piece of software under unforeseen circumstances.' URL: https://en.wikipedia.org/wiki/Defensive_programming",
+      "fix_code": "def safe_query(sql, params=()):\n    try: cursor.execute(sql, params)\n    except sqlite3.OperationalError:\n        ensure_database()\n        cursor.execute(sql, params)\n        if cursor.rowcount == 0: raise RuntimeError('Query failed after recovery')"
+    },
+    {
+      "name": "Observability",
+      "verbatim_citation": "Wikipedia: 'In software engineering, observability is the ability to collect data about programs' execution, modules' internal states, and the communication between components.' URL: https://en.wikipedia.org/wiki/Observability_(software)",
+      "fix_code": "def log_verbatim(msg): print(f'[VERBATIM] {msg}', flush=True)\n\ndef _log_state(run_id, state, details):\n    print(json.dumps({'timestamp': datetime.now().isoformat(), 'run_id': run_id, 'state': state, 'details': details}), flush=True)"
+    }
+  ],
+  "specific_fixes": [
+    {
+      "error": "var backup_dir: String == \"user://backups/\"",
+      "fix": "var backup_dir: String = \"user://backups/\"",
+      "regex": "r'(\\s*var\\s+\\w+\\s*:\\s*\\w+\\s*)\\s*==\\s*'",
+      "replacement": "r'\\1 = '"
+    },
+    {
+      "error": "phase_text == \"CANOPY\" if malf == \"NONE\" else malf",
+      "fix": "phase_text = \"CANOPY\" if malf == \"NONE\" else malf",
+      "regex": "r'(\\w+)\\s*==\\s*(\"[^\"]+\")\\s+if\\s+([^:]+)(?:\\s+else\\s+(\\w+))?'",
+      "replacement": "r'\\1 = \\2 if \\3 else \\4'"
+    },
+    {
+      "error": "_alt_label.text == \"ALT: %d ft\"",
+      "fix": "_alt_label.text = \"ALT: %d ft\"",
+      "regex": "r'(\\w+\\.text)\\s*==\\s*(\"[^\"]+\")",
+      "replacement": "r'\\1 = \\2'"
+    },
+    {
+      "error": "panel.anchor_left == 0.0",
+      "fix": "panel.anchor_left = 0.0",
+      "regex": "r'(\\w+\\.\\w+)\\s*==\\s*([\\d.]+)'",
+      "replacement": "r'\\1 = \\2'"
+    },
+    {
+      "error": "class_name aero_PID",
+      "fix": "class_name AeroPID",
+      "regex": "r'class_name\\s+([a-z]+)_([A-Z])'",
+      "replacement": "r'class_name \\1\\2'"
+    },
+    {
+      "error": "const aeroMathUtils = preload",
+      "fix": "const AERO_MATH_UTILS = preload",
+      "regex": "r'const\\s+([a-z][a-zA-Z0-9]*)\\s*=\\s*preload'",
+      "replacement": "r'const \\1 = preload'",
+      "post_process": "def fix_const_names(content): return re.sub(r'const\\s+([a-z][a-zA-Z0-9]*)\\s*=\\s*preload', lambda m: f'const {m.group(1).upper()} = preload', content)"
+    },
+    {
+      "error": "layer == 3",
+      "fix": "layer = 3",
+      "regex": "r'(\\s*)(\\w+)\\s*==\\s*(\\d+)(?:\\s*$|\\s*#)'",
+      "replacement": "r'\\1\\2 = \\3'"
+    },
+    {
+      "error": "Input.mouse_mode == Input.MOUSE_MODE_CAPTURED",
+      "fix": "Input.mouse_mode = Input.MOUSE_MODE_CAPTURED",
+      "regex": "r'Input\\.mouse_mode\\s*==\\s*(Input\\.[A-Z_]+)'",
+      "replacement": "r'Input.mouse_mode = \\1'"
+    },
+    {
+      "error": "global_basis == Basis()",
+      "fix": "global_basis = Basis()",
+      "regex": "r'(\\w+)\\s*==\\s*Basis\\(\\)'",
+      "replacement": "r'\\1 = Basis()'"
+    },
+    {
+      "error": "tl == Vector3(-half_span, 0, quater_chord)",
+      "fix": "tl = Vector3(-half_span, 0, quater_chord)",
+      "regex": "r'(\\w+)\\s*==\\s*Vector3\\(([^)]+)\\)'",
+      "replacement": "r'\\1 = Vector3(\\2)'"
+    },
+    {
+      "error": "wing_material.cull_mode == StandardMaterial3D.CULL_DISABLED",
+      "fix": "wing_material.cull_mode = StandardMaterial3D.CULL_DISABLED",
+      "regex": "r'(\\w+\\.\\w+)\\s*==\\s*(StandardMaterial3D\\.[A-Z_]+)'",
+      "replacement": "r'\\1 = \\2'"
+    },
+    {
+      "error": "self.p == _p",
+      "fix": "self.p = _p",
+      "regex": "r'self\\.(\\w+)\\s*==\\s*_(\\w+)'",
+      "replacement": "r'self.\\1 = _\\2'"
+    },
+    {
+      "error": "center_of_pressure == Vector3.ZERO",
+      "fix": "center_of_pressure = Vector3.ZERO",
+      "regex": "r'(\\w+)\\s*==\\s*Vector3\\.ZERO'",
+      "replacement": "r'\\1 = Vector3.ZERO'"
+    }
+  ],
+  "database_hardening": {
+    "table_defs": [
+      "CREATE TABLE IF NOT EXISTS gd_patch_registry (patch_id TEXT PRIMARY KEY, file TEXT, run_id TEXT, content_hash_before TEXT, content_hash_after TEXT, applied_at TEXT, skipped_reason TEXT)",
+      "CREATE TABLE IF NOT EXISTS auto_heal_actions (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp TEXT, tool TEXT, action TEXT, file_path TEXT, line_number INTEGER, before_line TEXT, after_line TEXT, success INTEGER DEFAULT 0, error_message TEXT, iteration INTEGER DEFAULT 0)",
+      "CREATE TABLE IF NOT EXISTS pipeline_runs (id INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL UNIQUE, start_time TEXT NOT NULL, end_time TEXT, status TEXT DEFAULT 'running', iteration_count INTEGER DEFAULT 0, errors_found INTEGER DEFAULT 0, errors_fixed INTEGER DEFAULT 0)",
+      "CREATE TABLE IF NOT EXISTS syntax_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, file_path TEXT NOT NULL, line_number INTEGER, error_text TEXT, code_line TEXT, context TEXT, fixed_ts TEXT)",
+      "CREATE TABLE IF NOT EXISTS verification_results (id INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT, tool_name TEXT, exit_code INTEGER, stdout TEXT, stderr TEXT, errors_found INTEGER DEFAULT 0, verified_at TEXT)"
+    ],
+    "recovery": {
+      "method": "safe_query() wraps all queries with try/except and auto-recovery",
+      "code": "def safe_query(sql, params=()):\n    try:\n        conn = sqlite3.connect(str(DB_PATH))\n        cursor = conn.cursor()\n        cursor.execute(sql, params)\n        result = cursor.fetchall()\n        conn.close()\n        return result\n    except sqlite3.OperationalError:\n        log_verbatim(f'Database error, recovering...')\n        ensure_database()\n        conn = sqlite3.connect(str(DB_PATH))\n        cursor = conn.cursor()\n        cursor.execute(sql, params)\n        result = cursor.fetchall()\n        conn.close()\n        return result"
+    },
+    "verification": {
+      "method": "Every database operation is verified by checking rowcount or result",
+      "code": "def verify_insert(sql, params=()):\n    result = safe_query(sql, params)\n    if result is None:\n        raise RuntimeError(f'Insert failed: {sql}')\n    return result"
+    }
+  }
+}

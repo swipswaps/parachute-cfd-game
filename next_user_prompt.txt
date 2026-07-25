@@ -1,0 +1,13 @@
+paste of the newest flight_controller_recon_*.log follows, verbatim and complete.
+
+Using ONLY the [LIVE] canonical entries in STEP 2/3 of this log:
+1. identify which file is the aerodynamic addon's real control surface API
+   (AeroBody3D / flight_assist or equivalent) — cite the exact path and
+   line numbers from the log, nothing outside it
+2. emit ONE heredoc script that writes scripts/flight_controller.gd
+   against that confirmed API: mouse steers (plane or canopy), any key
+   exits IN_PLANE state at 6000 ft into freefall, spacebar deploys canopy
+3. the script must gdparse the new file, read it back, and print verbatim
+   results — no edits to any other file in this step
+
+<log paste starts on the next line>

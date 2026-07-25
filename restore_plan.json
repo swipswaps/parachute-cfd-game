@@ -1,0 +1,121 @@
+{
+  "fine": [
+    "addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_atmosphere_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_atmosphere_3d/aero_water_atmosphere_3d/aero_water_atmosphere_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_sphere_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_cyclic_propeller_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_thruster_3d.gd",
+    "addons/godot_aerodynamic_physics/core/aero_influencer_3d/drag_influencer/aero_drag_influencer.gd",
+    "addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd",
+    "addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd",
+    "addons/godot_aerodynamic_physics/core/controls/aero_control_config_axis.gd",
+    "addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd",
+    "addons/godot_aerodynamic_physics/demo/misc_demo_assets/ball_launcher.gd",
+    "addons/godot_aerodynamic_physics/demo/misc_demo_assets/mouse_control.gd",
+    "addons/godot_aerodynamic_physics/demo/misc_demo_assets/wind_indicator.gd",
+    "addons/godot_aerodynamic_physics/utils/math_utils.gd",
+    "addons/godot_aerodynamic_physics/utils/node_utils.gd",
+    "scripts/AirplaneController.gd",
+    "scripts/ComponentRegistry.gd",
+    "scripts/GameIntegrity.gd",
+    "scripts/InputManager.gd",
+    "scripts/ViewPoseController.gd",
+    "scripts/audit.gd",
+    "scripts/forensic_hud.gd",
+    "scripts/minimal.gd",
+    "scripts/parachute_controller.gd",
+    "scripts/pip_draggable.gd",
+    "scripts/plane.gd",
+    "scripts/splash.gd"
+  ],
+  "lines": [
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd",
+      "dest_sha256_at_plan": "6cfe4d2dc6cd2e10577f86531105e86d74ea48ece1ef740ee88e9e7d0bf74d59",
+      "res_path": "addons/godot_aerodynamic_physics/core/aero_body_3d.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons_backup_20260629_075234/godot_aerodynamic_physics/core/aero_body_3d.gd",
+      "src_root": "live",
+      "src_sha256": "6588a6b86965e5862d2af676d38615dd3a7f05d8b9d603322b242c05db629e18"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd",
+      "dest_sha256_at_plan": "ce07c985cea15fccdbd3571e6699310bf6b953ae113e2bf719c29e9a96d67835",
+      "res_path": "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons_backup_20260629_075234/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd",
+      "src_root": "live",
+      "src_sha256": "af5ae761f78c85319de90cd0ab79c70908f354042a149e09fc73df491b2e1f89"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd",
+      "dest_sha256_at_plan": "ab698b8c64fbeba321a90792fc9e0c49d99a64d91801f8cb44eb548a7b23abe4",
+      "res_path": "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons_backup_20260629_075234/godot_aerodynamic_physics/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd",
+      "src_root": "live",
+      "src_sha256": "69b3ea11c8cfe30ee0cbbe6c4f8dad16ce08d0db467d3d4d659809c0801b0290"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd",
+      "dest_sha256_at_plan": "df2db1171ee256b8cc596dba4b2927eff66f85de4e05a6738f7a4206d3335950",
+      "res_path": "addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons_backup_20260629_075234/godot_aerodynamic_physics.pre_final2/core/aero_influencer_3d/aero_thruster_3d/aero_jet_thruster_3d.gd",
+      "src_root": "live",
+      "src_sha256": "81ade530348553c7bfd8344312e38542d7f0c44b7d498615da5fe144446bb996"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd",
+      "dest_sha256_at_plan": "2195417ef28df7c307121dca9294fd30e3c333a0c1b14415034fb029100d01c6",
+      "res_path": "addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons_backup_20260629_075234/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd",
+      "src_root": "live",
+      "src_sha256": "d3ea737fdd5b9fe37275e6c1950b2bda30ceb36c687d842a907f432d99312deb"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/flight_assist.gd",
+      "dest_sha256_at_plan": "646d4af0f726a070a5808dc379163ba0173e3d9b7b94761d9170749974028fe6",
+      "res_path": "addons/godot_aerodynamic_physics/core/flight_assist.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons_backup_20260629_075234/godot_aerodynamic_physics/core/flight_assist.gd",
+      "src_root": "live",
+      "src_sha256": "4066760c5adaf6c5c735bdbbab8fee605220e778fc9663471021f6fdde639521"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/pid.gd",
+      "dest_sha256_at_plan": "214b2617f2be69b93eb4554198cbd865de436b5c866283eba9bb0c907fe4313d",
+      "res_path": "addons/godot_aerodynamic_physics/utils/pid.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/old_copies/godot_aerodynamic_physics.pre_final/utils/pid.gd",
+      "src_root": "live",
+      "src_sha256": "d3daf41096ce8504d6dfdb588dfee5ad23456e20f25ea3689222bf45eea5b251"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd",
+      "dest_sha256_at_plan": "946a60cdd21fd96574e0d570aa0b8f503c3f28b04b6b33efc1fce324fb5ece9c",
+      "res_path": "scripts/ResourceThrottle.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts.broken_0005/ResourceThrottle.gd",
+      "src_root": "live",
+      "src_sha256": "26416f3d88793b026ff861f1810cd636fbdbacd948c64c2e42bcfd2ba505139e"
+    },
+    {
+      "dest_existed": true,
+      "dest_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd",
+      "dest_sha256_at_plan": "a3e317c5f368a0c69368ab0b367b0a0bc94deb13854f2a0e13ee9aec59da57ff",
+      "res_path": "scripts/SqliteWatchdog.gd",
+      "src_path": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/healing_staging/scripts/SqliteWatchdog.gd",
+      "src_root": "live",
+      "src_sha256": "172ecc4fec097ca2d9e0855bc944332e5a2bd549f2d45a4f9fe42139f922fd68"
+    }
+  ],
+  "lost": [],
+  "project": "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project",
+  "schema_version": 1
+}

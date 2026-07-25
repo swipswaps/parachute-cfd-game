@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/Scony/godot-gdscript-toolkit
+    rev: 4.5.0
+    hooks:
+      - id: gdlint
+      - id: gdformat
+        args: ["--check"]
+
+  - repo: local
+    hooks:
+      - id: gdscanner
+        name: GDScript block scanner
+        entry: python3 scan_gd.py godot_project/scripts/build_terrain.gd
+        language: system
+        pass_filenames: false

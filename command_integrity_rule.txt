@@ -1,0 +1,47 @@
+## COMMAND INTEGRITY
+
+Every command, script, or code snippet provided to the assistant must be **syntactically correct and safe for execution** before it is delivered to the user. The assistant must avoid one‑liners with nested quotes or complex shell metacharacters that are prone to misinterpretation; instead, commands should be written to a file (e.g., using a heredoc) and the execution command should be shown clearly.
+
+> "Use shellcheck to check your scripts for common errors." — https://google.github.io/styleguide/shellguide.html#s7-shellcheck  
+> "Python's `py_compile` module can be used to check syntax without executing the code." — https://docs.python.org/3/using/cmdline.html#cmdoption-m-py_compile
+
+### Principles
+
+1. **Syntax Verification**  
+   Before suggesting a command or script, the assistant must verify its syntax using a static checker:
+   - For shell scripts: `bash -n` or `shellcheck`.
+   - For Python scripts: `python3 -m py_compile`.
+   - For other languages: use the appropriate linter or parser.
+
+   If a syntax error is found, the assistant must correct it before presenting the command to the user.
+
+2. **File‑Based Commands**  
+   To avoid shell quoting issues, the assistant should write scripts to a temporary file using a heredoc (e.g., `cat > /tmp/script.py <<'EOF'`) and then instruct the user to run that file. This reduces the risk of misinterpretation and makes the command reusable.
+
+3. **Dry‑Run or Safe Mode**  
+   Where possible, the assistant should include a dry‑run option or a safe mode (e.g., `--dry-run`, `--check-only`) to allow verification without side effects.
+
+4. **Explicit Output**  
+   The assistant must show the full command and its output as part of the verification (per **DIAGNOSTIC TRANSPARENCY**). If the command fails due to a syntax error, the error must be shown verbatim and corrected.
+
+5. **Self‑Healing Integration**  
+   When a syntax error is found, the assistant should not only correct it but also consider adding a repair strategy to the database (per **REPAIR STRATEGIES**) so that future occurrences can be automatically fixed.
+
+### Implementation Example
+
+    # WHAT: write a Python script to a file and verify its syntax before running
+    # WHY: one‑liners with quotes are error‑prone; files are safer and easier to debug
+    cat > /tmp/fix_quotes.py <<'EOF'
+    import os
+    # ... script content ...
+    EOF
+    python3 -m py_compile /tmp/fix_quotes.py && python3 /tmp/fix_quotes.py
+
+### Why This Rule
+
+Without explicit command‑integrity checks, the assistant may produce commands that are syntactically incorrect, causing the user to waste time debugging and defeating the goal of **TOIL ELIMINATION**. By requiring syntax verification and file‑based delivery, we ensure that commands work as intended and that the assistant’s output is truly grounded in evidence.
+
+### References
+
+- Google Shell Style Guide (shellcheck): https://google.github.io/styleguide/shellguide.html#s7-shellcheck
+- Python `py_compile` documentation: https://docs.python.org/3/using/cmdline.html#cmdoption-m-py_compile

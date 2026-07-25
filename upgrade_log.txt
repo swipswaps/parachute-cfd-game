@@ -1,0 +1,37 @@
+[VERBATIM] Starting upgrade at Wed Jun  3 04:20:11 PM EDT 2026
+[VERBATIM] All prerequisites satisfied.
+Requirement already satisfied: rasterio in /home/owner/.local/lib/python3.14/site-packages (1.5.0)
+Collecting owslib
+  Downloading owslib-0.35.0-py3-none-any.whl.metadata (6.8 kB)
+Requirement already satisfied: Pillow in /usr/lib64/python3.14/site-packages (11.3.0)
+Requirement already satisfied: numpy in /home/owner/.local/lib/python3.14/site-packages (2.4.4)
+Requirement already satisfied: affine in /home/owner/.local/lib/python3.14/site-packages (from rasterio) (2.4.0)
+Requirement already satisfied: attrs in /usr/lib/python3.14/site-packages (from rasterio) (25.4.0)
+Requirement already satisfied: certifi in /home/owner/.local/lib/python3.14/site-packages (from rasterio) (2026.2.25)
+Requirement already satisfied: click!=8.2.*,>=4.0 in /home/owner/.local/lib/python3.14/site-packages (from rasterio) (8.1.8)
+Requirement already satisfied: cligj>=0.5 in /home/owner/.local/lib/python3.14/site-packages (from rasterio) (0.7.2)
+Requirement already satisfied: pyparsing in /home/owner/.local/lib/python3.14/site-packages (from rasterio) (3.3.2)
+Requirement already satisfied: lxml in /usr/lib64/python3.14/site-packages (from owslib) (6.0.1)
+Requirement already satisfied: python-dateutil in /usr/lib/python3.14/site-packages (from owslib) (2.9.0.post0)
+Requirement already satisfied: pyyaml in /usr/lib64/python3.14/site-packages (from owslib) (6.0.2)
+Requirement already satisfied: requests in /usr/lib/python3.14/site-packages (from owslib) (2.32.5)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3.14/site-packages (from python-dateutil->owslib) (1.17.0)
+Requirement already satisfied: charset_normalizer<4,>=2 in /usr/lib/python3.14/site-packages (from requests->owslib) (3.4.3)
+Requirement already satisfied: idna<4,>=2.5 in /usr/lib/python3.14/site-packages (from requests->owslib) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/lib/python3.14/site-packages (from requests->owslib) (2.6.3)
+Downloading owslib-0.35.0-py3-none-any.whl (240 kB)
+Installing collected packages: owslib
+Successfully installed owslib-0.35.0
+[VERBATIM] Python dependencies installed.
+[VERBATIM] Backup created: godot_project/scripts/build_terrain.gd.backup.20260603_162037
+[VERBATIM] Starting Python upgrade script
+[VERBATIM] Elevation array shape: (1024, 1024), range: 12.7-30.9 m
+[VERBATIM] Requesting NAIP image: 4096x4096
+Traceback (most recent call last):
+  File "<stdin>", line 48, in <module>
+  File "/home/owner/.local/lib/python3.14/site-packages/owslib/map/wms130.py", line 311, in getmap
+    u = openURL(base_url, data, method, timeout=timeout or self.timeout, auth=self.auth, headers=self.headers)
+  File "/home/owner/.local/lib/python3.14/site-packages/owslib/util.py", line 235, in openURL
+    raise ServiceException('\n'.join([t.strip() for t in serviceException.itertext() if t.strip()]))
+owslib.util.ServiceException: Parameter 'layers' contains unacceptable layer names.
+[VERBATIM] Python upgrade script failed. Restoring backup...

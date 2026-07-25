@@ -1,0 +1,122 @@
+
+======================================================================
+STEP 0: Verify essential files exist
+======================================================================
+  build_terrain.gd exists: True
+  main.tscn exists: True
+
+======================================================================
+STEP 1: Terrain creation and addition to scene
+======================================================================
+  Found terrain creation line at 308:
+     303: 	terrain_mat.vertex_color_use_as_albedo = true
+     304: 	terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+     305: 	terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+     306: 	terrain_inst.material_override = terrain_mat
+     307: 	add_child(terrain_inst)
+     308: 	print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+     309: 
+     310: 	# --------------------------------------------------------------
+     311: 	# Runways (three predefined)
+     312: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+     313: 	# --------------------------------------------------------------
+
+  Found add_child for terrain at line 307:
+     304: 	terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+     305: 	terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+     306: 	terrain_inst.material_override = terrain_mat
+     307: 	add_child(terrain_inst)
+     308: 	print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+     309: 
+     310: 	# --------------------------------------------------------------
+
+======================================================================
+STEP 2: Airplane loading and parenting
+======================================================================
+  Found airplane load confirmation at line 635:
+     627: 	var plane_path = "res://assets/aircraft/cesna_airplane.glb"
+     628: 	if FileAccess.file_exists(plane_path):
+     629: 		var plane_scene = load(plane_path)
+     630: 		if plane_scene:
+     631: 			var plane = plane_scene.instantiate()
+     632: 			if _character: _character.reparent(plane, true)
+     633: 			plane.position = Vector3(200, 1800, -200)
+     634: 			add_child(plane)
+     635: 			print("[VERBATIM] Airplane loaded from ", plane_path)
+     636: 		else:
+     637: 			print("[VERBATIM] ERROR: Could not instantiate airplane scene from ", plane_path)
+     638: 	else:
+     639: 		print("[VERBATIM] WARNING: Airplane scene not found at ", plane_path)
+     640: 
+     641: 
+     642: # ------------------------------------------------------------------
+     643: # Deploy parachute (called on SPACE at correct altitude)
+
+  Found character reparent line at 632:
+     629: 		var plane_scene = load(plane_path)
+     630: 		if plane_scene:
+     631: 			var plane = plane_scene.instantiate()
+     632: 			if _character: _character.reparent(plane, true)
+     633: 			plane.position = Vector3(200, 1800, -200)
+     634: 			add_child(plane)
+     635: 			print("[VERBATIM] Airplane loaded from ", plane_path)
+
+======================================================================
+STEP 3: Search for visibility disabling or node removal
+======================================================================
+
+  Pattern: \.visible\s*=\s*false
+    Line 409:
+     407: 		else:
+     408: 			if _focus_label:
+     409: 				_focus_label.visible = false
+     410: 	if event is InputEventKey and event.pressed and not event.echo:
+     411: 		if event.keycode == KEY_SPACE and _game_state == GameState.FREEFALL:
+    Line 1541:
+    1539: 	_camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
+    1540: 	if _canopy_instance:
+    1541: 		_canopy_instance.visible = false
+    1542: 		_canopy_instance.scale = Vector3(1, 1, 1)
+    1543: 	_randomize_malfunction()
+    Line 1575:
+    1573: 					# No MeshInstance3D found – using procedural canopy
+    1574: 					_create_procedural_canopy()
+    1575: 				_canopy_instance.visible = false
+    1576: 				print("[VERBATIM] Clean GLB loaded from: ", canopy_path)
+    1577: 			else:
+
+======================================================================
+STEP 4: Camera setup and position
+======================================================================
+  No Camera3D found in main.tscn
+  Transform line 20: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1200, 3048, 0)
+  Transform line 31: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 20)
+
+======================================================================
+STEP 5: Check for any error/warning suppression in code
+======================================================================
+
+======================================================================
+STEP 6: Forensic HUD grey box – check autoload
+======================================================================
+  ForensicHUD autoload line 32: ForensicHUD="*res://scripts/forensic_hud.gd"
+      30: GameIntegrity="*res://scripts/GameIntegrity.gd"
+      31: #HUDandUIAltimeterHUD="*res://scripts/altimeter_hud.gd"
+      32: ForensicHUD="*res://scripts/forensic_hud.gd"
+      33: Audit="*res://scripts/audit.gd"
+      34: #PhysicsandenvironmentWindField="*res://scripts/wind_field.gd"
+      35: AeroUnits="*uid://5vah4ayrdxci"
+
+======================================================================
+VERDICT
+======================================================================
+  The diagnostic above shows the exact code locations for terrain
+  creation, airplane loading, and any visibility toggles.
+  If the terrain and airplane are created but not visible, the
+  most common causes are:
+    1. They are not added to the scene tree (missing add_child).
+    2. Their position is far from the camera (check transforms).
+    3. Their visibility is set to false (look for .visible = false).
+    4. They are hidden behind the grey ForensicHUD overlay.
+
+  Upload v22_output.txt for further analysis.

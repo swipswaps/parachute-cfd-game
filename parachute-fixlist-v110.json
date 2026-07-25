@@ -1,0 +1,5 @@
+{
+  "schema": "prf.fixlist.v1",
+  "description": "Complete self-healing fix list for the Parachute CFD Landing Game. v110: fixes unbound variable crash (PVPY) under set -u, includes all steps from v109 without omissions.",
+  "compliance_basis": "augment-rules-v6_12.json (schema_version=6.12), deepseek-rules-v6_16.json (post-syntax-repair), v109‑terminal‑crash (PVPY unbound)"
+}

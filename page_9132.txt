@@ -1,0 +1,100 @@
+[VERBATIM] RESERVE deployed – SAFE LANDING!
+
+[VERBATIM] Canopy visuals updated for GOOD
+
+[VERBATIM] ENTER _calculate_score gate=none
+
+[VERBATIM] Final score: 0 (distance: 5617.72314453125m, landing speed: 30.0 m/s)
+
+[VERBATIM] ENTER _update_leaderboard gate=none
+
+[VERBATIM] Leaderboard updated
+
+[VERBATIM] EXIT _update_leaderboard ok=true
+
+[VERBATIM] EXIT _calculate_score ok=true
+
+[DIAG] _do_reserve: EXIT, reserve_done=true
+
+[VERBATIM] EXIT _do_reserve ok=true
+
+[DIAG] _poll_controls: EXIT
+
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((894.0, 167.0)), relative=((-7.0, 2.0)), velocity=((-2.382067, 0.0)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=86 (V), mods=none, physical=false, location=unspecified, pressed=false, echo=false
+
+2026-07-15T04:10:19 [INFO] InputManager ready
+
+2026-07-15T04:10:19 [INFO] InputMap.has_action('restart') = true
+
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 16:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 13-19 (offending line 16):
+
+           13: 	"cutaway": KEY_X,
+
+           14: 	"reserve": KEY_V,
+
+           15: 	"flare": KEY_F,
+
+      >>   16: 	"restart": KEY_R,
+
+           17: 	"pause": KEY_ESCAPE,
+
+           18: }
+
+           19: 
+
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 16:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 13-19 (offending line 16):
+
+           13: 	"cutaway": KEY_X,
+
+           14: 	"reserve": KEY_V,
+
+           15: 	"flare": KEY_F,
+
+      >>   16: 	"restart": KEY_R,
+
+           17: 	"pause": KEY_ESCAPE,
+
+           18: }
+
+           19: 
+
+[INPUT] InputManager.gd:16 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 16:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 13-19 (offending line 16):
+
+           13: 	"cutaway": KEY_X,
+
+           14: 	"reserve": KEY_V,
+
+           15: 	"flare": KEY_F,
+
+      >>   16: 	"restart": KEY_R,
+
+           17: 	"pause": KEY_ESCAPE,
+
+           18: }
+
+           19: 
+
+[INPUT] InputManager.gd:9 _input/_unhandled_input triggered
+
+[DIAG] Error in godot_project/scripts/InputManager.gd at line 9:
+
+      [STALL SOURCE] godot_project/scripts/InputManager.gd lines 6-12 (offending line 9):
+
+            6: const ACTIONS: Dictionary = {
+
+            7: 	"deploy": KEY_SPACE,
+

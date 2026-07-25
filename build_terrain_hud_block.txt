@@ -1,0 +1,51 @@
+ 390: 		print("[DIAG] _ready: ERROR – plane node null")
+ 391: 
+ 392: 	print("[VERBATIM] Camera attached to root, following plane")
+ 393: 
+ 394: 	# --------------------------------------------------------------
+ 395: 	# Drop zone (yellow cylinder) – reduced radius
+ 396: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_cylindermesh.html
+ 397: 	# --------------------------------------------------------------
+ 398: 	var dz := MeshInstance3D.new()
+ 399: 	var cyl := CylinderMesh.new()
+ 400: 	cyl.top_radius = 3.0
+ 401: 	cyl.bottom_radius = 3.0
+ 402: 	cyl.radial_segments = 32
+ 403: 	dz.mesh = cyl
+ 404: 	dz.position = Vector3(0.0, 25.0, 0.0)
+ 405: 	var dz_mat := StandardMaterial3D.new()
+ 406: 	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+ 407: 	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 408: 	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+ 409: 	dz.material_override = dz_mat
+ 410: 	add_child(dz)
+ 411: 	print("[VERBATIM] Drop zone created")
+ 412: 	_load_faa_obstacles()
+ 413: 
+ 414: 	# --------------------------------------------------------------
+ 415: 	# HUD (8 lines + score + notification)
+ 416: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
+ 417: 	# --------------------------------------------------------------
+ 418: 	if true: return # old HUD disabled
+ 419: 	if _hud_layer:
+ 420: 		return
+ 421: 	_hud_layer = CanvasLayer.new()
+ 422: 	_hud_layer.layer = 1
+ 423: 	var bg_panel := Panel.new()
+ 424: 	bg_panel.anchor_right = 1.0
+ 425: 	bg_panel.anchor_bottom = 1.0
+ 426: 	var style := StyleBoxEmpty.new()
+ 427: 	bg_panel.add_theme_stylebox_override("panel", style)
+ 428: 	_hud_layer.add_child(bg_panel)
+ 429: 	add_child(_hud_layer)
+ 430: 	var font = ThemeDB.fallback_font
+ 431: 	var label_names := ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+ 432: 	for i in range(8):
+ 433: 		var lbl := Label.new()
+ 434: 		lbl.add_theme_font_override("font", font)
+ 435: 		lbl.add_theme_font_size_override("font_size", 14)
+ 436: 		lbl.add_theme_color_override("font_color", Color(0, 1, 0))
+ 437: 		lbl.position = Vector2(50, 10 + i * 22)
+ 438: 		lbl.custom_minimum_size = Vector2(220, 20)
+ 439: 		lbl.text = label_names[i] + ": --"
+ 440: 		_hud_layer.add_child(lbl)

@@ -1,0 +1,33 @@
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parachute-repair"
+version = "0.1.0"
+description = "GDScript repair system with A/B testing and telemetry"
+authors = [{name = "Your Name", email = "you@example.com"}]
+dependencies = [
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+    "sqlean.py>=3.46",
+    "aiosqlite>=0.20",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py38"
+select = ["E", "F", "I", "N", "W", "B", "C", "UP", "RUF"]
+ignore = ["E501", "B008", "C901"]
+
+[tool.black]
+line-length = 120
+target-version = ['py38']
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+asyncio_mode = "auto"

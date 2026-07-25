@@ -1,0 +1,49 @@
+# PATH: godot_project/scripts/forensic_hud.gd
+# WHAT: Append-only scrolling in-game forensic log overlay (top-right corner).
+# DB CONFIRMED: SHA 26f53456a6f0205fccd690ca53c4fd645bc1220eca17d079684d8fbb85c65794
+#   PASS gdparse 2026-06-19T18:45:42Z.
+# Source (Tier 2): Godot RichTextLabel — https://docs.godotengine.org/en/stable/classes/class_richtextlabel.html
+extends CanvasLayer
+
+const MAX_ENTRIES: int = 50
+
+var _entries: Array[String] = []
+var _label: RichTextLabel = null
+
+
+func _ready() -> void:
+	layer = 2
+	var panel: Panel = Panel.new()
+	panel.anchor_left   = 0.6
+	panel.anchor_top    = 0.0
+	panel.anchor_right  = 1.0
+	panel.anchor_bottom = 0.5
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.0, 0.0, 0.0, 0.6)
+	panel.add_theme_stylebox_override("panel", style)
+	add_child(panel)
+
+	_label = RichTextLabel.new()
+	_label.anchor_left   = 0.0
+	_label.anchor_top    = 0.0
+	_label.anchor_right  = 1.0
+	_label.anchor_bottom = 1.0
+	_label.scroll_following = true
+	_label.add_theme_font_size_override("normal_font_size", 12)
+	_label.add_theme_color_override("default_color", Color(0.8, 1.0, 0.8))
+	panel.add_child(_label)
+	print("[VERBATIM] forensic_hud: _ready ok=true")
+
+
+func add_entry(msg: String) -> void:
+	_entries.append(msg)
+	if _entries.size() > MAX_ENTRIES:
+		_entries.pop_front()
+	if _label:
+		_label.text = "\n".join(_entries)
+
+
+func get_full_log() -> String:
+	return "\n".join(_entries)
+
+# IMPLEMENTATION COMPLETE

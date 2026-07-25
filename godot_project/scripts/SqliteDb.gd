@@ -29,14 +29,48 @@ func _ready() -> void:
 	_db.path = DB_PATH
 	_db.verbosity_level = 0
 	if not _db.open_db():
-		print("[VERBATIM] SqliteDb: open_db() failed for " + DB_PATH)
-		return
+
+		# Recovery: attempt to create backup and repair (Godot 4)
+
+		var backup_path = DB_PATH + ".corrupt." + str(Time.get_unix_time_from_system())
+
+		var dir = DirAccess.open(DB_PATH.get_base_dir())
+
+		if dir != null and dir.copy(DB_PATH.get_file(), backup_path.get_file()) == OK:
+
+			print("[VERBATIM] SqliteDb: created backup of corrupt DB at ", backup_path)
+
+		# Try to reopen with a fresh connection
+
+		_db = SQLite.new()
+
+		_db.path = DB_PATH
+
+		if _db.open_db():
+
+			print("[VERBATIM] SqliteDb: recovered after backup")
+
+		else:
+
+			print("[VERBATIM] SqliteDb: open_db() failed for ", DB_PATH)
+
+			return
+
+	# PRAGMAs after the if (always executed)
+
+	_db.query("PRAGMA busy_timeout = 5000;")
+
+	_db.query("PRAGMA journal_mode = WAL;")
+
+	_db_ok = true
+
+	print("[VERBATIM] DB OPEN OK ", DB_PATH)
+
+	# PRAGMAs after the if (always executed)
+	_db.query("PRAGMA busy_timeout = 5000;")
+	_db.query("PRAGMA journal_mode = WAL;")
 	_db_ok = true
 	print("[VERBATIM] DB OPEN OK ", DB_PATH)
-	_create_tables()
-	print("[VERBATIM] SqliteDb: _ready completed")
-
-
 func _exit_tree() -> void:
 	if _db_ok and _db:
 		_db.close_db()

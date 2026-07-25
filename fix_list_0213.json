@@ -1,0 +1,63 @@
+{
+  "fix_session": "0213",
+  "overall_status": "GAME_RUNNING",
+  "milestone": {
+    "confirmed_from": "document 14 verbatim",
+    "evidence": [
+      "[VERBATIM] Screenshot library loaded: 816",
+      "[VERBATIM] Terrain created: 1048576 vertices",
+      "[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy",
+      "[VERBATIM] Entering BASE",
+      "[VERBATIM] Entering FINAL",
+      "[VERBATIM] Ground impact – fatal",
+      "[VERBATIM] Screenshot saved: ...v314_20260618T163850.png"
+    ],
+    "meaning": "The game launched, terrain rendered, character loaded, FBX model loaded, wind system active, flight path completed. This is the first successful game run after 8 sessions of parse fixes."
+  },
+  "remaining_errors": [
+    {
+      "file": "plane.gd",
+      "line": 5,
+      "error": "Parse Error: Used space character for indentation instead of tab as used before in the file.",
+      "classification": "VR001 pre-existing in plane.gd — unmasked by F10b fix of empty func at :4",
+      "caused_by_f10b": false,
+      "impact": "non-blocking — plane loaded without script (Cessna model still loaded via hardcoded path: '[VERBATIM] Cessna model loaded.')",
+      "rule_id": "VR001",
+      "fix": "F09b: run normalize_indent_to_dominant on plane.gd"
+    },
+    {
+      "file": "pip_draggable.gd",
+      "line": 11,
+      "error": "Parse Error: Used tab character for indentation instead of space as used before in the file.",
+      "classification": "VR001 INTRODUCED by F10b — tab pass inserted into space-dominant file (Rule 19 violation)",
+      "caused_by_f10b": true,
+      "impact": "non-blocking — PiP overlay loaded without script ('[VERBATIM] PiP canopy path=... main canopy attached')",
+      "rule_id": "VR001",
+      "fix": "F09c: normalize pip_draggable.gd indent to spaces; correct F10b pass_indent to use dominant char"
+    }
+  ],
+  "f10b_rule19_violation": {
+    "confirmed": true,
+    "mechanism": "fix_empty_bodies_in_file() used '\\t'*(ftabs+1) for pass indent regardless of file's dominant char. pip_draggable.gd is space-dominant. Inserting tab pass at line 11 created VR001 violation in a space file.",
+    "bash_tool_confirmation": "ftabs=0 -> pass_indent='\\t' (wrong); correct='    ' (4 spaces for space-dominant file)",
+    "fix": "detect_indent(path) before inserting pass; use dominant_char*(depth+1) not always tab"
+  },
+  "convergence_status": {
+    "VR001_build_terrain": "RESOLVED (F09)",
+    "VR001_plane_gd": "PENDING (F09b — pre-existing, unmasked)",
+    "VR001_pip_draggable": "PENDING (F09c — introduced by F10b Rule 19 violation)",
+    "VR002_F03b": "RESOLVED",
+    "VR003_F02b": "RESOLVED",
+    "VR004_F01": "RESOLVED",
+    "VR005_F05": "RESOLVED",
+    "VR006_F04": "RESOLVED",
+    "VR007_all_files": "RESOLVED (F10+F10b)",
+    "VR008_F11": "RESOLVED — [RECORDED] VR008 PASS",
+    "VR009_F12": "RESOLVED — [RECORDED] VR009 PASS"
+  },
+  "rss_monitoring_note": {
+    "observed": "rss=2MB, cpu=0.0% in all recordings",
+    "root_cause": "Godot ran 99 seconds but /proc poller only captured data when polling cycle coincided with live process. After process exit, read_proc_stats() returns None (FileNotFoundError). The peak RSS from the final poll before exit is typically low because the process had already started cleanup. Not a contention issue.",
+    "fix": "Add wall-time-based periodic poll independent of readline() loop using threading.Thread or select() to ensure /proc is sampled during active gameplay not just during readline() blocking"
+  }
+}

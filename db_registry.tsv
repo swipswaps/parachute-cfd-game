@@ -1,0 +1,192 @@
+db_path	table	rows	create_sql_first_line
+audit_logs/ab_test.db	ab_test_runs	64	CREATE TABLE ab_test_runs (
+audit_logs/ab_test.db	resource_contention_log_old	0	CREATE TABLE "resource_contention_log_old" (
+audit_logs/ab_test.db	resource_contention_log	0	CREATE TABLE resource_contention_log (
+audit_logs/ab_test.db	godot_log_entries	1949	CREATE TABLE godot_log_entries (
+audit_logs/ab_test.db	godot_state_events	1895	CREATE TABLE godot_state_events (
+audit_logs/ab_test.db	alerts_sent	0	CREATE TABLE alerts_sent (
+audit_logs/ab_test.db	auto_heal_actions	27	CREATE TABLE auto_heal_actions (
+audit_logs/ab_test.db	fix_patterns	25	CREATE TABLE fix_patterns (
+code_index.db	files	441	CREATE TABLE files (
+code_index.db	symbols	11816	CREATE TABLE symbols (
+diagnostics.db	diagnosis_log	82	CREATE TABLE diagnosis_log (
+diagnostics.db	repair_strategies	0	CREATE TABLE repair_strategies (
+fix_state.db	fixes	14	CREATE TABLE fixes (
+fix_state.db	history	5	CREATE TABLE history (
+fixes.db	errors	0	CREATE TABLE errors (
+fixes.db	fixes	3	CREATE TABLE fixes (
+gd_backup_index.db	files	6555	CREATE TABLE files (
+gd_backup_index.db	refs	84	CREATE TABLE refs (res_path TEXT PRIMARY KEY, logical TEXT)
+gd_patterns.db	fix_patterns	4	CREATE TABLE fix_patterns (
+gd_patterns.db	fix_log	6	CREATE TABLE fix_log (
+godot_project/default.db	issues	0	CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0)
+godot_project/default.db	screenshots	0	CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL)
+godot_project/default.db	parse_errors	0	CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending')
+godot_project/dependencies.db	discovered_scripts	42	CREATE TABLE discovered_scripts (
+godot_project/parachute_mutations.db	pipelineruns	23	CREATE TABLE pipelineruns (
+godot_project/parachute_mutations.db	autohealactions	692	CREATE TABLE autohealactions (
+godot_project/parachute_mutations.db	verificationresults	12	CREATE TABLE verificationresults (
+godot_project/parachute_mutations.db	gd_patch_registry	658	CREATE TABLE gd_patch_registry (
+godot_project/parachute_mutations.db	error_log	136	CREATE TABLE error_log (
+godot_project/parachute_mutations.db	fix_strategies	69	CREATE TABLE fix_strategies (
+godot_project/parachute_mutations.db	source_snapshots	1	CREATE TABLE source_snapshots (
+godot_project/recovery_engine.db	errors	0	CREATE TABLE errors (
+godot_project/recovery_engine.db	fix_strategies	15	CREATE TABLE fix_strategies (
+godot_project/recovery_engine.db	fix_log	39	CREATE TABLE fix_log (
+godot_project/recovery_engine.db	runtime_logs	108	CREATE TABLE runtime_logs (
+godot_project/recovery_engine.db	auto_heal_actions	1870	CREATE TABLE auto_heal_actions (
+godot_project/recovery_engine.db	dependencies	4	CREATE TABLE dependencies (
+godot_project/recovery_engine.db	error_log	1162	CREATE TABLE error_log (
+godot_project/recovery_engine.db	dependency_graph	9	CREATE TABLE dependency_graph (
+godot_project/recovery_engine.db	tool_registry	0	CREATE TABLE tool_registry (
+godot_project/recovery_engine.db	component_health	0	CREATE TABLE component_health (
+godot_project/scripts/parachute_mutations.db	replay_api_tests	3	CREATE TABLE replay_api_tests (
+godot_project/scripts/parachute_mutations.db	tool_audit	3	CREATE TABLE tool_audit (
+godot_project/scripts/parachute_mutations.db	verificationresults	0	CREATE TABLE verificationresults (
+indent_if_scan.db	errors	0	CREATE TABLE errors (
+multi_tool_audit.db	runs	1	CREATE TABLE runs(
+multi_tool_audit.db	db_snapshot	1	CREATE TABLE db_snapshot(
+multi_tool_audit.db	tool_runs	18	CREATE TABLE tool_runs(
+multi_tool_audit.db	gd2py_bridge	1	CREATE TABLE gd2py_bridge(
+multi_tool_audit.db	git_evidence	1	CREATE TABLE git_evidence(
+multi_tool_audit.db	citation_checks	12	CREATE TABLE citation_checks (
+parac1ute_mutations.db	auto_heal_actions	71	CREATE TABLE auto_heal_actions (
+parac1ute_mutations.db	tool_audit	0	CREATE TABLE tool_audit (
+parac1ute_mutations.db	error_fingerprints	0	CREATE TABLE error_fingerprints (
+parac1ute_mutations.db	known_repairs	5	CREATE TABLE known_repairs (
+parac1ute_mutations.db	strategy_rewards	5	CREATE TABLE strategy_rewards (
+parac1ute_mutations.db	parse_error_log	9	CREATE TABLE parse_error_log (
+parac1ute_mutations.db	repair_rules	13	CREATE TABLE repair_rules (
+parac1ute_mutations.db	repair_attempts	0	CREATE TABLE repair_attempts (
+parachute_mutations.db	source_snapshots	36	CREATE TABLE source_snapshots (
+parachute_mutations.db	source_mutations	235	CREATE TABLE source_mutations (
+parachute_mutations.db	parse_checks	3677	CREATE TABLE parse_checks (
+parachute_mutations.db	issues	38	CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0)
+parachute_mutations.db	screenshots	58	CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL)
+parachute_mutations.db	parse_errors	1	CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending')
+parachute_mutations.db	game_state_log	12	CREATE TABLE game_state_log (
+parachute_mutations.db	omissions	10	CREATE TABLE omissions (
+parachute_mutations.db	resource_contention_log	0	CREATE TABLE resource_contention_log (
+parachute_mutations.db	runtime_failures	0	CREATE TABLE runtime_failures (
+parachute_mutations.db	asset_validation	0	CREATE TABLE asset_validation (
+parachute_mutations.db	verbatim_logs	0	CREATE TABLE verbatim_logs (
+parachute_mutations.db	throttle_log	0	CREATE TABLE throttle_log (
+parachute_mutations.db	file_splits	12	CREATE TABLE file_splits (
+parachute_mutations.db	syntax_errors	0	CREATE TABLE syntax_errors (
+parachute_mutations.db	syntax_fixes	65	CREATE TABLE syntax_fixes (
+parachute_mutations.db	error_patterns	6	CREATE TABLE error_patterns (
+parachute_mutations.db	files_to_fix	82	CREATE TABLE files_to_fix (
+parachute_mutations.db	pipelineruns	35	CREATE TABLE pipelineruns (
+parachute_mutations.db	autohealactions	1488	CREATE TABLE autohealactions (
+parachute_mutations.db	gd_patch_registry	732	CREATE TABLE gd_patch_registry (
+parachute_mutations.db	verificationresults	1	CREATE TABLE verificationresults (
+parachute_mutations.db	applied_fixes	24	CREATE TABLE applied_fixes (
+parachute_mutations.db	repair_metrics	0	CREATE TABLE repair_metrics (
+parachute_mutations.db	repair_evidence	0	CREATE TABLE repair_evidence (
+parachute_mutations.db	schema_migrations	1	CREATE TABLE schema_migrations (
+parachute_mutations.db	auto_heal_actions	15710	CREATE TABLE auto_heal_actions (
+parachute_mutations.db	pipeline_runs	2	CREATE TABLE pipeline_runs (
+parachute_mutations.db	error_fingerprints	7	CREATE TABLE error_fingerprints (
+parachute_mutations.db	parse_error_log	1065	CREATE TABLE parse_error_log (
+parachute_mutations.db	pipeline_metadata	1	CREATE TABLE pipeline_metadata (
+parachute_mutations.db	known_repairs	36	CREATE TABLE known_repairs (id INTEGER PRIMARY KEY AUTOINCREMENT, error_class TEXT NOT NULL, strategy_name TEXT NOT NULL, pattern_old TEXT NOT NULL DEFAULT '', pattern_new TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000), UNIQUE(error_class, strategy_name))
+parachute_mutations.db	strategy_rewards	33	CREATE TABLE strategy_rewards (id INTEGER PRIMARY KEY AUTOINCREMENT, error_class TEXT NOT NULL, strategy_name TEXT NOT NULL, wins INTEGER NOT NULL DEFAULT 0, total_trials INTEGER NOT NULL DEFAULT 0, last_updated INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000), UNIQUE(error_class, strategy_name))
+parachute_mutations.db	replay_api_tests	0	CREATE TABLE replay_api_tests (
+parachute_mutations.db	repair_attempts	2	CREATE TABLE repair_attempts (
+parachute_mutations.db	tool_audit	2743	CREATE TABLE tool_audit (
+parachute_mutations.db	repair_rules	8	CREATE TABLE repair_rules (
+parachute_mutations.db	component_registry	443	CREATE TABLE component_registry (
+parachute_mutations.db	component_relationships	345	CREATE TABLE component_relationships (
+parachute_mutations.db	flight_controller_recon	68972	CREATE TABLE flight_controller_recon (
+parachute_mutations.db	flight_controller_recon_v2	17332	CREATE TABLE flight_controller_recon_v2 (
+parachute_mutations.db	blocking_errors_v1	36	CREATE TABLE blocking_errors_v1 (
+parachute_mutations.db	fixes	2	CREATE TABLE fixes (
+parachute_mutations.db	diagnostic_log	2	CREATE TABLE diagnostic_log (
+parachute_mutations.db	restore_log	2	CREATE TABLE restore_log (
+parachute_mutations.db	environment_fixes	1	CREATE TABLE environment_fixes (
+parachute_mutations.db	patch_history	2	CREATE TABLE patch_history (
+parachute_mutations.db	test_runs	2	CREATE TABLE test_runs (
+parachute_mutations.db	user_preferences	3	CREATE TABLE user_preferences (
+parachute_mutations.db	diagnostic_logs	0	CREATE TABLE diagnostic_logs (
+parachute_mutations.db	project_config	1	CREATE TABLE project_config (key TEXT PRIMARY KEY, value TEXT)
+parachute_mutations.db	gamification	0	CREATE TABLE gamification (
+parachute_mutations.db	pilot_career	1	CREATE TABLE pilot_career (
+parachute_mutations.db	ratings	3	CREATE TABLE ratings (
+parachute_mutations.db	pilot_ratings	0	CREATE TABLE pilot_ratings (
+parachute_mutations.db	pilot_category_fixes	0	CREATE TABLE pilot_category_fixes (
+parachute_mutations.db	flights	86	CREATE TABLE "flights" (
+parachute_mutations.db	code_patterns	1	CREATE TABLE code_patterns (
+parachute_mutations.db	missing_function_fixes	0	CREATE TABLE missing_function_fixes (
+parachute_mutations.db	function_index	1007	CREATE TABLE function_index (
+parachute_mutations.db	gdeye_diag	1614	CREATE TABLE gdeye_diag (
+parachute_mutations.db	hud_state	1	CREATE TABLE hud_state (
+parachute_mutations_backup.db	source_snapshots	36	CREATE TABLE source_snapshots (
+parachute_mutations_backup.db	source_mutations	235	CREATE TABLE source_mutations (
+parachute_mutations_backup.db	parse_checks	3677	CREATE TABLE parse_checks (
+parachute_mutations_backup.db	issues	38	CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0)
+parachute_mutations_backup.db	screenshots	58	CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL)
+parachute_mutations_backup.db	parse_errors	1	CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending')
+parachute_mutations_backup.db	game_state_log	12	CREATE TABLE game_state_log (
+parachute_mutations_backup.db	omissions	10	CREATE TABLE omissions (
+parachute_mutations_backup.db	resource_contention_log	0	CREATE TABLE resource_contention_log (
+parachute_mutations_backup.db	runtime_failures	0	CREATE TABLE runtime_failures (
+parachute_mutations_backup.db	asset_validation	0	CREATE TABLE asset_validation (
+parachute_mutations_backup.db	verbatim_logs	0	CREATE TABLE verbatim_logs (
+parachute_mutations_backup.db	throttle_log	0	CREATE TABLE throttle_log (
+parachute_mutations_backup.db	file_splits	12	CREATE TABLE file_splits (
+parachute_mutations_backup.db	syntax_errors	0	CREATE TABLE syntax_errors (
+parachute_mutations_backup.db	syntax_fixes	65	CREATE TABLE syntax_fixes (
+parachute_mutations_backup.db	error_patterns	6	CREATE TABLE error_patterns (
+parachute_mutations_backup.db	files_to_fix	72	CREATE TABLE files_to_fix (
+parachute_mutations_backup.db	pipelineruns	35	CREATE TABLE pipelineruns (
+parachute_mutations_backup.db	autohealactions	1464	CREATE TABLE autohealactions (
+parachute_mutations_backup.db	gd_patch_registry	732	CREATE TABLE gd_patch_registry (
+parachute_mutations_backup.db	verificationresults	1	CREATE TABLE verificationresults (
+parachute_mutations_backup.db	applied_fixes	23	CREATE TABLE applied_fixes (
+parachute_mutations_backup.db	repair_metrics	0	CREATE TABLE repair_metrics (
+parachute_mutations_backup.db	repair_evidence	0	CREATE TABLE repair_evidence (
+parachute_mutations_backup.db	schema_migrations	1	CREATE TABLE schema_migrations (
+parachute_mutations_backup.db	auto_heal_actions	15710	CREATE TABLE auto_heal_actions (
+parachute_mutations_backup.db	pipeline_runs	2	CREATE TABLE pipeline_runs (
+parachute_mutations_backup.db	error_fingerprints	7	CREATE TABLE error_fingerprints (
+parachute_mutations_backup.db	parse_error_log	968	CREATE TABLE parse_error_log (
+parachute_mutations_backup.db	pipeline_metadata	1	CREATE TABLE pipeline_metadata (
+parachute_mutations_backup.db	known_repairs	36	CREATE TABLE known_repairs (id INTEGER PRIMARY KEY AUTOINCREMENT, error_class TEXT NOT NULL, strategy_name TEXT NOT NULL, pattern_old TEXT NOT NULL DEFAULT '', pattern_new TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000), UNIQUE(error_class, strategy_name))
+parachute_mutations_backup.db	strategy_rewards	33	CREATE TABLE strategy_rewards (id INTEGER PRIMARY KEY AUTOINCREMENT, error_class TEXT NOT NULL, strategy_name TEXT NOT NULL, wins INTEGER NOT NULL DEFAULT 0, total_trials INTEGER NOT NULL DEFAULT 0, last_updated INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000), UNIQUE(error_class, strategy_name))
+parachute_mutations_backup.db	replay_api_tests	0	CREATE TABLE replay_api_tests (
+parachute_mutations_backup.db	repair_rules	77	CREATE TABLE repair_rules (
+parachute_mutations_backup.db	repair_attempts	2	CREATE TABLE repair_attempts (
+parachute_mutations_backup.db	tool_audit	248	CREATE TABLE tool_audit (
+patterns_mined.db	mining_runs	7	CREATE TABLE mining_runs (
+patterns_mined.db	failure_sites	0	CREATE TABLE failure_sites (
+patterns_mined.db	mined_patterns	0	CREATE TABLE mined_patterns (
+patterns_mined_focused.db	mining_runs	2	CREATE TABLE mining_runs (
+patterns_mined_focused.db	failure_sites	2	CREATE TABLE failure_sites (
+patterns_mined_focused.db	mined_patterns	6	CREATE TABLE mined_patterns (
+patterns_mined_v2.db	mining_runs	9	CREATE TABLE mining_runs (
+patterns_mined_v2.db	failure_sites	6	CREATE TABLE failure_sites (
+patterns_mined_v2.db	mined_patterns	0	CREATE TABLE mined_patterns (
+patterns_mined_v2.db	pending_fixes	15	CREATE TABLE pending_fixes (
+pipeline_audit.db	files	70	CREATE TABLE files (
+pipeline_audit.db	actions	448	CREATE TABLE actions (
+pipeline_forensics.db	snapshots	1	CREATE TABLE snapshots(
+pipeline_forensics.db	save_png_hits	0	CREATE TABLE save_png_hits(
+pipeline_forensics.db	strip_tests	1	CREATE TABLE strip_tests(
+repair.db	errors	20502	CREATE TABLE errors (
+repair.db	repair_log	1	CREATE TABLE repair_log (
+repair.db	fix_patterns	8	CREATE TABLE fix_patterns (
+repair_log.db	repairs	241	CREATE TABLE repairs
+syntax_errors.db	errors	1	CREATE TABLE errors (
+syntax_errors.db	fixes	6	CREATE TABLE fixes (
+syntax_errors.db	repair_strategies	5	CREATE TABLE repair_strategies (
+syntax_errors.db	fix_log	2	CREATE TABLE fix_log (
+syntax_errors.db	cache_clear_log	2	CREATE TABLE cache_clear_log (
+syntax_errors.db	project_diffs	1	CREATE TABLE project_diffs (
+syntax_errors.db	backup_audit	1	CREATE TABLE backup_audit (
+syntax_errors.db	file_diffs	1	CREATE TABLE file_diffs (
+test_results.db	parser_tests	3	CREATE TABLE parser_tests (
+tool_coverage.db	runs	2	CREATE TABLE runs(
+tool_coverage.db	probes	26	CREATE TABLE probes(
+tool_coverage.db	coverage	26	CREATE TABLE coverage(
+tool_coverage.db	bridge_demo	2	CREATE TABLE bridge_demo(
+validation_tools/parachute_mutations.db	files_to_fix	0	CREATE TABLE files_to_fix (

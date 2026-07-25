@@ -1,0 +1,100 @@
+[StructuredLogger] sentry_available=false
+
+[VERBATIM] 2026-07-15T04:09:40 GameIntegrity autoload initialized
+
+[VERBATIM] 2026-07-15T04:09:40 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+
+[FHUD] hub server spawned pid=923091 (exits itself if port busy)
+
+[FHUD] built, hidden at start. Press F3 or F9 to show. Panel pos=(700.0, 24.0)
+
+Wind field loaded:
+
+  Grid: 31 x 31 x 21
+
+  Spacing: 10.0 m
+
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+
+  Velocities: 20181 vectors
+
+[HUB] DB: parachute_mutations.db
+
+[HUB] DB size: 401408 bytes
+
+[HUB] FAILED to bind 127.0.0.1:8765 -- [Errno 98] Address already in use
+
+[HUB] Another hub instance may already be running.
+
+[CAMERA] Loaded plane camera distance from DB: 255.0
+
+[INIT] Press SPACE to start
+
+[DIAG] _ready: ENTER
+
+[VERBATIM] 2026-07-15T04:09:40 ENTER _ready gate=none
+
+[VERBATIM] Baked colours loaded: 3145728
+
+[VERBATIM] Terrain created: 1048576 vertices
+
+[VERBATIM] Runways added
+
+[DEBUG] _character position after set: (100.0, 6000.0, -100.0)
+
+[DEBUG] _character global_position: (100.0, 6000.0, -100.0)
+
+[VERBATIM] ENTER _load_character gate=none
+
+Loading resource: res://assets/characters/parachutist.fbx
+
+Loading resource: res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn
+
+[VERBATIM] FBX loaded
+
+[DEBUG] FBX instance visible: true
+
+[DEBUG] FBX instance added. Node: parachutist:<Node3D#36960208463>
+
+[DEBUG] Instance position: (0.0, 0.0, 0.0)
+
+[DEBUG] Instance scale: (1.0, 1.0, 1.0)
+
+[DEBUG] Instance visible: true
+
+[DEBUG] _character position: (100.0, 6000.0, -100.0)
+
+[VERBATIM] Left arm bone found index 8
+
+[VERBATIM] Stopped AnimationPlayer
+
+[VERBATIM] RESET animation not available – using fallback
+
+[VERBATIM] EXIT _load_character ok=true
+
+[DIAG] _ready: character loaded
+
+[VERBATIM] [VERBATIM] Creating plane node...
+
+Loading resource: res://scripts/plane.gd
+
+[VERBATIM] [VERBATIM] Plane script attached
+
+Loading resource: res://assets/aircraft/cesna_airplane.glb
+
+Loading resource: res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn
+
+Loading resource: res://assets/aircraft/cesna_airplane_2.png
+
+Loading resource: res://.godot/imported/cesna_airplane_2.png-a0ae2ab0bf25959dd0beafc4e856bc3b.s3tc.ctex
+
+Loading resource: res://assets/aircraft/cesna_airplane_0.png
+
+Loading resource: res://.godot/imported/cesna_airplane_0.png-e0456c27d48acd63e1dd01ab23117de6.s3tc.ctex
+
+Loading resource: res://assets/aircraft/cesna_airplane_1.png
+
+Loading resource: res://.godot/imported/cesna_airplane_1.png-40e4f0bad9835f0987c7e03e2e3ca5b0.s3tc.ctex
+
+[VERBATIM] Cessna model loaded. visible=true scale=(15.0, 15.0, 15.0)
+

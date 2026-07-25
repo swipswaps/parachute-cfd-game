@@ -5,6 +5,7 @@
 # Ref: https://docs.godotengine.org/en/stable/
 
 extends Node
+var camera_distance: float = 60.0  # default distance
 
 var camera_target: String = "plane"  # "plane" or "character"
 # ------------------------------------------------------------------
@@ -235,6 +236,8 @@ var _last_frame_keys := {
 # Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
 # ------------------------------------------------------------------
 func _ready() -> void:
+	camera_distance = 60.0  # reset to default
+
 	_load_camera_settings()
 	get_tree().paused = true
 	process_mode = PROCESS_MODE_ALWAYS
@@ -1884,6 +1887,12 @@ func _input(event: InputEvent) -> void:
 
 
 func _physics_process(delta) -> void:
+	# ADDED (this session): explicit poll calls, since Godot never invokes
+	# ForensicHUD._input()/ForensicPanel._process() automatically.
+	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+		ForensicHUD.poll_forensic_hud()
+	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+		ForensicPanel.poll_forensic_panel()
 	if _character and is_instance_valid(_character):
 		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
 	# --- Q/E turn input (checked first so it's available for all states) ---

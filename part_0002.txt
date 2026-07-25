@@ -1,0 +1,1000 @@
+Jun 25 08:39:11 [LOG:33] [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:11 [LOG:34] [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:11 [LOG:35] [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:11 [LOG:36] [VERBATIM] InputManager: registered action restart key=82
+Jun 25 08:39:11 [LOG:37] [VERBATIM] InputManager: registered action deploy key=32
+Jun 25 08:39:11 [LOG:38] [VERBATIM] InputManager: registered action turnleft key=81
+Jun 25 08:39:11 [LOG:39] [VERBATIM] InputManager: registered action turnright key=69
+Jun 25 08:39:11 [LOG:40] [VERBATIM] InputManager: registered action cyclecamera key=67
+Jun 25 08:39:11 [LOG:41] [VERBATIM] InputManager: registered action togglehud key=72
+Jun 25 08:39:11 [LOG:42] [VERBATIM] InputManager: registered action flightcheck key=67
+Jun 25 08:39:11 [LOG:43] [VERBATIM] InputManager: registered action cutaway key=88
+Jun 25 08:39:11 [LOG:44] [VERBATIM] InputManager: registered action reserve key=86
+Jun 25 08:39:11 [LOG:45] [VERBATIM] InputManager: registered action flare key=70
+Jun 25 08:39:11 [LOG:46] [VERBATIM] InputManager: registered action pause key=4194305
+Jun 25 08:39:11 [LOG:47] [VERBATIM] InputManager: registered action deploy_canopy key=32
+Jun 25 08:39:11 [LOG:48] [VERBATIM] InputManager: registered action turn_left key=81
+Jun 25 08:39:11 [LOG:49] [VERBATIM] InputManager: registered action turn_right key=69
+Jun 25 08:39:11 [LOG:50] [VERBATIM] InputManager: _ready ok=true actions_registered=14
+Jun 25 08:39:11 [LOG:51] [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:11 [LOG:52] [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:11 [LOG:53] [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:11 [LOG:54] [VERBATIM] PerformanceMonitor: _db_ok is true
+Jun 25 08:39:11 [LOG:55] [VERBATIM] PerformanceMonitor: _ready ok=true
+Jun 25 08:39:11 [LOG:56] [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:11 [LOG:57] [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:11 [LOG:58] [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:11 [LOG:59] [VERBATIM] PerformanceMonitor: _monitor_loop started
+Jun 25 08:39:11 [LOG:60] [VERBATIM] GameIntegrity: SQLite GDExtension OK
+Jun 25 08:39:11 [LOG:61] [VERBATIM] GameIntegrity: SqliteDb autoload OK
+Jun 25 08:39:11 [LOG:62] [VERBATIM] PerformanceMonitor: loop iteration
+Jun 25 08:39:11 [LOG:63] WARNING: [VERBATIM] GameIntegrity: group EMPTY: parachute_controller
+Jun 25 08:39:11 [LOG:64]      at: push_warning (core/variant/variant_utility.cpp:1034)
+Jun 25 08:39:11 [LOG:65]      GDScript backtrace (most recent call first):
+Jun 25 08:39:11 [LOG:66]          [0] _check_scene (res://scripts/GameIntegrity.gd:45)
+Jun 25 08:39:11 [LOG:67]          [1] _ready (res://scripts/GameIntegrity.gd:19)
+Jun 25 08:39:11 [LOG:68] WARNING: [VERBATIM] GameIntegrity: group EMPTY: airplane
+Jun 25 08:39:11 [LOG:69]      at: push_warning (core/variant/variant_utility.cpp:1034)
+Jun 25 08:39:11 [LOG:70]      GDScript backtrace (most recent call first):
+Jun 25 08:39:11 [LOG:71]          [0] _check_scene (res://scripts/GameIntegrity.gd:45)
+Jun 25 08:39:11 [LOG:72]          [1] _ready (res://scripts/GameIntegrity.gd:19)
+Jun 25 08:39:11 [LOG:73] [VERBATIM] GameIntegrity: _ready ok=true all_ok=true
+Jun 25 08:39:11 [LOG:74] [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:75] [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:76] [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:77] [VERBATIM] PerformanceMonitor: _insert_contention called with cpu=9.3 mem=0
+Jun 25 08:39:11 [LOG:78] ERROR:  --> SQL error: table resource_contention_log has no column named vol_ctxt_sw
+Jun 25 08:39:11 [LOG:79]    at: prepare_statement (src/gdsqlite.cpp:237)
+Jun 25 08:39:11 [LOG:80]    GDScript backtrace (most recent call first):
+Jun 25 08:39:11 [LOG:81]        [0] _query (res://scripts/SqliteDb.gd:44)
+Jun 25 08:39:11 [LOG:82]        [1] _insert_contention (res://scripts/PerformanceMonitor.gd:78)
+Jun 25 08:39:11 [LOG:83]        [2] _monitor_loop (res://scripts/PerformanceMonitor.gd:57)
+Jun 25 08:39:11 [LOG:84] [VERBATIM] DB QUERY FAIL:
+Jun 25 08:39:11 [LOG:85]   INSERT INTO resource_contention_log
+Jun 25 08:39:11 [LOG:86]   (session_id, godot_pid, ts, vm_rss_kb,
+Jun 25 08:39:11 [LOG:87] [VERBATIM] PerformanceMonitor: insert failed
+Jun 25 08:39:11 [LOG:88] [VERBATIM] altimeter_hud: _ready ok=true
+Jun 25 08:39:11 [LOG:89] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:90] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:91] [VERBATIM] forensic_hud: _ready ok=true
+Jun 25 08:39:11 [LOG:92] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11 [LOG:93] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11 [LOG:94] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11 [LOG:95] [VERBATIM] DB issue logged: AUDIT_START
+Jun 25 08:39:11 [LOG:96] [VERBATIM] audit: AUDIT_START
+Jun 25 08:39:11 [LOG:97] [VERBATIM] audit: _ready ok=true
+Jun 25 08:39:11 [LOG:98] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11 [LOG:99] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11 [LOG:100] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11 [LOG:101] [VERBATIM] Wind updated: 8.0 kts @ 240.0°
+Jun 25 08:39:11 [LOG:102] [VERBATIM] wind_field: _ready ok=true speed=8.0 kts dir=240 deg
+Jun 25 08:39:11 [LOG:103] [VERBATIM] DB CLOSED
+Jun 25 08:39:11 [HEARTBEAT] elapsed=5s, log_size=5431B, lines=103, cpu=1.45s, rss=209312KB, read=0B, write=0B (running)
+Jun 25 08:39:11 [HEARTBEAT] elapsed=10s, log_size=5431B, lines=103, cpu=1.45s, rss=209312KB, read=0B, write=0B (running)
+Jun 25 08:39:11 [HEARTBEAT] elapsed=15s, log_size=5431B, lines=103, cpu=1.45s, rss=209312KB, read=0B, write=0B (running)
+Jun 25 08:39:11 [OBS] Command exited with code 0.
+Jun 25 08:39:11 [OBS] Last 20 lines of log:
+Jun 25 08:39:11   [LOG:84] [VERBATIM] DB QUERY FAIL:
+Jun 25 08:39:11   [LOG:85]   INSERT INTO resource_contention_log
+Jun 25 08:39:11   [LOG:86]   (session_id, godot_pid, ts, vm_rss_kb,
+Jun 25 08:39:11   [LOG:87] [VERBATIM] PerformanceMonitor: insert failed
+Jun 25 08:39:11   [LOG:88] [VERBATIM] altimeter_hud: _ready ok=true
+Jun 25 08:39:11   [LOG:89] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11   [LOG:90] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11   [LOG:91] [VERBATIM] forensic_hud: _ready ok=true
+Jun 25 08:39:11   [LOG:92] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11   [LOG:93] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11   [LOG:94] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11   [LOG:95] [VERBATIM] DB issue logged: AUDIT_START
+Jun 25 08:39:11   [LOG:96] [VERBATIM] audit: AUDIT_START
+Jun 25 08:39:11   [LOG:97] [VERBATIM] audit: _ready ok=true
+Jun 25 08:39:11   [LOG:98] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11   [LOG:99] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11   [LOG:100] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11   [LOG:101] [VERBATIM] Wind updated: 8.0 kts @ 240.0°
+Jun 25 08:39:11   [LOG:102] [VERBATIM] wind_field: _ready ok=true speed=8.0 kts dir=240 deg
+Jun 25 08:39:11   [LOG:103] [VERBATIM] DB CLOSED
+Jun 25 08:39:11 [OBS] SUCCESS – command exited with 0 (no pattern).
+Jun 25 08:39:11 
+Jun 25 08:39:11 RETURN CODE: 0
+Jun 25 08:39:11 
+Jun 25 08:39:11 [4/5] Game state test...
+Jun 25 08:39:11 [TEST] Running game state test...
+
+again, the plane has been replaced of somehow skinned improperly, it was a red cessna not a cartoonish graphic
+
+[owner@192.168.1.152-20260625-083731 parachute-cfd-game]$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[owner@192.168.1.152-20260625-083731 parachute-cfd-game]$ python3 - << 'PYEOF'
+from pathlib import Path
+import re
+
+PIPELINE = Path("run_pipeline_v6_5_207.py")
+content = PIPELINE.read_text(encoding="utf-8")
+
+print("=== Pipeline Structure ===")
+print(f"Lines: {len(content.splitlines())}")
+
+# Find key functions
+key_functions = [
+    'def apply_known_repairs',
+    'def get_repairs_for_file',
+    'def rollback',
+    'def idempotency',
+    'def conflict_detection',
+    'DB_BACKUP_DIR',
+    'R082',
+]
+
+for func in key_functions:
+    found = func in content
+    status = '✅' if found else '❌'
+    print(f"  {status} {func}")
+
+# Find the apply_known_repairs function body
+match = re.search(r'(def apply_known_repairs\(.*?\):.*?)(?=\n\ndef |\nclass |\nif __name__|\Z)', content, re.DOTALL)
+if match:
+    print("\n=== Current apply_known_repairs ===")
+    print(match.group(1)[:500] + "...")
+PYEOF
+=== Pipeline Structure ===
+Lines: 980
+  ✅ def apply_known_repairs
+  ❌ def get_repairs_for_file
+  ✅ def rollback
+  ❌ def idempotency
+  ❌ def conflict_detection
+  ✅ DB_BACKUP_DIR
+  ✅ R082
+
+=== Current apply_known_repairs ===
+def apply_known_repairs(script_path: Path, conn: sqlite3.Connection, run_id: int) -> bool:
+    # WHAT: scan script_path for any line that matches a known corrupted pattern
+    #       (column-0, starts with corrupted_prefix, contains corrupted_suffix),
+    #       replace it with correct_line at the same index, R082-verify, record.
+    #
+    # WHY: gdformat strips indentation from multi-line boolean expressions that
+    #      span across what it considers a statement boundary. The result is a
+ ...
+[owner@192.168.1.152-20260625-083732 parachute-cfd-game]$ 
+[owner@192.168.1.152-20260625-083732 parachute-cfd-game]$ python3 - << 'PYEOF'
+from pathlib import Path
+import shutil
+import re
+
+PIPELINE = Path("run_pipeline_v6_5_207.py")
+BACKUP = PIPELINE.with_suffix(".py.before_guard_rails")
+
+# Backup the original
+shutil.copy2(PIPELINE, BACKUP)
+print(f"✅ Backup created: {BACKUP}")
+
+content = PIPELINE.read_text(encoding="utf-8")
+
+# ============================================================
+# 1. ADD ROLLBACK FUNCTION (if not already present)
+# ============================================================
+if 'def rollback_repair' not in content:
+    rollback_func = '''
+def rollback_repair(script_path: Path, repair_id: str) -> bool:
+    """Rollback a repair if it corrupted the file."""
+    backup_path = script_path.with_suffix(".backup_before_repair")
+    if backup_path.exists():
+        log(f"[ROLLBACK] Reverting {script_path} from {backup_path}")
+        shutil.copy2(backup_path, script_path)
+        backup_path.unlink()
+        return True
+    log(f"[ROLLBACK] No backup found for {repair_id}")
+    return False
+'''
+    # Insert after imports or before apply_known_repairs
+    if 'def apply_known_repairs' in content:
+        content = content.replace('def apply_known_repairs', rollback_func + '\n\ndef apply_known_repairs', 1)
+        print("✅ Rollback function added")
+    else:
+        print("⚠️ Could not find apply_known_repairs to insert rollback")
+else:
+    print("✅ Rollback function already present")
+
+# ============================================================
+# 2. ADD CONFLICT DETECTION to apply_known_repairs
+# ============================================================
+conflict_check = '''
+    # CONFLICT DETECTION: Check for overlapping repair patterns
+    conflict_found = False
+    for i, repair_a in enumerate(repairs):
+        for repair_b in repairs[i+1:]:
+            if repair_a.get("corrupted_prefix") and repair_b.get("corrupted_prefix"):
+                if (repair_a["corrupted_prefix"] in repair_b["corrupted_prefix"] or 
+                    repair_b["corrupted_prefix"] in repair_a["corrupted_prefix"]):
+                    log(f"[CONFLICT] {repair_a['repair_id']} overlaps with {repair_b['repair_id']}")
+                    log("[CONFLICT] Applying more specific repair first")
+                    conflict_found = True
+                    # Sort repairs by length (more specific first)
+                    repairs.sort(key=lambda x: len(x.get("corrupted_prefix", "")), reverse=True)
+    if conflict_found:
+        log("[CONFLICT] Repairs sorted by specificity")
+'''
+
+# Find where repairs are loaded and add conflict check
+conflict_pattern = r'(repairs = get_repairs_for_file.*?)(\n\s*# Apply each repair|\n\s*for repair in repairs)'
+if re.search(conflict_pattern, content, re.DOTALL) and 'CONFLICT DETECTION' not in content:
+    content = re.sub(conflict_pattern, r'\1' + conflict_check + r'\2', content, flags=re.DOTALL)
+    print("✅ Conflict detection added")
+else:
+    if 'CONFLICT DETECTION' in content:
+        print("✅ Conflict detection already present")
+    else:
+        print("⚠️ Could not add conflict detection - pattern not found")
+
+# ============================================================
+# 3. ADD IDEMPOTENCY to apply_known_repairs
+# ============================================================
+idempotency_guard = '''
+    # IDEMPOTENCY GUARD: Skip if file already has the correct line
+    content = script_path.read_text(encoding="utf-8")
+    already_fixed = False
+    for repair in repairs:
+        correct_line = repair.get("correct_line", "")
+        if correct_line and correct_line.strip() in content:
+            log(f"[GUARD] {script_path.name} already has repair {repair['repair_id']} - skipping")
+            already_fixed = True
+            break
+    if already_fixed:
+        log("[GUARD] All repairs already applied - skipping")
+        return 0
+'''
+
+# Insert idempotency after the initial content read in apply_known_repairs
+if 'IDEMPOTENCY GUARD' not in content:
+    # Try to find a good insertion point: after the first content read
+    idempotency_pattern = r'(content = script_path.read_text\(encoding="utf-8"\)\s*)(\n\s*# Find all corrupted lines|\n\s*for repair in repairs)'
+    if re.search(idempotency_pattern, content, re.DOTALL):
+        content = re.sub(idempotency_pattern, r'\1' + idempotency_guard + r'\2', content, flags=re.DOTALL)
+        print("✅ Idempotency guard added")
+    else:
+        # Alternative: insert at the beginning of apply_known_repairs
+        alt_pattern = r'(def apply_known_repairs\(.*?\):.*?)(\n\s*script_path =)'
+        if re.search(alt_pattern, content, re.DOTALL):
+            content = re.sub(alt_pattern, r'\1' + idempotency_guard + r'\2', content, flags=re.DOTALL)
+            print("✅ Idempotency guard added (alternative location)")
+        else:
+            print("⚠️ Could not add idempotency guard - pattern not found")
+else:
+    print("✅ Idempotency guard already present")
+
+# ============================================================
+# 4. ENSURE BACKUP BEFORE REPAIR
+# ============================================================
+backup_guard = '''
+    # BACKUP GUARD: Create backup before applying any repair
+    backup_path = script_path.with_suffix(".backup_before_repair")
+    if not backup_path.exists():
+        shutil.copy2(script_path, backup_path)
+        log(f"[BACKUP] Created {backup_path}")
+'''
+
+# Find a place to add backup guard - before applying repairs
+if 'backup_before_repair' not in content:
+    backup_pattern = r'(# Apply each repair|for repair in repairs:)'
+    if re.search(backup_pattern, content, re.DOTALL) and 'BACKUP GUARD' not in content:
+        content = re.sub(backup_pattern, backup_guard + r'\n    \1', content, flags=re.DOTALL)
+        print("✅ Backup guard added")
+    else:
+        print("⚠️ Could not add backup guard - pattern not found")
+else:
+    print("✅ Backup guard already present")
+
+# ============================================================
+# 5. ENSURE R082 VERIFICATION
+# ============================================================
+# R082 is already present, but let's ensure it's comprehensive
+if 'R082' in content:
+    print("✅ R082 verification present")
+else:
+    print("⚠️ R082 verification missing - adding")
+
+# Write updated pipeline
+PIPELINE.write_text(content, encoding="utf-8")
+print(f"\n✅ Pipeline updated: {PIPELINE}")
+
+# Verify changes
+print("\n=== VERIFICATION ===")
+updated_content = PIPELINE.read_text(encoding="utf-8")
+checks = {
+    "idempotency": "IDEMPOTENCY GUARD" in updated_content or "already_fixed" in updated_content,
+    "rollback": "def rollback_repair" in updated_content,
+    "conflict": "CONFLICT DETECTION" in updated_content or "overlap" in updated_content,
+    "backup": "backup_before_repair" in updated_content or "DB_BACKUP_DIR" in updated_content,
+    "R082": "R082" in updated_content,
+}
+
+for name, present in checks.items():
+    status = '✅' if present else '❌'
+    print(f"  {status} {name.upper()}: {present}")
+
+print(f"\nBackup saved: {BACKUP}")
+print(f"To restore: cp {BACKUP} {PIPELINE}")
+PYEOF
+✅ Backup created: run_pipeline_v6_5_207.py.before_guard_rails
+✅ Rollback function already present
+⚠️ Could not add conflict detection - pattern not found
+⚠️ Could not add idempotency guard - pattern not found
+✅ Backup guard already present
+✅ R082 verification present
+
+✅ Pipeline updated: run_pipeline_v6_5_207.py
+
+=== VERIFICATION ===
+  ❌ IDEMPOTENCY: False
+  ✅ ROLLBACK: True
+  ❌ CONFLICT: False
+  ✅ BACKUP: True
+  ✅ R082: True
+
+Backup saved: run_pipeline_v6_5_207.py.before_guard_rails
+To restore: cp run_pipeline_v6_5_207.py.before_guard_rails run_pipeline_v6_5_207.py
+[owner@192.168.1.152-20260625-083747 parachute-cfd-game]$ 
+[owner@192.168.1.152-20260625-083747 parachute-cfd-game]$ python3 - << 'PYEOF'
+from pathlib import Path
+
+PIPELINE = Path("run_pipeline_v6_5_207.py")
+content = PIPELINE.read_text(encoding="utf-8")
+
+print("=== Guard Rail Verification ===")
+print(f"Lines: {len(content.splitlines())}")
+
+# Check for key guard rail markers
+markers = {
+    "Idempotency": ["IDEMPOTENCY GUARD", "already_fixed", "already has repair"],
+    "Rollback": ["def rollback_repair", "ROLLBACK", "reverting"],
+    "Conflict": ["CONFLICT DETECTION", "overlap", "conflict_found"],
+    "Backup": ["backup_before_repair", "DB_BACKUP_DIR", "shutil.copy2"],
+    "R082": ["R082", "read-back", "verification"],
+}
+
+for name, keywords in markers.items():
+    found = any(k in content for k in keywords)
+    status = '✅' if found else '❌'
+    print(f"{status} {name}: {found}")
+
+# Show the modified apply_known_repairs function
+import re
+match = re.search(r'(def apply_known_repairs\(.*?\):.*?)(?=\n\ndef |\nclass |\nif __name__|\Z)', content, re.DOTALL)
+if match:
+    func_body = match.group(1)
+    print("\n=== apply_known_repairs (first 1000 chars) ===")
+    print(func_body[:1000] + "...")
+PYEOF
+=== Guard Rail Verification ===
+Lines: 980
+❌ Idempotency: False
+✅ Rollback: True
+❌ Conflict: False
+✅ Backup: True
+✅ R082: True
+
+=== apply_known_repairs (first 1000 chars) ===
+def apply_known_repairs(script_path: Path, conn: sqlite3.Connection, run_id: int) -> bool:
+    # WHAT: scan script_path for any line that matches a known corrupted pattern
+    #       (column-0, starts with corrupted_prefix, contains corrupted_suffix),
+    #       replace it with correct_line at the same index, R082-verify, record.
+    #
+    # WHY: gdformat strips indentation from multi-line boolean expressions that
+    #      span across what it considers a statement boundary. The result is a
+    #      syntactically invalid GDScript line at column 0 inside a function body.
+    #      This function detects and repairs that class of corruption regardless of
+    #      how many chained '== "..."' tokens were previously appended.
+    #
+    # MENTAL MODEL BEFORE: script may contain lines starting at column 0 (no \t)
+    #   that are if/elif statements which belong inside indented function bodies.
+    #   gdlint/gdparse report "Unexpected token IF at line N, column 1."
+    # MENTAL MODEL A...
+[owner@192.168.1.152-20260625-083755 parachute-cfd-game]$ # Dry run first - check syntax
+python3 -m py_compile run_pipeline_v6_5_207.py
+echo "Syntax check: $?"
+
+# Run the pipeline
+sudo HEADLESS=0 python3 run_pipeline_v6_5_207.py 2>&1 | ts | tee pipeline_run_with_full_guard_rails.log
+Syntax check: 0
+[sudo] password for owner: 
+Jun 25 08:38:06 === Pipeline v6.5.207 ===
+Jun 25 08:38:06 DB-backed kaizen repair catalogue; no fix_build_terrain_directly().
+Jun 25 08:38:06 START: 2026-06-25T08:38:06.925352
+Jun 25 08:38:07 [DEP] gdparse: gdparse 4.5.0
+Jun 25 08:38:07 [DEP] gdformat: gdformat 4.5.0
+Jun 25 08:38:07 [DEP] gdlint: gdlint 4.5.0
+Jun 25 08:38:07 [DB-HARDEN] Starting...
+Jun 25 08:38:07 [DB-HARDEN] Backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/db_backups/parachute_mutations_20260625_083807.db
+Jun 25 08:38:07 [DB-HARDEN] Reindex & vacuum completed.
+Jun 25 08:38:07 [DB-SCHEMA] All tables ensured.
+Jun 25 08:38:07 [KAIZEN] known_repairs table: 10 entries seeded/confirmed.
+Jun 25 08:38:07 [DB-RUN] run_id=40 opened
+Jun 25 08:38:07 
+Jun 25 08:38:07 [1/5] Apply fixes...
+Jun 25 08:38:07 [PATCH-PROJECT] Fixing project.godot...
+Jun 25 08:38:07 [PATCH-PROJECT] No changes needed.
+Jun 25 08:38:07 [FIX-CAMERA] Checking camera look_at...
+Jun 25 08:38:07 [FIX-CAMERA] look_at already present — skipping.
+Jun 25 08:38:07 
+Jun 25 08:38:07 [2/5] Self-heal all scripts...
+Jun 25 08:38:07 
+Jun 25 08:38:07 === SELF-HEAL: 26 scripts, max 5 iterations ===
+Jun 25 08:38:07 
+Jun 25 08:38:07 [HEAL] Iteration 1/5
+Jun 25 08:38:07   [gdformat] GameIntegrity.gd
+Jun 25 08:38:08   [gdformat] GameIntegrity_2606150714.gd
+Jun 25 08:38:08   [gdformat] InputManager.gd
+Jun 25 08:38:09   [gdformat] PerformanceMonitor.gd
+Jun 25 08:38:09   [gdformat] SqliteDb.gd
+Jun 25 08:38:10   [gdformat] SqliteWatchdog.gd
+Jun 25 08:38:10   [gdformat] StructuredLogger.gd
+Jun 25 08:38:11   [gdformat] altimeter_hud.gd
+Jun 25 08:38:11   [gdformat] audit.gd
+Jun 25 08:38:12   [gdformat] build_terrain.gd
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: right-arm bone if-check stripped of indent by gdformat
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: otype UTILITY if-check stripped of indent by gdformat
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: OPENING_ANIM state check stripped of indent
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: DIAGNOSIS state check stripped of indent
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: KEY_R input check stripped of indent and elif keyword
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: _reserve_done check stripped of indent
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: _cutaway_done check stripped of indent
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: _flight_control_checked check stripped of indent
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: already correct — build_terrain.gd: altitude > 500.0 check stripped of indent
+Jun 25 08:38:13 [REPAIR-SKIP] build_terrain.gd: pattern not present — repair_bt_cessna_v6507
+Jun 25 08:38:13   [gdformat] debug_components.gd
+Jun 25 08:38:13   [gdformat] flight_controller.gd
+Jun 25 08:38:14   [gdformat] forensic_hud.gd
+Jun 25 08:38:14   [gdformat] game_manager.gd
+Jun 25 08:38:15   [gdformat] log_game_state.gd
+Jun 25 08:38:15   [gdformat] minimal.gd
+Jun 25 08:38:16   [gdformat] parachute_controller.gd
+Jun 25 08:38:16   [gdformat] pip_draggable.gd
+Jun 25 08:38:17   [gdformat] pip_draggable_v2.gd
+Jun 25 08:38:17   [gdformat] plane.gd
+Jun 25 08:38:18   [gdformat] rotor_visualizer.gd
+Jun 25 08:38:18   [gdformat] splash.gd
+Jun 25 08:38:18   [gdformat] test_runner.gd
+Jun 25 08:38:19   [gdformat] toggle_arm_animator.gd
+Jun 25 08:38:19   [gdformat] validate_scene.gd
+Jun 25 08:38:20   [gdformat] wind_field.gd
+Jun 25 08:38:20   [check] GameIntegrity.gd
+Jun 25 08:38:21   gdlint output:
+Jun 25 08:38:21 Success: no problems found
+Jun 25 08:38:21 
+Jun 25 08:38:21   gdparse: no output (rc=0)
+Jun 25 08:38:21   [check] GameIntegrity_2606150714.gd
+Jun 25 08:38:22   gdlint output:
+Jun 25 08:38:22 Success: no problems found
+Jun 25 08:38:22 
+Jun 25 08:38:22   gdparse: no output (rc=0)
+Jun 25 08:38:23   [check] InputManager.gd
+Jun 25 08:38:23   gdlint output:
+Jun 25 08:38:23 Success: no problems found
+Jun 25 08:38:23 
+Jun 25 08:38:24   gdparse: no output (rc=0)
+Jun 25 08:38:24   [check] PerformanceMonitor.gd
+Jun 25 08:38:24   gdlint output:
+Jun 25 08:38:24 Success: no problems found
+Jun 25 08:38:24 
+Jun 25 08:38:25   gdparse: no output (rc=0)
+Jun 25 08:38:25   [check] SqliteDb.gd
+Jun 25 08:38:25   gdlint output:
+Jun 25 08:38:25 Success: no problems found
+Jun 25 08:38:25 
+Jun 25 08:38:26   gdparse: no output (rc=0)
+Jun 25 08:38:26   [check] SqliteWatchdog.gd
+Jun 25 08:38:27   gdlint output:
+Jun 25 08:38:27 Success: no problems found
+Jun 25 08:38:27 
+Jun 25 08:38:27   gdparse: no output (rc=0)
+Jun 25 08:38:27   [check] StructuredLogger.gd
+Jun 25 08:38:28   gdlint output:
+Jun 25 08:38:28 Success: no problems found
+Jun 25 08:38:28 
+Jun 25 08:38:28   gdparse: no output (rc=0)
+Jun 25 08:38:29   [check] altimeter_hud.gd
+Jun 25 08:38:29   gdlint output:
+Jun 25 08:38:29 Success: no problems found
+Jun 25 08:38:29 
+Jun 25 08:38:30   gdparse: no output (rc=0)
+Jun 25 08:38:30   [check] audit.gd
+Jun 25 08:38:30   gdlint output:
+Jun 25 08:38:30 Success: no problems found
+Jun 25 08:38:30 
+Jun 25 08:38:31   gdparse: no output (rc=0)
+Jun 25 08:38:31   [check] build_terrain.gd
+Jun 25 08:38:32   gdlint WARN on build_terrain.gd (rc=1) — style only, not blocking
+Jun 25 08:38:32   gdlint output:
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1321: Error: Function "_get_current_descent_rate" has more than 6 return statements (max-returns)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:2233: Error: Max allowed file lines num (2200) exceeded (max-file-lines)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:447: Error: Function-scope variable name "_mesh_child" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1556: Error: Function-scope variable name "_step" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1413: Error: Function-scope variable name "_exit_pressed" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1554: Error: Function-scope variable name "_pip_c" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:2103: Error: Function-scope variable name "_ss_path" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:2104: Error: Function-scope variable name "_ss_abs" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:218: Error: Function-scope variable name "_baked" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:219: Error: Function-scope variable name "_bf" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:375: Error: Function-scope variable name "_hud_bg_panel" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:597: Error: Function-scope variable name "_anim_player" is not valid (function-variable-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:11: Error: Constant name "LegLabel" is not valid (constant-name)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1228: Error: unused function argument 'delta' (unused-argument)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1265: Error: unused function argument 'stack_trace' (unused-argument)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1762: Error: unused function argument 'distance' (unused-argument)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1924: Error: unused function argument 'result' (unused-argument)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1924: Error: unused function argument 'headers' (unused-argument)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1942: Error: unused function argument 'result' (unused-argument)
+Jun 25 08:38:32 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1942: Error: unused function argument 'headers' (unused-argument)
+Jun 25 08:38:32 Failure: 20 problems found
+Jun 25 08:38:32 
+Jun 25 08:38:32 [VERBATIM] Code around line 1321:
+Jun 25 08:38:32  1318: 		MalfunctionType.GOOD:
+Jun 25 08:38:32  1319: 			return DESCENT_RATE_GOOD
+Jun 25 08:38:32  1320: 		_:
+Jun 25 08:38:32 >1321: 			return DESCENT_RATE_NORMAL
+Jun 25 08:38:32  1322: 
+Jun 25 08:38:32  1323: 
+Jun 25 08:38:32  1324: # ------------------------------------------------------------------
+Jun 25 08:38:32 [VERBATIM] Code around line 2233:
+Jun 25 08:38:32  2230: 		print("[TEST] EXIT: FAIL (not in IN_PLANE)")
+Jun 25 08:38:32  2231: 	print("[VERBATIM] Self-tests complete. Quitting...")
+Jun 25 08:38:32  2232: 	OS.delay_msec(100)  # Allow output flush
+Jun 25 08:38:32 >2233: 	get_tree().quit()
+Jun 25 08:38:32 [VERBATIM] Code around line 447:
+Jun 25 08:38:32   444: 				_canopy_instance.position = Vector3(0, 3.2, 0)
+Jun 25 08:38:32   445: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+Jun 25 08:38:32   446: 				_canopy_material = StandardMaterial3D.new()
+Jun 25 08:38:32 > 447: 				var _mesh_child = _find_first_mesh(_canopy_instance)
+Jun 25 08:38:32   448: 				if _mesh_child:
+Jun 25 08:38:32   449: 					_mesh_child.material_override = _canopy_material
+Jun 25 08:38:32   450: 				_canopy_instance.visible = false
+Jun 25 08:38:32 [VERBATIM] Code around line 1556:
+Jun 25 08:38:32  1553: 	if event is InputEventMouseButton and event.pressed:
+Jun 25 08:38:32  1554: 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+Jun 25 08:38:32  1555: 		if _pip_c:
+Jun 25 08:38:32 >1556: 			var _step := 0.1
+Jun 25 08:38:32  1557: 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+Jun 25 08:38:32  1558: 				_pip_c.size = (_pip_c.size * (1.0 + _step)).clamp(
+Jun 25 08:38:32  1559: 					Vector2(80, 60), Vector2(960, 720)
+Jun 25 08:38:32 [VERBATIM] Code around line 1413:
+Jun 25 08:38:32  1410: 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+Jun 25 08:38:32  1411: 
+Jun 25 08:38:32  1412: 	if _game_state == GameState.IN_PLANE:
+Jun 25 08:38:32 >1413: 		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+Jun 25 08:38:32  1414: 		if _exit_pressed:
+Jun 25 08:38:32  1415: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+Jun 25 08:38:32  1416: 			_game_state = GameState.FREEFALL
+Jun 25 08:38:33 [VERBATIM] Code around line 1554:
+Jun 25 08:38:33  1551: # ------------------------------------------------------------------
+Jun 25 08:38:33  1552: func _unhandled_input(event: InputEvent) -> void:
+Jun 25 08:38:33  1553: 	if event is InputEventMouseButton and event.pressed:
+Jun 25 08:38:33 >1554: 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+Jun 25 08:38:33  1555: 		if _pip_c:
+Jun 25 08:38:33  1556: 			var _step := 0.1
+Jun 25 08:38:33  1557: 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+Jun 25 08:38:33 [VERBATIM] Code around line 2103:
+Jun 25 08:38:33  2100: 	_loading_texture_rect.self_modulate = Color(1, 1, 1, 1)
+Jun 25 08:38:33  2101: 	var screenshot_displayed = false
+Jun 25 08:38:33  2102: 	if _screenshot_library.size() > 0:
+Jun 25 08:38:33 >2103: 		var _ss_path = _screenshot_library[0]
+Jun 25 08:38:33  2104: 		var _ss_abs = ProjectSettings.globalize_path(_ss_path)
+Jun 25 08:38:33  2105: 		if not FileAccess.file_exists(_ss_path):
+Jun 25 08:38:33  2106: 			print("[VERBATIM] WARNING: screenshot file missing (skipping): ", _ss_path)
+Jun 25 08:38:33 [VERBATIM] Code around line 2104:
+Jun 25 08:38:33  2101: 	var screenshot_displayed = false
+Jun 25 08:38:33  2102: 	if _screenshot_library.size() > 0:
+Jun 25 08:38:33  2103: 		var _ss_path = _screenshot_library[0]
+Jun 25 08:38:33 >2104: 		var _ss_abs = ProjectSettings.globalize_path(_ss_path)
+Jun 25 08:38:33  2105: 		if not FileAccess.file_exists(_ss_path):
+Jun 25 08:38:33  2106: 			print("[VERBATIM] WARNING: screenshot file missing (skipping): ", _ss_path)
+Jun 25 08:38:33  2107: 		else:
+Jun 25 08:38:33 [VERBATIM] Code around line 218:
+Jun 25 08:38:33   215: 	var data = file.get_buffer(file.get_length())
+Jun 25 08:38:33   216: 	file.close()
+Jun 25 08:38:33   217: 
+Jun 25 08:38:33 > 218: 	var _baked := PackedByteArray()
+Jun 25 08:38:33   219: 	var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+Jun 25 08:38:33   220: 	if _bf:
+Jun 25 08:38:33   221: 		_baked = _bf.get_buffer(3145728)
+Jun 25 08:38:33 [VERBATIM] Code around line 219:
+Jun 25 08:38:33   216: 	file.close()
+Jun 25 08:38:33   217: 
+Jun 25 08:38:33   218: 	var _baked := PackedByteArray()
+Jun 25 08:38:33 > 219: 	var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+Jun 25 08:38:33   220: 	if _bf:
+Jun 25 08:38:33   221: 		_baked = _bf.get_buffer(3145728)
+Jun 25 08:38:33   222: 		_bf.close()
+Jun 25 08:38:33 [VERBATIM] Code around line 375:
+Jun 25 08:38:33   372: 		_hud_labels.append(lbl)
+Jun 25 08:38:33   373: 
+Jun 25 08:38:33   374: 	# Add a semi-transparent background panel for readability
+Jun 25 08:38:33 > 375: 	var _hud_bg_panel = ColorRect.new()
+Jun 25 08:38:33   376: 	_hud_bg_panel.color = Color(0, 0, 0, 0.35)
+Jun 25 08:38:33   377: 	_hud_bg_panel.size = Vector2(280, 210)
+Jun 25 08:38:33   378: 	_hud_bg_panel.position = Vector2(5, 5)
+Jun 25 08:38:33 [VERBATIM] Code around line 597:
+Jun 25 08:38:33   594: 			skeleton.reset_bone_poses()
+Jun 25 08:38:33   595: 	# _force_neutral_arms()  # disabled – using RESET animation instead
+Jun 25 08:38:33   596: 	# Play RESET animation to force arms to rest pose (R091/R092)
+Jun 25 08:38:33 > 597: 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+Jun 25 08:38:33   598: 	if _anim_player and _anim_player.has_animation("RESET"):
+Jun 25 08:38:33   599: 		_anim_player.play("RESET")
+Jun 25 08:38:33   600: 		await get_tree().process_frame
+Jun 25 08:38:33 [VERBATIM] Code around line 11:
+Jun 25 08:38:33     8: # ------------------------------------------------------------------
+Jun 25 08:38:33     9: # Required string (R064)
+Jun 25 08:38:33    10: # ------------------------------------------------------------------
+Jun 25 08:38:33 >  11: const LegLabel = "LEG"
+Jun 25 08:38:33    12: 
+Jun 25 08:38:33    13: # ------------------------------------------------------------------
+Jun 25 08:38:33    14: # Game state machine
+Jun 25 08:38:33 [VERBATIM] Code around line 1228:
+Jun 25 08:38:33  1225: 	print("[VERBATIM] Replay started")
+Jun 25 08:38:33  1226: 
+Jun 25 08:38:33  1227: 
+Jun 25 08:38:33 >1228: func _process_replay(delta):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1229: 	if not _replay_playing:
+Jun 25 08:38:33  1230: 		return
+Jun 25 08:38:33  1231: 	if _replay_index >= _replay_recording.size():
+Jun 25 08:38:33 [VERBATIM] Code around line 1265:
+Jun 25 08:38:33  1262: 	print("[VERBATIM] EXIT _init_sentry ok=true")
+Jun 25 08:38:33  1263: 
+Jun 25 08:38:33  1264: 
+Jun 25 08:38:33 >1265: func _report_error(error_message: String, stack_trace: String = ""):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1266: 	if _sentry_initialized:
+Jun 25 08:38:33  1267: 		print("[VERBATIM] Sending error to Sentry: ", error_message)
+Jun 25 08:38:33  1268: 	else:
+Jun 25 08:38:33 [VERBATIM] Code around line 1762:
+Jun 25 08:38:33  1759: 	print("[VERBATIM] Right turn target: ", _turn_target_heading)
+Jun 25 08:38:33  1760: 
+Jun 25 08:38:33  1761: 
+Jun 25 08:38:33 >1762: func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1763: 	var new_state = _pattern_state
+Jun 25 08:38:33  1764: 	if altitude > 1000.0:
+Jun 25 08:38:33  1765: 		new_state = PatternState.DOWNWIND
+Jun 25 08:38:33 [VERBATIM] Code around line 1924:
+Jun 25 08:38:33  1921: 
+Jun 25 08:38:33  1922: 
+Jun 25 08:38:33  1923: func _on_wind_received(
+Jun 25 08:38:33 >1924: 	result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray
+Jun 25 08:38:33  1925: ):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1926: 	if response_code != 200:
+Jun 25 08:38:33  1927: 		print("[VERBATIM] Real wind request failed")
+Jun 25 08:38:33 [VERBATIM] Code around line 1924:
+Jun 25 08:38:33  1921: 
+Jun 25 08:38:33  1922: 
+Jun 25 08:38:33  1923: func _on_wind_received(
+Jun 25 08:38:33 >1924: 	result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray
+Jun 25 08:38:33  1925: ):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1926: 	if response_code != 200:
+Jun 25 08:38:33  1927: 		print("[VERBATIM] Real wind request failed")
+Jun 25 08:38:33 [VERBATIM] Code around line 1942:
+Jun 25 08:38:33  1939: 
+Jun 25 08:38:33  1940: 
+Jun 25 08:38:33  1941: func _on_forecast_received(
+Jun 25 08:38:33 >1942: 	result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray
+Jun 25 08:38:33  1943: ):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1944: 	if response_code != 200:
+Jun 25 08:38:33  1945: 		return
+Jun 25 08:38:33 [VERBATIM] Code around line 1942:
+Jun 25 08:38:33  1939: 
+Jun 25 08:38:33  1940: 
+Jun 25 08:38:33  1941: func _on_forecast_received(
+Jun 25 08:38:33 >1942: 	result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray
+Jun 25 08:38:33  1943: ):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+Jun 25 08:38:33  1944: 	if response_code != 200:
+Jun 25 08:38:33  1945: 		return
+Jun 25 08:38:34   gdparse: no output (rc=0)
+Jun 25 08:38:35   [check] debug_components.gd
+Jun 25 08:38:35   gdlint output:
+Jun 25 08:38:35 Success: no problems found
+Jun 25 08:38:35 
+Jun 25 08:38:36   gdparse: no output (rc=0)
+Jun 25 08:38:36   [check] flight_controller.gd
+Jun 25 08:38:36   gdlint output:
+Jun 25 08:38:36 Success: no problems found
+Jun 25 08:38:36 
+Jun 25 08:38:37   gdparse: no output (rc=0)
+Jun 25 08:38:37   [check] forensic_hud.gd
+Jun 25 08:38:37   gdlint output:
+Jun 25 08:38:37 Success: no problems found
+Jun 25 08:38:37 
+Jun 25 08:38:38   gdparse: no output (rc=0)
+Jun 25 08:38:38   [check] game_manager.gd
+Jun 25 08:38:39   gdlint output:
+Jun 25 08:38:39 Success: no problems found
+Jun 25 08:38:39 
+Jun 25 08:38:39   gdparse: no output (rc=0)
+Jun 25 08:38:39   [check] log_game_state.gd
+Jun 25 08:38:40   gdlint output:
+Jun 25 08:38:40 Success: no problems found
+Jun 25 08:38:40 
+Jun 25 08:38:40   gdparse: no output (rc=0)
+Jun 25 08:38:41   [check] minimal.gd
+Jun 25 08:38:41   gdlint output:
+Jun 25 08:38:41 Success: no problems found
+Jun 25 08:38:41 
+Jun 25 08:38:42   gdparse: no output (rc=0)
+Jun 25 08:38:42   [check] parachute_controller.gd
+Jun 25 08:38:42   gdlint output:
+Jun 25 08:38:42 Success: no problems found
+Jun 25 08:38:42 
+Jun 25 08:38:43   gdparse: no output (rc=0)
+Jun 25 08:38:44   [check] pip_draggable.gd
+Jun 25 08:38:44   gdlint output:
+Jun 25 08:38:44 Success: no problems found
+Jun 25 08:38:44 
+Jun 25 08:38:45   gdparse: no output (rc=0)
+Jun 25 08:38:45   [check] pip_draggable_v2.gd
+Jun 25 08:38:45   gdlint output:
+Jun 25 08:38:45 Success: no problems found
+Jun 25 08:38:45 
+Jun 25 08:38:46   gdparse: no output (rc=0)
+Jun 25 08:38:46   [check] plane.gd
+Jun 25 08:38:46   gdlint output:
+Jun 25 08:38:46 Success: no problems found
+Jun 25 08:38:46 
+Jun 25 08:38:47   gdparse: no output (rc=0)
+Jun 25 08:38:47   [check] rotor_visualizer.gd
+Jun 25 08:38:48   gdlint output:
+Jun 25 08:38:48 Success: no problems found
+Jun 25 08:38:48 
+Jun 25 08:38:48   gdparse: no output (rc=0)
+Jun 25 08:38:48   [check] splash.gd
+Jun 25 08:38:49   gdlint output:
+Jun 25 08:38:49 Success: no problems found
+Jun 25 08:38:49 
+Jun 25 08:38:49   gdparse: no output (rc=0)
+Jun 25 08:38:49   [check] test_runner.gd
+Jun 25 08:38:50   gdlint output:
+Jun 25 08:38:50 Success: no problems found
+Jun 25 08:38:50 
+Jun 25 08:38:51   gdparse: no output (rc=0)
+Jun 25 08:38:51   [check] toggle_arm_animator.gd
+Jun 25 08:38:51   gdlint output:
+Jun 25 08:38:51 Success: no problems found
+Jun 25 08:38:51 
+Jun 25 08:38:52   gdparse: no output (rc=0)
+Jun 25 08:38:52   [check] validate_scene.gd
+Jun 25 08:38:52   gdlint output:
+Jun 25 08:38:52 Success: no problems found
+Jun 25 08:38:52 
+Jun 25 08:38:53   gdparse: no output (rc=0)
+Jun 25 08:38:53   [check] wind_field.gd
+Jun 25 08:38:54   gdlint output:
+Jun 25 08:38:54 Success: no problems found
+Jun 25 08:38:54 
+Jun 25 08:38:54   gdparse: no output (rc=0)
+Jun 25 08:38:55 [HEAL-OK] All scripts passed all checks.
+Jun 25 08:38:55 [HEAL-OK] All scripts passed after self-heal.
+Jun 25 08:38:55 [DB-RUN] run_id=40 closed outcome=running
+Jun 25 08:38:55 
+Jun 25 08:38:55 [3/5] Observable runner...
+Jun 25 08:38:55 [RUN] /usr/sbin/python3 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/observable_runner_v2.py --cmd /usr/bin/godot --path ./godot_project --quit-after 20 --log-file /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/audit_logs/pipeline_final.log --heartbeat 5 --timeout 35 --stall-detection 25
+Jun 25 08:39:11 STDOUT:
+Jun 25 08:39:11 [OBS] Log file: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/audit_logs/pipeline_final.log
+Jun 25 08:39:11 [OBS] PID=309807
+Jun 25 08:39:11 [LOG:1] Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+Jun 25 08:39:11 [LOG:2] OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+Jun 25 08:39:11 [LOG:3] WARNING: Started the engine as `root`/superuser. This is a security risk, and subsystems like audio may not work correctly.
+Jun 25 08:39:11 [LOG:4] Set the environment variable `GODOT_SILENCE_ROOT_WARNING` to 1 to silence this warning.
+Jun 25 08:39:11 [LOG:5]      at: setup2 (main/main.cpp:3478)
+Jun 25 08:39:11 [LOG:6] ERROR: Condition "status < 0" is true. Returning: ERR_CANT_OPEN
+Jun 25 08:39:11 [LOG:7]    at: init_output_device (drivers/alsa/audio_driver_alsa.cpp:90)
+Jun 25 08:39:11 [LOG:8] WARNING: All audio drivers failed, falling back to the dummy driver.
+Jun 25 08:39:11 [LOG:9]      at: initialize (servers/audio/audio_server.cpp:247)
+Jun 25 08:39:11 [LOG:10] 
+Jun 25 08:39:11 [LOG:11] SCRIPT ERROR: Parse Error: Expected indented block after "if" block.
+Jun 25 08:39:11 [LOG:12]           at: GDScript::reload (res://scripts/build_terrain.gd:564)
+Jun 25 08:39:11 [LOG:13] ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+Jun 25 08:39:11 [LOG:14]    at: load (modules/gdscript/gdscript.cpp:2907)
+Jun 25 08:39:11 [LOG:15] [VERBATIM] SqliteDb.gd _ready() called
+Jun 25 08:39:11 [LOG:16] [VERBATIM] SqliteDb.gd _ready() called
+Jun 25 08:39:11 [LOG:17] [VERBATIM] SqliteDb.gd _ready() called
+Jun 25 08:39:11 [LOG:18] [VERBATIM] SqliteDb: _ready started
+Jun 25 08:39:11 [LOG:19] [VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+Jun 25 08:39:11 [LOG:20] [VERBATIM] DB tables ensured
+Jun 25 08:39:11 [LOG:21] [VERBATIM] SqliteDb: _ready completed
+Jun 25 08:39:11 [LOG:22] [VERBATIM] SqliteWatchdog.gd _ready() called
+Jun 25 08:39:11 [LOG:23] [VERBATIM] SqliteWatchdog.gd _ready() called
+Jun 25 08:39:11 [LOG:24] [VERBATIM] SqliteWatchdog.gd _ready() called
+Jun 25 08:39:11 [LOG:25] [VERBATIM] Watchdog: _ready started
+Jun 25 08:39:11 [LOG:26] [VERBATIM] Watchdog: started, polling user://screenshots/
+Jun 25 08:39:11 [LOG:27] [VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+Jun 25 08:39:11 [LOG:28] [VERBATIM] Watchdog: _ready completed
+Jun 25 08:39:11 [LOG:29] [VERBATIM] StructuredLogger.gd _ready() called
+Jun 25 08:39:11 [LOG:30] [VERBATIM] StructuredLogger.gd _ready() called
+Jun 25 08:39:11 [LOG:31] [StructuredLogger] log file: (disabled) — stdout only
+Jun 25 08:39:11 [LOG:32] [StructuredLogger] sentry_available=false
+Jun 25 08:39:11 [LOG:33] [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:11 [LOG:34] [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:11 [LOG:35] [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:11 [LOG:36] [VERBATIM] InputManager: registered action restart key=82
+Jun 25 08:39:11 [LOG:37] [VERBATIM] InputManager: registered action deploy key=32
+Jun 25 08:39:11 [LOG:38] [VERBATIM] InputManager: registered action turnleft key=81
+Jun 25 08:39:11 [LOG:39] [VERBATIM] InputManager: registered action turnright key=69
+Jun 25 08:39:11 [LOG:40] [VERBATIM] InputManager: registered action cyclecamera key=67
+Jun 25 08:39:11 [LOG:41] [VERBATIM] InputManager: registered action togglehud key=72
+Jun 25 08:39:11 [LOG:42] [VERBATIM] InputManager: registered action flightcheck key=67
+Jun 25 08:39:11 [LOG:43] [VERBATIM] InputManager: registered action cutaway key=88
+Jun 25 08:39:11 [LOG:44] [VERBATIM] InputManager: registered action reserve key=86
+Jun 25 08:39:11 [LOG:45] [VERBATIM] InputManager: registered action flare key=70
+Jun 25 08:39:11 [LOG:46] [VERBATIM] InputManager: registered action pause key=4194305
+Jun 25 08:39:11 [LOG:47] [VERBATIM] InputManager: registered action deploy_canopy key=32
+Jun 25 08:39:11 [LOG:48] [VERBATIM] InputManager: registered action turn_left key=81
+Jun 25 08:39:11 [LOG:49] [VERBATIM] InputManager: registered action turn_right key=69
+Jun 25 08:39:11 [LOG:50] [VERBATIM] InputManager: _ready ok=true actions_registered=14
+Jun 25 08:39:11 [LOG:51] [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:11 [LOG:52] [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:11 [LOG:53] [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:11 [LOG:54] [VERBATIM] PerformanceMonitor: _db_ok is true
+Jun 25 08:39:11 [LOG:55] [VERBATIM] PerformanceMonitor: _ready ok=true
+Jun 25 08:39:11 [LOG:56] [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:11 [LOG:57] [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:11 [LOG:58] [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:11 [LOG:59] [VERBATIM] PerformanceMonitor: _monitor_loop started
+Jun 25 08:39:11 [LOG:60] [VERBATIM] GameIntegrity: SQLite GDExtension OK
+Jun 25 08:39:11 [LOG:61] [VERBATIM] GameIntegrity: SqliteDb autoload OK
+Jun 25 08:39:11 [LOG:62] [VERBATIM] PerformanceMonitor: loop iteration
+Jun 25 08:39:11 [LOG:63] WARNING: [VERBATIM] GameIntegrity: group EMPTY: parachute_controller
+Jun 25 08:39:11 [LOG:64]      at: push_warning (core/variant/variant_utility.cpp:1034)
+Jun 25 08:39:11 [LOG:65]      GDScript backtrace (most recent call first):
+Jun 25 08:39:11 [LOG:66]          [0] _check_scene (res://scripts/GameIntegrity.gd:45)
+Jun 25 08:39:11 [LOG:67]          [1] _ready (res://scripts/GameIntegrity.gd:19)
+Jun 25 08:39:11 [LOG:68] WARNING: [VERBATIM] GameIntegrity: group EMPTY: airplane
+Jun 25 08:39:11 [LOG:69]      at: push_warning (core/variant/variant_utility.cpp:1034)
+Jun 25 08:39:11 [LOG:70]      GDScript backtrace (most recent call first):
+Jun 25 08:39:11 [LOG:71]          [0] _check_scene (res://scripts/GameIntegrity.gd:45)
+Jun 25 08:39:11 [LOG:72]          [1] _ready (res://scripts/GameIntegrity.gd:19)
+Jun 25 08:39:11 [LOG:73] [VERBATIM] GameIntegrity: _ready ok=true all_ok=true
+Jun 25 08:39:11 [LOG:74] [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:75] [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:76] [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:77] [VERBATIM] PerformanceMonitor: _insert_contention called with cpu=9.3 mem=0
+Jun 25 08:39:11 [LOG:78] ERROR:  --> SQL error: table resource_contention_log has no column named vol_ctxt_sw
+Jun 25 08:39:11 [LOG:79]    at: prepare_statement (src/gdsqlite.cpp:237)
+Jun 25 08:39:11 [LOG:80]    GDScript backtrace (most recent call first):
+Jun 25 08:39:11 [LOG:81]        [0] _query (res://scripts/SqliteDb.gd:44)
+Jun 25 08:39:11 [LOG:82]        [1] _insert_contention (res://scripts/PerformanceMonitor.gd:78)
+Jun 25 08:39:11 [LOG:83]        [2] _monitor_loop (res://scripts/PerformanceMonitor.gd:57)
+Jun 25 08:39:11 [LOG:84] [VERBATIM] DB QUERY FAIL:
+Jun 25 08:39:11 [LOG:85]   INSERT INTO resource_contention_log
+Jun 25 08:39:11 [LOG:86]   (session_id, godot_pid, ts, vm_rss_kb,
+Jun 25 08:39:11 [LOG:87] [VERBATIM] PerformanceMonitor: insert failed
+Jun 25 08:39:11 [LOG:88] [VERBATIM] altimeter_hud: _ready ok=true
+Jun 25 08:39:11 [LOG:89] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:90] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11 [LOG:91] [VERBATIM] forensic_hud: _ready ok=true
+Jun 25 08:39:11 [LOG:92] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11 [LOG:93] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11 [LOG:94] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11 [LOG:95] [VERBATIM] DB issue logged: AUDIT_START
+Jun 25 08:39:11 [LOG:96] [VERBATIM] audit: AUDIT_START
+Jun 25 08:39:11 [LOG:97] [VERBATIM] audit: _ready ok=true
+Jun 25 08:39:11 [LOG:98] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11 [LOG:99] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11 [LOG:100] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11 [LOG:101] [VERBATIM] Wind updated: 8.0 kts @ 240.0°
+Jun 25 08:39:11 [LOG:102] [VERBATIM] wind_field: _ready ok=true speed=8.0 kts dir=240 deg
+Jun 25 08:39:11 [LOG:103] [VERBATIM] DB CLOSED
+Jun 25 08:39:11 [HEARTBEAT] elapsed=5s, log_size=5431B, lines=103, cpu=1.45s, rss=209312KB, read=0B, write=0B (running)
+Jun 25 08:39:11 [HEARTBEAT] elapsed=10s, log_size=5431B, lines=103, cpu=1.45s, rss=209312KB, read=0B, write=0B (running)
+Jun 25 08:39:11 [HEARTBEAT] elapsed=15s, log_size=5431B, lines=103, cpu=1.45s, rss=209312KB, read=0B, write=0B (running)
+Jun 25 08:39:11 [OBS] Command exited with code 0.
+Jun 25 08:39:11 [OBS] Last 20 lines of log:
+Jun 25 08:39:11   [LOG:84] [VERBATIM] DB QUERY FAIL:
+Jun 25 08:39:11   [LOG:85]   INSERT INTO resource_contention_log
+Jun 25 08:39:11   [LOG:86]   (session_id, godot_pid, ts, vm_rss_kb,
+Jun 25 08:39:11   [LOG:87] [VERBATIM] PerformanceMonitor: insert failed
+Jun 25 08:39:11   [LOG:88] [VERBATIM] altimeter_hud: _ready ok=true
+Jun 25 08:39:11   [LOG:89] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11   [LOG:90] [VERBATIM] forensic_hud.gd _ready() called
+Jun 25 08:39:11   [LOG:91] [VERBATIM] forensic_hud: _ready ok=true
+Jun 25 08:39:11   [LOG:92] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11   [LOG:93] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11   [LOG:94] [VERBATIM] audit.gd _ready() called
+Jun 25 08:39:11   [LOG:95] [VERBATIM] DB issue logged: AUDIT_START
+Jun 25 08:39:11   [LOG:96] [VERBATIM] audit: AUDIT_START
+Jun 25 08:39:11   [LOG:97] [VERBATIM] audit: _ready ok=true
+Jun 25 08:39:11   [LOG:98] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11   [LOG:99] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11   [LOG:100] [VERBATIM] wind_field.gd _ready() called
+Jun 25 08:39:11   [LOG:101] [VERBATIM] Wind updated: 8.0 kts @ 240.0°
+Jun 25 08:39:11   [LOG:102] [VERBATIM] wind_field: _ready ok=true speed=8.0 kts dir=240 deg
+Jun 25 08:39:11   [LOG:103] [VERBATIM] DB CLOSED
+Jun 25 08:39:11 [OBS] SUCCESS – command exited with 0 (no pattern).
+Jun 25 08:39:11 
+Jun 25 08:39:11 RETURN CODE: 0
+Jun 25 08:39:11 
+Jun 25 08:39:11 [4/5] Game state test...
+Jun 25 08:39:11 [TEST] Running game state test...
+Jun 25 08:39:28 STDOUT:
+Jun 25 08:39:28 Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+Jun 25 08:39:28 OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+Jun 25 08:39:28 
+Jun 25 08:39:28 [VERBATIM] SqliteDb.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] SqliteDb.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] SqliteDb.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] SqliteDb: _ready started
+Jun 25 08:39:28 [VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+Jun 25 08:39:28 [VERBATIM] DB tables ensured
+Jun 25 08:39:28 [VERBATIM] SqliteDb: _ready completed
+Jun 25 08:39:28 [VERBATIM] SqliteWatchdog.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] SqliteWatchdog.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] SqliteWatchdog.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] Watchdog: _ready started
+Jun 25 08:39:28 [VERBATIM] Watchdog: started, polling user://screenshots/
+Jun 25 08:39:28 [VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+Jun 25 08:39:28 [VERBATIM] Watchdog: _ready completed
+Jun 25 08:39:28 [VERBATIM] StructuredLogger.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] StructuredLogger.gd _ready() called
+Jun 25 08:39:28 [StructuredLogger] log file: (disabled) — stdout only
+Jun 25 08:39:28 [StructuredLogger] sentry_available=false
+Jun 25 08:39:28 [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] InputManager.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action restart key=82
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action deploy key=32
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action turnleft key=81
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action turnright key=69
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action cyclecamera key=67
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action togglehud key=72
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action flightcheck key=67
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action cutaway key=88
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action reserve key=86
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action flare key=70
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action pause key=4194305
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action deploy_canopy key=32
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action turn_left key=81
+Jun 25 08:39:28 [VERBATIM] InputManager: registered action turn_right key=69
+Jun 25 08:39:28 [VERBATIM] InputManager: _ready ok=true actions_registered=14
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor: _db_ok is true
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor: _ready ok=true
+Jun 25 08:39:28 [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] GameIntegrity.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor: _monitor_loop started
+Jun 25 08:39:28 [VERBATIM] GameIntegrity: SQLite GDExtension OK
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor: loop iteration
+Jun 25 08:39:28 [VERBATIM] GameIntegrity: SqliteDb autoload OK
+Jun 25 08:39:28 [VERBATIM] GameIntegrity: _ready ok=true all_ok=true
+Jun 25 08:39:28 [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] altimeter_hud.gd _ready() called
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor: _insert_contention called with cpu=9.4 mem=0
+Jun 25 08:39:28 [VERBATIM] DB QUERY FAIL: 
+Jun 25 08:39:28   INSERT INTO resource_contention_log
+Jun 25 08:39:28   (session_id, godot_pid, ts, vm_rss_kb, 
+Jun 25 08:39:28 [VERBATIM] PerformanceMonitor: insert failed
+Jun 25 08:39:28 [VERBATIM] altimeter_hud: _ready ok=true

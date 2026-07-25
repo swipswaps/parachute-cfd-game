@@ -1,0 +1,15 @@
+--- BEFORE: sha256 ---
+f5c9f6357620192259eb7abaec6dc31830e973a603894c6e975c4798fc538faf  godot_project/scripts/forensic_hud.gd
+29dd348c22f39b52395245ae2143d6ce7b8f8e5f4e4811b00ce678a913e75d57  godot_project/scripts/build_terrain.gd
+--- BEFORE: toggle line in forensic_hud.gd ---
+109:		if event.keycode == KEY_F3 or event.keycode == KEY_F9 or event.keycode == KEY_QUOTELEFT or event.keycode == KEY_T:
+--- BEFORE: member declarations in build_terrain.gd ---
+55:var _pip_canopy_node: Node3D
+124:var _canopy_instance: Node3D
+--- BEFORE: POLL entry print ---
+1527:	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+[FIX1] toggle-key line matches: 0
+[REFUSE] expected 1; actual toggle context:
+  109: 		if event.keycode == KEY_F3 or event.keycode == KEY_F9 or event.keycode == KEY_QUOTELEFT or event.keycode == KEY_T:
+patch exit: 1
+PATCH REFUSED -- nothing written (see context above)

@@ -1,0 +1,7 @@
+[
+  {
+    "file": "godot_project/scripts/build_terrain.gd",
+    "old": "\t# Camera follows character for all other states\n\tif is_instance_valid(_character) and is_instance_valid(_camera):\n\t\tvar target = _character.global_position\n\t\tvar offset = Vector3(0, 0, -_cam_distance)\n\t\toffset = offset.rotated(Vector3.UP, _cam_azimuth)\n\t\toffset = offset.rotated(Vector3.RIGHT, _cam_elevation)\n\t\t_camera.global_position = target + offset\n\t\t_camera.look_at(target, Vector3.UP)",
+    "new": ""
+  }
+]

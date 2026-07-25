@@ -31,6 +31,7 @@ __pycache__/
 !controlled_edit.py
 !prepare_repo.py
 !backup_and_clean.py
+!forensic_hub_server.py
 # Godot editor and cache
 .godot/
 .import/
@@ -58,3 +59,78 @@ Thumbs.db
 external_repos/
 godot_aerodynamic_physics_cache/
 godot_source/
+
+# === v2 additions ===
+# Timestamped backup files (*.bak.YYYYMMDD*, *.bak.*, etc.)
+*.bak.*
+*.bak_*
+# Backup directories
+backup_archives/
+backups/
+# Autostall backup files
+autostall*.bak*
+autostall*.txt
+# DB maintenance directories
+db_maintain_*/
+db_audit_*/
+# Archive directories
+archive/
+cleanup_surface_*/
+fix_*/
+fix_altimeter_*/
+fix_autostall_*/
+fix_crosshair_*/
+fix_dg_dupstate_*/
+fix_drag_*/
+fix_fhp_*/
+fix_gate_*/
+fix_hc_*/
+fix_output_*/
+fix_panel_*/
+fix_runtime_*/
+drag_verify_*/
+# Godot editor backup
+godot_project/.godot.bak_*/
+# Audit output directories
+audit_output_*/
+# Diagnostics directory
+diagnostics/
+# Upstream/external repos
+upstream_aero_check/
+# PDF reports
+*.pdf
+# Large binary/data files
+*.tgz
+*.tar
+*.b64
+*.sha256
+# CFD data
+cases/
+cfd_mesh/
+*_0[0-9][0-9][0-9].txt
+*_0[0-9][0-9][0-9][0-9].txt
+# Downloaded files
+downloaded_files/
+geckodriver-*.tar.gz
+# Misc scratch
+chunk_aa
+first_half*.txt
+game_files.*
+*.b64
+node_modules/
+bin/
+*.pyc
+__pycache__/
+srtm_*.tif
+srtm_*.tif.aux.xml
+terminal*.png
+terminal-*.png
+page-*.png
+page_*.png
+page_*.txt
+Screenshot*.png
+*.db.bak.*
+forensics.db.bak.*
+terrain/*.obj
+game_data/DOF.csv
+parachute_mutations.db.bak.*

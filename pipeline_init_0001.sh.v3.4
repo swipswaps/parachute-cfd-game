@@ -1,0 +1,26 @@
+#!/bin/bash
+# pipeline_init_0001.sh – Install dependencies for the pipeline (DB management is handled by the pipeline itself)
+set -e
+echo "[INIT] Installing gdtoolkit and cargo tools..."
+
+if command -v dnf &>/dev/null; then
+    PKG="dnf"
+elif command -v apt-get &>/dev/null; then
+    PKG="apt-get"
+else
+    echo "[INIT-ERROR] No supported package manager found." >&2
+    exit 1
+fi
+
+if [ "$PKG" = "dnf" ]; then
+    $PKG install -y python3-pip git cargo
+elif [ "$PKG" = "apt-get" ]; then
+    $PKG update
+    $PKG install -y python3-pip git cargo
+fi
+
+pip3 install --upgrade gdtoolkit
+cargo install gdcli gdstyle || echo "[INIT] cargo install failed (may be optional)"
+
+# DB is managed by the pipeline's ensure_database() – we do NOT run set_db_controls.py here.
+echo "[INIT] Dependencies installed. DB setup skipped – pipeline will handle it."

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://box_test"]
+
+[ext_resource type="Material" path="res://assets/terrain/green_mat.tres" id="1_mat"]
+[sub_resource type="BoxMesh" id="1"]
+size = Vector3(50, 5, 50)
+
+[node name="Box" type="MeshInstance3D"]
+	[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+	root_node = NodePath("..")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("1")
+material_override = ExtResource("1_mat")
+visible = true

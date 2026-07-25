@@ -1,0 +1,151 @@
+#!/usr/bin/env bash
+# PATH: parachute-cfd-game/pipeline_init_0001.sh.v3.2
+# VERSION: 3.2 – FINAL
+# Non‑interactive when NONINTERACTIVE=1 or -y argument passed.
+# Adds ~/.local/bin to PATH so pip --user binaries are found.
+# Backs up existing files before writing (handled externally).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DB_PATH="$SCRIPT_DIR/parachute_mutations.db"
+SET_DB_CONTROLS="$SCRIPT_DIR/set_db_controls.py"
+
+# ---- Detect non‑interactive mode ----
+NONINTERACTIVE=0
+if [[ "${NONINTERACTIVE:-0}" == "1" ]] || [[ "${1:-}" == "-y" ]]; then
+    NONINTERACTIVE=1
+fi
+
+# ---- Add ~/.local/bin to PATH (for pip --user) ----
+export PATH="$HOME/.local/bin:$PATH"
+
+# ---- Functions ----
+die() {
+    echo "[FATAL] $*" >&2
+    exit 1
+}
+
+record_install() {
+    local tool="$1"
+    local cmd="$2"
+    sqlite3 "$DB_PATH" \
+        "INSERT INTO auto_heal_actions
+         (run_id, error_pattern, file_path, line_number, patch_applied, status)
+         VALUES (0, 'dep_missing', '$tool', 0, '$cmd', 'installed');" \
+        2>/dev/null && echo "[DB] recorded install of $tool" || echo "[DB-WARN] could not record install"
+}
+
+check_cmd() {
+    local cmd="$1"
+    local pkg="${2:-$1}"
+    local reason="$3"
+    local install_cmd="${4:-sudo dnf install -y $pkg}"
+
+    if command -v "$cmd" >/dev/null 2>&1; then
+        echo "[DEP-OK] $cmd already installed."
+        return 0
+    fi
+
+    echo "[DEP-MISSING] $cmd not found. Required for: $reason"
+    if [[ $NONINTERACTIVE -eq 1 ]]; then
+        echo "[AUTO-INSTALL] Installing $cmd via: $install_cmd"
+        eval "$install_cmd" || die "Install of $pkg failed"
+        if command -v "$cmd" >/dev/null 2>&1; then
+            echo "[DEP-VERIFIED] $cmd now on PATH."
+            record_install "$cmd" "$install_cmd"
+        else
+            die "$cmd still not on PATH after install"
+        fi
+    else
+        echo "  Install command: $install_cmd"
+        read -r -p "  Install $pkg now? [y/N] " response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            eval "$install_cmd" || die "Install failed"
+            command -v "$cmd" >/dev/null 2>&1 || die "$cmd still not on PATH"
+            record_install "$cmd" "$install_cmd"
+        else
+            die "Cannot continue without $cmd"
+        fi
+    fi
+}
+
+check_python_module() {
+    local module="$1"
+    local pip_pkg="${2:-$module}"
+    local reason="$3"
+
+    if python3 -c "import $module" >/dev/null 2>&1; then
+        echo "[DEP-OK] Python module $module importable."
+        return 0
+    fi
+
+    echo "[DEP-MISSING] Python module $module not importable. Required for: $reason"
+    if [[ $NONINTERACTIVE -eq 1 ]]; then
+        echo "[AUTO-INSTALL] pip3 install $pip_pkg"
+        pip3 install "$pip_pkg" || die "pip3 install failed"
+        python3 -c "import $module" >/dev/null 2>&1 || die "$module still not importable"
+        record_install "$module" "pip3 install $pip_pkg"
+    else
+        echo "  Install command: pip3 install $pip_pkg"
+        read -r -p "  Install $pip_pkg now? [y/N] " response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+            pip3 install "$pip_pkg" || die "pip3 install failed"
+            python3 -c "import $module" >/dev/null 2>&1 || die "$module still not importable"
+            record_install "$module" "pip3 install $pip_pkg"
+        else
+            die "Cannot continue without Python module $module"
+        fi
+    fi
+}
+
+verify_table() {
+    local table="$1"
+    local expected_min="$2"
+    local count
+    count=$(sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM $table;" 2>&1) \
+        || die "Table '$table' does not exist"
+    if [[ "$count" -lt "$expected_min" ]]; then
+        die "Table '$table' has $count rows (expected >= $expected_min)"
+    fi
+    echo "[OK] $table: $count rows"
+}
+
+# ---- PATH bootstrap for cargo ----
+CARGO_BIN="$HOME/.cargo/bin"
+mkdir -p "$CARGO_BIN"
+export PATH="$CARGO_BIN:$PATH"
+BASHRC="$HOME/.bashrc"
+CARGO_PATH_LINE='export PATH="$HOME/.cargo/bin:$PATH"'
+grep -qxF "$CARGO_PATH_LINE" "$BASHRC" || echo "$CARGO_PATH_LINE" >> "$BASHRC"
+
+# ---- Steps ----
+echo "[INIT] STEP 1 — core runtime..."
+check_cmd python3 python3 "running scripts" "sudo dnf install -y python3"
+check_cmd sqlite3 sqlite "verifying DB" "sudo dnf install -y sqlite"
+check_cmd pip3    python3-pip "installing Python packages" "sudo dnf install -y python3-pip"
+
+echo "[INIT] STEP 2 — gdtoolkit..."
+check_cmd gdparse  gdtoolkit "GDScript parse" "pip3 install gdtoolkit"
+check_cmd gdformat gdtoolkit "GDScript format" "pip3 install gdtoolkit"
+check_cmd gdlint   gdtoolkit "GDScript lint" "pip3 install gdtoolkit"
+check_python_module gdtoolkit.gdradon gdtoolkit "GDScript complexity"
+
+echo "[INIT] STEP 3 — cargo tools..."
+check_cmd cargo cargo "Rust toolchain" "sudo dnf install -y cargo"
+check_cmd gdstyle gdstyle "GDScript style" "cargo install gdstyle"
+check_cmd gdcli   gdcli   "GDScript CLI" "cargo install gdcli"
+
+echo "[INIT] STEP 4 — set_db_controls.py and DB presence..."
+[[ -f "$SET_DB_CONTROLS" ]] || die "set_db_controls.py not found"
+[[ -f "$DB_PATH" ]] || die "DB not found – run Godot once"
+
+echo "[INIT] STEP 5 — running set_db_controls.py..."
+python3 "$SET_DB_CONTROLS" || die "set_db_controls.py failed"
+
+echo "[INIT] STEP 6 — verifying DB tables..."
+verify_table control_wiring     14
+verify_table component_registry 12
+
+echo "[INIT] pipeline_init_0001.sh complete"
+# IMPLEMENTATION COMPLETE

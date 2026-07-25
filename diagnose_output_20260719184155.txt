@@ -1,0 +1,60 @@
+======================================================================
+CHECK 1: has forensic_panel.gd changed since the 22:24:20 dump?
+======================================================================
+  File: godot_project/autoloads/forensic_panel.gd
+  Size: 2993      	Blocks: 8          IO Block: 4096   regular file
+Device: 0,45	Inode: 23250977    Links: 1
+Access: (0644/-rw-r--r--)  Uid: ( 1000/   owner)   Gid: ( 1000/   owner)
+Context: unconfined_u:object_r:user_home_t:s0
+Access: 2026-07-19 18:35:06.315977042 -0400
+Modify: 2026-07-19 18:35:06.315876539 -0400
+Change: 2026-07-19 18:35:06.315876539 -0400
+ Birth: 2026-07-17 20:11:47.391981554 -0400
+[2026-07-19T22:41:55Z] [SUCCESS] check_mtime: raw stat shown above -- compare mtime to 2026-07-19 22:24:20
+
+======================================================================
+CHECK 2: byte-exact search for BOTH spellings of _adopt_pip
+(anchored, whole-word, so _adopt_pip_container does not falsely
+count as a match for bare _adopt_pip)
+======================================================================
+--- exact count of '_adopt_pip.call_deferred()' ---
+0
+--- exact count of 'connect(_adopt_pip)' (bare, no _container) ---
+0
+--- exact count of '_adopt_pip_container' (the real function) ---
+4
+--- every line containing 'adopt_pip' in any form, with line numbers ---
+34:	_adopt_pip_container.call_deferred()
+42:	timer.timeout.connect(_adopt_pip_container)
+48:		if _adopt_pip_container():
+53:func _adopt_pip_container() -> bool:
+[2026-07-19T22:41:55Z] [SUCCESS] check_literal_content: raw grep counts shown above
+
+======================================================================
+CHECK 3: dump lines 25-45 verbatim, RIGHT NOW, byte-for-byte
+(re-confirms leading whitespace character-by-character with cat -A,
+which shows tabs as ^I and line ends as $ -- settles the
+whitespace-mismatch hypothesis definitively)
+======================================================================
+var _toggle_latch := false   # edgeM-bM-^@M-^Qdetect so held key doesn't flicker$
+$
+func _ready() -> void:$
+^Ilayer = 100$
+^I_build_ui()$
+^I_db = get_node_or_null("/root/SqliteDb")$
+^I_http = HTTPRequest.new()$
+^Iadd_child(_http)$
+^I_http.request_completed.connect(_on_hub_reply)$
+^I_adopt_pip_container.call_deferred()$
+^Ivisible = false$
+^Iprint("[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)")$
+$
+^I# Retry adoption after a short delay to allow PiP creation$
+^Ivar timer = Timer.new()$
+^Itimer.wait_time = 0.5$
+^Itimer.one_shot = true$
+^Itimer.timeout.connect(_adopt_pip_container)$
+^Iadd_child(timer)$
+^Itimer.start()$
+func _try_adopt_later() -> void:$
+[2026-07-19T22:41:55Z] [SUCCESS] check_verbatim_lines: cat -A output shown above

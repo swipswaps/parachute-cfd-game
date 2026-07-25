@@ -1,0 +1,86 @@
+=== BEFORE STATE ===
+--- forensic_hud.gd _input (mouse handling) ---
+92-	return Rect2(_panel.position, sz)
+93-
+94:func _input(event: InputEvent) -> void:
+95-	# F3 toggle – safe with null check
+96-	if event is InputEventKey and event.pressed and not event.echo:
+97-		if event.keycode == KEY_F3:
+98-			if _layer != null:
+99-				_layer.visible = not _layer.visible
+100-			get_viewport().set_input_as_handled()
+101-		return
+102-	# Do not process mouse events if panel is hidden
+103-	if _layer == null or not _layer.visible or _panel == null:
+104-		return
+105-	if event is InputEventMouseButton:
+106-		var mb := event as InputEventMouseButton
+107-		if mb.button_index != MOUSE_BUTTON_LEFT:
+108-			return
+109-		if mb.pressed and _panel_rect().has_point(mb.position):
+
+--- SHA256 before ---
+0d4ea27035c740e538fe333a0429fceb06be9b6ca77abd9a85004ade20225e3d  godot_project/scripts/forensic_hud.gd
+
+=== COMPUTING PATCH ===
+Baseline SHA: 0d4ea27035c740e538fe333a0429fceb06be9b6ca77abd9a85004ade20225e3d
+
+--- DIFF ---
+--- godot_project/scripts/forensic_hud.gd
++++ godot_project/scripts/forensic_hud.gd.new
+@@ -102,23 +102,9 @@
+ 	# Do not process mouse events if panel is hidden
+ 	if _layer == null or not _layer.visible or _panel == null:
+ 		return
+-	if event is InputEventMouseButton:
+-		var mb := event as InputEventMouseButton
+-		if mb.button_index != MOUSE_BUTTON_LEFT:
+-			return
+-		if mb.pressed and _panel_rect().has_point(mb.position):
+-			_dragging = true
+-			_drag_offset = mb.position - _panel.position
+-			get_viewport().set_input_as_handled()
+-		elif not mb.pressed and _dragging:
+-			_dragging = false
+-			get_viewport().set_input_as_handled()
+-		return
+-	if event is InputEventMouseMotion and _dragging:
+-		var mm := event as InputEventMouseMotion
+-		_panel.position = mm.position - _drag_offset
+-		get_viewport().set_input_as_handled()
+-
++	# Delegate mouse events to _gui_input (which handles dragging)
++	if event is InputEventMouseButton or event is InputEventMouseMotion:
++		_gui_input(event)
+ func _build_ui() -> void:
+ 	_layer = CanvasLayer.new()
+ 	_layer.layer = 100
+@@ -381,3 +367,23 @@
+ 		body_box.visible = not cur
+ 		toggle.text = "-" if not cur else "+"
+ 	)
++
++
++func _gui_input(event: InputEvent) -> void:
++	# Only process if panel is visible
++	if _layer == null or not _layer.visible or _panel == null:
++		return
++	if event is InputEventMouseButton:
++		var mb := event as InputEventMouseButton
++		if mb.button_index != MOUSE_BUTTON_LEFT:
++			return
++		if mb.pressed and _panel_rect().has_point(mb.position):
++			_dragging = true
++			_drag_offset = mb.position - _panel.position
++			get_viewport().set_input_as_handled()
++		elif not mb.pressed and _dragging:
++			_dragging = false
++			get_viewport().set_input_as_handled()
++	if event is InputEventMouseMotion and _dragging:
++		_panel.position = event.position - _drag_offset
++		get_viewport().set_input_as_handled()
+--- END DIFF ---
+
+DRY-RUN: no files changed. Re-run with --apply to write.
+patch exit: 0
+=== SCRIPT FINISHED ===

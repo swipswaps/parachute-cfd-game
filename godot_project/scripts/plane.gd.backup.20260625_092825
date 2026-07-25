@@ -1,0 +1,66 @@
+extends Node3D
+
+signal jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)
+
+const PATTERN_RADIUS_M: float = 1200.0
+const PATTERN_ALT_M: float = 3048.0
+const AIRSPEED_MPS: float = 45.0
+const KDED_CENTER: Vector3 = Vector3(0.0, 3048.0, 0.0)
+
+var _angle_rad: float = 0.0
+var _has_jumped: bool = false
+var _model_instance: Node3D = null
+
+
+func _ready():
+	print("[VERBATIM] plane.gd _ready() called")
+	add_to_group("airplane")
+	global_position = _pattern_pos(0.0)
+
+	# Load and attach the Cessna 3D model
+	var model_path = "res://assets/aircraft/cesna_airplane.glb"
+	if FileAccess.file_exists(model_path):
+		var model_scene = load(model_path)
+		if model_scene and model_scene is PackedScene:
+			_model_instance = model_scene.instantiate()
+			add_child(_model_instance)
+			print("[VERBATIM] Cessna model loaded and attached.")
+		else:
+			print("[VERBATIM] ERROR: Failed to instantiate Cessna model.")
+	else:
+		print("[VERBATIM] ERROR: Cessna model file not found at: ", model_path)
+
+	print("[VERBATIM] plane: _ready ok=true pos=", global_position)
+
+
+func _physics_process(delta: float):
+	if _has_jumped:
+		return
+	var angular_vel: float = AIRSPEED_MPS / PATTERN_RADIUS_M
+	_angle_rad += angular_vel * delta
+	global_position = _pattern_pos(_angle_rad)
+	var next_pos: Vector3 = _pattern_pos(_angle_rad + 0.01)
+	look_at(next_pos, Vector3.UP)
+
+
+func _input(event: InputEvent):
+	if event.is_action_pressed("deploy_canopy") and not _has_jumped:
+		_has_jumped = true
+		var exit_vel: Vector3 = (
+			(_pattern_pos(_angle_rad + 0.01) - _pattern_pos(_angle_rad)).normalized() * AIRSPEED_MPS
+		)
+		emit_signal("jumped_from_plane", global_position, exit_vel)
+		print("[VERBATIM] plane: jumped_from_plane emitted pos=", global_position)
+
+
+func _pattern_pos(angle: float) -> Vector3:
+	return Vector3(
+		KDED_CENTER.x + PATTERN_RADIUS_M * cos(angle),
+		KDED_CENTER.y,
+		KDED_CENTER.z + PATTERN_RADIUS_M * sin(angle)
+	)
+
+
+class ScreenshotLibrary:
+	static func save_flight_screenshot():
+		pass

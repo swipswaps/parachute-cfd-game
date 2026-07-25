@@ -1,0 +1,1030 @@
+     1	#!/usr/bin/env python3
+     2	"""
+     3	autostall.py – Adaptive self‑healing for Godot simulations with automatic display provisioning.
+     4	- Ensures a valid X11 display (starts Xvfb if needed) so that the game renders correctly.
+     5	- No screenshot capture – the dummy renderer is bypassed, eliminating grey screen.
+     6	- Full diagnostics (gdb, strace, perf, etc.) run once per session.
+     7	- Auto‑starts headless‑like simulation (simulates SPACE press).
+     8	- Detects game completion and terminates cleanly.
+     9	"""
+    10	
+    11	import subprocess
+    12	from gamification.logbook import init_db, start_flight, end_flight, record_fix_category
+    13	from modules.pattern_learner import learn_indentation, get_indentation_style
+    14	import sys
+    15	import time
+    16	import os
+    17	import select
+    18	import shutil
+    19	import sqlite3
+    20	import json
+    21	import fcntl
+    22	import re
+    23	from pathlib import Path
+    24	from datetime import datetime
+    25	from typing import List, Dict, Any, Optional, Tuple
+    26	
+    27	# ------------------------------------------------------------------
+    28	# Configuration
+    29	# ------------------------------------------------------------------
+    30	GODOT_BIN = "/usr/bin/godot"
+    31	PROJECT_DIR = "godot_project"
+    32	TIMEOUT = 120
+    33	STALL_THRESHOLD = 30.0
+    34	HEARTBEAT_INTERVAL = 30.0
+    35	DB_PATH = "parachute_mutations.db"
+    36	CONTEXT_LINES = 3
+    37	GODOT_SOURCE_DIR = "godot_source"  # local clone of Godot engine source
+    38	TOOL_TIMEOUT = 2.0
+    39	FIX_LIST_PATH = "fix_list.json"
+    40	GRACE_PERIOD = 3.0
+    41	
+    42	# Display provisioning
+    43	XVFB_DISPLAY = ":99"
+    44	XVFB_SCREEN = "1024x768x24"
+    45	
+    46	# ------------------------------------------------------------------
+    47	# Helper: run a command with timeout
+    48	# ------------------------------------------------------------------
+    49	def run_cmd(cmd: List[str], timeout: float = TOOL_TIMEOUT) -> str:
+    50	    try:
+    51	        res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    52	        return res.stdout + res.stderr
+    53	    except subprocess.TimeoutExpired:
+    54	        return f"TIMEOUT after {timeout}s"
+    55	    except Exception as e:
+    56	        return f"ERROR: {e}"
+    57	
+    58	def tool_available(name: str) -> bool:
+    59	    return shutil.which(name) is not None
+    60	
+    61	# ------------------------------------------------------------------
+    62	# Display provisioning: ensure a valid X11 display
+    63	# ------------------------------------------------------------------
+    64	def ensure_display() -> Tuple[bool, Optional[subprocess.Popen], str]:
+    65	    """
+    66	    Checks if DISPLAY is set and points to a valid X server.
+    67	    If not, attempts to start Xvfb on a free display.
+    68	    Returns (success, Xvfb_process, display_string).
+    69	    """
+    70	    display = os.environ.get("DISPLAY")
+    71	    if display:
+    72	        # Quick check: try to open a connection
+    73	        try:
+    74	            subprocess.check_call(["xdpyinfo", "-display", display], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    75	            print(f"[DISPLAY] Using existing display: {display}")
+    76	            return True, None, display
+    77	        except (subprocess.CalledProcessError, FileNotFoundError):
+    78	            print(f"[DISPLAY] DISPLAY={display} is set but not usable. Will try to start Xvfb.")
+    79	    else:
+    80	        print("[DISPLAY] DISPLAY not set. Will try to start Xvfb.")
+    81	
+    82	    if not tool_available("Xvfb"):
+    83	        print("[DISPLAY] Xvfb not installed. Falling back to headless (dummy renderer).")
+    84	        print("[DISPLAY] To avoid grey screen, install Xvfb (e.g., 'sudo dnf install xorg-x11-server-Xvfb').")
+    85	        return False, None, ""
+    86	
+    87	    # Try to find a free display number (we'll use :99 as default, but may try others)
+    88	    for disp in [":99", ":100", ":101"]:
+    89	        # Check if the display is already in use
+    90	        lock_file = f"/tmp/.X{disp[1:]}-lock"
+    91	        if os.path.exists(lock_file):
+    92	            print(f"[DISPLAY] Display {disp} appears to be in use. Trying next.")
+    93	            continue
+    94	        try:
+    95	            # Start Xvfb
+    96	            proc = subprocess.Popen(
+    97	                ["Xvfb", disp, "-screen", "0", XVFB_SCREEN, "-ac", "-nolisten", "tcp"],
+    98	                stdout=subprocess.DEVNULL,
+    99	                stderr=subprocess.DEVNULL
+   100	            )
+   101	            # Wait a moment for it to start
+   102	            time.sleep(1)
+   103	            # Verify it's running
+   104	            if proc.poll() is None:
+   105	                print(f"[DISPLAY] Started Xvfb on {disp}")
+   106	                return True, proc, disp
+   107	            else:
+   108	                print(f"[DISPLAY] Xvfb on {disp} exited unexpectedly.")
+   109	        except Exception as e:
+   110	            print(f"[DISPLAY] Failed to start Xvfb on {disp}: {e}")
+   111	            continue
+   112	
+   113	    print("[DISPLAY] Could not start Xvfb. Falling back to headless.")
+   114	    return False, None, ""
+   115	
+   116	# ------------------------------------------------------------------
+   117	# Database schema helper: returns the table name to use
+   118	# ------------------------------------------------------------------
+   119	def get_error_table() -> str:
+   120	    conn = sqlite3.connect(DB_PATH)
+   121	    cursor = conn.cursor()
+   122	    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+   123	    if cursor.fetchone():
+   124	        return "files_to_fix"
+   125	    else:
+   126	        return "error_blocks"
+   127	
+   128	# ------------------------------------------------------------------
+   129	# Auto‑extract file/line from output buffer (handles both at: and backtraces)
+   130	# ------------------------------------------------------------------
+   131	
+   132	def extract_last_gd_error(output_buffer: List[str]) -> Tuple[Optional[str], Optional[int]]:
+   133	    for line in reversed(output_buffer):
+   134	        if "at:" in line and ".gd" in line:
+   135	            gd_pos = line.find(".gd")
+   136	            if gd_pos == -1:
+   137	                continue
+   138	            start = line.rfind(" ", 0, gd_pos) + 1
+   139	            if start == 0:
+   140	                start = line.rfind("(", 0, gd_pos) + 1
+   141	            if start == 0:
+   142	                start = 0
+   143	            end = line.find(")", gd_pos)
+   144	            if end == -1:
+   145	                end = len(line)
+   146	            candidate = line[start:end].strip()
+   147	            if ":" in candidate:
+   148	                file_part, num_part = candidate.rsplit(":", 1)
+   149	                if num_part.isdigit():
+   150	                    base = Path(PROJECT_DIR) / "scripts"
+   151	                    file_name = file_part.split("/")[-1]
+   152	                    full_path = base / file_name
+   153	                    if not full_path.exists():
+   154	                        full_path = file_part
+   155	                    return str(full_path), int(num_part)
+   156	        elif ".gd" in line and ":" in line:
+   157	            match = re.search(r'\(([^)]+\.gd):(\d+)\)', line)
+   158	            if match:
+   159	                file_part = match.group(1)
+   160	                line_num = int(match.group(2))
+   161	                base = Path(PROJECT_DIR) / "scripts"
+   162	                file_name = file_part.split("/")[-1]
+   163	                full_path = base / file_name
+   164	                if not full_path.exists():
+   165	                    full_path = file_part
+   166	                return str(full_path), line_num
+   167	            match = re.search(r'([^\s(]+\.gd):(\d+)', line)
+   168	            if match:
+   169	                file_part = match.group(1)
+   170	                line_num = int(match.group(2))
+   171	                base = Path(PROJECT_DIR) / "scripts"
+   172	                file_name = file_part.split("/")[-1]
+   173	                full_path = base / file_name
+   174	                if not full_path.exists():
+   175	                    full_path = file_part
+   176	                return str(full_path), line_num
+   177	    return None, None
+   178	
+   179	# ------------------------------------------------------------------
+   180	# Proactive patch: add headless auto-start to build_terrain.gd (idempotent)
+   181	# ------------------------------------------------------------------
+   182	def apply_auto_start_patch() -> Tuple[bool, str]:
+   183	    file_path = os.path.join(PROJECT_DIR, "scripts", "build_terrain.gd")
+   184	    p = Path(file_path)
+   185	    if not p.exists():
+   186	        return False, f"File not found: {file_path}"
+   187	    with open(p, 'r') as f:
+   188	        lines = f.readlines()
+   189	
+   190	    # Check if the patch is already applied (look for the exact comment line)
+   191	    for line in lines:
+   192	        if "# Headless auto‑start: simulate SPACE press" in line:
+   193	            return True, "Auto‑start patch already applied."
+   194	
+   195	    # Find the line with "Game ready – press SPACE at ~4000 ft to deploy"
+   196	    ready_line_idx = None
+   197	    for i, line in enumerate(lines):
+   198	        if "Game ready – press SPACE at ~4000 ft to deploy" in line:
+   199	            ready_line_idx = i
+   200	            break
+   201	    if ready_line_idx is None:
+   202	        return False, "Could not locate 'Game ready' message line."
+   203	
+   204	    # Determine indentation of that line
+   205	    indent = re.match(r'^[ \t]*', lines[ready_line_idx]).group(0)
+   206	
+   207	    # Create backup
+   208	    backup_path = make_timestamped_backup(p)
+   209	
+   210	    # Insert auto-start block right after the message
+   211	    auto_start_block = [
+   212	        f"{indent}# Headless auto‑start: simulate SPACE press\n",
+   213	        f"{indent}if OS.get_environment(\"GODOT_HEADLESS\") == \"1\":\n",
+   214	        f"{indent}\tInput.action_press(\"ui_accept\")\n",
+   215	        f"{indent}\tInput.action_release(\"ui_accept\")\n",
+   216	        f"{indent}\tprint(\"[VERBATIM] Headless auto‑start triggered.\")\n",
+   217	    ]
+   218	    # Insert after the message line
+   219	    lines[ready_line_idx+1:ready_line_idx+1] = auto_start_block
+   220	
+   221	    with open(p, 'w') as f:
+   222	        f.writelines(lines)
+   223	
+   224	    return True, f"Auto‑start patch applied. Backup at {backup_path}"
+   225	
+   226	def make_timestamped_backup(p) -> object:
+   227	    """Rule #21: creates a NEW backup file every call — never
+   228	    overwrites a prior one. Microsecond precision so multiple
+   229	    auto-fixes on the same file within the same run still each
+   230	    get their own distinct backup."""
+   231	    ts = datetime.now().strftime("%Y%m%d%H%M%S%f")
+   232	    backup_path = p.with_suffix(p.suffix + f".bak.{ts}")
+   233	    shutil.copy2(p, backup_path)
+   234	    return backup_path
+   235	
+   236	# ------------------------------------------------------------------
+   237	# Auto‑fix: indentation error
+   238	# ------------------------------------------------------------------
+   239	def auto_fix_indent_error(file_path: str, line_num: int) -> Tuple[bool, str]:
+   240	    """
+   241	    Fix an indentation error by checking the prevailing style in the
+   242	    script's directory (learned from the codebase). Replaces the entire
+   243	    line's leading whitespace with the correct number of tabs or spaces.
+   244	    """
+   245	    try:
+   246	        p = Path(file_path)
+   247	        if not p.exists():
+   248	            return False, f"File not found: {file_path}"
+   249	        with open(p, 'r') as f:
+   250	            lines = f.readlines()
+   251	        if line_num < 1 or line_num > len(lines):
+   252	            return False, "Line number out of range"
+   253	        offending = lines[line_num - 1]
+   254	        stripped = offending.lstrip()
+   255	        if not stripped:
+   256	            return False, "Empty line - cannot fix"
+   257	
+   258	        # Determine the relative directory of this script
+   259	        rel_dir = os.path.relpath(os.path.dirname(file_path), os.path.join(PROJECT_DIR, "scripts"))
+   260	        if rel_dir == ".":
+   261	            rel_dir = ""
+   262	
+   263	        style = get_indentation_style(rel_dir)
+   264	        # Count current leading whitespace characters
+   265	        leading = len(offending) - len(stripped)
+   266	        if style == "tab":
+   267	            # Assume 4 spaces = 1 tab for conversion
+   268	            new_leading = "\t" * (leading // 4)
+   269	        else:
+   270	            new_leading = "    " * (leading // 4)   # space style
+   271	        new_line = new_leading + stripped
+   272	        # Ensure trailing newline
+   273	        if not new_line.endswith("\n"):
+   274	            new_line += "\n"
+   275	
+   276	        if new_line == offending:
+   277	            return False, "No change needed (indentation already matches dominant style)"
+   278	
+   279	        backup_path = make_timestamped_backup(p)
+   280	        lines[line_num - 1] = new_line
+   281	        with open(p, 'w') as f:
+   282	            f.writelines(lines)
+   283	        return True, f"Indentation corrected to {style} style. Backup at {backup_path}"
+   284	    except Exception as e:
+   285	        return False, f"Error: {e}"
+   286	
+   287	def auto_fix_null_texture(file_path: str, line_num: int) -> Tuple[bool, str]:
+   288	    try:
+   289	        p = Path(file_path)
+   290	        if not p.exists():
+   291	            return False, "File not found"
+   292	        with open(p, 'r') as f:
+   293	            lines = f.readlines()
+   294	
+   295	        start_idx = None
+   296	        for i in range(line_num - 1, -1, -1):
+   297	            if "var tex" in lines[i] and "get_viewport" in lines[i]:
+   298	                start_idx = i
+   299	                break
+   300	
+   301	        if start_idx is None:
+   302	            for i in range(line_num - 1, -1, -1):
+   303	                if "get_viewport" in lines[i] and "get_texture" in lines[i]:
+   304	                    start_idx = i
+   305	                    break
+   306	        if start_idx is None:
+   307	            return False, "Could not locate the screenshot block (no var tex line)"
+   308	
+   309	        indent = re.match(r'^[ \t]*', lines[start_idx]).group(0)
+   310	        end_idx = None
+   311	        for i in range(start_idx + 1, len(lines)):
+   312	            if lines[i].startswith(indent) and not lines[i].strip().startswith("elif") and not lines[i].strip().startswith("else"):
+   313	                end_idx = i - 1
+   314	                break
+   315	        if end_idx is None:
+   316	            end_idx = len(lines) - 1
+   317	
+   318	        backup_path = make_timestamped_backup(p)
+   319	
+   320	        # Replace with a comment and a print (no screenshot capture)
+   321	        new_block = [
+   322	            f"{indent}# Screenshot capture removed – rendering is working; no need to capture.\n",
+   323	            f"{indent}print(\"[VERBATIM] Screenshot function removed (headless mode).\")\n"
+   324	        ]
+   325	        lines[start_idx:end_idx+1] = new_block
+   326	
+   327	        with open(p, 'w') as f:
+   328	            f.writelines(lines)
+   329	        return True, f"Screenshot block removed (no capture). Backup at {backup_path}"
+   330	    except Exception as e:
+   331	        return False, f"Error: {e}"
+   332	
+   333	# ------------------------------------------------------------------
+   334	# Rollback function
+   335	# ------------------------------------------------------------------
+   336	
+   337	def auto_fix_trailing_dot(file_path: str, line_num: int) -> Tuple[bool, str]:
+   338	    """
+   339	    If line `line_num` of `file_path` is a short line ending with a dot (like "dir."),
+   340	    remove it completely. Returns (success, message).
+   341	    """
+   342	    try:
+   343	        p = Path(file_path)
+   344	        if not p.exists():
+   345	            return False, f"File not found: {file_path}"
+   346	        with open(p, 'r') as f:
+   347	            original_lines = f.readlines()
+   348	        if line_num < 1 or line_num > len(original_lines):
+   349	            return False, "Line number out of range"
+   350	        target = original_lines[line_num - 1].strip()
+   351	        if target.endswith('.') and len(target) < 10:
+   352	            # Create backup
+   353	            backup_path = make_timestamped_backup(p)
+   354	            # Remove the line
+   355	            new_lines = original_lines[:line_num - 1] + original_lines[line_num:]
+   356	            with open(p, 'w') as f:
+   357	                f.writelines(new_lines)
+   358	            return True, f"Removed stray dot line {line_num}: {target}"
+   359	        else:
+   360	            return False, "Line does not match stray‑dot pattern"
+   361	    except Exception as e:
+   362	        return False, f"Error: {e}"
+   363	
+   364	
+   365	def rollback_file(file_path: str) -> bool:
+   366	    """Restores from the MOST RECENT timestamped backup (Rule #21).
+   367	    Filename format sorts lexicographically == chronologically, so
+   368	    max() over the glob finds the latest one without parsing it."""
+   369	    p = Path(file_path)
+   370	    candidates = sorted(p.parent.glob(f"{p.name}.bak.*"))
+   371	    if not candidates:
+   372	        return False
+   373	    latest_backup = candidates[-1]
+   374	    shutil.copy2(latest_backup, p)
+   375	    return True
+   376	
+   377	# ------------------------------------------------------------------
+   378	# Source block printer (dynamic)
+   379	# ------------------------------------------------------------------
+   380	def print_source_block(filepath: str, lnum: int, context: int = CONTEXT_LINES):
+   381	    p = Path(filepath)
+   382	    if not p.exists():
+   383	        print(f"      [WARNING] File not found: {filepath}")
+   384	        return
+   385	    lines = p.read_text().splitlines()
+   386	    total = len(lines)
+   387	    if lnum < 1 or lnum > total:
+   388	        print(f"      [WARNING] line {lnum} out of range (file has {total} lines)")
+   389	        return
+   390	    start = max(0, lnum - context - 1)
+   391	    end = min(total, lnum + context)
+   392	    print(f"      [STALL SOURCE] {p} lines {start+1}-{end} (offending line {lnum}):")
+   393	    for i in range(start, end):
+   394	        prefix = ">> " if i == lnum - 1 else "   "
+   395	        print(f"      {prefix}{i+1:4d}: {lines[i]}")
+   396	
+   397	# ------------------------------------------------------------------
+   398	# Store error in database (auto‑schema detection)
+   399	# ------------------------------------------------------------------
+   400	def store_error(file_path: str, line_num: int, message: str, status: str = "new"):
+   401	    try:
+   402	        conn = sqlite3.connect(DB_PATH)
+   403	        cursor = conn.cursor()
+   404	        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+   405	        if cursor.fetchone():
+   406	            sql = """
+   407	                INSERT OR REPLACE INTO files_to_fix (file_path, line_number, error_text, status)
+   408	                VALUES (?, ?, ?, ?)
+   409	            """
+   410	            cursor.execute(sql, (file_path, line_num, message, status))
+   411	            conn.commit()
+   412	            print(f"[DB] Stored/replaced error in files_to_fix with status {status}")
+   413	        else:
+   414	            cursor.execute('''
+   415	                CREATE TABLE IF NOT EXISTS error_blocks (
+   416	                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+   417	                    file_path TEXT NOT NULL,
+   418	                    line_number INTEGER NOT NULL,
+   419	                    error_text TEXT,
+   420	                    context TEXT,
+   421	                    status TEXT DEFAULT 'new',
+   422	                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   423	                    UNIQUE(file_path, line_number)
+   424	                )
+   425	            ''')
+   426	            p = Path(file_path)
+   427	            lines = p.read_text().splitlines() if p.exists() else []
+   428	            start = max(0, line_num - CONTEXT_LINES - 1)
+   429	            end = min(len(lines), line_num + CONTEXT_LINES)
+   430	            context_lines = [f"{i+1:4d}: {lines[i]}" for i in range(start, end)] if lines else []
+   431	            context_str = "\n".join(context_lines)
+   432	            sql = """
+   433	                INSERT OR REPLACE INTO error_blocks (file_path, line_number, error_text, context, status)
+   434	                VALUES (?, ?, ?, ?, ?)
+   435	            """
+   436	            cursor.execute(sql, (file_path, line_num, lines[line_num-1].strip() if lines else message, context_str, status))
+   437	            conn.commit()
+   438	            print("[DB] Stored error in 'error_blocks'")
+   439	        conn.close()
+   440	    except Exception as e:
+   441	        print(f"[DB] Error: {e}")
+   442	
+   443	# ------------------------------------------------------------------
+   444	# Diagnostic tools (prioritized) – run only once
+   445	# ------------------------------------------------------------------
+   446	_diagnostics_run = False
+   447	
+   448	def run_diagnostics(pid: int) -> Dict[str, Any]:
+   449	    global _diagnostics_run
+   450	    if _diagnostics_run:
+   451	        return {"skipped": "Diagnostics already run this session"}
+   452	    _diagnostics_run = True
+   453	
+   454	    results = {}
+   455	    proc_info = {}
+   456	    try:
+   457	        with open(f"/proc/{pid}/status", "r") as f:
+   458	            proc_info["status"] = f.read()
+   459	    except:
+   460	        proc_info["status"] = "unavailable"
+   461	    try:
+   462	        with open(f"/proc/{pid}/wchan", "r") as f:
+   463	            proc_info["wchan"] = f.read().strip()
+   464	    except:
+   465	        proc_info["wchan"] = "unavailable"
+   466	    try:
+   467	        with open(f"/proc/{pid}/cmdline", "rb") as f:
+   468	            proc_info["cmdline"] = f.read().replace(b'\0', b' ').decode('utf-8')
+   469	    except:
+   470	        proc_info["cmdline"] = "unavailable"
+   471	    results["proc_info"] = proc_info
+   472	
+   473	    if tool_available("gdb"):
+   474	        results["gdb"] = run_cmd(["gdb", "-batch", "-p", str(pid), "-ex", "thread apply all bt"])
+   475	    else:
+   476	        results["gdb"] = "gdb not installed"
+   477	
+   478	    if tool_available("strace"):
+   479	        results["strace"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "strace", "-p", str(pid), "-s", "256"])
+   480	    else:
+   481	        results["strace"] = "strace not installed"
+   482	
+   483	    if tool_available("lsof"):
+   484	        results["lsof"] = run_cmd(["lsof", "-p", str(pid)])
+   485	    else:
+   486	        results["lsof"] = "lsof not installed"
+   487	
+   488	    if tool_available("perf"):
+   489	        record_cmd = ["perf", "record", "-g", "-p", str(pid), "-o", "/tmp/perf.data", "--", "sleep", str(TOOL_TIMEOUT)]
+   490	        run_cmd(record_cmd, timeout=TOOL_TIMEOUT+1)
+   491	        report_cmd = ["perf", "report", "-i", "/tmp/perf.data", "--stdio", "--max-stack", "10", "-n"]
+   492	        results["perf"] = run_cmd(report_cmd, timeout=3)
+   493	    else:
+   494	        results["perf"] = "perf not installed"
+   495	
+   496	    if tool_available("ltrace"):
+   497	        results["ltrace"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "ltrace", "-p", str(pid), "-s", "256"])
+   498	    else:
+   499	        results["ltrace"] = "ltrace not installed"
+   500	
+   501	    if tool_available("iotop"):
+   502	        results["iotop"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "iotop", "-p", str(pid), "-b", "-n", "1"])
+   503	    else:
+   504	        results["iotop"] = "iotop not installed"
+   505	
+   506	    if tool_available("top"):
+   507	        results["top"] = run_cmd(["top", "-b", "-n", "1", "-p", str(pid)])
+   508	    else:
+   509	        results["top"] = "top not installed"
+   510	
+   511	    if tool_available("sysdig"):
+   512	        results["sysdig"] = run_cmd(["timeout", str(TOOL_TIMEOUT), "sysdig", "-p", "%proc.name %proc.pid %evt.type", "proc.pid=" + str(pid)])
+   513	    else:
+   514	        results["sysdig"] = "sysdig not installed"
+   515	    if tool_available("vmstat"):
+   516	        results["vmstat"] = run_cmd(["vmstat", "1", "2"])
+   517	    else:
+   518	        results["vmstat"] = "vmstat not installed"
+   519	    if tool_available("iostat"):
+   520	        results["iostat"] = run_cmd(["iostat", "-x", "1", "2"])
+   521	    else:
+   522	        results["iostat"] = "iostat not installed"
+   523	    if tool_available("netstat"):
+   524	        results["netstat"] = run_cmd(["netstat", "-tunap"])
+   525	    else:
+   526	        results["netstat"] = "netstat not installed"
+   527	    if tool_available("ss"):
+   528	        results["ss"] = run_cmd(["ss", "-tunap"])
+   529	    else:
+   530	        results["ss"] = "ss not installed"
+   531	
+   532	    if tool_available("tree"):
+   533	        results["tree"] = run_cmd(["tree", "-L", "2", PROJECT_DIR])
+   534	    else:
+   535	        results["tree"] = "tree not installed"
+   536	
+   537	    return results
+   538	
+   539	def print_diagnostic_summary(results: Dict[str, Any]):
+   540	    if "skipped" in results:
+   541	        print("[DIAG] Skipped (already run this session).")
+   542	        return
+   543	    print("\n=== DIAGNOSTIC SUMMARY ===")
+   544	    print(f"PID: {results.get('pid', 'N/A')}")
+   545	    wchan = results.get('proc_info', {}).get('wchan', 'N/A')
+   546	    print(f"wchan: {wchan}")
+   547	
+   548	    strace_out = results.get('strace', '')
+   549	    if strace_out and "TIMEOUT" not in strace_out:
+   550	        lines = strace_out.splitlines()
+   551	        print("Strace (last 3 lines):")
+   552	        for line in lines[-3:]:
+   553	            print(f"  {line[:120]}")
+   554	    else:
+   555	        print("Strace: unavailable")
+   556	
+   557	    lsof_out = results.get('lsof', '')
+   558	    if lsof_out and "TIMEOUT" not in lsof_out:
+   559	        print("Lsof: open files (non‑memory, non‑pipe):")
+   560	        for line in lsof_out.splitlines():
+   561	            if "REG" in line or "DIR" in line:
+   562	                print(f"  {line[:120]}")
+   563	    else:
+   564	        print("Lsof: unavailable")
+   565	
+   566	    perf_out = results.get('perf', '')
+   567	    if perf_out and "TIMEOUT" not in perf_out:
+   568	        print("Perf top functions:")
+   569	        count = 0
+   570	        for line in perf_out.splitlines():
+   571	            if "." in line and "[" in line and "]" in line:
+   572	                print(f"  {line[:100]}")
+   573	                count += 1
+   574	                if count >= 3:
+   575	                    break
+   576	    else:
+   577	        print("Perf: unavailable")
+   578	
+   579	    gdb_out = results.get('gdb', '')
+   580	    if gdb_out and "TIMEOUT" not in gdb_out:
+   581	        print("GDB (first 5 lines of backtrace):")
+   582	        count = 0
+   583	        for line in gdb_out.splitlines():
+   584	            if "#" in line:
+   585	                print(f"  {line[:120]}")
+   586	                count += 1
+   587	                if count >= 5:
+   588	                    break
+   589	    else:
+   590	        print("GDB: unavailable")
+   591	
+   592	    for tool in ["ltrace", "iotop", "top", "sysdig", "vmstat", "iostat", "netstat", "ss", "tree"]:
+   593	        if tool in results and "TIMEOUT" not in results[tool] and "not installed" not in results[tool]:
+   594	            print(f"{tool.capitalize()}: ran successfully (output in JSON report)")
+   595	
+   596	    print(f"Full report saved to stall_report.json")
+   597	
+   598	# ------------------------------------------------------------------
+   599	# Main: launch Godot with proper display, monitor, heal, and report
+   600	# ------------------------------------------------------------------
+   601	def main():
+   602	    # Ensure a valid display (starts Xvfb if needed)
+   603	    display_ok, xvfb_proc, display = ensure_display()
+   604	    if display_ok:
+   605	        os.environ["DISPLAY"] = display
+   606	        print(f"[ENV] Using DISPLAY={display}")
+   607	    else:
+   608	        print("[ENV] No valid display – Godot will likely use dummy renderer.")
+   609	        print("[ENV] Diagnostics may be limited, but the script will continue.")
+   610	        # Keep existing DISPLAY or unset it
+   611	
+   612	    # Apply auto-start patch before launching Godot
+   613	    success, msg = apply_auto_start_patch()
+   614	    if success:
+   615	        print(f"[PATCH] {msg}")
+   616	    else:
+   617	        print(f"[PATCH] Failed: {msg} (continuing anyway)")
+   618	
+   619	    os.environ["GODOT_HEADLESS"] = "1"   # Still used for auto‑start trigger
+   620	
+   621	    print("[SETUP] godot binary:", GODOT_BIN)
+   622	    print("[SETUP] project dir: ", os.path.abspath(PROJECT_DIR))
+   623	    print("[RUN] /usr/bin/godot --path godot_project --verbose")
+   624	    print("[RUN] stall threshold: {}s   timeout: {}s".format(STALL_THRESHOLD, TIMEOUT))
+   625	    print("[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)")
+   626	    print("="*72)
+   627	
+   628	    # Do NOT use  – we want rendering to work with the display
+   629	    cmd = [GODOT_BIN, "--path", PROJECT_DIR, "--verbose"]
+   630	    # If we have a display, we can also add --display-driver x11 (optional)
+   631	    # but Godot will auto-detect.
+   632	
+   633	    proc = subprocess.Popen(
+   634	        cmd,
+   635	        stdout=subprocess.PIPE,
+   636	        stderr=subprocess.STDOUT,
+   637	        text=True,
+   638	        bufsize=1,
+   639	        universal_newlines=True,
+   640	        env=os.environ
+   641	    )
+   642	
+   643	    fd = proc.stdout.fileno()
+   644	    flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+   645	    fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+   646	
+   647	    start_time = time.time()
+   648	    last_output_time = time.time()
+   649	    stall_reported = False
+   650	    output_buffer = []
+   651	    partial_line = b''
+   652	    godot_pid = None
+   653	
+   654	    last_heartbeat = time.time()
+   655	    stall_handled = False
+   656	    fix_attempted_this_run = False
+   657	    game_completed = False
+   658	    grace_until = 0.0
+   659	
+   660	    error_table = get_error_table()
+   661	    print(f"[DB] Using table: {error_table}")
+   662	
+   663	    while True:
+   664	        elapsed = time.time() - start_time
+   665	        if elapsed > TIMEOUT:
+   666	            print(f"\n[TIMEOUT] reached {TIMEOUT}s. Terminating.")
+   667	            proc.terminate()
+   668	            break
+   669	
+   670	        if proc.poll() is not None:
+   671	            print("[INFO] Godot process exited on its own.")
+   672	            break
+   673	
+   674	        rlist, _, _ = select.select([fd], [], [], STALL_THRESHOLD)
+   675	        if rlist:
+   676	            try:
+   677	                data = os.read(fd, 4096)
+   678	            except BlockingIOError:
+   679	                continue
+   680	            if not data:
+   681	                print("[INFO] EOF from Godot; process likely finished.")
+   682	                break
+   683	            partial_line += data
+   684	            lines = partial_line.split(b'\n')
+   685	            partial_line = lines.pop()
+   686	            for line_bytes in lines:
+   687	                line = line_bytes.decode('utf-8', errors='replace')
+   688	                sys.stdout.write(line + '\n')
+   689	                sys.stdout.flush()
+   690	                last_output_time = time.time()
+   691	                stall_reported = False
+   692	                stall_handled = False
+   693	                output_buffer.append(line)
+   694	                # Immediate diagnostic: print file/line/source if SCRIPT ERROR detected
+   695	                _diag_if_error(line)
+   696	                if len(output_buffer) > 1000:
+   697	                    output_buffer.pop(0)
+   698	
+   699	                if "Ground impact – fatal" in line:
+   700	                    game_completed = True
+   701	                    print("[INFO] Game completed (ground impact). Terminating Godot...")
+   702	                    proc.terminate()
+   703	                    time.sleep(1)
+   704	                    if proc.poll() is None:
+   705	                        proc.kill()
+   706	                    break
+   707	
+   708	                if not godot_pid and ("Godot Engine" in line or "WorkerThreadPool" in line):
+   709	                    try:
+   710	                        out = subprocess.check_output(["pgrep", "-f", "godot"], text=True).strip()
+   711	                        godot_pid = int(out.split()[0])
+   712	                    except:
+   713	                        pass
+   714	            if game_completed:
+   715	                break
+   716	        else:
+   717	            now = time.time()
+   718	            elapsed_since_output = now - last_output_time
+   719	
+   720	            if now < grace_until:
+   721	                continue
+   722	
+   723	            if not stall_reported and elapsed_since_output > STALL_THRESHOLD:
+   724	                stall_reported = True
+   725	                if not godot_pid:
+   726	                    try:
+   727	                        out = subprocess.check_output(["pgrep", "-f", "godot"], text=True).strip()
+   728	                        godot_pid = int(out.split()[0])
+   729	                    except:
+   730	                        godot_pid = None
+   731	                if godot_pid:
+   732	                    gd_file, gd_line = extract_last_gd_error(output_buffer)
+   733	                    if gd_file and gd_line:
+   734	                        # show the broken code
+   735	                        print(f"\n[DIAG] Error in {gd_file} at line {gd_line}:")
+   736	                        print_source_block(gd_file, gd_line)
+   737	                        # end diagnostic
+   738	                        print(f"\n[STALL #1] quiet {elapsed_since_output:.1f}s — stepping through in-flight code:")
+   739	                        print_source_block(gd_file, gd_line)
+   740	                        store_error(gd_file, gd_line, f"Parse error at {gd_file}:{gd_line}")
+   741	
+   742	                        error_context = " ".join(output_buffer[-10:])
+   743	                        fix_applied = False
+   744	                        if "Indent" in error_context and not fix_attempted_this_run:
+   745	                            conn = sqlite3.connect(DB_PATH)
+   746	                            cursor = conn.cursor()
+   747	                            query = f"""
+   748	                                SELECT status FROM {error_table}
+   749	                                WHERE file_path=? AND line_number=? AND error_text LIKE ?
+   750	                                ORDER BY id DESC LIMIT 1
+   751	                            """
+   752	                            cursor.execute(query, (gd_file, gd_line, "%Indent%"))
+   753	                            row = cursor.fetchone()
+   754	                            if row and row[0] in ('fix_attempted', 'fix_failed'):
+   755	                                print("[FIX] Already attempted fix for this error; skipping to avoid loop.")
+   756	                            else:
+   757	                                print("[FIX] Attempting to correct indentation automatically...")
+   758	                                success, msg = auto_fix_indent_error(gd_file, gd_line)
+   759	                                if success:
+   760	                                    print(f"[FIX] {msg}")
+   761	                                    store_error(gd_file, gd_line, f"Fix attempted at {gd_file}:{gd_line}", status="fix_attempted")
+   762	                                    record_fix_category(_pilot_name, "Indent")
+   763	                                    fix_attempted_this_run = True
+   764	                                    fix_applied = True
+   765	                                else:
+   766	                                    print(f"[FIX] Auto‑fix failed: {msg}")
+   767	                                    store_error(gd_file, gd_line, f"Fix failed: {msg}", status="fix_failed")
+   768	                        elif "Parameter \"t\" is null" in error_context and not fix_attempted_this_run:
+   769	                            conn = sqlite3.connect(DB_PATH)
+   770	                            cursor = conn.cursor()
+   771	                            query = f"""
+   772	                                SELECT status FROM {error_table}
+   773	                                WHERE file_path=? AND line_number=? AND error_text LIKE ?
+   774	                                ORDER BY id DESC LIMIT 1
+   775	                            """
+   776	                            cursor.execute(query, (gd_file, gd_line, "%Parameter \"t\" is null%"))
+   777	                            row = cursor.fetchone()
+   778	                            if row and row[0] in ('fix_attempted', 'fix_failed'):
+   779	                                print("[FIX] Already attempted fix for this error; skipping to avoid loop.")
+   780	                            else:
+   781	                                print("[FIX] Attempting to remove screenshot block entirely (no capture)...")
+   782	                                success, msg = auto_fix_null_texture(gd_file, gd_line)
+   783	                                if success:
+   784	                                    print(f"[FIX] {msg}")
+   785	                                    store_error(gd_file, gd_line, f"Fix attempted at {gd_file}:{gd_line}", status="fix_attempted")
+   786	                                    record_fix_category(_pilot_name, "NullTexture")
+   787	                                    fix_attempted_this_run = True
+   788	                                    fix_applied = True
+   789	                                else:
+   790	                                    print(f"[FIX] Auto‑fix failed: {msg}")
+   791	                                    store_error(gd_file, gd_line, f"Fix failed: {msg}", status="fix_failed")
+   792	
+   793	                        elif "Expected identifier after" in error_context and not fix_attempted_this_run:
+   794	                            conn = sqlite3.connect(DB_PATH)
+   795	                            cursor = conn.cursor()
+   796	                            query = f"""
+   797	                                SELECT status FROM {error_table}
+   798	                                WHERE file_path=? AND line_number=? AND error_text LIKE ?
+   799	                                ORDER BY id DESC LIMIT 1
+   800	                            """
+   801	                            cursor.execute(query, (gd_file, gd_line, "%Expected identifier after%"))
+   802	                            row = cursor.fetchone()
+   803	                            if row and row[0] in ('fix_attempted', 'fix_failed'):
+   804	                                print("[FIX] Already attempted fix for this stray-dot error; skipping.")
+   805	                            else:
+   806	                                print("[FIX] Attempting to remove stray dot line...")
+   807	                                success, msg = auto_fix_trailing_dot(gd_file, gd_line)
+   808	                                if success:
+   809	                                    print(f"[FIX] {msg}")
+   810	                                    store_error(gd_file, gd_line, f"Fix attempted at {gd_file}:{gd_line}", status="fix_attempted")
+   811	                                    fix_attempted_this_run = True
+   812	                                    fix_applied = True
+   813	                                else:
+   814	                                    print(f"[FIX] Auto‑fix failed: {msg}")
+   815	                                    store_error(gd_file, gd_line, f"Fix failed: {msg}", status="fix_failed")
+   816	
+   817	                        if fix_applied:
+   818	                            print("[FIX] Testing the fix by restarting Godot...")
+   819	                            proc.terminate()
+   820	                            proc.wait()
+   821	                            proc = subprocess.Popen(
+   822	                                cmd,
+   823	                                stdout=subprocess.PIPE,
+   824	                                stderr=subprocess.STDOUT,
+   825	                                text=True,
+   826	                                bufsize=1,
+   827	                                universal_newlines=True,
+   828	                                env=os.environ
+   829	                            )
+   830	                            fd = proc.stdout.fileno()
+   831	                            flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+   832	                            fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+   833	                            output_buffer = []
+   834	                            last_output_time = time.time()
+   835	                            stall_reported = False
+   836	                            stall_handled = False
+   837	                            grace_until = time.time() + GRACE_PERIOD
+   838	                            continue
+   839	
+   840	                        if fix_attempted_this_run:
+   841	                            conn = sqlite3.connect(DB_PATH)
+   842	                            cursor = conn.cursor()
+   843	                            query = f"""
+   844	                                SELECT status FROM {error_table}
+   845	                                WHERE file_path=? AND line_number=?
+   846	                                ORDER BY id DESC LIMIT 1
+   847	                            """
+   848	                            cursor.execute(query, (gd_file, gd_line))
+   849	                            row = cursor.fetchone()
+   850	                            if row and row[0] == 'fix_attempted':
+   851	                                print("[FIX] Fix did not resolve the error. Rolling back...")
+   852	                                if rollback_file(gd_file):
+   853	                                    print("[FIX] Rolled back to original.")
+   854	                                    store_error(gd_file, gd_line, "Fix rolled back", status="fix_failed")
+   855	                                else:
+   856	                                    print("[FIX] No backup found; manual intervention required.")
+   857	                            else:
+   858	                                if not row:
+   859	                                    print("[FIX] Error resolved! Marking as fixed.")
+   860	                                    store_error(gd_file, gd_line, "Fixed successfully", status="fixed")
+   861	                        # -- Diagnostic: show file/line context --
+   862	                        print(f"\n[ERROR] {gd_file}:{gd_line}")
+   863	                        print_source_block(gd_file, gd_line)
+   864	                        # -- End diagnostic --
+   865	                    else:
+   866	                        print(f"\n[STALL #1] quiet {elapsed_since_output:.1f}s — no .gd error found in log.")
+   867	                    # Run diagnostics only once
+   868	                    print("\n[DIAG] Running diagnostic tools (timeout {}s each)...".format(TOOL_TIMEOUT))
+   869	                    results = run_diagnostics(godot_pid)
+   870	                    results["timestamp"] = datetime.now().isoformat()
+   871	                    results["pid"] = godot_pid
+   872	                    report_file = "stall_report.json"
+   873	                    with open(report_file, "w") as f:
+   874	                        json.dump(results, f, indent=2, default=str)
+   875	                    print_diagnostic_summary(results)
+   876	                    stall_handled = True
+   877	                else:
+   878	                    print("[STALL] Could not find Godot PID; skipping diagnostics.")
+   879	            elif stall_reported and stall_handled:
+   880	                if time.time() - last_heartbeat > HEARTBEAT_INTERVAL:
+   881	                    print(f"[STALL] process still stuck, elapsed={elapsed:.1f}s (no new output)")
+   882	                    sys.stdout.flush()
+   883	                    last_heartbeat = time.time()
+   884	
+   885	    if partial_line:
+   886	        line = partial_line.decode('utf-8', errors='replace')
+   887	        sys.stdout.write(line + '\n')
+   888	
+   889	    if proc.poll() is None:
+   890	        proc.terminate()
+   891	        proc.wait()
+   892	
+   893	    # Stop Xvfb if we started it
+   894	    if xvfb_proc and xvfb_proc.poll() is None:
+   895	        print("[DISPLAY] Stopping Xvfb...")
+   896	        xvfb_proc.terminate()
+   897	        xvfb_proc.wait()
+   898	
+   899	    summary = {
+   900	        "timestamp": datetime.now().isoformat(),
+   901	        "runtime": time.time() - start_time,
+   902	        "game_completed": game_completed,
+   903	        "fix_attempted": fix_attempted_this_run,
+   904	        "diagnostics_run": _diagnostics_run,
+   905	        "exit_code": proc.returncode,
+   906	        "display_provisioned": display_ok
+   907	    }
+   908	    with open("run_summary.json", "w") as f:
+   909	        json.dump(summary, f, indent=2)
+   910	
+   911	    print("\n[SUMMARY] autostall.py finished.")
+   912	    if game_completed:
+   913	        print("[SUMMARY] Game completed normally (ground impact detected).")
+   914	    else:
+   915	        print("[SUMMARY] Process terminated by script.")
+   916	    print(f"[SUMMARY] Runtime: {summary['runtime']:.1f}s")
+   917	    print("[SUMMARY] Diagnostics data preserved in stall_report.json")
+   918	    print("="*72)
+   919	
+   920	    # -- Gamification start --
+   921	    init_db()
+   922	    learn_indentation()
+   923	    _flight_id = start_flight()
+   924	    _pilot_name = 'default'
+   925	    _fixes_attempted = 0
+   926	    # -- Gamification end --
+   927	    # -- Gamification flight end --
+   928	    if _flight_id is not None:
+   929	        outcome = "landed" if game_completed else ("aborted" if proc.returncode == 0 else "crashed")
+   930	        bugs_encountered = sum(1 for l in output_buffer if "SCRIPT ERROR" in l or "ERROR:" in l)
+   931	        end_flight(_flight_id, outcome, bugs_encountered=bugs_encountered,
+   932	                   bugs_fixed=fix_attempted_this_run,
+   933	                   notes=f"fix_attempted={fix_attempted_this_run}")
+   934	    # -- End gamification --
+   935	def _diag_if_error(line: str):
+   936	    """Print diagnostic for any Godot error line that mentions a source file.
+   937	       - .gd files: full source context (3‑5 lines).
+   938	       - engine files: reads from local GODOT_SOURCE_DIR clone."""
+   939	    import os
+   940	
+   941	    # 1. .gd files via robust extractor
+   942	    gd_file, gd_line = extract_last_gd_error([line])
+   943	    if gd_file and gd_line:
+   944	        print(f"\n[DIAG] Error in {gd_file} at line {gd_line}:")
+   945	        print_source_block(gd_file, gd_line)
+   946	        return
+   947	
+   948	    # 2. Engine files referenced via "at:"
+   949	    if "at:" in line:
+   950	        start = line.find('(', line.find('at:') + 3)
+   951	        if start != -1:
+   952	            end = line.find(')', start)
+   953	            if end != -1:
+   954	                file_ref = line[start+1:end].strip()
+   955	                if file_ref and ':' in file_ref:
+   956	                    parts = file_ref.rsplit(':', 1)
+   957	                    file_path = parts[0]
+   958	                    line_num = int(parts[1]) if parts[1].isdigit() else None
+   959	                    if line_num and not file_path.endswith('.gd'):
+   960	                        local_path = os.path.join(GODOT_SOURCE_DIR, file_path)
+   961	                        if os.path.exists(local_path):
+   962	                            print(f"\n[DIAG] Engine error in {file_path} at line {line_num}:")
+   963	                            # print context same way as print_source_block
+   964	                            with open(local_path, "r", encoding="utf-8", errors="replace") as f:
+   965	                                engine_lines = f.readlines()
+   966	                            total = len(engine_lines)
+   967	                            if 1 <= line_num <= total:
+   968	                                start_idx = max(0, line_num - CONTEXT_LINES - 1)
+   969	                                end_idx = min(total, line_num + CONTEXT_LINES)
+   970	                                print(f"      [ENGINE SOURCE] {file_path} lines {start_idx+1}-{end_idx} (line {line_num}):")
+   971	                                for i in range(start_idx, end_idx):
+   972	                                    prefix = ">> " if i == line_num - 1 else "   "
+   973	                                    print(f"      {prefix}{i+1:4d}: {engine_lines[i].rstrip()}")
+   974	                            return
+   975	                        else:
+   976	                            print(f"\n[DIAG] Engine error in {file_path} at line {line_num} (source not found locally)")
+   977	                            return
+   978	                    elif line_num:
+   979	                        # .gd file missed by extractor, try print_source_block anyway
+   980	                        print(f"\n[DIAG] Error in {file_path} at line {line_num}:")
+   981	                        print_source_block(file_path, line_num)
+   982	                        return
+   983	
+   984	    # 3b. GDScript backtrace lines: "[N] func_name (res://path.gd:LINE)"
+   985	    #     Always show source context — these carry exact file+line.
+   986	    import re as _re
+   987	    _bt = _re.match(r'\s*\[\d+\]\s+\S+\s+\((.+\.gd):(\d+)\)', line)
+   988	    if _bt:
+   989	        _f, _l = _bt.group(1), int(_bt.group(2))
+   990	        _fp = _f.replace("res://", "godot_project/")
+   991	        print(f"\n[DIAG] Backtrace: {_f} at line {_l}:")
+   992	        print_source_block(_fp, _l)
+   993	        return
+   994	
+   995	    # 3c. Engine-level "ERROR:" (HTTPRequest, physics, etc.)
+   996	    if line.startswith("ERROR:") and ".gd" in line:
+   997	        _parts = line.split(".gd")
+   998	        if len(_parts) > 1:
+   999	            _suffix = _parts[1]
+  1000	            _colon = _suffix.find(":")
+  1001	            if _colon != -1:
+  1002	                try:
+  1003	                    _ln2 = int(_suffix[_colon+1:].split()[0].rstrip(".,)"))
+  1004	                    _base = _parts[0].split()[-1].lstrip("\"('")
+  1005	                    _fp2 = (_base + ".gd").replace("res://", "godot_project/")
+  1006	                    print(f"\n[DIAG] ERROR in {_fp2} at line {_ln2}:")
+  1007	                    print_source_block(_fp2, _ln2)
+  1008	                    return
+  1009	                except (ValueError, IndexError):
+  1010	                    pass
+  1011	        print(f"\n[DIAG] ERROR (no line#): {line.strip()}")
+  1012	        return
+  1013	
+  1014	    # 3. Fallback for lines with ERROR and a .gd file (no line number)
+  1015	    if ("ERROR" in line or "SCRIPT ERROR" in line) and ".gd" in line:
+  1016	        gd_idx = line.find(".gd")
+  1017	        if gd_idx != -1:
+  1018	            end_idx = gd_idx + 3
+  1019	            start_idx = line.rfind(' ', 0, gd_idx)
+  1020	            if start_idx == -1:
+  1021	                start_idx = line.rfind('(', 0, gd_idx)
+  1022	            if start_idx == -1:
+  1023	                start_idx = 0
+  1024	            else:
+  1025	                start_idx += 1
+  1026	            path = line[start_idx:end_idx].strip('"\'')
+  1027	            print(f"\n[DIAG] Godot error referencing {path}:\n  {line.strip()}")
+  1028	
+  1029	if __name__ == "__main__":
+  1030	    main()

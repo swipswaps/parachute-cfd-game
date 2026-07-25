@@ -1,0 +1,76 @@
+{
+  "run_ts": "2026-07-12T12:07:58.415536+00:00",
+  "results": {
+    "G001": {
+      "id": "G001",
+      "label": "Godot HTTPRequest",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_httprequest.html",
+      "http_code": 200,
+      "body_bytes": 8192,
+      "body_sha256_16": "18243f1f674302eb",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "og_description": "Inherits: Node< Object A node with the ability to send HTTP(S) requests. Description: A node with the ability to send HTTP requests. Uses HTTPClient internally. Can be used to make HTTP requests..."
+    },
+    "G002": {
+      "id": "G002",
+      "label": "Godot ProjectSettings",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_projectsettings.html",
+      "http_code": 200,
+      "body_bytes": 8192,
+      "body_sha256_16": "e3da6714a9436168",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "og_description": "Inherits: Object Stores globally-accessible variables. Description: Stores variables that can be accessed from everywhere. Use get_setting(), set_setting() or has_setting() to access them. Variable..."
+    },
+    "G003": {
+      "id": "G003",
+      "label": "Godot CanvasLayer",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html",
+      "http_code": 200,
+      "body_bytes": 8192,
+      "body_sha256_16": "8e53ae31474befcc",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "og_description": "Inherits: Node< Object Inherited By: ParallaxBackground A node used for independent rendering of objects within a 2D scene. Description: CanvasItem-derived nodes that are direct or indirect chil..."
+    },
+    "G004": {
+      "id": "G004",
+      "label": "Godot InputEvent",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_inputevent.html",
+      "http_code": 200,
+      "body_bytes": 8192,
+      "body_sha256_16": "8279795a69524c3b",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "og_description": "Inherits: Resource< RefCounted< Object Inherited By: InputEventAction, InputEventFromWindow, InputEventJoypadButton, InputEventJoypadMotion, InputEventMIDI, InputEventShortcut Abstract base c..."
+    },
+    "G004b": {
+      "id": "G004b",
+      "label": "Godot OS (shell_open)",
+      "url": "https://docs.godotengine.org/en/stable/classes/class_os.html",
+      "http_code": 200,
+      "body_bytes": 8192,
+      "body_sha256_16": "0cc406562486392d",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "og_description": "Inherits: Object Provides access to common operating system functionalities. Description: The OS class wraps the most common functionalities for communicating with the host operating system, such a..."
+    },
+    "P004_wiki": {
+      "id": "P004_wiki",
+      "label": "Wikipedia Design by contract (full intro)",
+      "url": "https://en.wikipedia.org/w/api.php?action=query&titles=Design_by_contract&prop=extracts&exintro=1&explaintext=1&format=json",
+      "http_code": 200,
+      "body_bytes": 1230,
+      "body_sha256_16": "a276cd43ad4e11e4",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "full_extract": "Design by contract (DbC), also known as contract programming, programming by contract and design-by-contract programming, is an approach for designing software.\nIt prescribes that software designers should define formal, precise and verifiable interface specifications for software components, which extend the ordinary definition of abstract data types with preconditions, postconditions and invariants. These specifications are referred to as \"contracts\", in accordance with a conceptual metaphor with the conditions and obligations of business contracts.\nThe DbC approach assumes all client components that invoke an operation on a server component will meet the preconditions specified as required for that operation.\nWhere this assumption is considered too risky (as in multi-channel or distributed computing), the inverse approach is taken, meaning that the server component tests that all relevant preconditions hold true (before, or while, processing the client component's request) and replies with a suitable error message if not.",
+      "first_3_sentences": "Design by contract (DbC), also known as contract programming, programming by contract and design-by-contract programming, is an approach for designing software. It prescribes that software designers should define formal, precise and verifiable interface specifications for software components, which extend the ordinary definition of abstract data types with preconditions, postconditions and invariants. These specifications are referred to as \"contracts\", in accordance with a conceptual metaphor with the conditions and obligations of business contracts."
+    },
+    "P002_acm": {
+      "id": "P002_acm",
+      "label": "ACM DL ARIES abstract",
+      "url": "https://dl.acm.org/doi/abs/10.1145/128765.128770",
+      "http_code": 403,
+      "body_bytes": 14,
+      "body_sha256_16": "0a2b9dbee77110e6",
+      "fetched_at": "2026-07-12T12:07:58.415536+00:00",
+      "abstract": "NOT_FOUND_IN_BODY"
+    }
+  }
+}

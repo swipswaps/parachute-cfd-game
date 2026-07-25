@@ -1,0 +1,761 @@
+--- Scanning .gd files for database calls ---
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd lines 1-5 ---
+   1: extends Node
+   2: # PATH: godot_project/scripts/SqliteWatchdog.gd
+   3: # Safe version – skips if SqliteDb not available.:
+   4: 
+   5: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd lines 9-13 ---
+   9: 	print("[VERBATIM] SqliteWatchdog.gd _ready() called")
+  10: 	print("[VERBATIM] Watchdog: _ready started")
+  11: 	if not has_node("/root/SqliteDb"):
+  12: 		print("[VERBATIM] Watchdog: SqliteDb not available; skipping scan.")
+  13: 		return
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd lines 10-14 ---
+  10: 	print("[VERBATIM] Watchdog: _ready started")
+  11: 	if not has_node("/root/SqliteDb"):
+  12: 		print("[VERBATIM] Watchdog: SqliteDb not available; skipping scan.")
+  13: 		return
+  14: 	var sqlite := get_node("/root/SqliteDb")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd lines 12-16 ---
+  12: 		print("[VERBATIM] Watchdog: SqliteDb not available; skipping scan.")
+  13: 		return
+  14: 	var sqlite := get_node("/root/SqliteDb")
+  15: 	if not sqlite._db_ok:
+  16: 		print("[VERBATIM] Watchdog: SqliteDb not ready; skipping scan.")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd lines 14-18 ---
+  14: 	var sqlite := get_node("/root/SqliteDb")
+  15: 	if not sqlite._db_ok:
+  16: 		print("[VERBATIM] Watchdog: SqliteDb not ready; skipping scan.")
+  17: 		return
+  18: 	print("[VERBATIM] Watchdog: started, polling user://screenshots/")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/PerformanceMonitor.gd lines 11-15 ---
+  11: 
+  12: func _ready() -> void:
+  13: 	if ClassDB.class_exists("SQLite") and has_node("/root/SqliteDb"):
+  14: 		_db_ok = true
+  15: 	_thread = Thread.new()
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/PerformanceMonitor.gd lines 89-93 ---
+  89: 	"""
+  90: 	var args := [24, pid, mem, cs["vol"], cs["nonvol"], cpu]
+  91: 	db._query(sql, args)
+  92: 
+  93: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 1-3 ---
+   1: # PATH: godot_project/scripts/DatabaseGuard.gd
+   2: # WHAT: Centralized database health management with automatic recovery
+   3: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 49-53 ---
+  49: 
+  50: func _ready() -> void:
+  51: 	print("[VERBATIM] DatabaseGuard.gd _ready() called")
+  52: 	_db = get_node_or_null("/root/SqliteDb")
+  53: 	if _db:
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 50-54 ---
+  50: func _ready() -> void:
+  51: 	print("[VERBATIM] DatabaseGuard.gd _ready() called")
+  52: 	_db = get_node_or_null("/root/SqliteDb")
+  53: 	if _db:
+  54: 		_check_db_health()
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 55-59 ---
+  55: 	else:
+  56: 		_is_healthy = false
+  57: 		_last_error = "SqliteDb not found"
+  58: 		print("[VERBATIM] DatabaseGuard: SqliteDb not found, will retry")
+  59: 		_schedule_retry()
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 56-60 ---
+  56: 		_is_healthy = false
+  57: 		_last_error = "SqliteDb not found"
+  58: 		print("[VERBATIM] DatabaseGuard: SqliteDb not found, will retry")
+  59: 		_schedule_retry()
+  60: 	print("[VERBATIM] DatabaseGuard: _ready ok=true")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 58-62 ---
+  58: 		print("[VERBATIM] DatabaseGuard: SqliteDb not found, will retry")
+  59: 		_schedule_retry()
+  60: 	print("[VERBATIM] DatabaseGuard: _ready ok=true")
+  61: 
+  62: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 62-66 ---
+  62: 
+  63: func _exit_tree() -> void:
+  64: 	print("[VERBATIM] DatabaseGuard: _exit_tree called")
+  65: 	_db = null
+  66: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 76-80 ---
+  76: 		if Time.get_ticks_msec() - _circuit_last_failure > _circuit_timeout_ms:
+  77: 			_circuit_state = "HALF_OPEN"
+  78: 			print("[VERBATIM] DatabaseGuard: circuit HALF_OPEN - testing")
+  79: 		else:
+  80: 			print("[VERBATIM] DatabaseGuard: circuit OPEN - rejecting query")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 78-82 ---
+  78: 			print("[VERBATIM] DatabaseGuard: circuit HALF_OPEN - testing")
+  79: 		else:
+  80: 			print("[VERBATIM] DatabaseGuard: circuit OPEN - rejecting query")
+  81: 			return []
+  82: 	if not _ensure_db_ready():
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 91-95 ---
+  91: 		attempt += 1
+  92: 		if attempt < max_attempts:
+  93: 			print("[VERBATIM] DatabaseGuard: query failed, retry %d/%d" % [attempt, max_attempts])
+  94: 			OS.delay_msec(_retry_delay_ms * attempt)
+  95: 	_record_failure(sql)
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 124-128 ---
+ 124: 	_circuit_state = "CLOSED"
+ 125: 	_failure_count = 0
+ 126: 	print("[VERBATIM] DatabaseGuard: circuit manually reset")
+ 127: 
+ 128: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 134-138 ---
+ 134: func _ensure_db_ready() -> bool:
+ 135: 	if not _db:
+ 136: 		_db = get_node_or_null("/root/SqliteDb")
+ 137: 		if not _db:
+ 138: 			_last_error = "SqliteDb not available"
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 136-140 ---
+ 136: 		_db = get_node_or_null("/root/SqliteDb")
+ 137: 		if not _db:
+ 138: 			_last_error = "SqliteDb not available"
+ 139: 			return false
+ 140: 	_check_db_health()
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 149-153 ---
+ 149: 		_is_healthy = false
+ 150: 		return
+ 151: 	if not _db.has_method("_query"):
+ 152: 		_is_healthy = false
+ 153: 		_last_error = "SqliteDb._query method not found"
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 151-155 ---
+ 151: 	if not _db.has_method("_query"):
+ 152: 		_is_healthy = false
+ 153: 		_last_error = "SqliteDb._query method not found"
+ 154: 		return
+ 155: 	var result = _db._query("SELECT 1")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 153-157 ---
+ 153: 		_last_error = "SqliteDb._query method not found"
+ 154: 		return
+ 155: 	var result = _db._query("SELECT 1")
+ 156: 	if result != null and result.size() > 0:
+ 157: 		_is_healthy = true
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 167-171 ---
+ 167: func _attempt_recovery() -> void:
+ 168: 	if _recovery_attempts >= _max_recovery_attempts:
+ 169: 		print("[VERBATIM] DatabaseGuard: max recovery attempts reached")
+ 170: 		return
+ 171: 	_recovery_attempts += 1
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 172-176 ---
+ 172: 	print(
+ 173: 		(
+ 174: 			"[VERBATIM] DatabaseGuard: recovery attempt %d/%d"
+ 175: 			% [_recovery_attempts, _max_recovery_attempts]
+ 176: 		)
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 178-182 ---
+ 178: 	_db = null
+ 179: 	OS.delay_msec(500)
+ 180: 	_db = get_node_or_null("/root/SqliteDb")
+ 181: 	if _db:
+ 182: 		_check_db_health()
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 183-187 ---
+ 183: 		if _is_healthy:
+ 184: 			emit_signal("db_recovered")
+ 185: 			print("[VERBATIM] DatabaseGuard: recovery SUCCESS")
+ 186: 			return
+ 187: 	_schedule_retry()
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 197-201 ---
+ 197: 	add_child(timer)
+ 198: 	timer.start()
+ 199: 	print("[VERBATIM] DatabaseGuard: retry scheduled in %d ms" % delay)
+ 200: 
+ 201: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 207-211 ---
+ 207: 
+ 208: func _execute_with_retry(sql: String, args: Array):
+ 209: 	if not _db or not _db.has_method("_query"):
+ 210: 		return null
+ 211: 	var result = _db._query(sql, args)
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 209-213 ---
+ 209: 	if not _db or not _db.has_method("_query"):
+ 210: 		return null
+ 211: 	var result = _db._query(sql, args)
+ 212: 	if result != null:
+ 213: 		return result
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 222-226 ---
+ 222: 		_circuit_state = "CLOSED"
+ 223: 		emit_signal("db_recovered")
+ 224: 		print("[VERBATIM] DatabaseGuard: circuit CLOSED")
+ 225: 
+ 226: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/DatabaseGuard.gd lines 231-235 ---
+ 231: 		_circuit_state = "OPEN"
+ 232: 		emit_signal("db_unhealthy", "Circuit breaker OPEN after %d failures" % _failure_count)
+ 233: 		print("[VERBATIM] DatabaseGuard: circuit OPEN")
+ 234: 
+ 235: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 13-17 ---
+  13: func _ready() -> void:
+  14: 	print("[VERBATIM] ResourceThrottle.gd _ready() called")
+  15: 	_db = get_node_or_null("/root/SqliteDb")
+  16: 	_ensure_table()
+  17: 	_initialized = true
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 21-25 ---
+  21: func _ensure_table() -> void:
+  22: 	if not _db:
+  23: 		print("[VERBATIM] ResourceThrottle: SqliteDb not available")
+  24: 		return
+  25: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 37-41 ---
+  37: 		)
+  38: 	"""
+  39: 	_db._query(sql)
+  40: 	print("[VERBATIM] ResourceThrottle: table ensured")
+  41: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 46-50 ---
+  46: 
+  47: 	var sql := "SELECT attempt_count, backoff_seconds, last_attempt, locked FROM throttle_log WHERE operation = ?"
+  48: 	var result = _db._query(sql, [operation])
+  49: 
+  50: 	if result.is_empty():
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 77-81 ---
+  77: 	# Get current state
+  78: 	var sql := "SELECT attempt_count, backoff_seconds, failure_count, locked FROM throttle_log WHERE operation = ?"
+  79: 	var result = _db._query(sql, [operation])
+  80: 
+  81: 	var attempt_count := 1
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 119-123 ---
+ 119: 		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+ 120: 	"""
+ 121: 	_db._query(sql, [
+ 122: 		operation,
+ 123: 		attempt_count,
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 135-139 ---
+ 135: 		return
+ 136: 	var sql := "UPDATE throttle_log SET locked = 0 WHERE operation = ?"
+ 137: 	_db._query(sql, [operation])
+ 138: 	print("[VERBATIM] ResourceThrottle: operation '%s' unlocked" % operation)
+ 139: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ResourceThrottle.gd lines 145-149 ---
+ 145: 
+ 146: 	var sql := "SELECT attempt_count, backoff_seconds, last_attempt, locked, failure_count FROM throttle_log WHERE operation = ?"
+ 147: 	var result = _db._query(sql, [operation])
+ 148: 
+ 149: 	if result.is_empty():
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 1-3 ---
+   1: # PATH: godot_project/scripts/SqliteDb.gd
+   2: # Safe version – prints info, never errors.
+   3: extends Node
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 16-20 ---
+  16: 
+  17: func _ready() -> void:
+  18: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  19: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  20: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 17-21 ---
+  17: func _ready() -> void:
+  18: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  19: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  20: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  21: 	print("[VERBATIM] SqliteDb: _ready started")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 18-22 ---
+  18: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  19: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  20: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  21: 	print("[VERBATIM] SqliteDb: _ready started")
+  22: 	if not ClassDB.class_exists("SQLite"):
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 19-23 ---
+  19: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  20: 	print("[VERBATIM] SqliteDb.gd _ready() called")
+  21: 	print("[VERBATIM] SqliteDb: _ready started")
+  22: 	if not ClassDB.class_exists("SQLite"):
+  23: 		print("[VERBATIM] SqliteDb: SQLite extension not loaded; continuing without database.")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 21-25 ---
+  21: 	print("[VERBATIM] SqliteDb: _ready started")
+  22: 	if not ClassDB.class_exists("SQLite"):
+  23: 		print("[VERBATIM] SqliteDb: SQLite extension not loaded; continuing without database.")
+  24: 		return
+  25: 	_db = ClassDB.instantiate("SQLite")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 25-29 ---
+  25: 	_db = ClassDB.instantiate("SQLite")
+  26: 	if not _db:
+  27: 		print("[VERBATIM] SqliteDb: failed to instantiate SQLite.")
+  28: 		return
+  29: 	_db.path = DB_PATH
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 27-31 ---
+  27: 		print("[VERBATIM] SqliteDb: failed to instantiate SQLite.")
+  28: 		return
+  29: 	_db.path = DB_PATH
+  30: 	_db.verbosity_level = 0
+  31: 	if not _db.open_db():
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 28-32 ---
+  28: 		return
+  29: 	_db.path = DB_PATH
+  30: 	_db.verbosity_level = 0
+  31: 	if not _db.open_db():
+  32: 		print("[VERBATIM] SqliteDb: open_db() failed for " + DB_PATH)
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 29-33 ---
+  29: 	_db.path = DB_PATH
+  30: 	_db.verbosity_level = 0
+  31: 	if not _db.open_db():
+  32: 		print("[VERBATIM] SqliteDb: open_db() failed for " + DB_PATH)
+  33: 		return
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 30-34 ---
+  30: 	_db.verbosity_level = 0
+  31: 	if not _db.open_db():
+  32: 		print("[VERBATIM] SqliteDb: open_db() failed for " + DB_PATH)
+  33: 		return
+  34: 	_db_ok = true
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 35-39 ---
+  35: 	print("[VERBATIM] DB OPEN OK ", DB_PATH)
+  36: 	_create_tables()
+  37: 	print("[VERBATIM] SqliteDb: _ready completed")
+  38: 
+  39: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 40-44 ---
+  40: func _exit_tree() -> void:
+  41: 	if _db_ok and _db:
+  42: 		_db.close_db()
+  43: 	print("[VERBATIM] DB CLOSED")
+  44: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 48-52 ---
+  48: 		print("[VERBATIM] DB NOT AVAILABLE – skipping: ", sql.left(60))
+  49: 		return []
+  50: 	if not _db.query_with_bindings(sql, args):
+  51: 		print("[VERBATIM] DB QUERY FAIL: " + sql.left(80))
+  52: 		return []
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd lines 51-55 ---
+  51: 		print("[VERBATIM] DB QUERY FAIL: " + sql.left(80))
+  52: 		return []
+  53: 	return _db.query_result
+  54: 
+  55: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 26-30 ---
+  26: 		LIMIT 1
+  27: 	"""
+  28: 	var result = db.query_with_bindings(query, ["%" + error_signature + "%"])
+  29: 
+  30: 	var fix_applied := false
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 43-47 ---
+  43: 	ensure_qe_turn_checks()
+  44: 
+  45: 	db.close_db()
+  46: 	print("[AutoHeal] Indentation fix applied." if fix_applied else "[AutoHeal] No fix needed.")
+  47: 
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 52-56 ---
+  52: 
+  53: 	db = SQLite.new()
+  54: 	db.path = DB_PATH
+  55: 	db.open_db()
+  56: 	if not db.is_open():
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 53-57 ---
+  53: 	db = SQLite.new()
+  54: 	db.path = DB_PATH
+  55: 	db.open_db()
+  56: 	if not db.is_open():
+  57: 		push_error("Failed to open database.")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 54-58 ---
+  54: 	db.path = DB_PATH
+  55: 	db.open_db()
+  56: 	if not db.is_open():
+  57: 		push_error("Failed to open database.")
+  58: 		return false
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 125-129 ---
+ 125: 
+ 126: func log_autoheal(source: String, action: String, success: bool) -> void:
+ 127: 	if not db.is_open():
+ 128: 		return
+ 129: 	var query = """
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/auto_heal.gd lines 132-136 ---
+ 132: 		VALUES (?, ?, ?, ?, ?, datetime('now'), ?)
+ 133: 	"""
+ 134: 	db.query_with_bindings(query, [
+ 135: 		"autoheal_script", 1, TARGET_FILE,
+ 136: 		"godot-sqlite", success,
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 2-6 ---
+   2: ## HUDManager — Central portal for HUD component management.
+   3: ## Manages visibility, dragging, collapsibility, and selectability.
+   4: ## State is stored in the database via SqliteDb (if available).
+   5: 
+   6: signal hud_toggled(name: String, visible: bool)
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 49-53 ---
+  49: 
+  50: func _save_state():
+  51:     var db = get_node_or_null("/root/SqliteDb")
+  52:     if db and db.has_method("query"):
+  53:         var data = {}
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 50-54 ---
+  50: func _save_state():
+  51:     var db = get_node_or_null("/root/SqliteDb")
+  52:     if db and db.has_method("query"):
+  53:         var data = {}
+  54:         for name in _components:
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 59-63 ---
+  59:             }
+  60:         var json = JSON.stringify(data)
+  61:         db.query("INSERT OR REPLACE INTO hud_state (key, value) VALUES ('state', ?);", [json])
+  62: 
+  63: func _load_state():
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 62-66 ---
+  62: 
+  63: func _load_state():
+  64:     var db = get_node_or_null("/root/SqliteDb")
+  65:     if db and db.has_method("query"):
+  66:         var result = db.query("SELECT value FROM hud_state WHERE key = 'state';")
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 63-67 ---
+  63: func _load_state():
+  64:     var db = get_node_or_null("/root/SqliteDb")
+  65:     if db and db.has_method("query"):
+  66:         var result = db.query("SELECT value FROM hud_state WHERE key = 'state';")
+  67:         if result and result.size() > 0:
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HUDManager.gd lines 64-68 ---
+  64:     var db = get_node_or_null("/root/SqliteDb")
+  65:     if db and db.has_method("query"):
+  66:         var result = db.query("SELECT value FROM hud_state WHERE key = 'state';")
+  67:         if result and result.size() > 0:
+  68:             var json = result[0]["value"]
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2584-2588 ---
+2584: 
+2585: func _save_camera_settings() -> void:
+2586: 	var db = SqliteDb  # autoload singleton
+2587: 	if not db:
+2588: 		return
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2587-2591 ---
+2587: 	if not db:
+2588: 		return
+2589: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2590: 	var key = (
+2591: 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2591-2595 ---
+2591: 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+2592: 	)
+2593: 	db._query(
+2594: 		(
+2595: 			"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2604-2608 ---
+2604: 
+2605: func _load_camera_settings() -> void:
+2606: 	var db = SqliteDb  # autoload singleton
+2607: 	if not db:
+2608: 		return
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2608-2612 ---
+2608: 		return
+2609: 	# Ensure table exists
+2610: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2611: 	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+2612: 	if result and result.size() > 0:
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd lines 2609-2613 ---
+2609: 	# Ensure table exists
+2610: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2611: 	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+2612: 	if result and result.size() > 0:
+2613: 		_cam_distance = float(result[0]["value"])
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/ErrorLogger.gd lines 19-23 ---
+  19: 
+  20: func _log_error(function: String, file: String, line: int, code: String, rationale: String, editor_notify: bool, error_type: int, script_backtraces: Array) -> void:
+  21: 	var db = SqliteDb
+  22: 	if db:
+  23: 		db.query("INSERT INTO diagnostic_logs (level, source, message) VALUES (?, ?, ?)", ["ERROR", file + ":" + str(line), rationale])
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/autoloads/ErrorLogger.gd lines 21-25 ---
+  21: 	var db = SqliteDb
+  22: 	if db:
+  23: 		db.query("INSERT INTO diagnostic_logs (level, source, message) VALUES (?, ?, ?)", ["ERROR", file + ":" + str(line), rationale])
+  24: 	var error_bus = ErrorBus
+  25: 	if error_bus and error_bus.has_signal("error_occurred"):
+
+--- Scanning Python monitoring scripts for sqlite3 calls ---
+--- autostall.py ---
+--- autostall.py lines 17-21 ---
+  17: import select
+  18: import shutil
+  19: import sqlite3
+  20: import json
+  21: import fcntl
+
+--- autostall.py lines 118-122 ---
+ 118: # ------------------------------------------------------------------
+ 119: def get_error_table() -> str:
+ 120:     conn = sqlite3.connect(DB_PATH)
+ 121:     cursor = conn.cursor()
+ 122:     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+
+--- autostall.py lines 119-123 ---
+ 119: def get_error_table() -> str:
+ 120:     conn = sqlite3.connect(DB_PATH)
+ 121:     cursor = conn.cursor()
+ 122:     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+ 123:     if cursor.fetchone():
+
+--- autostall.py lines 120-124 ---
+ 120:     conn = sqlite3.connect(DB_PATH)
+ 121:     cursor = conn.cursor()
+ 122:     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+ 123:     if cursor.fetchone():
+ 124:         return "files_to_fix"
+
+--- autostall.py lines 415-419 ---
+ 415: def store_error(file_path: str, line_num: int, message: str, status: str = "new"):
+ 416:     try:
+ 417:         conn = sqlite3.connect(DB_PATH)
+ 418:         cursor = conn.cursor()
+ 419:         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+
+--- autostall.py lines 416-420 ---
+ 416:     try:
+ 417:         conn = sqlite3.connect(DB_PATH)
+ 418:         cursor = conn.cursor()
+ 419:         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+ 420:         if cursor.fetchone():
+
+--- autostall.py lines 417-421 ---
+ 417:         conn = sqlite3.connect(DB_PATH)
+ 418:         cursor = conn.cursor()
+ 419:         cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='files_to_fix'")
+ 420:         if cursor.fetchone():
+ 421:             sql = """
+
+--- autostall.py lines 423-427 ---
+ 423:                 VALUES (?, ?, ?, ?)
+ 424:             """
+ 425:             cursor.execute(sql, (file_path, line_num, message, status))
+ 426:             conn.commit()
+ 427:             print(f"[DB] Stored/replaced error in files_to_fix with status {status}")
+
+--- autostall.py lines 427-431 ---
+ 427:             print(f"[DB] Stored/replaced error in files_to_fix with status {status}")
+ 428:         else:
+ 429:             cursor.execute('''
+ 430:                 CREATE TABLE IF NOT EXISTS error_blocks (
+ 431:                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+--- autostall.py lines 428-432 ---
+ 428:         else:
+ 429:             cursor.execute('''
+ 430:                 CREATE TABLE IF NOT EXISTS error_blocks (
+ 431:                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+ 432:                     file_path TEXT NOT NULL,
+
+--- autostall.py lines 449-453 ---
+ 449:                 VALUES (?, ?, ?, ?, ?)
+ 450:             """
+ 451:             cursor.execute(sql, (file_path, line_num, lines[line_num-1].strip() if lines else message, context_str, status))
+ 452:             conn.commit()
+ 453:             print("[DB] Stored error in 'error_blocks'")
+
+--- autostall.py lines 758-762 ---
+ 758:                         fix_applied = False
+ 759:                         if "Indent" in error_context and not fix_attempted_this_run:
+ 760:                             conn = sqlite3.connect(DB_PATH)
+ 761:                             cursor = conn.cursor()
+ 762:                             query = f"""
+
+--- autostall.py lines 759-763 ---
+ 759:                         if "Indent" in error_context and not fix_attempted_this_run:
+ 760:                             conn = sqlite3.connect(DB_PATH)
+ 761:                             cursor = conn.cursor()
+ 762:                             query = f"""
+ 763:                                 SELECT status FROM {error_table}
+
+--- autostall.py lines 761-765 ---
+ 761:                             cursor = conn.cursor()
+ 762:                             query = f"""
+ 763:                                 SELECT status FROM {error_table}
+ 764:                                 WHERE file_path=? AND line_number=? AND error_text LIKE ?
+ 765:                                 ORDER BY id DESC LIMIT 1
+
+--- autostall.py lines 765-769 ---
+ 765:                                 ORDER BY id DESC LIMIT 1
+ 766:                             """
+ 767:                             cursor.execute(query, (gd_file, gd_line, "%Indent%"))
+ 768:                             row = cursor.fetchone()
+ 769:                             if row and row[0] in ('fix_attempted', 'fix_failed'):
+
+--- autostall.py lines 782-786 ---
+ 782:                                     store_error(gd_file, gd_line, f"Fix failed: {msg}", status="fix_failed")
+ 783:                         elif "Parameter \"t\" is null" in error_context and not fix_attempted_this_run:
+ 784:                             conn = sqlite3.connect(DB_PATH)
+ 785:                             cursor = conn.cursor()
+ 786:                             query = f"""
+
+--- autostall.py lines 783-787 ---
+ 783:                         elif "Parameter \"t\" is null" in error_context and not fix_attempted_this_run:
+ 784:                             conn = sqlite3.connect(DB_PATH)
+ 785:                             cursor = conn.cursor()
+ 786:                             query = f"""
+ 787:                                 SELECT status FROM {error_table}
+
+--- autostall.py lines 785-789 ---
+ 785:                             cursor = conn.cursor()
+ 786:                             query = f"""
+ 787:                                 SELECT status FROM {error_table}
+ 788:                                 WHERE file_path=? AND line_number=? AND error_text LIKE ?
+ 789:                                 ORDER BY id DESC LIMIT 1
+
+--- autostall.py lines 789-793 ---
+ 789:                                 ORDER BY id DESC LIMIT 1
+ 790:                             """
+ 791:                             cursor.execute(query, (gd_file, gd_line, "%Parameter \"t\" is null%"))
+ 792:                             row = cursor.fetchone()
+ 793:                             if row and row[0] in ('fix_attempted', 'fix_failed'):
+
+--- autostall.py lines 807-811 ---
+ 807: 
+ 808:                         elif "Expected identifier after" in error_context and not fix_attempted_this_run:
+ 809:                             conn = sqlite3.connect(DB_PATH)
+ 810:                             cursor = conn.cursor()
+ 811:                             query = f"""
+
+--- autostall.py lines 808-812 ---
+ 808:                         elif "Expected identifier after" in error_context and not fix_attempted_this_run:
+ 809:                             conn = sqlite3.connect(DB_PATH)
+ 810:                             cursor = conn.cursor()
+ 811:                             query = f"""
+ 812:                                 SELECT status FROM {error_table}
+
+--- autostall.py lines 810-814 ---
+ 810:                             cursor = conn.cursor()
+ 811:                             query = f"""
+ 812:                                 SELECT status FROM {error_table}
+ 813:                                 WHERE file_path=? AND line_number=? AND error_text LIKE ?
+ 814:                                 ORDER BY id DESC LIMIT 1
+
+--- autostall.py lines 814-818 ---
+ 814:                                 ORDER BY id DESC LIMIT 1
+ 815:                             """
+ 816:                             cursor.execute(query, (gd_file, gd_line, "%Expected identifier after%"))
+ 817:                             row = cursor.fetchone()
+ 818:                             if row and row[0] in ('fix_attempted', 'fix_failed'):
+
+--- autostall.py lines 831-835 ---
+ 831: 
+ 832:                         elif "Expected identifier after" in error_context and not fix_attempted_this_run:
+ 833:                             conn = sqlite3.connect(DB_PATH)
+ 834:                             cursor = conn.cursor()
+ 835:                             query = f"""
+
+--- autostall.py lines 832-836 ---
+ 832:                         elif "Expected identifier after" in error_context and not fix_attempted_this_run:
+ 833:                             conn = sqlite3.connect(DB_PATH)
+ 834:                             cursor = conn.cursor()
+ 835:                             query = f"""
+ 836:                                 SELECT status FROM {error_table}
+
+--- autostall.py lines 834-838 ---
+ 834:                             cursor = conn.cursor()
+ 835:                             query = f"""
+ 836:                                 SELECT status FROM {error_table}
+ 837:                                 WHERE file_path=? AND line_number=? AND error_text LIKE ?
+ 838:                                 ORDER BY id DESC LIMIT 1
+
+--- autostall.py lines 838-842 ---
+ 838:                                 ORDER BY id DESC LIMIT 1
+ 839:                             """
+ 840:                             cursor.execute(query, (gd_file, gd_line, "%Expected identifier after%"))
+ 841:                             row = cursor.fetchone()
+ 842:                             if row and row[0] in ('fix_attempted', 'fix_failed'):
+
+--- autostall.py lines 878-882 ---
+ 878: 
+ 879:                         if fix_attempted_this_run:
+ 880:                             conn = sqlite3.connect(DB_PATH)
+ 881:                             cursor = conn.cursor()
+ 882:                             query = f"""
+
+--- autostall.py lines 879-883 ---
+ 879:                         if fix_attempted_this_run:
+ 880:                             conn = sqlite3.connect(DB_PATH)
+ 881:                             cursor = conn.cursor()
+ 882:                             query = f"""
+ 883:                                 SELECT status FROM {error_table}
+
+--- autostall.py lines 881-885 ---
+ 881:                             cursor = conn.cursor()
+ 882:                             query = f"""
+ 883:                                 SELECT status FROM {error_table}
+ 884:                                 WHERE file_path=? AND line_number=?
+ 885:                                 ORDER BY id DESC LIMIT 1
+
+--- autostall.py lines 885-889 ---
+ 885:                                 ORDER BY id DESC LIMIT 1
+ 886:                             """
+ 887:                             cursor.execute(query, (gd_file, gd_line))
+ 888:                             row = cursor.fetchone()
+ 889:                             if row and row[0] == 'fix_attempted':
+
+--- stall_monitor_improved.py ---
+--- stall_monitor_enhanced.py ---
+--- run_game_debug.sh ---
+--- run_game.sh ---
+--- run_autostall_headless0.sh ---
+=== Scan complete ===

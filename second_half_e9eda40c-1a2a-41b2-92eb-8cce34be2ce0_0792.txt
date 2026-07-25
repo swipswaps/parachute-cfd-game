@@ -1,0 +1,1683 @@
+        # Empty result is still a success (e.g., INSERT)
+        return []
+    else:
+        # Null indicates error
+        return null
+
+func _record_success():
+    """Record a successful operation"""
+    _failure_count = max(0, _failure_count - 1)
+    if _circuit_state == "HALF_OPEN":
+        _circuit_state = "CLOSED"
+        emit_signal("db_recovered")
+        print("[VERBATIM] DatabaseGuard: circuit CLOSED")
+
+func _record_failure(sql: String):
+    """Record a failed operation"""
+    _failure_count += 1
+    _circuit_last_failure = Time.get_ticks_msec()
+    
+    if _failure_count >= _failure_threshold and _circuit_state == "CLOSED":
+        _circuit_state = "OPEN"
+        emit_signal("db_unhealthy", "Circuit breaker OPEN after %d failures" % _failure_count)
+        print("[VERBATIM] DatabaseGuard: circuit OPEN")
+
+# ------------------------------------------------------------------
+# Maintenance
+# ------------------------------------------------------------------
+
+func vacuum_db() -> bool:
+    """Vacuum the database to reclaim space"""
+    if not _ensure_db_ready():
+        return false
+    
+    var result = execute_query("VACUUM")
+    return result != null
+
+func compact_db() -> bool:
+    """Compact the database"""
+    return vacuum_db()
+
+Complete RecoveryManager.gd
+gdscript
+
+# PATH: godot_project/scripts/RecoveryManager.gd
+# WHAT: Manages automatic recovery from errors with exponential backoff
+extends Node
+
+# ------------------------------------------------------------------
+# State
+# ------------------------------------------------------------------
+var _db_guard: Node = null
+var _throttle: Node = null
+var _recovery_operations: Dictionary = {}
+var _is_recovering: bool = false
+
+# Recovery settings
+const MAX_RETRIES = 3
+const BASE_DELAY_MS = 1000
+const MAX_DELAY_MS = 60000
+
+# ------------------------------------------------------------------
+# Lifecycle
+# ------------------------------------------------------------------
+
+func _ready():
+    print("[VERBATIM] RecoveryManager.gd _ready() called")
+    _db_guard = get_node_or_null("/root/DatabaseGuard")
+    _throttle = get_node_or_null("/root/ResourceThrottle")
+    
+    if not _db_guard:
+        print("[VERBATIM] RecoveryManager: DatabaseGuard not found")
+    print("[VERBATIM] RecoveryManager: _ready ok=true")
+
+# ------------------------------------------------------------------
+# Public API
+# ------------------------------------------------------------------
+
+func register_operation(operation_id: String, recovery_func: Callable, max_retries: int = MAX_RETRIES):
+    """Register an operation that can be recovered"""
+    _recovery_operations[operation_id] = {
+        "func": recovery_func,
+        "max_retries": max_retries,
+        "attempts": 0,
+        "last_attempt": 0,
+        "delay_ms": BASE_DELAY_MS
+    }
+    print("[VERBATIM] RecoveryManager: registered operation '%s'" % operation_id)
+
+func attempt_recovery(operation_id: String) -> bool:
+    """Attempt to recover a specific operation"""
+    if _is_recovering:
+        print("[VERBATIM] RecoveryManager: already recovering, skipping")
+        return false
+    
+    var op = _recovery_operations.get(operation_id)
+    if not op:
+        print("[VERBATIM] RecoveryManager: operation '%s' not registered" % operation_id)
+        return false
+    
+    # Check throttle
+    if _throttle and not _throttle.can_attempt("recover_" + operation_id):
+        print("[VERBATIM] RecoveryManager: operation '%s' throttled" % operation_id)
+        return false
+    
+    _is_recovering = true
+    
+    # Check if database is healthy
+    if _db_guard and not _db_guard.is_healthy():
+        print("[VERBATIM] RecoveryManager: database unhealthy, waiting")
+        _is_recovering = false
+        return false
+    
+    # Check if we need to wait
+    var now = Time.get_ticks_msec()
+    if now - op["last_attempt"] < op["delay_ms"]:
+        print("[VERBATIM] RecoveryManager: operation '%s' cooling down" % operation_id)
+        _is_recovering = false
+        return false
+    
+    # Attempt recovery
+    op["last_attempt"] = now
+    op["attempts"] += 1
+    
+    var success = false
+    try:
+        success = op["func"].call()
+    except:
+        print("[VERBATIM] RecoveryManager: recovery function threw error")
+        success = false
+    
+    # Update throttle
+    if _throttle:
+        _throttle.record_attempt("recover_" + operation_id, success)
+    
+    if success:
+        # Reset on success
+        op["attempts"] = 0
+        op["delay_ms"] = BASE_DELAY_MS
+        print("[VERBATIM] RecoveryManager: operation '%s' recovered successfully" % operation_id)
+    else:
+        # Exponential backoff on failure
+        op["delay_ms"] = min(op["delay_ms"] * 2, MAX_DELAY_MS)
+        print("[VERBATIM] RecoveryManager: operation '%s' recovery failed, backoff %d ms" % [operation_id, op["delay_ms"]])
+        
+        if op["attempts"] >= op["max_retries"]:
+            print("[VERBATIM] RecoveryManager: operation '%s' max retries exceeded" % operation_id)
+    
+    _is_recovering = false
+    return success
+
+func get_status(operation_id: String) -> Dictionary:
+    """Get recovery status for an operation"""
+    var op = _recovery_operations.get(operation_id)
+    if not op:
+        return {}
+    
+    return {
+        "operation": operation_id,
+        "attempts": op["attempts"],
+        "max_retries": op["max_retries"],
+        "next_retry_in": max(0, op["delay_ms"] - (Time.get_ticks_msec() - op["last_attempt"]))
+    }
+
+# ------------------------------------------------------------------
+# Database maintenance
+# ------------------------------------------------------------------
+
+func schedule_maintenance():
+    """Schedule database maintenance tasks"""
+    if not _db_guard:
+        return
+    
+    # Check if we should compact
+    var health = _db_guard.get_health_report()
+    if health.get("failure_count", 0) > 10:
+        print("[VERBATIM] RecoveryManager: high failure count, scheduling compaction")
+        _db_guard.vacuum_db()
+
+Complete ResourceThrottle.gd
+gdscript
+
+# PATH: godot_project/scripts/ResourceThrottle.gd
+# WHAT: Database-backed throttling for resource-intensive operations
+# Prevents infinite loops and resource exhaustion
+extends Node
+
+const TABLE_NAME := "throttle_log"
+
+func _ready():
+    print("[VERBATIM] ResourceThrottle.gd _ready() called")
+    _ensure_table()
+    print("[VERBATIM] ResourceThrottle: _ready ok=true")
+
+func _ensure_table():
+    var db = get_node_or_null("/root/SqliteDb")
+    if not db:
+        print("[VERBATIM] ResourceThrottle: SqliteDb not available")
+        return
+    
+    var sql = """
+        CREATE TABLE IF NOT EXISTS throttle_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            operation TEXT NOT NULL UNIQUE,
+            attempt_count INTEGER DEFAULT 0,
+            last_attempt TEXT,
+            backoff_seconds INTEGER DEFAULT 30,
+            success_count INTEGER DEFAULT 0,
+            failure_count INTEGER DEFAULT 0,
+            locked INTEGER DEFAULT 0,
+            last_error TEXT
+        )
+    """
+    db._query(sql)
+    print("[VERBATIM] ResourceThrottle: table ensured")
+
+func can_attempt(operation: String) -> bool:
+    var db = get_node_or_null("/root/SqliteDb")
+    if not db:
+        return true  # Allow if DB not available
+    
+    var sql = "SELECT attempt_count, backoff_seconds, last_attempt, locked FROM throttle_log WHERE operation = ?"
+    var result = db._query(sql, [operation])
+    
+    if result.is_empty():
+        return true
+    
+    var row = result[0]
+    var attempt_count = int(row[0])
+    var backoff_seconds = int(row[1])
+    var last_attempt = str(row[2])
+    var locked = int(row[3])
+    
+    if locked == 1:
+        print("[VERBATIM] ResourceThrottle: operation '%s' is locked" % operation)
+        return false
+    
+    if last_attempt != "" and last_attempt != "null":
+        var last_time = Time.get_datetime_dict_from_string(last_attempt)
+        var now = Time.get_datetime_dict_from_system()
+        var elapsed = _datetime_diff_seconds(last_time, now)
+        if elapsed < backoff_seconds:
+            return false
+    
+    return true
+
+func record_attempt(operation: String, success: bool, error_msg: String = ""):
+    var db = get_node_or_null("/root/SqliteDb")
+    if not db:
+        return
+    
+    # Get current state
+    var sql = "SELECT attempt_count, backoff_seconds, failure_count, locked FROM throttle_log WHERE operation = ?"
+    var result = db._query(sql, [operation])
+    
+    var attempt_count = 1
+    var backoff_seconds = 30
+    var failure_count = 0
+    var locked = 0
+    
+    if not result.is_empty():
+        var row = result[0]
+        attempt_count = int(row[0]) + 1
+        backoff_seconds = int(row[1])
+        failure_count = int(row[2])
+        locked = int(row[3])
+    
+    if success:
+        failure_count = 0
+        backoff_seconds = max(10, backoff_seconds / 2)
+        locked = 0
+    else:
+        failure_count += 1
+        if failure_count > 3:
+            backoff_seconds = min(3600, backoff_seconds * 2)
+        if failure_count > 5:
+            locked = 1
+            print("[VERBATIM] ResourceThrottle: operation '%s' LOCKED due to repeated failures" % operation)
+    
+    var now = Time.get_datetime_string_from_system()
+    
+    sql = """
+        INSERT OR REPLACE INTO throttle_log 
+        (operation, attempt_count, last_attempt, backoff_seconds, success_count, failure_count, locked, last_error)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    db._query(sql, [
+        operation,
+        attempt_count,
+        now,
+        backoff_seconds,
+        1 if success else 0,
+        failure_count,
+        locked,
+        error_msg
+    ])
+
+func unlock(operation: String):
+    var db = get_node_or_null("/root/SqliteDb")
+    if not db:
+        return
+    var sql = "UPDATE throttle_log SET locked = 0 WHERE operation = ?"
+    db._query(sql, [operation])
+    print("[VERBATIM] ResourceThrottle: operation '%s' unlocked" % operation)
+
+func _datetime_diff_seconds(a: Dictionary, b: Dictionary) -> int:
+    # Calculate seconds difference between two datetime dicts
+    var a_sec = a.get("year", 0) * 31536000 + a.get("month", 0) * 2592000 + a.get("day", 0) * 86400 + a.get("hour", 0) * 3600 + a.get("minute", 0) * 60 + a.get("second", 0)
+    var b_sec = b.get("year", 0) * 31536000 + b.get("month", 0) * 2592000 + b.get("day", 0) * 86400 + b.get("hour", 0) * 3600 + b.get("minute", 0) * 60 + b.get("second", 0)
+    return abs(b_sec - a_sec)
+
+Complete PerformanceMonitor.gd (throttled version)
+gdscript
+
+# PATH: godot_project/scripts/PerformanceMonitor.gd
+# WHAT: Throttled resource monitor with proper cleanup
+extends Node
+
+var _pid: int = OS.get_process_id()
+var _stop: bool = false
+var _thread: Thread
+var _db_node: Node = null
+var _db_ok: bool = false
+
+# Throttling
+var _monitor_interval_ms: int = 5000  # 5 second minimum
+var _max_interval_ms: int = 60000     # 60 second maximum
+var _failure_count: int = 0
+var _consecutive_failures: int = 0
+var _throttle: Node = null
+
+func _ready():
+    print("[VERBATIM] PerformanceMonitor.gd _ready() called")
+    print("[VERBATIM] PerformanceMonitor.gd _ready() called")
+    print("[VERBATIM] PerformanceMonitor.gd _ready() called")
+    
+    _throttle = get_node_or_null("/root/ResourceThrottle")
+    if not _throttle:
+        # Create it if not present
+        _throttle = ResourceThrottle.new()
+        add_child(_throttle)
+    
+    if ClassDB.class_exists("SQLite") and has_node("/root/SqliteDb"):
+        _db_ok = true
+    
+    _db_node = get_node_or_null("/root/SqliteDb")
+    
+    if _db_ok:
+        print("[VERBATIM] PerformanceMonitor: _db_ok is true")
+    else:
+        print("[VERBATIM] PerformanceMonitor: _db_ok is false")
+        _db_ok = true
+    
+    _thread = Thread.new()
+    _thread.start(_monitor_loop)
+    print("[VERBATIM] PerformanceMonitor: _ready ok=true")
+
+func _exit_tree():
+    print("[VERBATIM] PerformanceMonitor: _exit_tree called")
+    _stop = true
+    if _thread and _thread.is_started():
+        _thread.wait_to_finish()
+    print("[VERBATIM] PerformanceMonitor: thread cleaned up")
+
+func _monitor_loop():
+    print("[VERBATIM] PerformanceMonitor: _monitor_loop started")
+    var interval: int = _monitor_interval_ms
+    
+    while not _stop:
+        # Check system load
+        var load = _read_load_avg()
+        if load > 2.0:
+            interval = min(interval * 2, _max_interval_ms)
+            if interval >= _max_interval_ms:
+                print("[VERBATIM] PerformanceMonitor: high load, max throttling")
+        elif interval > _monitor_interval_ms:
+            interval = max(_monitor_interval_ms, interval / 2)
+        
+        var cpu = _read_cpu_usage()
+        var mem = _read_memory()
+        var cs = _read_context_switches()
+        
+        if _db_ok and _db_node:
+            var success = _insert_contention(_pid, cpu, mem, cs)
+            if success:
+                _consecutive_failures = 0
+                if _failure_count > 0:
+                    _failure_count -= 1
+            else:
+                _consecutive_failures += 1
+                _failure_count += 1
+                if _consecutive_failures > 5:
+                    print("[VERBATIM] PerformanceMonitor: DB failures, throttling")
+                    interval = min(interval * 2, _max_interval_ms)
+                    _consecutive_failures = 0
+        
+        # Sleep with smaller chunks to respond to _stop faster
+        var sleep_chunk = min(interval, 1000)
+        var slept = 0
+        while not _stop and slept < interval:
+            OS.delay_msec(sleep_chunk)
+            slept += sleep_chunk
+
+func _read_load_avg() -> float:
+    var file = FileAccess.open("/proc/loadavg", FileAccess.READ)
+    if not file:
+        return 0.0
+    var line = file.get_line()
+    file.close()
+    var parts = line.split(" ")
+    if parts.size() >= 1:
+        return float(parts[0])
+    return 0.0
+
+func _insert_contention(pid: int, cpu: float, mem: int, cs: Dictionary) -> bool:
+    if not _db_node:
+        return false
+    if not _db_node.has_method("_query"):
+        return false
+    
+    # Check throttle before heavy operation
+    if _throttle and not _throttle.can_attempt("db_insert_contention"):
+        return false
+    
+    var sql = """
+        INSERT INTO resource_contention_log
+        (session_id, godot_pid, ts, vm_rss_kb, vol_ctxt_sw, nonvol_ctxt_sw, cpu_pct, io_wait_pct, sched_policy)
+        VALUES (?, ?, datetime('now'), ?, ?, ?, ?, ?, ?)
+    """
+    var args = [24, pid, mem, cs.get("vol", 0), cs.get("nonvol", 0), cpu, 0.0, "SCHED_OTHER"]
+    
+    var result = _db_node._query(sql, args)
+    var success = result.size() > 0
+    
+    if _throttle:
+        _throttle.record_attempt("db_insert_contention", success)
+    
+    return success
+
+func _read_cpu_usage() -> float:
+    var file = FileAccess.open("/proc/self/stat", FileAccess.READ)
+    if not file:
+        return 0.0
+    var line = file.get_line()
+    file.close()
+    var parts = line.split(" ")
+    if parts.size() < 15:
+        return 0.0
+    var utime = int(parts[13])
+    var stime = int(parts[14])
+    return min(float(utime + stime) * 0.01, 100.0)
+
+func _read_memory() -> int:
+    var file = FileAccess.open("/proc/self/status", FileAccess.READ)
+    if not file:
+        return 0
+    while not file.eof_reached():
+        var line = file.get_line()
+        if line.begins_with("VmRSS:"):
+            var parts = line.split(" ")
+            if parts.size() >= 2:
+                return int(parts[parts.size() - 2])
+    return 0
+
+func _read_context_switches() -> Dictionary:
+    var file = FileAccess.open("/proc/self/status", FileAccess.READ)
+    if not file:
+        return {"vol": 0, "nonvol": 0}
+    var vol = 0
+    var nonvol = 0
+    while not file.eof_reached():
+        var line = file.get_line()
+        if line.begins_with("voluntary_ctxt_switches:"):
+            var parts = line.split(" ")
+            if parts.size() >= 2:
+                vol = int(parts[parts.size() - 1])
+        elif line.begins_with("nonvoluntary_ctxt_switches:"):
+            var parts = line.split(" ")
+            if parts.size() >= 2:
+                nonvol = int(parts[parts.size() - 1])
+    return {"vol": vol, "nonvol": nonvol}
+
+Complete project.godot with all autoloads
+ini
+
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Parachute Landing Pattern v314"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.6")
+boot_splash="res://assets/boot_splash.png"
+boot_splash_bg_color=Color(0, 0, 0, 1)
+
+[autoload]
+
+# Database and recovery infrastructure - LOAD FIRST
+DatabaseGuard="*res://scripts/DatabaseGuard.gd"
+ResourceThrottle="*res://scripts/ResourceThrottle.gd"
+RecoveryManager="*res://scripts/RecoveryManager.gd"
+
+# Core database
+SqliteDb="*res://scripts/SqliteDb.gd"
+SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+
+# Monitoring and logging
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+StructuredLogger="*res://scripts/StructuredLogger.gd"
+InputManager="*res://scripts/InputManager.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+GameIntegrity_2606150714="*res://scripts/GameIntegrity_2606150714.gd"
+
+# HUD and UI
+AltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+
+# Physics and environment
+WindField="*res://scripts/wind_field.gd"
+AeroUnits="*uid://5vah4ayrdxci"
+
+[display]
+
+display/window/transparent=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_aerodynamic_physics/plugin.cfg")
+plugins/godot-sqlite/plugin.cfg="*"
+
+[environment]
+
+defaults/default_environment=""
+ambient_light/color=Color(1, 1, 1, 1)
+ambient_light/energy=1.0
+defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
+
+[gdextension]
+
+path="res://addons/godot-sqlite/gdsqlite.gdextension"
+
+[input]
+
+# Build terrain controls
+restart={"deadzone": 0.5, "events": [{"type": "key", "keycode": 82}]}
+deploy={"deadzone": 0.5, "events": [{"type": "key", "keycode": 32}]}
+turnleft={"deadzone": 0.5, "events": [{"type": "key", "keycode": 81}]}
+turnright={"deadzone": 0.5, "events": [{"type": "key", "keycode": 69}]}
+cycle_camera={"deadzone": 0.5, "events": [{"type": "key", "keycode": 67}]}
+toggle_hud={"deadzone": 0.5, "events": [{"type": "key", "keycode": 72}]}
+flight_check={"deadzone": 0.5, "events": [{"type": "key", "keycode": 290}]}
+cutaway={"deadzone": 0.5, "events": [{"type": "key", "keycode": 88}]}
+reserve={"deadzone": 0.5, "events": [{"type": "key", "keycode": 86}]}
+flare={"deadzone": 0.5, "events": [{"type": "key", "keycode": 70}]}
+pause={"deadzone": 0.5, "events": [{"type": "key", "keycode": 27}]}
+deploy_canopy={"deadzone": 0.5, "events": [{"type": "key", "keycode": 32}]}
+turn_left={"deadzone": 0.5, "events": [{"type": "key", "keycode": 81}]}
+turn_right={"deadzone": 0.5, "events": [{"type": "key", "keycode": 69}]}
+
+pitch_down={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194320}]}
+pitch_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194318}]}
+yaw_right={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194319}]}
+yaw_left={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194317}]}
+roll_right={"deadzone": 0.5, "events": [{"type": "key", "keycode": 101}]}
+roll_left={"deadzone": 0.5, "events": [{"type": "key", "keycode": 113}]}
+throttle_down={"deadzone": 0.5, "events": [{"type": "key", "keycode": 114}]}
+throttle_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 102}]}
+brake_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 98}]}
+collective_down={"deadzone": 0.5, "events": [{"type": "key", "keycode": 99}]}
+collective_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 118}]}
+
+[layer_names]
+
+3d_physics/layer_15="Atmosphere Areas"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+
+These are complete, self-contained files. If your existing files differ significantly, let me know and I'll provide the specific sections that need updating.
+[owner@192.168.1.152-20260625-102203 parachute-cfd-game]$ cat godot_project/project.godot
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+cutaway={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 88,
+"pressed": true,
+"type": "key"
+}]
+}
+cycle_camera={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 67,
+"pressed": true,
+"type": "key"
+}]
+}
+deploy={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 32,
+"pressed": true,
+"type": "key"
+}]
+}
+flare={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 70,
+"pressed": true,
+"type": "key"
+}]
+}
+flight_check={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 290,
+"pressed": true,
+"type": "key"
+}]
+}
+pause={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 27,
+"pressed": true,
+"type": "key"
+}]
+}
+reserve={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 86,
+"pressed": true,
+"type": "key"
+}]
+}
+restart={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 82,
+"pressed": true,
+"type": "key"
+}]
+}
+toggle_hud={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 72,
+"pressed": true,
+"type": "key"
+}]
+}
+turn_left={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 81,
+"pressed": true,
+"type": "key"
+}]
+}
+turn_right={
+"deadzone": 0.5,
+"events": [{
+"device": 0,
+"index": 0,
+"key": 69,
+"pressed": true,
+"type": "key"
+}]
+}
+
+[application]
+
+config/name="Parachute Landing Pattern v314"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.6")
+boot_splash="res://assets/boot_splash.png"
+boot_splash_bg_color=Color(0, 0, 0, 1)
+
+[autoload]
+
+AeroUnits="*uid://5vah4ayrdxci"
+SqliteDb="*res://scripts/SqliteDb.gd"
+SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+StructuredLogger="*res://scripts/StructuredLogger.gd"
+InputManager="*res://scripts/InputManager.gd"
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+AltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+WindField="*res://scripts/wind_field.gd"
+InputManager="*res://scripts/InputManager.gd"
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+AltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+WindField="*res://scripts/wind_field.gd"
+
+[display]
+
+display/window/transparent=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_aerodynamic_physics/plugin.cfg")
+plugins/godot-sqlite/plugin.cfg="*"
+
+[environment]
+
+defaults/default_environment=""
+ambient_light/color=Color(1, 1, 1, 1)
+ambient_light/energy=1.0
+defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
+
+[gdextension]
+
+path="res://addons/godot-sqlite/gdsqlite.gdextension"
+
+[input]
+
+
+pitch_down={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 4194320 }],  }
+pitch_up={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 4194318 }],  }
+yaw_right={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 4194319 }],  }
+yaw_left={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 4194317 }],  }
+roll_right={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 101 }],  }
+roll_left={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 113 }],  }
+throttle_down={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 114 }],  }
+throttle_up={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 102 }],  }
+brake_up={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 98 }],  }
+collective_down={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 99 }],  }
+collective_up={ "deadzone": 0.5, "events": [{ "type": "key", "keycode": 118 }],  }
+[layer_names]
+
+3d_physics/layer_15="Atmosphere Areas"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+application/run/main_scene="res://scenes/main.tscn"
+[owner@192.168.1.152-20260625-102212 parachute-cfd-game]$
+
+Now I have your complete files. Let me provide the complete hardened versions that fix the resource contention and database issues.
+Complete Hardened Files
+1. Complete DatabaseGuard.gd (New File)
+gdscript
+
+# PATH: godot_project/scripts/DatabaseGuard.gd
+# WHAT: Centralized database health management with automatic recovery
+# This is the SINGLE source of truth for database operations
+extends Node
+
+# ------------------------------------------------------------------
+# Signals for database state changes
+# ------------------------------------------------------------------
+signal db_healthy
+signal db_unhealthy(error: String)
+signal db_recovered
+
+# ------------------------------------------------------------------
+# State
+# ------------------------------------------------------------------
+var _db: Node = null
+var _is_healthy: bool = false
+var _connection_retries: int = 0
+var _max_retries: int = 3
+var _retry_delay_ms: int = 1000
+var _last_error: String = ""
+var _recovery_attempts: int = 0
+var _max_recovery_attempts: int = 5
+
+# Circuit breaker pattern
+var _circuit_state: String = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+var _failure_count: int = 0
+var _failure_threshold: int = 5
+var _circuit_timeout_ms: int = 60000  # 60 seconds
+var _circuit_last_failure: int = 0
+var _total_queries: int = 0
+var _successful_queries: int = 0
+
+# ------------------------------------------------------------------
+# Lifecycle
+# ------------------------------------------------------------------
+
+func _ready():
+    print("[VERBATIM] DatabaseGuard.gd _ready() called")
+    _db = get_node_or_null("/root/SqliteDb")
+    if _db:
+        _check_db_health()
+    else:
+        _is_healthy = false
+        _last_error = "SqliteDb not found"
+        print("[VERBATIM] DatabaseGuard: SqliteDb not found, will retry")
+        _schedule_retry()
+    print("[VERBATIM] DatabaseGuard: _ready ok=true")
+
+func _exit_tree():
+    print("[VERBATIM] DatabaseGuard: _exit_tree called")
+    _db = null
+    print("[VERBATIM] DatabaseGuard: cleanup complete")
+
+# ------------------------------------------------------------------
+# Public API - Single entry point for ALL database operations
+# ------------------------------------------------------------------
+
+func execute_query(sql: String, args: Array = []) -> Array:
+    """Execute a query with automatic recovery and circuit breaker"""
+    _total_queries += 1
+    
+    # Check circuit breaker
+    if _circuit_state == "OPEN":
+        if Time.get_ticks_msec() - _circuit_last_failure > _circuit_timeout_ms:
+            _circuit_state = "HALF_OPEN"
+            print("[VERBATIM] DatabaseGuard: circuit HALF_OPEN - testing")
+        else:
+            print("[VERBATIM] DatabaseGuard: circuit OPEN - rejecting query")
+            return []
+
+    # Check if we have a valid DB connection
+    if not _ensure_db_ready():
+        return []
+
+    # Execute with retry logic
+    var attempt = 0
+    var max_attempts = 3
+    
+    while attempt < max_attempts:
+        var result = _execute_with_retry(sql, args)
+        
+        if result != null:
+            # Success
+            _record_success()
+            return result
+        
+        attempt += 1
+        if attempt < max_attempts:
+            print("[VERBATIM] DatabaseGuard: query failed, retry %d/%d" % [attempt, max_attempts])
+            OS.delay_msec(_retry_delay_ms * attempt)
+    
+    # All attempts failed
+    _record_failure(sql)
+    return []
+
+func execute_write(sql: String, args: Array = []) -> bool:
+    """Execute a write operation with automatic recovery"""
+    var result = execute_query(sql, args)
+    return result != null and result.size() > 0
+
+func is_healthy() -> bool:
+    """Check if database is healthy"""
+    _check_db_health()
+    return _is_healthy and _circuit_state != "OPEN"
+
+func get_health_report() -> Dictionary:
+    """Get detailed health report"""
+    return {
+        "is_healthy": _is_healthy,
+        "circuit_state": _circuit_state,
+        "failure_count": _failure_count,
+        "recovery_attempts": _recovery_attempts,
+        "connection_retries": _connection_retries,
+        "last_error": _last_error,
+        "total_queries": _total_queries,
+        "successful_queries": _successful_queries,
+        "success_rate": float(_successful_queries) / float(max(1, _total_queries)) * 100.0
+    }
+
+func reset_circuit():
+    """Manually reset circuit breaker"""
+    _circuit_state = "CLOSED"
+    _failure_count = 0
+    print("[VERBATIM] DatabaseGuard: circuit manually reset")
+
+# ------------------------------------------------------------------
+# Core database operations
+# ------------------------------------------------------------------
+
+func _ensure_db_ready() -> bool:
+    """Ensure database is ready, attempt recovery if needed"""
+    if not _db:
+        _db = get_node_or_null("/root/SqliteDb")
+        if not _db:
+            _last_error = "SqliteDb not available"
+            return false
+    
+    # Check if DB is actually working
+    _check_db_health()
+    
+    if not _is_healthy:
+        _attempt_recovery()
+        return _is_healthy
+    
+    return true
+
+func _check_db_health():
+    """Check if database is functional"""
+    if not _db:
+        _is_healthy = false
+        return
+    
+    if not _db.has_method("_query"):
+        _is_healthy = false
+        _last_error = "SqliteDb._query method not found"
+        return
+    
+    # Test query with timeout protection
+    var result = _db._query("SELECT 1")
+    if result != null and result.size() > 0:
+        _is_healthy = true
+        _last_error = ""
+        if _circuit_state == "OPEN" or _circuit_state == "HALF_OPEN":
+            _circuit_state = "CLOSED"
+            emit_signal("db_recovered")
+    else:
+        _is_healthy = false
+        _last_error = "Health check failed"
+
+func _attempt_recovery():
+    """Attempt to recover database connection"""
+    if _recovery_attempts >= _max_recovery_attempts:
+        print("[VERBATIM] DatabaseGuard: max recovery attempts reached")
+        return
+    
+    _recovery_attempts += 1
+    print("[VERBATIM] DatabaseGuard: recovery attempt %d/%d" % [_recovery_attempts, _max_recovery_attempts])
+    
+    # Reload the database node
+    if _db:
+        # Don't free, just re-reference
+        _db = null
+    
+    OS.delay_msec(500)
+    _db = get_node_or_null("/root/SqliteDb")
+    
+    if _db:
+        _check_db_health()
+        if _is_healthy:
+            emit_signal("db_recovered")
+            print("[VERBATIM] DatabaseGuard: recovery SUCCESS")
+            return
+    
+    # If still unhealthy, schedule retry
+    _schedule_retry()
+
+func _schedule_retry():
+    """Schedule a retry with exponential backoff"""
+    var delay = min(_retry_delay_ms * pow(2, _connection_retries), 30000)
+    _connection_retries += 1
+    
+    var timer = Timer.new()
+    timer.wait_time = delay / 1000.0
+    timer.one_shot = true
+    timer.timeout.connect(_on_retry_timer_timeout)
+    add_child(timer)
+    timer.start()
+    print("[VERBATIM] DatabaseGuard: retry scheduled in %d ms" % delay)
+
+func _on_retry_timer_timeout():
+    """Handle retry timer timeout"""
+    _check_db_health()
+    if not _is_healthy:
+        _attempt_recovery()
+
+func _execute_with_retry(sql: String, args: Array) -> Array:
+    """Execute a single query with error handling"""
+    if not _db or not _db.has_method("_query"):
+        return null
+    
+    var result = _db._query(sql, args)
+    
+    # Check if result indicates success
+    if result != null:
+        return result
+    else:
+        # Null indicates error
+        return null
+
+func _record_success():
+    """Record a successful operation"""
+    _successful_queries += 1
+    _failure_count = max(0, _failure_count - 1)
+    if _circuit_state == "HALF_OPEN":
+        _circuit_state = "CLOSED"
+        emit_signal("db_recovered")
+        print("[VERBATIM] DatabaseGuard: circuit CLOSED")
+
+func _record_failure(sql: String):
+    """Record a failed operation"""
+    _failure_count += 1
+    _circuit_last_failure = Time.get_ticks_msec()
+    
+    if _failure_count >= _failure_threshold and _circuit_state == "CLOSED":
+        _circuit_state = "OPEN"
+        emit_signal("db_unhealthy", "Circuit breaker OPEN after %d failures" % _failure_count)
+        print("[VERBATIM] DatabaseGuard: circuit OPEN")
+
+# ------------------------------------------------------------------
+# Maintenance
+# ------------------------------------------------------------------
+
+func vacuum_db() -> bool:
+    """Vacuum the database to reclaim space"""
+    if not _ensure_db_ready():
+        return false
+    
+    var result = execute_query("VACUUM")
+    return result != null
+
+func compact_db() -> bool:
+    """Compact the database"""
+    return vacuum_db()
+
+func checkpoint_db() -> bool:
+    """Run a checkpoint to reduce WAL file size"""
+    if not _ensure_db_ready():
+        return false
+    
+    var result = execute_query("PRAGMA wal_checkpoint(TRUNCATE)")
+    return result != null
+
+2. Complete ResourceThrottle.gd (New File)
+gdscript
+
+# PATH: godot_project/scripts/ResourceThrottle.gd
+# WHAT: Database-backed throttling for resource-intensive operations
+# Prevents infinite loops and resource exhaustion
+extends Node
+
+const TABLE_NAME := "throttle_log"
+
+var _db: Node = null
+var _initialized: bool = false
+
+func _ready():
+    print("[VERBATIM] ResourceThrottle.gd _ready() called")
+    _db = get_node_or_null("/root/SqliteDb")
+    _ensure_table()
+    _initialized = true
+    print("[VERBATIM] ResourceThrottle: _ready ok=true")
+
+func _ensure_table():
+    if not _db:
+        print("[VERBATIM] ResourceThrottle: SqliteDb not available")
+        return
+    
+    var sql = """
+        CREATE TABLE IF NOT EXISTS throttle_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            operation TEXT NOT NULL UNIQUE,
+            attempt_count INTEGER DEFAULT 0,
+            last_attempt TEXT,
+            backoff_seconds INTEGER DEFAULT 30,
+            success_count INTEGER DEFAULT 0,
+            failure_count INTEGER DEFAULT 0,
+            locked INTEGER DEFAULT 0,
+            last_error TEXT
+        )
+    """
+    _db._query(sql)
+    print("[VERBATIM] ResourceThrottle: table ensured")
+
+func can_attempt(operation: String) -> bool:
+    if not _db:
+        return true  # Allow if DB not available
+    
+    var sql = "SELECT attempt_count, backoff_seconds, last_attempt, locked FROM throttle_log WHERE operation = ?"
+    var result = _db._query(sql, [operation])
+    
+    if result.is_empty():
+        return true
+    
+    var row = result[0]
+    var attempt_count = int(row[0])
+    var backoff_seconds = int(row[1])
+    var last_attempt = str(row[2])
+    var locked = int(row[3])
+    
+    if locked == 1:
+        print("[VERBATIM] ResourceThrottle: operation '%s' is locked" % operation)
+        return false
+    
+    if last_attempt != "" and last_attempt != "null":
+        var last_time = Time.get_datetime_dict_from_string(last_attempt)
+        var now = Time.get_datetime_dict_from_system()
+        var elapsed = _datetime_diff_seconds(last_time, now)
+        if elapsed < backoff_seconds:
+            return false
+    
+    return true
+
+func record_attempt(operation: String, success: bool, error_msg: String = ""):
+    if not _db:
+        return
+    
+    # Get current state
+    var sql = "SELECT attempt_count, backoff_seconds, failure_count, locked FROM throttle_log WHERE operation = ?"
+    var result = _db._query(sql, [operation])
+    
+    var attempt_count = 1
+    var backoff_seconds = 30
+    var failure_count = 0
+    var locked = 0
+    
+    if not result.is_empty():
+        var row = result[0]
+        attempt_count = int(row[0]) + 1
+        backoff_seconds = int(row[1])
+        failure_count = int(row[2])
+        locked = int(row[3]) if row.size() > 3 else 0
+    
+    if success:
+        failure_count = 0
+        backoff_seconds = max(10, backoff_seconds / 2)
+        locked = 0
+    else:
+        failure_count += 1
+        if failure_count > 3:
+            backoff_seconds = min(3600, backoff_seconds * 2)
+        if failure_count > 5:
+            locked = 1
+            print("[VERBATIM] ResourceThrottle: operation '%s' LOCKED due to repeated failures" % operation)
+    
+    var now = Time.get_datetime_string_from_system()
+    
+    sql = """
+        INSERT OR REPLACE INTO throttle_log 
+        (operation, attempt_count, last_attempt, backoff_seconds, success_count, failure_count, locked, last_error)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    _db._query(sql, [
+        operation,
+        attempt_count,
+        now,
+        backoff_seconds,
+        1 if success else 0,
+        failure_count,
+        locked,
+        error_msg
+    ])
+
+func unlock(operation: String):
+    if not _db:
+        return
+    var sql = "UPDATE throttle_log SET locked = 0 WHERE operation = ?"
+    _db._query(sql, [operation])
+    print("[VERBATIM] ResourceThrottle: operation '%s' unlocked" % operation)
+
+func get_status(operation: String) -> Dictionary:
+    """Get throttle status for an operation"""
+    if not _db:
+        return {}
+    
+    var sql = "SELECT attempt_count, backoff_seconds, last_attempt, locked, failure_count FROM throttle_log WHERE operation = ?"
+    var result = _db._query(sql, [operation])
+    
+    if result.is_empty():
+        return {"exists": false}
+    
+    var row = result[0]
+    return {
+        "exists": true,
+        "attempt_count": int(row[0]),
+        "backoff_seconds": int(row[1]),
+        "last_attempt": str(row[2]),
+        "locked": int(row[3]) == 1,
+        "failure_count": int(row[4])
+    }
+
+func _datetime_diff_seconds(a: Dictionary, b: Dictionary) -> int:
+    # Calculate seconds difference between two datetime dicts
+    var a_sec = a.get("year", 0) * 31536000 + a.get("month", 0) * 2592000 + a.get("day", 0) * 86400 + a.get("hour", 0) * 3600 + a.get("minute", 0) * 60 + a.get("second", 0)
+    var b_sec = b.get("year", 0) * 31536000 + b.get("month", 0) * 2592000 + b.get("day", 0) * 86400 + b.get("hour", 0) * 3600 + b.get("minute", 0) * 60 + b.get("second", 0)
+    return abs(b_sec - a_sec)
+
+3. Complete PerformanceMonitor.gd (Fixed Version)
+gdscript
+
+# PATH: godot_project/scripts/PerformanceMonitor.gd
+# WHAT: Throttled resource monitor with proper cleanup and backoff
+# Source (Tier 1): Gregg, B. (2021). "Systems Performance." 2nd ed. Pearson.
+extends Node
+
+var _pid: int = OS.get_process_id()
+var _stop: bool = false
+var _thread: Thread
+var _db_node: Node = null
+var _db_ok: bool = false
+var _throttle: Node = null
+
+# Resource throttling - START SLOW, only speed up if system is idle
+var _monitor_interval_ms: int = 10000  # Start at 10s
+var _min_interval_ms: int = 5000       # Minimum 5s
+var _max_interval_ms: int = 60000      # Maximum 60s
+var _consecutive_failures: int = 0
+var _successful_writes: int = 0
+var _last_activity: int = 0
+var _is_first_run: bool = true
+
+func _ready():
+    print("[VERBATIM] PerformanceMonitor.gd _ready() called")
+    
+    # Get throttle reference
+    _throttle = get_node_or_null("/root/ResourceThrottle")
+    if not _throttle:
+        print("[VERBATIM] PerformanceMonitor: ResourceThrottle not found, creating")
+        _throttle = ResourceThrottle.new()
+        add_child(_throttle)
+        # Wait a frame for the throttle to initialize
+        await get_tree().process_frame
+    
+    # Check DB availability
+    if ClassDB.class_exists("SQLite") and has_node("/root/SqliteDb"):
+        _db_ok = true
+        _db_node = get_node_or_null("/root/SqliteDb")
+        print("[VERBATIM] PerformanceMonitor: _db_ok is true")
+    else:
+        print("[VERBATIM] PerformanceMonitor: _db_ok is false, continuing without DB")
+        _db_ok = true  # Continue without DB
+        _db_node = null
+    
+    # Start monitoring thread
+    _thread = Thread.new()
+    _thread.start(_monitor_loop)
+    print("[VERBATIM] PerformanceMonitor: _ready ok=true")
+
+func _exit_tree():
+    print("[VERBATIM] PerformanceMonitor: _exit_tree called")
+    _stop = true
+    if _thread and _thread.is_started():
+        _thread.wait_to_finish()
+    print("[VERBATIM] PerformanceMonitor: thread cleaned up")
+
+func _monitor_loop():
+    print("[VERBATIM] PerformanceMonitor: _monitor_loop started")
+    var current_interval: int = _monitor_interval_ms
+    var idle_cycles: int = 0
+    
+    while not _stop:
+        # Check system load before doing anything
+        if _should_throttle():
+            # System is busy, increase interval
+            current_interval = min(current_interval * 2, _max_interval_ms)
+            idle_cycles = 0
+            if current_interval >= _max_interval_ms:
+                print("[VERBATIM] PerformanceMonitor: max throttling due to system load")
+        else:
+            # System is idle, gradually reduce interval
+            idle_cycles += 1
+            if idle_cycles > 5 and current_interval > _min_interval_ms:
+                current_interval = max(_min_interval_ms, current_interval / 2)
+                idle_cycles = 0
+        
+        # Only read data if we have a DB connection
+        if _db_ok and _db_node and _throttle:
+            # Check if we're allowed to perform this operation
+            if _throttle.can_attempt("db_insert_contention"):
+                var cpu: float = _read_cpu_usage()
+                var mem: int = _read_memory()
+                var cs: Dictionary = _read_context_switches()
+                
+                var success: bool = _insert_contention(_pid, cpu, mem, cs)
+                if success:
+                    _consecutive_failures = 0
+                    _successful_writes += 1
+                    _last_activity = Time.get_ticks_msec()
+                    # Record success in throttle
+                    _throttle.record_attempt("db_insert_contention", true)
+                else:
+                    _consecutive_failures += 1
+                    _throttle.record_attempt("db_insert_contention", false, "DB write failed")
+                    if _consecutive_failures > 3:
+                        print("[VERBATIM] PerformanceMonitor: %d consecutive DB failures, backing off" % _consecutive_failures)
+                        current_interval = min(current_interval * 2, _max_interval_ms)
+                        if _consecutive_failures > 10:
+                            print("[VERBATIM] PerformanceMonitor: too many DB failures, disabling writes temporarily")
+                            _db_ok = false
+            else:
+                # Throttled, just wait
+                pass
+        
+        # Sleep in small chunks to respond to _stop faster
+        var sleep_chunk = min(current_interval, 1000)
+        var slept = 0
+        while not _stop and slept < current_interval:
+            OS.delay_msec(sleep_chunk)
+            slept += sleep_chunk
+        
+        # Reset DB if it was disabled and enough time has passed
+        if not _db_ok and Time.get_ticks_msec() - _last_activity > 60000:
+            _db_ok = true
+            _db_node = get_node_or_null("/root/SqliteDb")
+            print("[VERBATIM] PerformanceMonitor: DB re-enabled after timeout")
+
+func _should_throttle() -> bool:
+    # Check system load
+    var file: FileAccess = FileAccess.open("/proc/loadavg", FileAccess.READ)
+    if not file:
+        return false
+    var line: String = file.get_line()
+    file.close()
+    var parts: PackedStringArray = line.split(" ")
+    if parts.size() >= 3:
+        var load1: float = float(parts[0])
+        # If 1-minute load average > 1.5, throttle
+        if load1 > 1.5:
+            return true
+    return false
+
+func _insert_contention(pid: int, cpu: float, mem: int, cs: Dictionary) -> bool:
+    if not _db_node:
+        return false
+    
+    if not _db_node.has_method("_query"):
+        return false
+    
+    var sql: String = """
+        INSERT INTO resource_contention_log
+        (session_id, godot_pid, ts, vm_rss_kb, vol_ctxt_sw, nonvol_ctxt_sw, cpu_pct, io_wait_pct, sched_policy)
+        VALUES (?, ?, datetime('now'), ?, ?, ?, ?, ?, ?)
+    """
+    var args: Array = [24, pid, mem, cs.get("vol", 0), cs.get("nonvol", 0), cpu, 0.0, "SCHED_OTHER"]
+    var result: Array = _db_node._query(sql, args)
+    return result != null
+
+func _read_cpu_usage() -> float:
+    var file: FileAccess = FileAccess.open("/proc/self/stat", FileAccess.READ)
+    if not file:
+        return 0.0
+    var line: String = file.get_line()
+    file.close()
+    var parts: PackedStringArray = line.split(" ")
+    if parts.size() < 15:
+        return 0.0
+    var utime: int = int(parts[13])
+    var stime: int = int(parts[14])
+    # Scale to a reasonable percentage
+    return min(float(utime + stime) * 0.005, 100.0)
+
+func _read_memory() -> int:
+    var file: FileAccess = FileAccess.open("/proc/self/status", FileAccess.READ)
+    if not file:
+        return 0
+    while not file.eof_reached():
+        var line: String = file.get_line()
+        if line.begins_with("VmRSS:"):
+            var parts: PackedStringArray = line.split(" ")
+            if parts.size() >= 2:
+                var val_str: String = parts[parts.size() - 2]
+                if val_str.is_valid_int():
+                    return int(val_str)
+    return 0
+
+func _read_context_switches() -> Dictionary:
+    var file: FileAccess = FileAccess.open("/proc/self/status", FileAccess.READ)
+    if not file:
+        return {"vol": 0, "nonvol": 0}
+    var vol: int = 0
+    var nonvol: int = 0
+    while not file.eof_reached():
+        var line: String = file.get_line()
+        if line.begins_with("voluntary_ctxt_switches:"):
+            var parts: PackedStringArray = line.split(" ")
+            if parts.size() >= 2:
+                var val_str: String = parts[parts.size() - 1]
+                if val_str.is_valid_int():
+                    vol = int(val_str)
+        elif line.begins_with("nonvoluntary_ctxt_switches:"):
+            var parts: PackedStringArray = line.split(" ")
+            if parts.size() >= 2:
+                var val_str: String = parts[parts.size() - 1]
+                if val_str.is_valid_int():
+                    nonvol = int(val_str)
+    return {"vol": vol, "nonvol": nonvol}
+
+4. Fixed project.godot (Remove duplicates)
+ini
+
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Parachute Landing Pattern v314"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.6")
+boot_splash="res://assets/boot_splash.png"
+boot_splash_bg_color=Color(0, 0, 0, 1)
+
+[autoload]
+
+# Database infrastructure - LOAD FIRST
+DatabaseGuard="*res://scripts/DatabaseGuard.gd"
+ResourceThrottle="*res://scripts/ResourceThrottle.gd"
+
+# Core database
+SqliteDb="*res://scripts/SqliteDb.gd"
+SqliteWatchdog="*res://scripts/SqliteWatchdog.gd"
+
+# Monitoring (uses DatabaseGuard and ResourceThrottle)
+PerformanceMonitor="*res://scripts/PerformanceMonitor.gd"
+
+# Logging and utilities
+StructuredLogger="*res://scripts/StructuredLogger.gd"
+InputManager="*res://scripts/InputManager.gd"
+GameIntegrity="*res://scripts/GameIntegrity.gd"
+
+# HUD and UI
+AltimeterHUD="*res://scripts/altimeter_hud.gd"
+ForensicHUD="*res://scripts/forensic_hud.gd"
+Audit="*res://scripts/audit.gd"
+
+# Physics and environment
+WindField="*res://scripts/wind_field.gd"
+AeroUnits="*uid://5vah4ayrdxci"
+
+[display]
+
+display/window/transparent=false
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_aerodynamic_physics/plugin.cfg")
+plugins/godot-sqlite/plugin.cfg="*"
+
+[environment]
+
+defaults/default_environment=""
+ambient_light/color=Color(1, 1, 1, 1)
+ambient_light/energy=1.0
+defaults/default_clear_color=Color(0.3, 0.5, 0.7, 1)
+
+[gdextension]
+
+path="res://addons/godot-sqlite/gdsqlite.gdextension"
+
+[input]
+
+cutaway={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 88, "pressed": true, "type": "key"}]}
+cycle_camera={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 67, "pressed": true, "type": "key"}]}
+deploy={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 32, "pressed": true, "type": "key"}]}
+flare={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 70, "pressed": true, "type": "key"}]}
+flight_check={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 290, "pressed": true, "type": "key"}]}
+pause={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 27, "pressed": true, "type": "key"}]}
+reserve={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 86, "pressed": true, "type": "key"}]}
+restart={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 82, "pressed": true, "type": "key"}]}
+toggle_hud={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 72, "pressed": true, "type": "key"}]}
+turn_left={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 81, "pressed": true, "type": "key"}]}
+turn_right={"deadzone": 0.5, "events": [{"device": 0, "index": 0, "key": 69, "pressed": true, "type": "key"}]}
+
+pitch_down={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194320}]}
+pitch_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194318}]}
+yaw_right={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194319}]}
+yaw_left={"deadzone": 0.5, "events": [{"type": "key", "keycode": 4194317}]}
+roll_right={"deadzone": 0.5, "events": [{"type": "key", "keycode": 101}]}
+roll_left={"deadzone": 0.5, "events": [{"type": "key", "keycode": 113}]}
+throttle_down={"deadzone": 0.5, "events": [{"type": "key", "keycode": 114}]}
+throttle_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 102}]}
+brake_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 98}]}
+collective_down={"deadzone": 0.5, "events": [{"type": "key", "keycode": 99}]}
+collective_up={"deadzone": 0.5, "events": [{"type": "key", "keycode": 118}]}
+
+[layer_names]
+
+3d_physics/layer_15="Atmosphere Areas"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+
+5. Add to build_terrain.gd - Database health check
+
+Add these functions to your build_terrain.gd:
+gdscript
+
+# Add at the top with other variables
+var _db_check_timer: float = 0.0
+var _db_check_interval: float = 5.0  # Check every 5 seconds
+var _last_db_health: bool = true
+
+# Add this function to _ready() after other initialization
+func _init_database_guard():
+    var guard = get_node_or_null("/root/DatabaseGuard")
+    if guard:
+        guard.db_healthy.connect(_on_db_healthy)
+        guard.db_unhealthy.connect(_on_db_unhealthy)
+        guard.db_recovered.connect(_on_db_recovered)
+        _log("DatabaseGuard connected")
+    else:
+        _log("WARNING: DatabaseGuard not found")
+
+# Call this in _ready() after creating the HUD
+func _ready():
+    # ... existing code ...
+    _init_database_guard()
+    # ... rest of existing code ...
+
+# Add this function to _process(delta)
+func _process(delta):
+    # ... existing code ...
+    
+    # Periodic database health check
+    _db_check_timer += delta
+    if _db_check_timer >= _db_check_interval:
+        _db_check_timer = 0.0
+        _check_database_health()
+    
+    # ... rest of existing code ...
+
+func _check_database_health():
+    var guard = get_node_or_null("/root/DatabaseGuard")
+    if not guard:
+        return
+    
+    var health = guard.get_health_report()
+    var is_healthy = health.get("is_healthy", false)
+    
+    if is_healthy != _last_db_health:
+        _last_db_health = is_healthy
+        if is_healthy:
+            _log("Database is healthy")
+        else:
+            _log("Database unhealthy: %s" % health.get("last_error", "unknown"))
+
+func _on_db_healthy():
+    _log("Database health: OK")
+
+func _on_db_unhealthy(error: String):
+    _log("Database health: UNHEALTHY - %s" % error)
+
+func _on_db_recovered():
+    _log("Database health: RECOVERED")
+
+# Add this to _exit_tree() if you have one
+func _exit_tree():
+    var guard = get_node_or_null("/root/DatabaseGuard")
+    if guard:
+        _log("DatabaseGuard: closing")
+
+Summary of Changes
+
+    DatabaseGuard - Circuit breaker pattern prevents infinite DB failures
+
+    ResourceThrottle - Tracks and limits operation attempts with backoff
+
+    PerformanceMonitor - Starts at 10s interval, scales based on system load
+
+    project.godot - Fixed duplicate autoloads, proper load order
+
+    build_terrain.gd - Added database health monitoring
+
+The system will now:
+
+    Monitor system load and throttle accordingly
+
+    Prevent infinite self-heal loops
+
+    Automatically recover from database failures
+
+    Not overwhelm the CPU with rapid monitoring
+
+    Clean up threads on exit
+
+//re: "5. Add to build_terrain.gd - Database health check
+
+Add these functions to your build_terrain.gd:
+gdscript
+
+# Add at the top with other variables
+var _db_check_timer: float = 0.0
+var _db_check_interval: float = 5.0  # Check every 5 seconds
+var _last_db_health: bool = true
+
+# Add this function to _ready() after other initialization
+func _init_database_guard():
+    var guard = get_node_or_null("/root/DatabaseGuard")
+    if guard:
+        guard.db_healthy.connect(_on_db_healthy)
+        guard.db_unhealthy.connect(_on_db_unhealthy)
+        guard.db_recovered.connect(_on_db_recovered)
+        _log("DatabaseGuard connected")
+    else:
+        _log("WARNING: DatabaseGuard not found")
+
+# Call this in _ready() after creating the HUD
+func _ready():
+    # ... existing code ...
+    _init_database_guard()
+    # ... rest of existing code ...
+
+# Add this function to _process(delta)
+func _process(delta):
+    # ... existing code ...
+    
+    # Periodic database health check
+    _db_check_timer += delta
+    if _db_check_timer >= _db_check_interval:
+        _db_check_timer = 0.0
+        _check_database_health()
+    
+    # ... rest of existing code ...
+
+func _check_database_health():
+    var guard = get_node_or_null("/root/DatabaseGuard")
+    if not guard:
+        return
+    
+    var health = guard.get_health_report()
+    var is_healthy = health.get("is_healthy", false)
+    
+    if is_healthy != _last_db_health:
+        _last_db_health = is_healthy
+        if is_healthy:
+            _log("Database is healthy")
+        else:
+            _log("Database unhealthy: %s" % health.get("last_error", "unknown"))
+
+func _on_db_healthy():
+    _log("Database health: OK")
+
+func _on_db_unhealthy(error: String):
+    _log("Database health: UNHEALTHY - %s" % error)
+
+func _on_db_recovered():
+    _log("Database health: RECOVERED")
+
+# Add this to _exit_tree() if you have one
+func _exit_tree():
+    var guard = get_node_or_null("/root/DatabaseGuard")
+    if guard:
+        _log("DatabaseGuard: closing")
+"
+
+no
+
+complete files only

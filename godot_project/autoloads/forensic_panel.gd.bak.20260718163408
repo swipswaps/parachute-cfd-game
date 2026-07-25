@@ -1,0 +1,123 @@
+extends CanvasLayer
+# ============================================================================
+# ForensicPanel – pull‑based unified container (forensic HUD + PiP).
+#
+# Based on evidence from discover_panel_wiring.py:
+#   - SqliteDb API is _query(), not query()
+#   - PiP is created at runtime in build_terrain.gd – search by type
+#   - Input polled in _process (cannot be suppressed by set_input_as_handled)
+#
+# REFERENCES:
+#   - Node._process: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-process
+#   - Input.is_physical_key_pressed: https://docs.godotengine.org/en/stable/classes/class_input.html#class-input-method-is-physical-key-pressed
+#   - HTTPRequest: https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+# ============================================================================
+
+const REFRESH_SEC := 2.0
+const HUB_URL := "http://127.0.0.1:8765/api/summary"
+
+var _panel: PanelContainer
+var _label: RichTextLabel
+var _pip_slot: PanelContainer
+var _db: Node = null
+var _http: HTTPRequest
+var _accum := 0.0
+var _toggle_latch := false   # edge‑detect so held key doesn't flicker
+
+func _ready() -> void:
+	layer = 100
+	_build_ui()
+	_db = get_node_or_null("/root/SqliteDb")
+	_http = HTTPRequest.new()
+	add_child(_http)
+	_http.request_completed.connect(_on_hub_reply)
+	_adopt_pip.call_deferred()
+	visible = false
+	print("[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)")
+
+    # Retry adoption after a short delay to allow PiP creation
+    var timer = Timer.new()
+    timer.wait_time = 0.5
+    timer.one_shot = true
+    timer.timeout.connect(_adopt_pip)
+    add_child(timer)
+    timer.start()
+func _build_ui() -> void:
+	_panel = PanelContainer.new()
+	_panel.anchor_left = 0.62
+	_panel.anchor_top = 0.05
+	_panel.anchor_right = 0.98
+	_panel.anchor_bottom = 0.95
+	add_child(_panel)
+
+	var vbox := VBoxContainer.new()
+	_panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "FORENSIC PANEL"
+	vbox.add_child(title)
+
+	_label = RichTextLabel.new()
+	_label.selection_enabled = true
+	_label.context_menu_enabled = true
+	_label.bbcode_enabled = true
+	_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_label.custom_minimum_size = Vector2(0, 300)
+	vbox.add_child(_label)
+
+	_pip_slot = PanelContainer.new()
+	_pip_slot.custom_minimum_size = Vector2(320, 200)
+	vbox.add_child(_pip_slot)
+
+func _adopt_pip() -> void:
+	# PiP is created at runtime in build_terrain.gd – search the root for a
+	# SubViewportContainer (type) rather than a specific name.
+	var root := get_tree().root
+	var candidates := root.find_children("*", "SubViewportContainer", true, false)
+	if candidates.is_empty():
+		print("[FPANEL] no SubViewportContainer found – slot stays empty")
+		return
+	var container := candidates[0]
+	var old_parent := container.get_parent()
+	old_parent.remove_child(container)
+	_pip_slot.add_child(container)
+	print("[FPANEL] adopted PiP (SubViewportContainer) from %s" % old_parent.name)
+
+func _process(delta: float) -> void:
+	var pressed := Input.is_physical_key_pressed(KEY_F3) \
+		or Input.is_physical_key_pressed(KEY_F9) \
+		or Input.is_physical_key_pressed(KEY_QUOTELEFT) \
+		or Input.is_physical_key_pressed(KEY_T)
+	if pressed and not _toggle_latch:
+		visible = not visible
+		print("[FPANEL] toggled -> visible=%s" % visible)
+	_toggle_latch = pressed
+
+	if not visible:
+		return
+	_accum += delta
+	if _accum < REFRESH_SEC:
+		return
+	_accum = 0.0
+	_refresh()
+
+func _refresh() -> void:
+	if _db and _db.has_method("_query"):
+		# Use the proven‑working _query() method (discovered by wiring script)
+		var rows: Array = _db._query("SELECT status, COUNT(*) FROM files_to_fix GROUP BY status")
+		var health: Array = _db._query("SELECT check_name, result FROM diagnosis_log ORDER BY id DESC LIMIT 8")
+		var text := "[b]files_to_fix by status[/b]\n"
+		for r in rows:
+			text += "  %s\n" % str(r)
+		text += "\n[b]recent diagnosis[/b]\n"
+		for r in health:
+			text += "  %s\n" % str(r)
+		_label.text = text
+	else:
+		_http.request(HUB_URL)
+
+func _on_hub_reply(_result: int, code: int, _headers: PackedStringArray, body: PackedByteArray) -> void:
+	if code == 200:
+		_label.text = body.get_string_from_utf8()
+	else:
+		_label.text = "[hub unreachable: HTTP %d -- will retry in %.0fs]" % [code, REFRESH_SEC]
