@@ -1,0 +1,72 @@
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CONTROLS] turnleft  action_existed=true  keys_before=[]  wanted=Q  added=true
+[CONTROLS] turnright  action_existed=true  keys_before=[]  wanted=E  added=true
+[CONTROLS] camera_cycle  action_existed=true  keys_before=[]  wanted=C  added=true
+[CONTROLS] cutaway  action_existed=true  keys_before=[]  wanted=X  added=true
+[CONTROLS] reserve  action_existed=true  keys_before=[]  wanted=V  added=true
+[CONTROLS] flare  action_existed=true  keys_before=[]  wanted=F  added=true
+[CONTROLS] togglehud  action_existed=true  keys_before=[]  wanted=H  added=true
+[CONTROLS] flightcheck  action_existed=true  keys_before=[]  wanted=G  added=true
+[CONTROLS] restart  action_existed=true  keys_before=[]  wanted=R  added=true
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=[]  wanted=Escape  added=true
+[CONTROLS] ---- 11 binding(s) added ----
+[PIPLIVE] SubViewport now shares the main World3D
+[PIPLIVE] hid 2 standalone PiP prop(s); camera kept
+[PIPLIVE] eye=(100.0, 1830.5, -100.0) state=0 deployed=false framing=aircraft/sky
+[PIPLIVE] eye=(100.0, 1830.5, -100.0) state=0 deployed=false framing=aircraft/sky
+[PIPLIVE] eye=(100.0, 1830.5, -100.0) state=0 deployed=false framing=aircraft/sky
+[CTRL] pressed=j  key=J  state=0  deployed=false  alt_m=1828.8
+[PIPLIVE] eye=(287.7334, 1740.651, 740.0939) state=1 deployed=false framing=aircraft/sky
+[CTRL] pressed=turnleft  key=Q  state=1  deployed=false  alt_m=1668.7
+[CTRL] pressed=turnright  key=E  state=1  deployed=false  alt_m=1546.6
+[PIPLIVE] eye=(278.7141, 1543.378, 716.8951) state=1 deployed=false framing=aircraft/sky
+[CTRL] pressed=deploy  key=Space  state=1  deployed=false  alt_m=1423.3
+[PIPLIVE] eye=(271.7822, 1408.998, 707.1544) state=2 deployed=true framing=canopy
+[CTRL] pressed=turnleft  key=Q  state=2  deployed=true  alt_m=1403.1
+[PIPLIVE] eye=(271.9367, 1400.909, 727.636) state=2 deployed=true framing=canopy
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=["Space"]  wanted=Space  added=false
+[CONTROLS] turnleft  action_existed=true  keys_before=["Q"]  wanted=Q  added=false
+[CONTROLS] turnright  action_existed=true  keys_before=["E"]  wanted=E  added=false
+[CONTROLS] camera_cycle  action_existed=true  keys_before=["C"]  wanted=C  added=false
+[CONTROLS] cutaway  action_existed=true  keys_before=["X"]  wanted=X  added=false
+[CONTROLS] reserve  action_existed=true  keys_before=["V"]  wanted=V  added=false
+[CONTROLS] flare  action_existed=true  keys_before=["F"]  wanted=F  added=false
+[CONTROLS] togglehud  action_existed=true  keys_before=["H"]  wanted=H  added=false
+[CONTROLS] flightcheck  action_existed=true  keys_before=["G"]  wanted=G  added=false
+[CONTROLS] restart  action_existed=true  keys_before=["R"]  wanted=R  added=false
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=["Escape"]  wanted=Escape  added=false
+[CONTROLS] ---- 0 binding(s) added ----
+[CTRL] pressed=turnright  key=E  state=0  deployed=false  alt_m=1828.8
+[PIPLIVE] SubViewport now shares the main World3D
+[PIPLIVE] hid 2 standalone PiP prop(s); camera kept
+[PIPLIVE] eye=(100.0, 1830.5, -100.0) state=0 deployed=false framing=aircraft/sky
+[CTRL] pressed=deploy  key=Space  state=0  deployed=false  alt_m=1828.8
+[PIPLIVE] eye=(660.4864, 1799.875, 448.9335) state=1 deployed=false framing=aircraft/sky
+[PIPLIVE] eye=(644.6941, 1612.843, 437.9861) state=1 deployed=false framing=aircraft/sky
+[PIPLIVE] eye=(622.0528, 1413.7, 422.6041) state=1 deployed=false framing=aircraft/sky
+[CTRL] pressed=turnleft  key=Q  state=1  deployed=false  alt_m=1369.4
+[PIPLIVE] eye=(597.519, 1215.781, 405.9366) state=1 deployed=false framing=aircraft/sky
+[CTRL] pressed=turnright  key=E  state=1  deployed=false  alt_m=1140.9
+[PIPLIVE] eye=(570.7144, 1019.507, 387.7265) state=1 deployed=false framing=aircraft/sky
+[CTRL] pressed=deploy  key=Space  state=1  deployed=false  alt_m=958.2
+[PIPLIVE] eye=(561.3511, 950.9243, 396.4688) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(561.1, 942.3943, 418.6504) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(560.8489, 933.8643, 440.832) state=2 deployed=true framing=canopy
+[CTRL] pressed=turnleft  key=Q  state=2  deployed=true  alt_m=929.3
+[PIPLIVE] eye=(563.2269, 925.9845, 460.2674) state=2 deployed=true framing=canopy
+[CTRL] pressed=turnleft  key=Q  state=2  deployed=true  alt_m=921.4
+[PIPLIVE] eye=(576.6058, 918.2485, 473.4753) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(586.7964, 910.9899, 463.6924) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(592.482, 902.4619, 442.2547) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(598.1686, 893.9319, 420.8116) state=2 deployed=true framing=canopy
+[CTRL] pressed=turnright  key=E  state=2  deployed=true  alt_m=886.0
+[PIPLIVE] eye=(603.9154, 885.5255, 399.7643) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(615.6675, 878.4381, 394.3522) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(616.492, 871.3704, 406.4529) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(597.0345, 863.3282, 411.4664) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(575.2628, 854.7982, 415.7203) state=2 deployed=true framing=canopy
+[PIPLIVE] eye=(553.491, 846.2682, 419.9742) state=2 deployed=true framing=canopy
