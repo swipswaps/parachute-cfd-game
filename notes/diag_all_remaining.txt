@@ -1,0 +1,202 @@
+=== 1. mixamo_com / anim play call sites ===
+ 654: '\n'
+ 655: '\tvar ap = _character.find_child("AnimationPlayer", true, false)\n'
+ 656: '\tif ap:\n'
+ 657: '\t\t_setup_anim_player(ap)\n'
+
+ 656: '\tif ap:\n'
+ 657: '\t\t_setup_anim_player(ap)\n'
+ 658: '\n'
+ 659: '\t# Reset to rest pose (R083)\n'
+
+ 659: '\t# Reset to rest pose (R083)\n'
+ 660: '\tvar anim_player = _character.find_child("AnimationPlayer", true, false)\n'
+ 661: '\tif anim_player:\n'
+ 662: '\t\tif anim_player.has_animation("RESET"):\n'
+
+ 660: '\tvar anim_player = _character.find_child("AnimationPlayer", true, false)\n'
+ 661: '\tif anim_player:\n'
+ 662: '\t\tif anim_player.has_animation("RESET"):\n'
+ 663: '\t\t\tanim_player.play("RESET")\n'
+
+ 661: '\tif anim_player:\n'
+ 662: '\t\tif anim_player.has_animation("RESET"):\n'
+ 663: '\t\t\tanim_player.play("RESET")\n'
+ 664: '\t\t\tanim_player.advance(0)\n'
+
+ 662: '\t\tif anim_player.has_animation("RESET"):\n'
+ 663: '\t\t\tanim_player.play("RESET")\n'
+ 664: '\t\t\tanim_player.advance(0)\n'
+ 665: '\t\t\tanim_player.stop()\n'
+
+ 663: '\t\t\tanim_player.play("RESET")\n'
+ 664: '\t\t\tanim_player.advance(0)\n'
+ 665: '\t\t\tanim_player.stop()\n'
+ 666: '\t\telse:\n'
+
+ 664: '\t\t\tanim_player.advance(0)\n'
+ 665: '\t\t\tanim_player.stop()\n'
+ 666: '\t\telse:\n'
+ 667: '\t\t\tvar skeleton = _character.find_child("Skeleton3D", true, false)\n'
+
+ 670: '\t# Reset to rest pose\n'
+ 671: '\tif anim_player.has_animation("RESET"):\n'
+ 672: '\t\tanim_player.play("RESET")\n'
+ 673: '\t\tanim_player.advance(0)\n'
+
+ 671: '\tif anim_player.has_animation("RESET"):\n'
+ 672: '\t\tanim_player.play("RESET")\n'
+ 673: '\t\tanim_player.advance(0)\n'
+ 674: '\t\tanim_player.stop()\n'
+
+ 672: '\t\tanim_player.play("RESET")\n'
+ 673: '\t\tanim_player.advance(0)\n'
+ 674: '\t\tanim_player.stop()\n'
+ 675: '\telse:\n'
+
+ 673: '\t\tanim_player.advance(0)\n'
+ 674: '\t\tanim_player.stop()\n'
+ 675: '\telse:\n'
+ 676: '\t\tvar skeleton = _character.find_child("Skeleton3D", true, false)\n'
+
+ 680: '\t# Play RESET animation to force arms to rest pose (R091/R092)\n'
+ 681: '\tvar _anim_player = _character.find_child("AnimationPlayer", true, false)\n'
+ 682: '\tif _anim_player and _anim_player.has_animation("RESET"):\n'
+ 683: '\t\t_anim_player.play("RESET")\n'
+
+ 681: '\tvar _anim_player = _character.find_child("AnimationPlayer", true, false)\n'
+ 682: '\tif _anim_player and _anim_player.has_animation("RESET"):\n'
+ 683: '\t\t_anim_player.play("RESET")\n'
+ 684: '\t\tawait get_tree().process_frame\n'
+
+ 682: '\tif _anim_player and _anim_player.has_animation("RESET"):\n'
+ 683: '\t\t_anim_player.play("RESET")\n'
+ 684: '\t\tawait get_tree().process_frame\n'
+ 685: '\t\t_anim_player.stop()\n'
+
+ 684: '\t\tawait get_tree().process_frame\n'
+ 685: '\t\t_anim_player.stop()\n'
+ 686: '\t\tprint("[VERBATIM] RESET animation played – arms at rest pose")\n'
+ 687: '\telse:\n'
+
+2714: '# ---------------------------------------------------------------------------\n'
+2715: '# _setup_anim_player — plays the full-body Mixamo animation.\n'
+2716: "# Clip name 'mixamo_com' is the GODOT-imported name, proven by live telemetry\n"
+2717: '#   0709.txt L208: _setup_anim_player: clips=["Take 001", "mixamo_com"]\n'
+
+2715: '# _setup_anim_player — plays the full-body Mixamo animation.\n'
+2716: "# Clip name 'mixamo_com' is the GODOT-imported name, proven by live telemetry\n"
+2717: '#   0709.txt L208: _setup_anim_player: clips=["Take 001", "mixamo_com"]\n'
+2718: "# The Blender action name 'Armature|mixamo.com|Layer0' does not survive FBX import.\n"
+
+2716: "# Clip name 'mixamo_com' is the GODOT-imported name, proven by live telemetry\n"
+2717: '#   0709.txt L208: _setup_anim_player: clips=["Take 001", "mixamo_com"]\n'
+2718: "# The Blender action name 'Armature|mixamo.com|Layer0' does not survive FBX import.\n"
+2719: '#\n'
+
+2728: '# ---------------------------------------------------------------------------\n'
+2729: 'func _setup_anim_player(ap) -> void:\n'
+2730: '\tconst CLIP := "mixamo_com"\n'
+2731: '\tif ap == null:\n'
+
+2729: 'func _setup_anim_player(ap) -> void:\n'
+2730: '\tconst CLIP := "mixamo_com"\n'
+2731: '\tif ap == null:\n'
+2732: '\t\tprint("[VERBATIM] _setup_anim_player: ap is null")\n'
+
+2731: '\tif ap == null:\n'
+2732: '\t\tprint("[VERBATIM] _setup_anim_player: ap is null")\n'
+2733: '\t\treturn\n'
+2734: '\tif not ap.has_method("get_animation_list"):\n'
+
+2734: '\tif not ap.has_method("get_animation_list"):\n'
+2735: '\t\tprint("[VERBATIM] _setup_anim_player: node is not an AnimationPlayer: ", ap)\n'
+2736: '\t\treturn\n'
+2737: '\tvar clips = ap.get_animation_list()\n'
+
+2737: '\tvar clips = ap.get_animation_list()\n'
+2738: '\tprint("[VERBATIM] _setup_anim_player: clips=", clips)\n'
+2739: '\tvar chosen := ""\n'
+2740: '\tif CLIP in clips:\n'
+
+2747: '\tif chosen == "":\n'
+2748: '\t\tprint("[VERBATIM] _setup_anim_player: no usable clip in ", clips)\n'
+2749: '\t\treturn\n'
+2750: '\tprint("[VERBATIM] _setup_anim_player: deferring play of ", chosen)\n'
+
+2749: '\t\treturn\n'
+2750: '\tprint("[VERBATIM] _setup_anim_player: deferring play of ", chosen)\n'
+2751: '\tawait get_tree().process_frame\n'
+2752: '\tawait get_tree().process_frame\n'
+
+2753: '\tif not is_instance_valid(ap):\n'
+2754: '\t\tprint("[VERBATIM] _setup_anim_player: ap freed before deferred play")\n'
+2755: '\t\treturn\n'
+2756: '\tap.play(chosen)\n'
+
+2755: '\t\treturn\n'
+2756: '\tap.play(chosen)\n'
+2757: '\tap.speed_scale = 1.0\n'
+2758: '\tprint("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)\n'
+
+2757: '\tap.speed_scale = 1.0\n'
+2758: '\tprint("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)\n'
+2759: '\n'
+2760: '# ===========================================================================\n'
+
+2836: '\t# what made the controls feel disconnected (0716.txt L233-L270).\n'
+2837: '\t# Ref: AnimationPlayer.get_current_animation_position\n'
+2838: '\tif _arm_anim_ref == null and _character and is_instance_valid(_character):\n'
+2839: '\t\t_arm_anim_ref = _character.find_child("AnimationPlayer", true, false)\n'
+
+2838: '\tif _arm_anim_ref == null and _character and is_instance_valid(_character):\n'
+2839: '\t\t_arm_anim_ref = _character.find_child("AnimationPlayer", true, false)\n'
+2840: '\tif _arm_anim_ref == null:\n'
+2841: '\t\treturn -1.0\n'
+
+3003: '\n'
+3004: '\t# ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then\n'
+3005: '\t#      0716.txt showed it cleared entirely - the clip does not loop) -----\n'
+3006: '\tvar ap = null\n'
+
+3007: '\tif _character and is_instance_valid(_character):\n'
+3008: '\t\tap = _character.find_child("AnimationPlayer", true, false)\n'
+3009: '\tif ap == null:\n'
+3010: '\t\tprint("[ANIMDIAG] no AnimationPlayer found")\n'
+
+3009: '\tif ap == null:\n'
+3010: '\t\tprint("[ANIMDIAG] no AnimationPlayer found")\n'
+3011: '\telse:\n'
+3012: '\t\tvar cur: String = ap.current_animation\n'
+
+
+=== 2. project.godot input section — corrupted + real entries ===
+
+=== 3. FREEFALL branch (lines 2016-2042) ===
+2016: '\tif _game_state == GameState.FREEFALL:\n'
+2017: '\t\t# Freefall body turning (asymmetric drag)\n'
+2018: '\t\tif abs(_turn_input) > 0.001:\n'
+2019: '\t\t\t_character.rotate_y(-_turn_input * 2.0 * delta)\n'
+2020: '\t\tvar target_dir = -_character.global_position.normalized()\n'
+2021: '\t\t_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)\n'
+2022: '\t\tvar turn_dir = Vector3.RIGHT * _turn_input * _turn_force\n'
+2023: '\t\t_velocity_vec += turn_dir * delta\n'
+2024: '\t\tvar forward_vec = target_dir * _forward_speed\n'
+2025: '\t\t_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)\n'
+2026: '\t\t_character.position += _velocity_vec * delta\n'
+2027: '\t\tif _velocity_vec.length() > 0.5:\n'
+2028: '\t\t\tvar angle = atan2(_velocity_vec.x, _velocity_vec.z)\n'
+2029: '\t\t\t# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour\n'
+2030: '\t\tvar speed_kts = _forward_speed * 1.94384\n'
+2031: '\t\t_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]\n'
+2032: '\t\t_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)\n'
+2033: '\t\t_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)\n'
+2034: '\t\t_check_decision_altitude()\n'
+2035: '\t\t# Capture flight screenshot every 5 seconds (R085 ensures during flight)\n'
+2036: '\t\tif _screenshot_save_timer > 0:\n'
+2037: '\t\t\t_screenshot_save_timer -= delta\n'
+2038: '\t\tif _screenshot_save_timer <= 0.0:\n'
+2039: '\t\t\tScreenshotLibrary.save_flight_screenshot()\n'
+2040: '\t\t\t_screenshot_save_timer = 5.0\n'
+2041: '\tif _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:\n'
+2042: '\t\tprint("[VERBATIM] DIAGNOSIS turning block executed")\n'
