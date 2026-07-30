@@ -189,6 +189,7 @@ var _wind_base_direction: int = 120  # degrees
 var _wind_turbulence: float = 2.0
 var _wind_gust_time: float = 0.0
 var _wind_current_gust: float = 0.0
+var _wind_log_timer: float = 0.0  # throttle [WIND] print to 5-second intervals
 
 # ------------------------------------------------------------------
 # Procedural objects (buildings and trees – turbines removed per R073)
@@ -1446,14 +1447,23 @@ func _update_cfd_wind(delta: float) -> void:
 	var wind_vec = Vector3(sin(wind_rad), 0, cos(wind_rad)) * (final_speed * 0.514444)
 	if _game_state == GameState.DIAGNOSIS:
 		_velocity_vec += wind_vec * delta * 0.5
-	print(
-		"[VERBATIM] CFD wind: speed ",
-		final_speed,
-		" kts, dir ",
-		_wind_base_direction,
-		"°, gust ",
-		_wind_current_gust
-	)
+	elif _game_state == GameState.FREEFALL:
+		# Body drifts ~30% of canopy drift — smaller cross-section in freefall.
+		# Ref: USPA BSR body-position standards (general knowledge).
+		_character.position += wind_vec * delta * 0.3
+	elif _game_state == GameState.OPENING_ANIM:
+		# Canopy rides the air mass fully — primary landing-spot offset driver.
+		# wind_vec already in m/s (kts * 0.514444 applied above).
+		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+		# (general knowledge — not retrieved this session)
+		_character.position += wind_vec * delta
+	# Throttle: was ~60 lines/s; now 1 line per 5 seconds.
+	_wind_log_timer -= delta
+	if _wind_log_timer <= 0.0:
+		_wind_log_timer = 5.0
+		print("[WIND] speed ", final_speed, " kts  dir ",
+			_wind_base_direction, "°  gust ", _wind_current_gust,
+			"  vec_ms ", wind_vec)
 
 
 # ------------------------------------------------------------------
