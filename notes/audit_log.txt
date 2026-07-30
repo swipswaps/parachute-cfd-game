@@ -1,0 +1,202 @@
+========================================================================
+PARACHUTE-CFD-GAME AUDIT LOG
+Generated: 2026-07-30T17:53:50.202653+00:00
+========================================================================
+
+## git_branch
+  rc=0
+  stdout: main
+
+## git_log_1
+  rc=0
+  stdout: e2fc9df diag: control_health_verify + fcc_gate_verify
+
+## git_status
+  rc=0
+  stdout: M gate_log.txt
+ M godot_project/autoloads/HealthChecker.gd
+ M godot_project/autoloads/forensic_panel.gd
+ M godot_project/project.godot
+ M godot_project/scenes/forensic_hud.gd
+ M godot_project/scripts/FlightTrack.gd
+ M godot_project/scripts/InputManager.gd
+ M godot_project/scripts/audit.gd
+ M godot_project/scripts/draggable_control.gd
+ M godot_project/scripts/forensic_hud.gd
+ M godot_project/scripts/screenshot_library.gd
+ M godot_project/scripts/splash.gd
+ M godot_project/scripts/test_orbit.gd
+ M godot_project/scripts/toggle_arm_animator.gd
+ M run_summary.json
+?? .quarantine/
+?? 02.gd
+?? 1
+?? 1.
+?? =
+?? GameIntegrity_0002.gd
+?? GameIntegrity_2606201818.gd
+?? InputManager_0003.gd
+?? PerformanceMonitor_0002.gd
+?? SqliteDb_0002.gd
+?? SqliteWatchdog_0002.gd
+?? StructuredLogger.gd
+?? TelemetryLogger.gd
+?? [owner@192.168.1.152-20260616-173650parachute-cfd-game]$
+?? alembic.ini
+?? altimeter_hud_0002.gd
+?? apply_v5_repairs.sh.bad
+?? argparse
+?? autostall_post_revert.txtclear
+?? blosm/
+?? build_terrain_0123.gd
+?? build_terrain_patch.gd
+?? check_inputmap.gd
+?? combined_edits.json
+?? context_20260619T143131.zip
+?? debug_components_0002.gd
+?? difflib
+?? eof
+?? fu
+?? game_manager_0002.gd
+?? godot_aerodynamic_physics.zip
+?? godot_project/TelemetryLogger.gd
+?? godot_project/add_input_actions.gd
+?? godot_project/assets/aircraft/Cessna.glb
+?? godot_project/assets/aircraft/cesna_airplane_0.png
+?? godot_project/assets/aircraft/cesna_airplane_1.png
+?? godot_project/assets/aircraft/cesna_airplane_2.png
+?? godot_project/assets/aircraft/cessna172.glb
+?? godot_project/assets/aircraft/cessna172_Image.png
+?? godot_project/assets/canopy/clean.glb
+?? godot_project/assets/canopy/parachute.glb
+?? godot_project/assets/canopy/parachute_clean.glb
+?? godot_project/assets/canopy/parachute_cleaned.glb
+?? godot_project/assets/canopy/parachute_fixed.fbx
+?? godot_project/assets/canopy/parachute_fixed.glb
+?? godot_project/assets/canopy/parachute_fixed_0001.glb
+?? godot_project/assets/canopy/parachute_sanitized.glb
+?? godot_project/assets/canopy/temp.bin
+?? "godot_project/assets/characters/Hanging under canopy.fbx"
+?? godot_project/assets/characters/parachutist.fbx
+?? godot_project/assets/characters/parachutist.glb
+?? godot_project/assets/terrain/baked_colours.bin
+?? godot_project/assets/terrain/baked_colours_1024.bin
+?? godot_project/assets/terrain/earth_mesh.glb
+?? godot_project/assets/terrain/heightmap.png
+?? godot_project/assets/terrain/naip_texture.png
+?? godot_project/assets/terrain/satellite.png
+?? godot_project/assets/terrain/terrain_data.npz
+?? godot_project/capture.gd
+?? godot_project/final_screenshot.png
+?? godot_project/scripts/build_terrain_0100.gd
+?? godot_project/simulate_input.gd
+?? godot_project/test_hud.gd
+?? godot_project/test_minimal.gd
+?? godot_project/test_minimal.png
+?? godot_project/tools/setup_input_map.gd
+?? minimal_0002.gd
+?? observability/
+?? parachute_controller_0002.gd
+?? pip_draggable_0002.gd
+?? pip_draggable_v2_0002.gd
+?? plane_0002.gd
+?? rotor_visualizer_0002.gd
+?? scratch_aeropropeller_fix/
+?? scratch_formatting_test/
+?? scratch_inline_tab_diag/
+?? scratch_iterative_test/
+?? scratch_reconstruct_test/
+?? scratch_upstream_compare/
+?? screenshot.png
+?? screenshot_20260607T140645.png
+?? screenshot_20260607T141131.png
+?? screenshot_20260607T142005.png
+?? scripts/
+?? splash_0002.gd
+?? temp_check.gd
+?? test_extract_20260711_002400/
+?? tmp_candidate.gd
+?? toggle_arm_animator_0002.gd
+?? validate_scene_0002.gd
+
+## hub_control_health_path
+  49:CONTROL_HEALTH_PATH = "/api/control_health"
+  304:        if path == CONTROL_HEALTH_PATH:
+
+## hub_serve_method
+  265:    def _serve_control_health(self):
+  305:            self._serve_control_health()
+
+## hub_route
+  49:CONTROL_HEALTH_PATH = "/api/control_health"
+  304:        if path == CONTROL_HEALTH_PATH:
+
+## gd_arm_q_stored
+  2934:		_arm_q_stored[side] = q
+  2962:			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+  2991:var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+
+## gd_arm_elbow_q_stored
+  2945:			_arm_elbow_q_stored[side] = eq
+  2965:			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+  2992:var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+
+## gd_apply_arm_func
+  2956:func _apply_arm_bone_overrides() -> void:
+
+## gd_call_deferred_arm
+  2105:	call_deferred("_apply_arm_bone_overrides")
+
+## gd_key_h_removed
+  1684:	# Toggle HUD (H) — action handler is canonical; direct KEY_H removed
+
+## gd_fcc_opening_anim
+  30:	OPENING_ANIM,
+  824:	_game_state = GameState.OPENING_ANIM
+  825:	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+  973:	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+  1419:	if _game_state == GameState.OPENING_ANIM:
+
+## gd_fcc_gate
+  
+
+## gd_exit_poll_count
+  0
+
+## gd_bare_deploy
+  
+
+## hub_health
+  rc=0
+  stdout: {
+  "status": "ok",
+  "paused": false,
+  "port": 8765,
+  "db": "./godot_project/parachute_mutations.db",
+  "endpoints": [
+    "/api/gamification",
+    "/api/leaderboard",
+    "/api/citations",
+    "/api/integrity",
+    "/api/control"
+  ]
+}
+
+## hub_control_health
+  rc=0
+  stdout: {
+  "error": "no such table: control_baseline"
+}
+
+## gd_project_exists
+  rc=0
+  stdout: -rw-r--r--. 1 owner owner 4895 Jul 28 14:47 godot_project/project.godot
+
+## db_exists
+  rc=0
+  stdout: -rw-r--r--. 1 owner owner 466944 Jul 23 12:16 godot_project/parachute_mutations.db
+
+## hub_process
+  rc=0
+  stdout: 3689961 python3 forensic_hub_server.py .
+
