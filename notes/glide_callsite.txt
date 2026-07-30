@@ -1,0 +1,40 @@
+  30: 	OPENING_ANIM,
+ 127: var _canopy_deployed: bool = false
+ 816: 	if _canopy_deployed or not _canopy_instance:
+ 819: 	_canopy_deployed = true
+ 823: 	_game_state = GameState.OPENING_ANIM
+ 824: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+ 996: 	if not _canopy_deployed:
+1022: 	if not _canopy_deployed:
+1064: 	if not _canopy_deployed:
+1418: 	if _game_state == GameState.OPENING_ANIM:
+1464: 	if not _canopy_instance or not _canopy_deployed:
+1568: 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+1569: 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+1573: 	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+1592: 		print("[STEER_TELEM] canopy=", _canopy_deployed,
+1612: 		#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
+1634: 			if _canopy_deployed:
+1635: 				_canopy_deployed = false
+1639: 				_canopy_deployed = true
+1643: 		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+1777: 	_canopy_deployed = false
+2001: 	_update_canopy_glide(delta, descent)
+2041: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+3217: # _canopy_deployed. _canopy_instance by contrast has six .visible writes and
+3240: 			"  state=", _game_state, "  deployed=", _canopy_deployed)
+3245: 			" deployed=", _canopy_deployed, " visible=", want)
+3284: var _glide_tel_t := 0.0
+3285: var _glide_tel_hdr := false
+3289: func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+3290: 	if not _canopy_deployed:
+3329: 	_glide_tel_t += delta
+3330: 	if not _glide_tel_hdr:
+3331: 		print("[GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,"
+3333: 		_glide_tel_hdr = true
+3337: 	if moving or _glide_tel_t - _glide_last_log > 0.5:
+3338: 		_glide_last_log = _glide_tel_t
+3344: 		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+3429: 		var what := "canopy" if _canopy_deployed else "aircraft/sky"
+3431: 			" deployed=", _canopy_deployed, " framing=", what)
+3522: 				"  deployed=", _canopy_deployed,
