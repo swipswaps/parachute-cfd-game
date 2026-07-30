@@ -1,0 +1,54 @@
+  10: '\tvar check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]\n'
+  11: '\tvar output = []\n'
+  12: '\tvar exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)\n'
+  13: '\tif exit_code == 0 and output.size() > 0 and output[0] == "200":\n'
+  14: '\t\tprint("[HubManager] Hub already running.")\n'
+
+  21: '\t# Original startup block follows\n'
+  22: '\tprint("[HubManager] Hub not responding; starting it...")\n'
+  23: '\tvar project_dir = ProjectSettings.globalize_path("res://")\n'
+  24: '\t# FIX (this session): project_dir = res:// resolves to godot_project/,\n'
+  25: '\t# but forensic_hub_server.py lives one directory up, at the outer\n'
+
+  22: '\tprint("[HubManager] Hub not responding; starting it...")\n'
+  23: '\tvar project_dir = ProjectSettings.globalize_path("res://")\n'
+  24: '\t# FIX (this session): project_dir = res:// resolves to godot_project/,\n'
+  25: '\t# but forensic_hub_server.py lives one directory up, at the outer\n'
+  26: "\t# project root — confirmed via find: only one copy exists, and it's\n"
+
+  23: '\tvar project_dir = ProjectSettings.globalize_path("res://")\n'
+  24: '\t# FIX (this session): project_dir = res:// resolves to godot_project/,\n'
+  25: '\t# but forensic_hub_server.py lives one directory up, at the outer\n'
+  26: "\t# project root — confirmed via find: only one copy exists, and it's\n"
+  27: '\t# not inside godot_project/. The cd+exec was silently failing every\n'
+
+  28: '\t# run. Fixed by cd-ing up one level before invoking the script.\n'
+  29: '\t# FIX (this session): script requires <project_root> positional arg.\n'
+  30: '\t# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"\n'
+  31: '\t# After the cd, "." is the outer project root the script needs.\n'
+  32: '\tvar start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir\n'
+
+  30: '\t# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"\n'
+  31: '\t# After the cd, "." is the outer project root the script needs.\n'
+  32: '\tvar start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir\n'
+  33: '\tOS.execute("/bin/sh", ["-c", start_cmd])\n'
+  34: '\t# Wait a moment and re-check\n'
+
+  31: '\t# After the cd, "." is the outer project root the script needs.\n'
+  32: '\tvar start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir\n'
+  33: '\tOS.execute("/bin/sh", ["-c", start_cmd])\n'
+  34: '\t# Wait a moment and re-check\n'
+  35: "\t# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's\n"
+
+  33: '\tOS.execute("/bin/sh", ["-c", start_cmd])\n'
+  34: '\t# Wait a moment and re-check\n'
+  35: "\t# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's\n"
+  36: '\t# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck\n'
+  37: '\t# always fired before the server was listening. Confirmed via\n'
+
+  39: '\tawait get_tree().create_timer(5.0).timeout\n'
+  40: '\tvar output2 = []\n'
+  41: '\tvar exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)\n'
+  42: '\tif exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":\n'
+  43: '\t\tprint("[HubManager] Hub started successfully.")\n'
+
