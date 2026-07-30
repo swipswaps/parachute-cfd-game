@@ -278,7 +278,13 @@ func _ready() -> void:
 			for x in range(W):
 				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
 				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
-				var idx = (z * W + x) * 2
+								# heightmap_512.raw is 512x512; mesh is 1024x1024.
+				# Direct index (z*W + x) overflows 512-wide rows for x/z > 511
+				# -> returns raw=0 -> flat y=0 for 75% of the mesh.
+				# Fix: map vertex UV to heightmap pixel coords (nearest-neighbour).
+				var hm_x := int(float(x) / float(W - 1) * 511.0)
+				var hm_z := int(float(z) / float(H - 1) * 511.0)
+				var idx := (hm_z * 512 + hm_x) * 2
 				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
 				var py = (float(raw) / 65535.0) * MAX_ELEV
 				verts.push_back(Vector3(px, py, pz))
