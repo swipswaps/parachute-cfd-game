@@ -46,6 +46,7 @@ from urllib.parse import urlparse
 HUB_PORT  = 8765
 HUB_BIND  = "127.0.0.1"
 CONTROL_PATH = "/api/control"
+CONTROL_HEALTH_PATH = "/api/control_health"
 _hub_state = {"paused": False}  # module-level control flag; single-process, no locking needed
 STATS_PATH  = "/api/gamification"
 LEADER_PATH = "/api/leaderboard"
@@ -261,10 +262,47 @@ class ForensicHubHandler(BaseHTTPRequestHandler):
         log_result("hub_control", True, f"action={action} paused={_hub_state['paused']}")
         self._json({"paused": _hub_state["paused"]})
 
+    def _serve_control_health(self):
+        """Control baseline + recent events from parachute_mutations.db."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            baseline = conn.execute(
+                "SELECT action, required_states, required_flags,"
+                " sequence_after, description, status"
+                " FROM control_baseline ORDER BY action"
+            ).fetchall()
+            has_ev = conn.execute(
+                "SELECT name FROM sqlite_master"
+                " WHERE type='table' AND name='control_events'"
+            ).fetchone()
+            recent = conn.execute(
+                "SELECT ts, action, key, state_num, result, reason"
+                " FROM control_events ORDER BY id DESC LIMIT 50"
+            ).fetchall() if has_ev else []
+            conn.close()
+            self._json({
+                "baseline": [
+                    {"action": r[0], "required_states": r[1],
+                     "required_flags": r[2], "sequence_after": r[3],
+                     "description": r[4], "status": r[5]}
+                    for r in baseline
+                ],
+                "recent_events": [
+                    {"ts": r[0], "action": r[1], "key": r[2],
+                     "state": r[3], "result": r[4], "reason": r[5]}
+                    for r in recent
+                ],
+            })
+        except Exception as exc:
+            self._json({"error": str(exc)})
+
     def do_GET(self):
         path = urlparse(self.path).path
         if _hub_state["paused"] and path in (STATS_PATH, LEADER_PATH, CITE_PATH, INTEG_PATH):
             self._json({"paused": True})
+            return
+        if path == CONTROL_HEALTH_PATH:
+            self._serve_control_health()
             return
         if path == STATS_PATH:
             self._json(query_gamification(self.db_path))
