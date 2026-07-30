@@ -1,0 +1,8 @@
+30:	OPENING_ANIM,
+824:	_game_state = GameState.OPENING_ANIM
+825:	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+973:	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+1419:	if _game_state == GameState.OPENING_ANIM:
+1454:	elif _game_state == GameState.OPENING_ANIM:
+1583:	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+2056:	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
