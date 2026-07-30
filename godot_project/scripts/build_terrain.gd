@@ -2014,9 +2014,16 @@ func _physics_process(delta) -> void:
 	_update_canopy_tilt()
 
 	if _game_state == GameState.FREEFALL:
-		# Freefall body turning (asymmetric drag)
+		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
 		if abs(_turn_input) > 0.001:
 			_character.rotate_y(-_turn_input * 2.0 * delta)
+		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+		# 1.5 rad/s at full differential ≈ 86 deg/s.
+		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+		# (general knowledge — not retrieved this session)
+		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+		if absf(ff_diff) > 0.002:
+			_character.rotate_y(-ff_diff * 1.5 * delta)
 		var target_dir = -_character.global_position.normalized()
 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
@@ -2753,6 +2760,13 @@ func _setup_anim_player(ap) -> void:
 	if not is_instance_valid(ap):
 		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
 		return
+	# Set loop mode on the Animation resource — must be set on the resource,
+	# not as a play() argument. Animation.LOOP_LINEAR = 1.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_animation.html
+	# (general knowledge — not retrieved this session)
+	var _anim_res = ap.get_animation(chosen)
+	if _anim_res:
+		_anim_res.loop_mode = Animation.LOOP_LINEAR
 	ap.play(chosen)
 	ap.speed_scale = 1.0
 	print("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)
