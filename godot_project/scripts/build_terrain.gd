@@ -970,9 +970,9 @@ func _update_canopy_visuals() -> void:
 func _flight_control_check() -> void:
 	print("[DIAG] _flight_control_check: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _flight_control_check gate=_game_state=", _game_state)
-	if _game_state != GameState.DIAGNOSIS:
-		print("[DIAG] _flight_control_check: early exit – not in DIAGNOSIS")
-		print("[VERBATIM] EXIT _flight_control_check early=not_in_diagnosis")
+	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+		print("[DIAG] _flight_control_check: early exit – not deployed")
+		print("[VERBATIM] EXIT _flight_control_check early=not_deployed")
 		return
 	if _flight_control_checked:
 		print("[DIAG] _flight_control_check: already checked")
@@ -1681,9 +1681,8 @@ func _poll_controls() -> void:
 	if Input.is_key_pressed(KEY_F) and not _last_frame_keys.get("F", false):
 		_do_flare()
 	_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
-	# Toggle HUD (H)
-	if Input.is_key_pressed(KEY_H) and not _last_frame_keys.get("H", false):
-		_toggle_hud()
+	# Toggle HUD (H) — action handler is canonical; direct KEY_H removed
+	# (was double-firing: HUD toggled on then immediately off).
 	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
 	# Save camera settings (S)
 	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
@@ -1756,7 +1755,6 @@ func _poll_controls() -> void:
 				_camera.global_position = target + offset
 				_camera.look_at(target, Vector3.UP)
 				print("[CAMERA] Switched to plane (J)")
-	print("[DIAG] _poll_controls: EXIT")
 
 
 # ------------------------------------------------------------------
@@ -2104,6 +2102,7 @@ func _process(delta) -> void:
 	_check_mission_completion()
 	if _frame_count % 1800 == 0:
 		_update_weather()
+	call_deferred("_apply_arm_bone_overrides")
 
 
 # ------------------------------------------------------------------
@@ -2932,7 +2931,7 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 		var axis: Vector3 = _arm_axis_use(side)
 		var angle: float = pull * ARM_MAX_ANGLE
 		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
-		_skeleton.set_bone_pose_rotation(idx, q)
+		_arm_q_stored[side] = q
 
 		# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
 		# pull keeps the arm straight and a deep pull draws the hand inward.
@@ -2943,7 +2942,7 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 			var e_ang: float = e_t * ARM_ELBOW_MAX
 			var e_ax: Vector3 = _arm_elbow_axis[side]
 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
-			_skeleton.set_bone_pose_rotation(_arm_fore_idx[side], eq)
+			_arm_elbow_q_stored[side] = eq
 			elbow_deg = rad_to_deg(e_ang)
 
 		# Telemetry only while the system is doing something, so idle frames
@@ -2953,6 +2952,18 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 				",", force, ",", tension, ",", damping, ",", accel,
 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
 				",", elbow_deg, ",", _arm_hold_t[side])
+
+func _apply_arm_bone_overrides() -> void:
+	if not _skeleton:
+		return
+	for side in ["L", "R"]:
+		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+		if idx != -1:
+			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+		var f_idx: int = _arm_fore_idx.get(side, -1)
+		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+
 
 # ===========================================================================
 # ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
@@ -2977,6 +2988,8 @@ const ARM_AXIS_L := Vector3(0, 0, -1)
 const ARM_AXIS_R := Vector3(0, 0, 1)
 
 var _arm_probe_done := false
+var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
 var _arm_axis_solved := {"L": Vector3.ZERO, "R": Vector3.ZERO}
 var _arm_axis_ok := {"L": false, "R": false}
 var _arm_solve_tries := 0
