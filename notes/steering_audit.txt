@@ -1,0 +1,1092 @@
+steering_audit  2026-07-31T13:21:02.174704+00:00
+======================================================================
+
+=== DB TABLES ===
+  applied_fixes
+  arm_physics_baseline
+  arm_rig_audit
+  asset_validation
+  auto_heal_actions
+  autohealactions
+  blocking_errors_v1
+  code_patterns
+  component_audit_log
+  component_health_tests
+  component_registry
+  component_relationships
+  control_baseline
+  control_events
+  control_info
+  diag_findings
+  diagnostic_log
+  diagnostic_logs
+  environment_fixes
+  error_fingerprints
+  error_patterns
+  events_hardened
+  file_splits
+  files_to_fix
+  fix_log
+  fixes
+  flight_controller_recon
+  flight_controller_recon_v2
+  flights
+  function_index
+  game_state_log
+  gamification
+  gd_patch_registry
+  gdeye_diag
+  hud_state
+  issues
+  known_repairs
+  missing_function_fixes
+  omissions
+  parse_checks
+  parse_error_log
+  parse_errors
+  patch_history
+  pilot_career
+  pilot_category_fixes
+  pilot_ratings
+  pipeline_metadata
+  pipeline_runs
+  pipelineruns
+  project_config
+  ratings
+  remediation_queue
+  repair_attempts
+  repair_evidence
+  repair_metrics
+  repair_rules
+  replay_api_tests
+  resource_contention_log
+  restore_log
+  runtime_failures
+  schema_migrations
+  screenshots
+  source_mutations
+  source_snapshots
+  sqlite_sequence
+  steering_telemetry
+  strategy_rewards
+  syntax_errors
+  syntax_fixes
+  terrain_upgrades
+  test_runs
+  throttle_log
+  tool_audit
+  user_preferences
+  verbatim_logs
+  verificationresults
+
+=== control_baseline ===
+  camera_cycle      states=IN_PLANE,FREEFALL,OPENING_ANIM,DIAGNOSIS  flags=                                                    CONFIRMED_WORKING
+  cutaway           states=OPENING_ANIM,DIAGNOSIS                    flags=_canopy_deployed=true,_malfunction!=GOOD            CONFIRMED_BY_DESIGN
+  deploy            states=FREEFALL                                  flags=not _canopy_deployed                                CONFIRMED_WORKING
+  flare             states=OPENING_ANIM,DIAGNOSIS                    flags=_canopy_deployed=true,_flight_control_checked=true,_malfunction=GOOD  FIXED_STATE_GATE
+  flightcheck       states=OPENING_ANIM,DIAGNOSIS                    flags=_canopy_deployed=true                               FIXED_STATE_GATE
+  j                 states=IN_PLANE                                  flags=                                                    CONFIRMED_WORKING
+  pause             states=ANY                                       flags=                                                    UNVERIFIED
+  reserve           states=OPENING_ANIM,DIAGNOSIS                    flags=_cutaway_done=true                                  CONFIRMED_BY_DESIGN
+  restart           states=ANY                                       flags=                                                    UNVERIFIED
+  togglehud         states=IN_PLANE,FREEFALL,OPENING_ANIM,DIAGNOSIS  flags=_hud_layer exists                                   FIXED_DOUBLE_FIRE
+  turnleft          states=FREEFALL,OPENING_ANIM                     flags=                                                    CONFIRMED_WORKING
+  turnright         states=FREEFALL,OPENING_ANIM                     flags=                                                    CONFIRMED_WORKING
+
+=== control_events (last 30) ===
+  (empty)
+
+=== arm_physics_baseline (last 10) ===
+  (empty)
+
+=== files_to_fix (steering/control/arm, last 20) ===
+  L0     FIXED     Added POST /api/control pause/resume; corrected stale startup banner claims
+  L0     fixed     Started forensic_hub_server.py; all endpoints returned 200
+
+=== build_terrain.gd: steering-related lines ===
+      66: var _forward_speed := 0.0
+>>>   67: var _turn_input := 0.0
+      68: var _max_speed := 30.0
+
+     914: 		MalfunctionType.LINE_TWISTS:
+>>>  915: 			_turn_input *= 0.5
+     916: 		MalfunctionType.BAG_LOCK:
+
+     919: 		MalfunctionType.LINE_OVER:
+>>>  920: 			_turn_input = 0.5
+     921: 		_:
+
+    1292: 	if _controller_input_map["turn_left"]:
+>>> 1293: 		_turn_input = -1.0
+    1294: 		if not _last_frame_keys["Q"]:
+
+    1296: 	elif _controller_input_map["turn_right"]:
+>>> 1297: 		_turn_input = 1.0
+    1298: 		if not _last_frame_keys["E"]:
+
+    1481: 		return
+>>> 1482: 	var tilt = _turn_input * 15.0
+    1483: 	_canopy_instance.rotation_degrees.z = tilt
+
+    1549: 			Input.is_action_just_pressed("deploy")
+>>> 1550: 			or Input.is_key_pressed(KEY_J)
+    1551: 			or _headless_auto_jump
+
+    1590: 		var turn_input := 0.0
+>>> 1591: 		if Input.is_action_pressed("turnleft"):
+    1592: 			turn_input -= 1.0
+
+    1592: 			turn_input -= 1.0
+>>> 1593: 		if Input.is_action_pressed("turnright"):
+    1594: 			turn_input += 1.0
+
+    1596: 		if turn_input < 0.0:
+>>> 1597: 			print("[VERBATIM] POLL: turnleft pressed - left turn")
+    1598: 			if not _last_frame_keys["Q"]:
+
+    1600: 		elif turn_input > 0.0:
+>>> 1601: 			print("[VERBATIM] POLL: turnright pressed - right turn")
+    1602: 			if not _last_frame_keys["E"]:
+
+    1604: 
+>>> 1605: 		_turn_input = turn_input
+    1606: 		# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong
+
+    1609: 				" has_pc=", _has_pc,
+>>> 1610: 				" turn=", _turn_input,
+    1611: 				" state=", _game_state)
+
+    1612: 		if _has_pc:
+>>> 1613: 			get_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)
+    1614: 			print("[STEER_TELEM] apply_steering CALLED")
+
+    1630: 	# Turn left (Q)
+>>> 1631: 	if Input.is_key_pressed(KEY_Q):
+    1632: 		_turn_input = -1.0
+
+    1631: 	if Input.is_key_pressed(KEY_Q):
+>>> 1632: 		_turn_input = -1.0
+    1633: 		if not _last_frame_keys["Q"]:
+
+    1634: 			_rotate_arm(true)
+>>> 1635: 	elif Input.is_key_pressed(KEY_E):
+    1636: 		_turn_input = 1.0
+
+    1635: 	elif Input.is_key_pressed(KEY_E):
+>>> 1636: 		_turn_input = 1.0
+    1637: 		if not _last_frame_keys["E"]:
+
+    1639: 	else:
+>>> 1640: 		if _turn_input == 0.0:
+    1641: 			pass  # already zero
+
+    1642: 		# NOTE: key-action calls (C/X/V/F/H/S) are handled below
+>>> 1643: 		# with is_key_pressed + _last_frame_keys guards. Do NOT
+    1644: 		# call them here -- this else fires every frame.
+
+    1647: 	# SPACE: toggle canopy in plane, deploy in freefall
+>>> 1648: 	if Input.is_key_pressed(KEY_SPACE) and not _last_frame_keys.get("SPACE", false):
+    1649: 		if _game_state == GameState.IN_PLANE:
+
+    1660: 			_deploy_canopy()
+>>> 1661: 	_last_frame_keys["SPACE"] = Input.is_key_pressed(KEY_SPACE)
+    1662: 	# Turn left (Q)
+
+    1662: 	# Turn left (Q)
+>>> 1663: 	if Input.is_key_pressed(KEY_Q):
+    1664: 		_turn_input = -1.0
+
+    1663: 	if Input.is_key_pressed(KEY_Q):
+>>> 1664: 		_turn_input = -1.0
+    1665: 		if not _last_frame_keys.get("Q", false):
+
+    1666: 			_rotate_arm(true)
+>>> 1667: 	elif Input.is_key_pressed(KEY_E):
+    1668: 		_turn_input = 1.0
+
+    1667: 	elif Input.is_key_pressed(KEY_E):
+>>> 1668: 		_turn_input = 1.0
+    1669: 		if not _last_frame_keys.get("E", false):
+
+    1671: 	else:
+>>> 1672: 		if _turn_input == 0.0:
+    1673: 			pass
+
+    1674: 	# Flight control check (C)
+>>> 1675: 	if Input.is_key_pressed(KEY_C) and not _last_frame_keys.get("C", false):
+    1676: 		_flight_control_check()
+
+    1676: 		_flight_control_check()
+>>> 1677: 	_last_frame_keys["C"] = Input.is_key_pressed(KEY_C)
+    1678: 	# Cutaway (X)
+
+    1678: 	# Cutaway (X)
+>>> 1679: 	if Input.is_key_pressed(KEY_X) and not _last_frame_keys.get("X", false):
+    1680: 		_do_cutaway()
+
+    1680: 		_do_cutaway()
+>>> 1681: 	_last_frame_keys["X"] = Input.is_key_pressed(KEY_X)
+    1682: 	# Reserve (V)
+
+    1682: 	# Reserve (V)
+>>> 1683: 	if Input.is_key_pressed(KEY_V) and not _last_frame_keys.get("V", false):
+    1684: 		_do_reserve()
+
+    1684: 		_do_reserve()
+>>> 1685: 	_last_frame_keys["V"] = Input.is_key_pressed(KEY_V)
+    1686: 	# Flare (F)
+
+    1686: 	# Flare (F)
+>>> 1687: 	if Input.is_key_pressed(KEY_F) and not _last_frame_keys.get("F", false):
+    1688: 		_do_flare()
+
+    1688: 		_do_flare()
+>>> 1689: 	_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
+    1690: 	# Toggle HUD (H) — action handler is canonical; direct KEY_H removed
+
+    1691: 	# (was double-firing: HUD toggled on then immediately off).
+>>> 1692: 	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+    1693: 	# Save camera settings (S)
+
+    1693: 	# Save camera settings (S)
+>>> 1694: 	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
+    1695: 		_save_camera_settings()
+
+    1696: 		print("[CAMERA] Settings saved manually (from _poll_controls)")
+>>> 1697: 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
+    1698: 	if Input.is_action_just_pressed("camera_cycle"):
+
+    1724: 	var cam_move = Vector3.ZERO
+>>> 1725: 	if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+    1726: 		cam_move.z -= 1.0
+
+    1726: 		cam_move.z -= 1.0
+>>> 1727: 	if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+    1728: 		cam_move.z += 1.0
+
+    1728: 		cam_move.z += 1.0
+>>> 1729: 	if Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A):
+    1730: 		cam_move.x -= 1.0
+
+    1730: 		cam_move.x -= 1.0
+>>> 1731: 	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D):
+    1732: 		cam_move.x += 1.0
+
+    1738: 
+>>> 1739: 	_last_frame_keys["Q"] = Input.is_key_pressed(KEY_Q)
+    1740: 	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+
+    1739: 	_last_frame_keys["Q"] = Input.is_key_pressed(KEY_Q)
+>>> 1740: 	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+    1741: 
+
+    1891: 		var action := ""
+>>> 1892: 		if event.keycode == KEY_Q:
+    1893: 			action = "turn_left (Q)"
+
+    1893: 			action = "turn_left (Q)"
+>>> 1894: 		elif event.keycode == KEY_E:
+    1895: 			action = "turn_right (E)"
+
+    1930: 	# --- Q/E turn input (checked first so it's available for all states) ---
+>>> 1931: 	if Input.is_key_pressed(KEY_Q):
+    1932: 		_turn_input = -1.0
+
+    1931: 	if Input.is_key_pressed(KEY_Q):
+>>> 1932: 		_turn_input = -1.0
+    1933: 	elif Input.is_key_pressed(KEY_E):
+
+    1932: 		_turn_input = -1.0
+>>> 1933: 	elif Input.is_key_pressed(KEY_E):
+    1934: 		_turn_input = 1.0
+
+    1933: 	elif Input.is_key_pressed(KEY_E):
+>>> 1934: 		_turn_input = 1.0
+    1935: 	else:
+
+    1935: 	else:
+>>> 1936: 		_turn_input = 0.0
+    1937: 	# fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+
+    1939: 	# (the old edge-triggered path executed nothing on key-up).
+>>> 1940: 	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+    1941: 	_ensure_controls()
+
+    1940: 	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+>>> 1941: 	_ensure_controls()
+    1942: 	_log_control_presses()
+
+    2031: 		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+>>> 2032: 		if abs(_turn_input) > 0.001:
+    2033: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+
+    2032: 		if abs(_turn_input) > 0.001:
+>>> 2033: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+    2034: 		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+
+    2033: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+>>> 2034: 		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+    2035: 		# 1.5 rad/s at full differential ≈ 86 deg/s.
+
+    2037: 		# (general knowledge — not retrieved this session)
+>>> 2038: 		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+    2039: 		if absf(ff_diff) > 0.002:
+
+    2038: 		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+>>> 2039: 		if absf(ff_diff) > 0.002:
+    2040: 			_character.rotate_y(-ff_diff * 1.5 * delta)
+
+    2039: 		if absf(ff_diff) > 0.002:
+>>> 2040: 			_character.rotate_y(-ff_diff * 1.5 * delta)
+    2041: 		var target_dir = -_character.global_position.normalized()
+
+    2042: 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
+>>> 2043: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+    2044: 		_velocity_vec += turn_dir * delta
+
+    2052: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+>>> 2053: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+    2054: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+
+    2063: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+>>> 2064: 		print("[DIAG] _turn_input = ", _turn_input)
+    2065: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+
+    2064: 		print("[DIAG] _turn_input = ", _turn_input)
+>>> 2065: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+    2066: 		_velocity_vec += turn_dir * delta
+
+    2110: 		_update_weather()
+>>> 2111: 	call_deferred("_apply_arm_bone_overrides")
+    2112: 
+
+    2961: 
+>>> 2962: func _apply_arm_bone_overrides() -> void:
+    2963: 	if not _skeleton:
+
+    3305: #
+>>> 3306: # GLIDE_TURN_SIGN exists so the turn direction can be reversed with a single
+    3307: # constant if right-toggle-turns-right comes out backwards. That is a
+
+    3321: const GLIDE_BRAKE_SLOW := 0.72     # fraction of speed removed at full brake
+>>> 3322: const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+    3323: const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+
+    3322: const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+>>> 3323: const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+    3324: const GLIDE_TARGET_RATIO := 2.6    # reference glide ratio, for the log only
+
+    3325: 
+>>> 3326: var _canopy_heading := 0.0
+    3327: var _glide_tel_t := 0.0
+
+    3353: 	# Turn rate: differential brake, less authority when both brakes are deep.
+>>> 3354: 	var turn_rate: float = GLIDE_TURN_RATE * GLIDE_TURN_SIGN * diff \
+    3355: 		* (1.0 - 0.35 * sym)
+
+    3355: 		* (1.0 - 0.35 * sym)
+>>> 3356: 	_canopy_heading += turn_rate * delta
+    3357: 	_canopy_heading = wrapf(_canopy_heading, -PI, PI)
+
+    3356: 	_canopy_heading += turn_rate * delta
+>>> 3357: 	_canopy_heading = wrapf(_canopy_heading, -PI, PI)
+    3358: 
+
+    3359: 	# Horizontal travel along the heading.
+>>> 3360: 	var fwd := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+    3361: 	var before := _character.position
+
+    3362: 	_character.position += fwd * fwd_speed * delta
+>>> 3363: 	_character.rotation.y = _canopy_heading
+    3364: 
+
+    3392: 			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+>>> 3393: 			rad_to_deg(_canopy_heading), ",", desc_rate, ",", log_ratio,
+    3394: 			",", _character.position.x, ",", _character.position.z,
+
+    3467: 	# so the current heading is used as that hint.
+>>> 3468: 	var up_hint := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+    3469: 	if up_hint.length() < 0.001:
+
+    3488: # That matches the observed behaviour: deploy (SPACE) and turn (Q/E) work,
+>>> 3489: # and turn works because _physics_process also reads KEY_Q / KEY_E directly,
+    3490: # bypassing the action system. Controls with no such fallback would silently
+
+    3492: #
+>>> 3493: # _ensure_controls() only ADDS a missing binding; it never removes an
+    3494: # existing one, so a working configuration is left intact. It reports what it
+
+    3504: 	"deploy":       KEY_SPACE,
+>>> 3505: 	"turnleft":     KEY_Q,
+    3506: 	"turnright":    KEY_E,
+
+    3505: 	"turnleft":     KEY_Q,
+>>> 3506: 	"turnright":    KEY_E,
+    3507: 	"camera_cycle": KEY_C,
+
+    3514: 	"j":            KEY_J,
+>>> 3515: 	"pause":        KEY_ESCAPE,
+    3516: }
+
+    3520: 
+>>> 3521: func _ensure_controls() -> void:
+    3522: 	if _controls_ready:
+
+    3538: 				had.append(OS.get_keycode_string(kc))
+>>> 3539: 		var need: bool = not InputMap.action_has_event(action, _key_event(want))
+    3540: 		if need:
+
+    3540: 		if need:
+>>> 3541: 			InputMap.action_add_event(action, _key_event(want))
+    3542: 			added += 1
+
+    3550: 
+>>> 3551: func _key_event(keycode: int) -> InputEventKey:
+    3552: 	var ev := InputEventKey.new()
+
+
+=== FREEFALL branch in _physics_process ===
+1423: 	if _game_state == GameState.FREEFALL:
+1424: 		return 1.2
+1425: 	if _game_state == GameState.OPENING_ANIM:
+1426: 		return 0.3
+1427: 	if _game_state != GameState.DIAGNOSIS:
+1428: 		return 0.0
+1429: 	if _reserve_done or _flare_done:
+1430: 		return DESCENT_RATE_GOOD
+1431: 	match _malfunction:
+1432: 		MalfunctionType.BAG_LOCK:
+1433: 			return DESCENT_RATE_BAGLOCK
+1434: 		MalfunctionType.GOOD:
+1435: 			return DESCENT_RATE_GOOD
+1436: 		_:
+1437: 			return DESCENT_RATE_NORMAL
+1438: 
+1439: 
+1440: # ------------------------------------------------------------------
+1441: # CFD wind update (called every physics frame)
+1442: # Ref: Derived from logarithmic wind profile theory (https://en.wikipedia.org/wiki/Logarithmic_wind_profile)
+1443: # ------------------------------------------------------------------
+1444: func _update_cfd_wind(delta: float) -> void:
+1445: 	var altitude_m = _current_altitude * 0.3048
+1446: 	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1447: 	_wind_gust_time += delta
+1448: 	if _wind_gust_time > randf_range(5.0, 10.0):
+1449: 		_wind_gust_time = 0.0
+1450: 		_wind_current_gust = randf_range(-_wind_turbulence, _wind_turbulence)
+1451: 	var final_speed = max(0.0, wind_speed_at_alt + _wind_current_gust)
+1452: 	var wind_rad := deg_to_rad(_wind_base_direction)
+1453: 	var wind_vec = Vector3(sin(wind_rad), 0, cos(wind_rad)) * (final_speed * 0.514444)
+1454: 	if _game_state == GameState.DIAGNOSIS:
+1455: 		_velocity_vec += wind_vec * delta * 0.5
+1456: 	elif _game_state == GameState.FREEFALL:
+1457: 		# Body drifts ~30% of canopy drift — smaller cross-section in freefall.
+1458: 		# Ref: USPA BSR body-position standards (general knowledge).
+1459: 		_character.position += wind_vec * delta * 0.3
+1460: 	elif _game_state == GameState.OPENING_ANIM:
+1461: 		# Canopy rides the air mass fully — primary landing-spot offset driver.
+1462: 		# wind_vec already in m/s (kts * 0.514444 applied above).
+1463: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+1464: 		# (general knowledge — not retrieved this session)
+1465: 		_character.position += wind_vec * delta
+1466: 	# Throttle: was ~60 lines/s; now 1 line per 5 seconds.
+1467: 	_wind_log_timer -= delta
+1468: 	if _wind_log_timer <= 0.0:
+1469: 		_wind_log_timer = 5.0
+1470: 		print("[WIND] speed ", final_speed, " kts  dir ",
+1471: 			_wind_base_direction, "°  gust ", _wind_current_gust,
+1472: 			"  vec_ms ", wind_vec)
+1473: 
+1474: 
+1475: # ------------------------------------------------------------------
+1476: # Create buildings (simple boxes with random heights)
+1477: # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+1478: # ------------------------------------------------------------------
+1479: func _update_canopy_tilt() -> void:
+1480: 	if not _canopy_instance or not _canopy_deployed:
+1481: 		return
+1482: 	var tilt = _turn_input * 15.0
+1483: 	_canopy_instance.rotation_degrees.z = tilt
+1484: 
+1485: 
+1486: # ------------------------------------------------------------------
+1487: # Camera cycle (C key)
+1488: # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+1489: # ------------------------------------------------------------------
+1490: func _cycle_camera() -> void:
+1491: 	print("[DIAG] _cycle_camera: ENTER, current idx=", _cam_angle_idx)
+1492: 	print("[VERBATIM] ENTER _cycle_camera gate=none")
+1493: 	if not _camera:
+1494: 		print("[DIAG] _cycle_camera: no camera, exiting")
+1495: 		print("[VERBATIM] EXIT _cycle_camera early=no_camera")
+1496: 		return
+1497: 	_cam_angle_idx = (_cam_angle_idx + 1) % 4
+1498: 	match _cam_angle_idx:
+1499: 		0:
+1500: 			_camera.position = Vector3(0.0, 2.0, 3.0)
+1501: 			_camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
+1502: 			print("[VERBATIM] camera=BEHIND (0,2,3)")
+1503: 		1:
+1504: 			_camera.position = Vector3(6.0, 1.0, 0.0)
+1505: 			_camera.rotation = Vector3(0.0, deg_to_rad(-90.0), 0.0)
+1506: 			print("[VERBATIM] camera=SIDE (6,1,0)")
+1507: 		2:
+1508: 			_camera.position = Vector3(0.0, 1.8, 0.0)
+1509: 			_camera.rotation = Vector3(deg_to_rad(90.0), 0.0, 0.0)
+1510: 			print("[VERBATIM] camera=PILOT_UP (0,1.8,0) looking up")
+1511: 		3:
+1512: 			_camera.position = Vector3(0.0, 0.5, 1.5)
+1513: 			_camera.rotation = Vector3(deg_to_rad(-5.0), 0.0, 0.0)
+1514: 			print("[VERBATIM] camera=CHASE_CLOSE (0,0.5,1.5)")
+1515: 	print("[DIAG] _cycle_camera: EXIT, new idx=", _cam_angle_idx)
+1516: 	print("[VERBATIM] EXIT _cycle_camera ok=true")
+1517: 
+1518: 
+1519: # ------------------------------------------------------------------
+1520: # HUD toggle (H key)
+1521: # Ref: https://docs.godotengine.org/en/stable/classes/class_canvasitem.html#class-canvasitem-property-visible
+1522: # ------------------------------------------------------------------
+1523: func _toggle_hud() -> void:
+1524: 	print("[DIAG] _toggle_hud: ENTER, current visible=", _hud_visible)
+1525: 	print("[VERBATIM] ENTER _toggle_hud gate=none")
+1526: 	if not _hud_layer:
+1527: 		print("[DIAG] _toggle_hud: no HUD layer, exiting")
+1528: 		print("[VERBATIM] EXIT _toggle_hud early=no_hud_layer")
+1529: 		return
+1530: 	_hud_visible = not _hud_visible
+1531: 	_hud_layer.visible = _hud_visible
+1532: 	print("[VERBATIM] HUD toggled visible=", _hud_visible)
+1533: 	print("[DIAG] _toggle_hud: EXIT, new visible=", _hud_visible)
+1534: 	print("[VERBATIM] EXIT _toggle_hud ok=true")
+1535: 
+1536: 
+1537: # ------------------------------------------------------------------
+1538: # Polling controls (continuous key detection, called every physics frame)
+1539: # ------------------------------------------------------------------
+1540: func _poll_controls() -> void:
+1541: 	print("[DIAG] _poll_controls: ENTER, state=", _game_state)
+1542: 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+1543: 
+1544: 	if _game_state == GameState.IN_PLANE:
+1545: 		# Also check headless auto-jump flag (set in _physics_process;
+1546: 		# reliable across _physics_process/_process frame boundary).
+1547: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1548: 		var _exit_pressed = (
+1549: 			Input.is_action_just_pressed("deploy")
+1550: 			or Input.is_key_pressed(KEY_J)
+1551: 			or _headless_auto_jump
+1552: 		)
+1553: 		_headless_auto_jump = false  # consume the flag
+1554: 		if _exit_pressed:
+1555: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+1556: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+1557: 			_game_state = GameState.FREEFALL
+1558: 			_cam_distance = 5.0
+1559: 			if _plane_node:
+1560: 				_plane_node.visible = false
+1561: 			_character.visible = true
+1562: 			if _plane_node:
+1563: 				_character.position = _plane_node.position + Vector3(0, -2.0, 0)
+1564: 			else:
+1565: 				_character.position = Vector3(100, 1828.8, -100)
+1566: 			_show_notification("Jumped! Deploy parachute (SPACE) above 2000 ft AGL")
+1567: 			# --- Immediately switch camera to character ---
+1568: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+1569: 				_camera.global_position = _character.global_position + Vector3(0, 2, 3)
+1570: 				_camera.look_at(_character.global_position, Vector3.UP)
+1571: 				print("[CAMERA] Switched to character after exit")
+1572: 				_camera.current = true  # ensure the camera becomes active
+1573: 		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
+1574: 		return
+1575: 
+1576: 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+1577: 		if Input.is_action_just_pressed("restart"):
+1578: 			print("[DIAG] _poll_controls: restart pressed")
+1579: 			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+1580: 			_reset_game()
+1581: 		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
+1582: 		return
+1583: 
+1584: 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+1585: 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+1586: 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
+1587: 		_deploy_canopy()
+1588: 
+1589: 	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+1590: 		var turn_input := 0.0
+1591: 		if Input.is_action_pressed("turnleft"):
+1592: 			turn_input -= 1.0
+1593: 		if Input.is_action_pressed("turnright"):
+1594: 			turn_input += 1.0
+1595: 
+1596: 		if turn_input < 0.0:
+1597: 			print("[VERBATIM] POLL: turnleft pressed - left turn")
+1598: 			if not _last_frame_keys["Q"]:
+1599: 				_rotate_arm(true)
+1600: 		elif turn_input > 0.0:
+1601: 			print("[VERBATIM] POLL: turnright pressed - right turn")
+1602: 			if not _last_frame_keys["E"]:
+1603: 				_rotate_arm(false)
+1604: 
+1605: 		_turn_input = turn_input
+1606: 		# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong
+1607: 		var _has_pc := has_node("/root/Main/ParachuteController")
+1608: 		print("[STEER_TELEM] canopy=", _canopy_deployed,
+1609: 				" has_pc=", _has_pc,
+1610: 				" turn=", _turn_input,
+1611: 				" state=", _game_state)
+1612: 		if _has_pc:
+1613: 			get_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)
+1614: 			print("[STEER_TELEM] apply_steering CALLED")
+1615: 		else:
+1616: 			# Log what IS in /root/Main so we can find the real node name
+1617: 			if has_node("/root/Main"):
+1618: 				var _main := get_node("/root/Main")
+1619: 				var _children_str := ""
+1620: 				for _c in _main.get_children():
+1621: 					_children_str += _c.name + " "
+1622: 				print("[STEER_TELEM] /root/Main children: ", _children_str)
+1623: 			else:
+1624: 				print("[STEER_TELEM] /root/Main does not exist")
+1625: # BUG1 FIX: guard restored — was firing _deploy_canopy() every frame unconditionally
+1626: 		# ----- Direct key checks (bypass Input Map) -----
+1627: 		# Deploy (SPACE)
+1628: 		#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
+1629: 		_deploy_canopy()
+1630: 	# Turn left (Q)
+1631: 	if Input.is_key_pressed(KEY_Q):
+1632: 		_turn_input = -1.0
+1633: 		if not _last_frame_keys["Q"]:
+1634: 			_rotate_arm(true)
+1635: 	elif Input.is_key_pressed(KEY_E):
+1636: 		_turn_input = 1.0
+1637: 		if not _last_frame_keys["E"]:
+1638: 			_rotate_arm(false)
+1639: 	else:
+1640: 		if _turn_input == 0.0:
+1641: 			pass  # already zero
+1642: 		# NOTE: key-action calls (C/X/V/F/H/S) are handled below
+1643: 		# with is_key_pressed + _last_frame_keys guards. Do NOT
+1644: 		# call them here -- this else fires every frame.
+1645: 	# ----- Direct key checks (bypass Input Map) -----
+1646: 	# Deploy (SPACE)
+1647: 	# SPACE: toggle canopy in plane, deploy in freefall
+1648: 	if Input.is_key_pressed(KEY_SPACE) and not _last_frame_keys.get("SPACE", false):
+1649: 		if _game_state == GameState.IN_PLANE:
+1650: 			if _canopy_deployed:
+1651: 				_canopy_deployed = false
+1652: 				_canopy_instance.visible = false
+1653: 				_show_notification("Canopy closed – safe to jump")
+1654: 			else:
+1655: 				_canopy_deployed = true
+1656: 				_canopy_instance.visible = true
+1657: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+1658: 				_show_notification("WARNING: Canopy deployed inside aircraft! DO NOT jump (J)")
+1659: 		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+1660: 			_deploy_canopy()
+1661: 	_last_frame_keys["SPACE"] = Input.is_key_pressed(KEY_SPACE)
+1662: 	# Turn left (Q)
+1663: 	if Input.is_key_pressed(KEY_Q):
+1664: 		_turn_input = -1.0
+1665: 		if not _last_frame_keys.get("Q", false):
+1666: 			_rotate_arm(true)
+1667: 	elif Input.is_key_pressed(KEY_E):
+1668: 		_turn_input = 1.0
+1669: 		if not _last_frame_keys.get("E", false):
+1670: 			_rotate_arm(false)
+1671: 	else:
+1672: 		if _turn_input == 0.0:
+1673: 			pass
+1674: 	# Flight control check (C)
+1675: 	if Input.is_key_pressed(KEY_C) and not _last_frame_keys.get("C", false):
+1676: 		_flight_control_check()
+1677: 	_last_frame_keys["C"] = Input.is_key_pressed(KEY_C)
+1678: 	# Cutaway (X)
+1679: 	if Input.is_key_pressed(KEY_X) and not _last_frame_keys.get("X", false):
+1680: 		_do_cutaway()
+1681: 	_last_frame_keys["X"] = Input.is_key_pressed(KEY_X)
+1682: 	# Reserve (V)
+1683: 	if Input.is_key_pressed(KEY_V) and not _last_frame_keys.get("V", false):
+1684: 		_do_reserve()
+1685: 	_last_frame_keys["V"] = Input.is_key_pressed(KEY_V)
+1686: 	# Flare (F)
+1687: 	if Input.is_key_pressed(KEY_F) and not _last_frame_keys.get("F", false):
+1688: 		_do_flare()
+1689: 	_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
+1690: 	# Toggle HUD (H) — action handler is canonical; direct KEY_H removed
+1691: 	# (was double-firing: HUD toggled on then immediately off).
+1692: 	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+1693: 	# Save camera settings (S)
+1694: 	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
+1695: 		_save_camera_settings()
+1696: 		print("[CAMERA] Settings saved manually (from _poll_controls)")
+1697: 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
+1698: 	if Input.is_action_just_pressed("camera_cycle"):
+1699: 		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
+1700: 		_cycle_camera()
+1701: 
+1702: 	if Input.is_action_just_pressed("togglehud"):
+1703: 		print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
+1704: 		_toggle_hud()
+1705: 
+1706: 	if Input.is_action_just_pressed("flightcheck"):
+1707: 		print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
+1708: 		_flight_control_check()
+1709: 
+1710: 	if Input.is_action_just_pressed("cutaway"):
+1711: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+1712: 		_do_cutaway()
+1713: 
+1714: 	if Input.is_action_just_pressed("reserve"):
+1715: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+1716: 		_do_reserve()
+1717: 
+1718: 	if Input.is_action_just_pressed("flare"):
+1719: 		print("[VERBATIM] POLL: flare pressed - calling _do_flare")
+1720: 		_do_flare()
+1721: 
+1722: 	_process_controller_input()
+1723: 
+1724: 	var cam_move = Vector3.ZERO
+1725: 	if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+1726: 		cam_move.z -= 1.0
+1727: 	if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+1728: 		cam_move.z += 1.0
+1729: 	if Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A):
+1730: 		cam_move.x -= 1.0
+1731: 	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D):
+1732: 		cam_move.x += 1.0
+1733: 	if cam_move.length() > 0:
+1734: 		cam_move = cam_move.normalized() * 100.0
+1735: 		_camera.position += cam_move
+1736: 		_camera.position.x = clamp(_camera.position.x, -2000.0, 2000.0)
+1737: 		_camera.position.z = clamp(_camera.position.z, -2000.0, 2000.0)
+1738: 
+1739: 	_last_frame_keys["Q"] = Input.is_key_pressed(KEY_Q)
+1740: 	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+1741: 
+1742: 	# --- Camera toggle on J (when not in plane) ---
+1743: 	if Input.is_action_just_pressed("j") and _game_state != GameState.IN_PLANE:
+1744: 		if camera_target == "plane":
+1745: 			camera_target = "character"
+1746: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+1747: 				var target = _character.global_position
+1748: 				var offset = Vector3(0, 0, -_cam_distance)
+1749: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1750: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1751: 				_camera.global_position = target + offset
+1752: 				_camera.look_at(target, Vector3.UP)
+1753: 				print("[CAMERA] Switched to character (J)")
+1754: 		else:
+1755: 			camera_target = "plane"
+1756: 			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+1757: 				var target = _plane_node.global_position
+1758: 				var offset = Vector3(0, 0, -_cam_distance)
+1759: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1760: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1761: 				_camera.global_position = target + offset
+1762: 				_camera.look_at(target, Vector3.UP)
+1763: 				print("[CAMERA] Switched to plane (J)")
+1764: 
+1765: 
+1766: # ------------------------------------------------------------------
+1767: # Reset game to initial state (deterministic, idempotent)
+1768: # ------------------------------------------------------------------
+1769: func _reset_game() -> void:
+1770: 	print("[DIAG] _reset_game: ENTER")
+1771: 	print("[VERBATIM] === RESETTING GAME ===")
+1772: 	_game_state = GameState.IN_PLANE
+1773: 	if _plane_node:
+1774: 		_plane_node.visible = true
+1775: 		_plane_angle = 0.0
+1776: 	_character.visible = false
+1777: 	_character.position = Vector3(100.0, 1828.8, -100.0)
+1778: 	_velocity_vec = Vector3.ZERO
+1779: 	_forward_speed = 0.0
+1780: 	_descent_rate = 0.0
+1781: 	_current_altitude = 3000.0
+1782: 	# Ensure altitude is non‑zero and game state is correct (R088)
+1783: 	if _current_altitude <= 0.0:
+1784: 		_current_altitude = 3000.0
+1785: 	_flight_control_checked = false
+1786: 	_cutaway_done = false
+1787: 	_reserve_done = false
+1788: 	_flare_done = false
+1789: 	_safe_landing = false
+1790: 	_decision_altitude_warning_shown = false
+1791: 	_canopy_deployed = false
+1792: 	_deployment_timer = 0.0
+1793: 	_score = 0
+1794: 	_cam_angle_idx = 0
+1795: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+1796: 	_camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
+1797: 	if _canopy_instance:
+1798: 		_canopy_instance.visible = false
+1799: 		_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+1800: 	_randomize_malfunction()
+1801: 	_update_canopy_visuals()
+1802: 	_left_arm_angle = 0.0
+1803: 	_right_arm_angle = 0.0
+1804: 	if _skeleton and _left_arm_idx != -1:
+1805: 		_skeleton.set_bone_pose_rotation(_left_arm_idx, Quaternion(Vector3(0, 0, 1), -PI / 2))
+1806: 	if _skeleton and _right_arm_idx != -1:
+1807: 		_skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion(Vector3(0, 0, 1), PI / 2))
+1808: 	_show_notification("Game reset")
+1809: 	print("[VERBATIM] Reset complete. New malfunction: ", _malfunction_name())
+1810: 	camera_target = "plane"
+1811: 	_start_recording()
+1812: 	print("[DIAG] _reset_game: EXIT, new state=", _game_state)
+1813: 
+1814: 
+1815: # ------------------------------------------------------------------
+1816: # Input handling (mouse wheel, right‑click drag, verbatim logging)
+1817: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
+1818: # Ref: https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+1819: # ------------------------------------------------------------------
+1820: func _unhandled_input(event: InputEvent) -> void:
+1821: 	if event is InputEventMouseButton and event.pressed:
+1822: 		var _pip_c = _pip_layer.get_node_or_null("SubViewportContainer") if _pip_layer else null
+1823: 		# Zoom with mouse wheel (only if not hovering over pip)
+1824: 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+1825: 			_cam_distance = max(1.0, _cam_distance - 5.0)
+1826: 			_update_camera_position()
+1827: 			print("[VERBATIM] Zoom in, distance=", _cam_distance)
+1828: 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+1829: 			_cam_distance = min(300.0, _cam_distance + 5.0)
+1830: 			_update_camera_position()
+1831: 			print("[VERBATIM] Zoom out, distance=", _cam_distance)
+1832: 	# Start game from initial paused state
+1833: 	if (
+1834: 		get_tree().paused
+1835: 		and _initial_paused
+1836: 		and event is InputEventKey
+1837: 		and event.pressed
+1838: 		and event.keycode == KEY_SPACE
+1839: 	):
+1840: 		get_tree().paused = false
+1841: 		_initial_paused = false
+1842: 		_save_camera_settings()
+1843: 		print("[INIT] Game started")
+1844: 		return
+1845: 	if event.is_action_pressed("pause"):
+1846: 		toggle_pause()
+1847: 
+1848: 
+1849: func toggle_pause() -> void:
+1850: 	var tree := get_tree()
+1851: 	tree.paused = not tree.paused
+1852: 	$PauseMenu.visible = tree.paused
+1853: 	if tree.paused:
+1854: 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+1855: 	else:
+1856: 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+1857: 
+1858: 
+1859: func _input(event: InputEvent) -> void:
+1860: 	# Ignore F3 – let forensic_hud handle it
+1861: 	if event is InputEventKey and event.keycode == KEY_F3:
+1862: 		return
+1863: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+1864: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+1865: 		var rel = (event as InputEventMouseMotion).relative
+1866: 		# Adjust azimuth and elevation based on mouse drag
+1867: 		_cam_azimuth -= rel.x * 0.005
+1868: 		_cam_elevation -= rel.y * 0.005
+1869: 		# _character.rotation.y = _cam_azimuth  # removed to match plane behaviour
+1870: 		# Clamp elevation to avoid flipping
+1871: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+1872: 		_update_camera_position()
+1873: 		# Immediately update camera position if we have a target
+1874: 		var target: Vector3
+1875: 		if camera_target == "plane" and is_instance_valid(_plane_node):
+1876: 			target = _plane_node.global_position
+1877: 		elif camera_target == "character" and is_instance_valid(_character):
+1878: 			target = _character.global_position
+1879: 		else:
+1880: 			return
+1881: 		var offset = Vector3(0, 0, -_cam_distance)
+1882: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1883: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1884: 		_camera.global_position = target + offset
+1885: 		_camera.look_at(target, Vector3.UP)
+1886: 		print(
+1887: 			"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)
+1888: 		)
+1889: 
+1890: 	if event is InputEventKey and event.pressed and not event.echo:
+1891: 		var action := ""
+1892: 		if event.keycode == KEY_Q:
+1893: 			action = "turn_left (Q)"
+1894: 		elif event.keycode == KEY_E:
+1895: 			action = "turn_right (E)"
+1896: 		elif event.keycode == KEY_SPACE:
+1897: 			action = "deploy (SPACE)"
+1898: 		elif event.keycode == KEY_C:
+1899: 			action = "cycle_camera (C)"
+1900: 		elif event.keycode == KEY_H:
+1901: 			action = "toggle_hud (H)"
+1902: 		elif event.keycode == KEY_X:
+1903: 			action = "cutaway (X)"
+1904: 		elif event.keycode == KEY_V:
+1905: 			action = "reserve (V)"
+1906: 		elif event.keycode == KEY_F:
+1907: 			action = "flare (F)"
+1908: 		elif event.keycode == KEY_R:
+1909: 			action = "restart (R)"
+1910: 		if action != "":
+1911: 			print("[VERBATIM] INPUT: action=", action)
+1912: 	if event.is_action_pressed("pause"):
+1913: 		toggle_pause()
+1914: 
+1915: 	# Manual save key (S)
+1916: 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+1917: 		_save_camera_settings()
+1918: 		print("[CAMERA] Settings saved manually")
+1919: 
+1920: 
+1921: func _physics_process(delta) -> void:
+1922: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+1923: 	# ForensicHUD._input()/ForensicPanel._process() automatically.
+1924: 	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+1925: 		ForensicHUD.poll_forensic_hud()
+1926: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+1927: 		ForensicPanel.poll_forensic_panel()
+1928: 	if _character and is_instance_valid(_character):
+1929: 		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+1930: 	# --- Q/E turn input (checked first so it's available for all states) ---
+1931: 	if Input.is_key_pressed(KEY_Q):
+1932: 		_turn_input = -1.0
+1933: 	elif Input.is_key_pressed(KEY_E):
+1934: 		_turn_input = 1.0
+1935: 	else:
+1936: 		_turn_input = 0.0
+1937: 	# fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+1938: 	# Held state is read directly from the keys here, so release is handled
+1939: 	# (the old edge-triggered path executed nothing on key-up).
+1940: 	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+1941: 	_ensure_controls()
+1942: 	_log_control_presses()
+1943: 	_sync_main_canopy()
+1944: 	_pip_live_view(delta)
+1945: 
+1946: 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
+1947: 	if _game_state == GameState.IN_PLANE:
+1948: 		print("[DIAG] _physics_process: IN_PLANE branch entered")
+1949: 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+1950: 		if _plane_node:
+1951: 			_plane_node.position = Vector3(
+1952: 				cos(_plane_angle) * _PLANE_ORBIT_RADIUS,
+1953: 				_PLANE_ALTITUDE,
+1954: 				sin(_plane_angle) * _PLANE_ORBIT_RADIUS
+1955: 			)
+1956: 			_plane_node.rotation.y = _plane_angle + PI / 2.0
+1957: 			# Headless auto-start: fire SPACE on first IN_PLANE frame
+1958: 			# (Rule #1 grounded: this is the first rendered frame, confirmed
+1959: 			#  by _0283.txt showing plane position update before stall)
+1960: 			if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+1961: 				if not ProjectSettings.has_setting("_headless_space_fired"):
+1962: 					ProjectSettings.set_setting("_headless_space_fired", true)
+1963: 					Input.action_press("deploy")
+1964: 					Input.action_release("deploy")
+1965: 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+1966: 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+1967: 		else:
+1968: 			print("[DIAG] _physics_process: plane_node is NULL")
+1969: 		if _hud_labels.size() > 0:
+1970: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+1971: 		if _hud_labels.size() > 7:
+1972: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+1973: 		# --- CAMERA FOLLOW ---
+1974: 		print("[DIAG] _physics_process: checking camera follow")
+1975: 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+1976: 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+1977: 			var old_pos = _camera.global_position
+1978: 			var target = _plane_node.global_position
+1979: 			var offset = Vector3(0, 0, -_cam_distance)
+1980: 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1981: 			offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1982: 			_camera.global_position = target + offset
+1983: 			_camera.look_at(target, Vector3.UP)
+1984: 			print(
+1985: 				"[DIAG] _physics_process: camera moved from ",
+1986: 				old_pos,
+1987: 				" to ",
+1988: 				_camera.global_position
+1989: 			)
+1990: 		else:
+1991: 			print(
+1992: 				"[DIAG] _physics_process: camera follow skipped – plane=",
+1993: 				_plane_node,
+1994: 				" camera=",
+1995: 				_camera
+1996: 			)
+1997: 		print("[DIAG] _physics_process: IN_PLANE returning")
+1998: 		return
+1999: 
+2000: 	# Camera follows character using orbit (same as IN_PLANE)
+2001: 	if _character and _camera:
+2002: 		var target = _character.global_position
+2003: 		var offset = Vector3(0, 0, -_cam_distance)
+2004: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+2005: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+2006: 		_camera.global_position = target + offset
+2007: 		_camera.look_at(target, Vector3.UP)
+2008: 		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
+2009: 	_prev_descent_rate = _descent_rate
+2010: 	_apply_malfunction_effects(delta)
+2011: 	var descent = _get_current_descent_rate() * 60.0 * delta
+2012: 	_character.position.y -= descent
+2013: 	# v11: only .y was ever written here, so the canopy had no forward
+2014: 	# flight at all. Horizontal glide and turning are applied below.
+2015: 	_update_canopy_glide(delta, descent)
+2016: 	if _character.position.y < 25.0:
+2017: 		_character.position.y = 25.0
+2018: 		if not _safe_landing:
+2019: 			ScreenshotLibrary.save_flight_screenshot()
+2020: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+2021: 			_game_state = GameState.GAME_OVER
+2022: 			print("[VERBATIM] Ground impact – fatal")
+2023: 	_current_altitude = _character.position.y - 25.0
+2024: 
+2025: 	_vario_mps = _prev_descent_rate - _descent_rate
+2026: 
+2027: 	_update_cfd_wind(delta)
+2028: 	_update_canopy_tilt()
+2029: 
+2030: 	if _game_state == GameState.FREEFALL:
+2031: 		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+2032: 		if abs(_turn_input) > 0.001:
+2033: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+2034: 		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+2035: 		# 1.5 rad/s at full differential ≈ 86 deg/s.
+2036: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+2037: 		# (general knowledge — not retrieved this session)
+2038: 		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+2039: 		if absf(ff_diff) > 0.002:
+2040: 			_character.rotate_y(-ff_diff * 1.5 * delta)
+2041: 		var target_dir = -_character.global_position.normalized()
+2042: 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
+2043: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+2044: 		_velocity_vec += turn_dir * delta
+2045: 		var forward_vec = target_dir * _forward_speed
+2046: 		_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)
+2047: 		_character.position += _velocity_vec * delta
+2048: 		if _velocity_vec.length() > 0.5:
+2049: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+2050: 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
+2051: 		var speed_kts = _forward_speed * 1.94384
+2052: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2053: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2054: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2055: 		_check_decision_altitude()
+2056: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+2057: 		if _screenshot_save_timer > 0:
+2058: 			_screenshot_save_timer -= delta
+2059: 		if _screenshot_save_timer <= 0.0:
+2060: 			ScreenshotLibrary.save_flight_screenshot()
+2061: 			_screenshot_save_timer = 5.0
+2062: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+
+=== _update_canopy_glide turn section ===
+3332: func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+
