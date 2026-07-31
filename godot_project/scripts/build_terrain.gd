@@ -3330,6 +3330,10 @@ var _glide_last_log := 0.0
 
 
 func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+	# Stop glide physics on landing — otherwise canopy keeps flying underground.
+	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+		_canopy_deployed = false
+		return
 	if not _canopy_deployed:
 		return
 	if _character == null or not is_instance_valid(_character):
