@@ -1603,45 +1603,11 @@ func _poll_controls() -> void:
 				_rotate_arm(false)
 
 		_turn_input = turn_input
-		# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong
-		var _has_pc := has_node("/root/Main/ParachuteController")
-		print("[STEER_TELEM] canopy=", _canopy_deployed,
-				" has_pc=", _has_pc,
-				" turn=", _turn_input,
-				" state=", _game_state)
-		if _has_pc:
-			get_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)
-			print("[STEER_TELEM] apply_steering CALLED")
-		else:
-			# Log what IS in /root/Main so we can find the real node name
-			if has_node("/root/Main"):
-				var _main := get_node("/root/Main")
-				var _children_str := ""
-				for _c in _main.get_children():
-					_children_str += _c.name + " "
-				print("[STEER_TELEM] /root/Main children: ", _children_str)
-			else:
-				print("[STEER_TELEM] /root/Main does not exist")
-# BUG1 FIX: guard restored — was firing _deploy_canopy() every frame unconditionally
-		# ----- Direct key checks (bypass Input Map) -----
-		# Deploy (SPACE)
-		#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
-		_deploy_canopy()
-	# Turn left (Q)
-	if Input.is_key_pressed(KEY_Q):
-		_turn_input = -1.0
-		if not _last_frame_keys["Q"]:
-			_rotate_arm(true)
-	elif Input.is_key_pressed(KEY_E):
-		_turn_input = 1.0
-		if not _last_frame_keys["E"]:
-			_rotate_arm(false)
-	else:
-		if _turn_input == 0.0:
-			pass  # already zero
-		# NOTE: key-action calls (C/X/V/F/H/S) are handled below
-		# with is_key_pressed + _last_frame_keys guards. Do NOT
-		# call them here -- this else fires every frame.
+		# ParachuteController removed — steering via _turn_input + _arm_pull directly.
+# FIX (fix_steering_v1): _deploy_canopy() here was called every frame in
+# OPENING_ANIM/DIAGNOSIS, resetting _canopy_heading=0 each frame so the
+# canopy could never accumulate a turn. Guard was commented out; call removed.
+		# Deploy on SPACE is handled by is_action_just_pressed at line ~1585.
 	# ----- Direct key checks (bypass Input Map) -----
 	# Deploy (SPACE)
 	# SPACE: toggle canopy in plane, deploy in freefall
