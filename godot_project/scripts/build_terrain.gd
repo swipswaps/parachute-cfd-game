@@ -253,14 +253,14 @@ func _ready() -> void:
 	# Terrain generation (full – uses heightmap and baked colours) with fallback
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
 	# --------------------------------------------------------------
-	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+	var file = FileAccess.open("res://assets/terrain/heightmap_1024_hd.raw", FileAccess.READ)
 	if file:
 		# --- Heightmap exists: generate detailed terrain ---
 		var data = file.get_buffer(file.get_length())
 		file.close()
 
 		var _baked := PackedByteArray()
-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024_hd.bin", FileAccess.READ)
 		if _bf:
 			_baked = _bf.get_buffer(_bf.get_length())
 			_bf.close()
@@ -270,8 +270,8 @@ func _ready() -> void:
 
 		var verts := []
 		var uvs := []
-		const W = 4096
-		const H = 4096
+		const W = 1024
+		const H = 1024
 		const MAX_ELEV = 80.0
 		const SCALE_XZ = 4000.0
 		for z in range(H):
