@@ -260,7 +260,7 @@ func _ready() -> void:
 		file.close()
 
 		var _baked := PackedByteArray()
-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024_hd.bin", FileAccess.READ)
+		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
 		if _bf:
 			_baked = _bf.get_buffer(_bf.get_length())
 			_bf.close()
@@ -272,7 +272,7 @@ func _ready() -> void:
 		var uvs := []
 		const W = 1024
 		const H = 1024
-		const MAX_ELEV = 80.0
+		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
 		const SCALE_XZ = 4000.0
 		for z in range(H):
 			for x in range(W):
