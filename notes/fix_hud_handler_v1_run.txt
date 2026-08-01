@@ -1,0 +1,25 @@
+[2026-08-01T14:35:34.373183+00:00] [OK] db_flag: 4 issues flagged in files_to_fix
+[2026-08-01T14:35:34.400012+00:00] [OK] sqlitedb_api: methods: ['_ready', '_exit_tree', '_query', '_create_tables', 'insert_issue', 'get_issues', 'mark_verified', 'insert_screenshot', 'get_screenshots', 'log_parse_error', 'get_parse_errors', 'mark_parse_error_fixed']
+[2026-08-01T14:35:34.441494+00:00] [OK] precond:add_ctrl_health_handler: 1 match
+[2026-08-01T14:35:34.441706+00:00] [OK] precond:poll_fast_busy_guard: 1 match
+[2026-08-01T14:35:34.441845+00:00] [OK] precond:remove_gui_input_flood: 1 match
+[2026-08-01T14:35:34.441963+00:00] [OK] precond:remove_input_flood: 1 match
+[2026-08-01T14:35:34.443414+00:00] [OK] hud_raw: verified
+[2026-08-01T14:35:34.506384+00:00] [OK] db_update: 3 records updated to FIXED
+[2026-08-01T14:35:34.507501+00:00] [OK] result_log: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/fix_hud_handler_result_20260801143534.txt
+Success: no problems found
+[main 91fcea1] fix: forensic_hud — add missing _on_ctrl_health_completed + busy guard + log flood
+ 3 files changed, 50 insertions(+), 12 deletions(-)
+ create mode 100644 notes/fix_hud_handler_result_20260801143534.txt
+To https://github.com/swipswaps/parachute-cfd-game.git
+   dfd3b63..91fcea1  main -> main
+[2026-08-01T14:35:36.663482+00:00] [OK] COMPLETE: fix_hud_handler_v1 done
+
+=== staged (3) ===
+  .gitignore
+  godot_project/scripts/forensic_hud.gd
+  notes/fix_hud_handler_result_20260801143534.txt
+
+=== RAW LINKS ===
+Result: https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_hud_handler_result_20260801143534.txt
+HUD:    https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/godot_project/scripts/forensic_hud.gd
