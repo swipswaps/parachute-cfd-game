@@ -1,0 +1,130 @@
+diag_arm_glide | 2026-08-01T20:50:00.482721+00:00
+======================================================================
+
+=== held_left / held_right assignments ===
+2863: func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+2881: 		var held: bool = held_left if side == "L" else held_right
+
+=== arm rotate callsites L1605-1660 ===
+1605: 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
+1606: 		_deploy_canopy()
+1607: 
+1608: 	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+1609: 		var turn_input := 0.0
+1610: 		if Input.is_action_pressed("turnleft"):
+1611: 			turn_input -= 1.0
+1612: 		if Input.is_action_pressed("turnright"):
+1613: 			turn_input += 1.0
+1614: 
+1615: 		if turn_input < 0.0:
+1616: 			print("[VERBATIM] POLL: turnleft pressed - left turn")
+1617: 			if not _last_frame_keys["Q"]:
+1618: 				_rotate_arm(true)
+1619: 		elif turn_input > 0.0:
+1620: 			print("[VERBATIM] POLL: turnright pressed - right turn")
+1621: 			if not _last_frame_keys["E"]:
+1622: 				_rotate_arm(false)
+1623: 
+1624: 		_turn_input = turn_input
+1625: 		# ParachuteController removed — steering via _turn_input + _arm_pull directly.
+1626: # FIX (fix_steering_v1): _deploy_canopy() here was called every frame in
+1627: # OPENING_ANIM/DIAGNOSIS, resetting _canopy_heading=0 each frame so the
+1628: # canopy could never accumulate a turn. Guard was commented out; call removed.
+1629: 		# Deploy on SPACE is handled by is_action_just_pressed at line ~1585.
+1630: 	# ----- Direct key checks (bypass Input Map) -----
+1631: 	# Deploy (SPACE)
+1632: 	# SPACE: toggle canopy in plane, deploy in freefall
+1633: 	if Input.is_key_pressed(KEY_SPACE) and not _last_frame_keys.get("SPACE", false):
+1634: 		if _game_state == GameState.IN_PLANE:
+1635: 			if _canopy_deployed:
+1636: 				_canopy_deployed = false
+1637: 				_canopy_instance.visible = false
+1638: 				_show_notification("Canopy closed – safe to jump")
+1639: 			else:
+1640: 				_canopy_deployed = true
+1641: 				_canopy_instance.visible = true
+1642: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+1643: 				_show_notification("WARNING: Canopy deployed inside aircraft! DO NOT jump (J)")
+1644: 		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+1645: 			_deploy_canopy()
+1646: 	_last_frame_keys["SPACE"] = Input.is_key_pressed(KEY_SPACE)
+1647: 	# Turn left (Q)
+1648: 	if Input.is_key_pressed(KEY_Q):
+1649: 		_turn_input = -1.0
+1650: 		if not _last_frame_keys.get("Q", false):
+1651: 			_rotate_arm(true)
+1652: 	elif Input.is_key_pressed(KEY_E):
+1653: 		_turn_input = 1.0
+1654: 		if not _last_frame_keys.get("E", false):
+1655: 			_rotate_arm(false)
+1656: 	else:
+1657: 		if _turn_input == 0.0:
+1658: 			pass
+1659: 	# Flight control check (C)
+1660: 	if Input.is_key_pressed(KEY_C) and not _last_frame_keys.get("C", false):
+1661: 		_flight_control_check()
+
+=== _update_canopy_glide L3355-3415 ===
+3355: 	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+3356: 	ratio = maxf(ratio, 0.6)
+3357: 	var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sym * sym * sym
+3358: 	_character.position.y += descent_this_frame - sink * delta
+3359: 
+3360: 	# ---- telemetry -------------------------------------------------------
+3361: 	_glide_tel_t += delta
+3362: 	if not _glide_tel_hdr:
+3363: 		print("[GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,"
+3364: 			+ "heading_deg,descent_m_s,glide_ratio,x,z,raw_descent")
+3365: 		_glide_tel_hdr = true
+3366: 
+3367: 	# log on change or twice a second, so a straight glide stays readable
+3368: 	var moving: bool = absf(diff) > 0.002 or sym > 0.002
+3369: 	if moving or _glide_tel_t - _glide_last_log > 0.5:
+3370: 		_glide_last_log = _glide_tel_t
+3371: 		var desc_rate: float = sink
+3372: 		var raw_rate: float = descent_this_frame / delta
+3373: 		var log_ratio: float = 0.0
+3374: 		if absf(desc_rate) > 0.0001:
+3375: 			log_ratio = fwd_speed / desc_rate
+3376: 		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+3377: 			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+3378: 			rad_to_deg(_canopy_heading), ",", desc_rate, ",", log_ratio,
+3379: 			",", _character.position.x, ",", _character.position.z,
+3380: 			",", raw_rate)
+3381: 		if before.distance_to(_character.position) < 0.0001 and fwd_speed > 0.1:
+3382: 			print("[GLIDE] WARNING: position did not change despite fwd_speed=",
+3383: 				fwd_speed, " - something downstream is overwriting position")
+3384: 
+3385: # ===========================================================================
+3386: # GLIDE TUNING + LIVE PiP  (fix_altitude_pip_v12)
+3387: #
+3388: # glide_v11.txt measured descent 18.0 m/s flat and glide ratio 0.39-0.61.
+3389: # A ram-air canopy sits near 2.6 at full flight, degrading under brake, with
+3390: # sink rising sharply as it approaches stall.
+3391: #   brakes off: 11.00 / 2.6           = 4.23 m/s
+3392: #   full brake:  3.08 / 1.2 + 3.0     = 5.57 m/s
+3393: #
+3394: # PiP: _setup_pip_overlay builds a standalone SubViewport mini-scene with its
+3395: # own canopy model and light (build_terrain.gd 2180-2226), so it shows a prop,
+3396: # not the real canopy. Sharing the main World3D into that SubViewport and
+3397: # driving its camera from the character makes it a genuine overhead view:
+3398: # the aircraft receding before deploy, the real canopy after.
+3399: #
+3400: # The mini-scene props are hidden rather than freed, so nothing that
+3401: # _setup_pip_overlay still holds a reference to is invalidated.
+3402: #
+3403: # Refs (general knowledge - not retrieved this session):
+3404: #   https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+3405: #   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+3406: # ===========================================================================
+3407: 
+3408: const GLIDE_RATIO_BEST       := 2.6    # full flight, brakes off
+3409: const GLIDE_RATIO_BRAKE_LOSS := 1.4    # ratio lost at full brake (-> 1.2)
+3410: const GLIDE_STALL_SINK       := 3.0    # m/s extra sink approaching stall
+3411: 
+3412: var _pip_ready := false
+3413: var _pip_log_t := 0.0
+3414: 
+3415: 
+
+Generated: 2026-08-01T20:50:00.485753+00:00
