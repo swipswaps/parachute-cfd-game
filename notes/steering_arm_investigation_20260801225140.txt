@@ -1,0 +1,594 @@
+Investigation: steering/arm logic – 2026-08-01T22:51:40.001691+00:00
+================================================================================
+
+1. Files containing 'steering' (active .gd):
+  godot_project/scripts/build_terrain.gd
+  godot_project/scripts/game_manager.gd
+  godot_project/scripts/parachute_controller.gd
+
+2. Files with arm/elbow/bend keywords:
+  godot_project/scripts/InputManager.gd:	# normal gameplay immediately before/after each false alarm.
+  godot_project/scripts/build_terrain.gd:var _left_arm_idx := -1
+  godot_project/scripts/build_terrain.gd:var _right_arm_idx := -1
+  godot_project/scripts/build_terrain.gd:var _left_arm_angle := 0.0
+  godot_project/scripts/build_terrain.gd:var _right_arm_angle := 0.0
+  godot_project/scripts/build_terrain.gd:var _arm_rotation_step := deg_to_rad(45.0)
+  godot_project/scripts/build_terrain.gd:	_check_arm_pose_safe()
+  godot_project/scripts/build_terrain.gd:# Gate: Verify arms are not extended (R099)
+  godot_project/scripts/build_terrain.gd:func _check_arm_pose() -> void:
+  godot_project/scripts/build_terrain.gd:	# Get left arm bone (index 8 from earlier log)
+  godot_project/scripts/build_terrain.gd:	var left_arm = skeleton.get_bone_global_pose(8)
+  godot_project/scripts/build_terrain.gd:	var right_arm = skeleton.get_bone_global_pose(32)
+  godot_project/scripts/build_terrain.gd:	print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+  godot_project/scripts/build_terrain.gd:	print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+  godot_project/scripts/build_terrain.gd:	# If arms are extended (rotation around X near 0, Z near 0), suggest reset
+  godot_project/scripts/build_terrain.gd:	if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+  godot_project/scripts/build_terrain.gd:# Load FBX character and find arm bones
+  godot_project/scripts/build_terrain.gd:				_left_arm_idx = i
+  godot_project/scripts/build_terrain.gd:				print("[VERBATIM] Left arm bone found index ", i)
+  godot_project/scripts/build_terrain.gd:				_right_arm_idx = i
+  godot_project/scripts/build_terrain.gd:				print("[VERBATIM] Right arm bone found index ", i)
+  godot_project/scripts/build_terrain.gd:	# _force_neutral_arms()  # disabled – using RESET animation instead
+  godot_project/scripts/build_terrain.gd:	# Play RESET animation to force arms to rest pose (R091/R092)
+  godot_project/scripts/build_terrain.gd:		print("[VERBATIM] RESET animation played – arms at rest pose")
+  godot_project/scripts/build_terrain.gd:# Rule R092 / R083 – Force arms to neutral pose via bone override
+  godot_project/scripts/build_terrain.gd:func _force_neutral_arms() -> void:
+  godot_project/scripts/build_terrain.gd:	# Rotate around Z axis (roll) by -90° to bring arm down
+  godot_project/scripts/build_terrain.gd:func _rotate_arm(left: bool) -> void:
+  godot_project/scripts/build_terrain.gd:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+  godot_project/scripts/build_terrain.gd:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+  godot_project/scripts/build_terrain.gd:	var idx = _left_arm_idx if left else _right_arm_idx
+  godot_project/scripts/build_terrain.gd:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+  godot_project/scripts/build_terrain.gd:	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+  godot_project/scripts/build_terrain.gd:	#   angle += _arm_rotation_step   clamped to [0, PI]
+  godot_project/scripts/build_terrain.gd:	# was dead code). Arm motion is now driven by _update_arm_physics(),
+  godot_project/scripts/build_terrain.gd:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+  godot_project/scripts/build_terrain.gd:	# Stay in DIAGNOSIS so _update_canopy_glide and arm-pull steering run.
+  godot_project/scripts/build_terrain.gd:			_rotate_arm(true)
+  godot_project/scripts/build_terrain.gd:			_rotate_arm(false)
+  godot_project/scripts/build_terrain.gd:				_rotate_arm(true)
+  godot_project/scripts/build_terrain.gd:				_rotate_arm(false)
+  godot_project/scripts/build_terrain.gd:		# ParachuteController removed — steering via _turn_input + _arm_pull directly.
+  godot_project/scripts/build_terrain.gd:			_rotate_arm(true)
+  godot_project/scripts/build_terrain.gd:			_rotate_arm(false)
+  godot_project/scripts/build_terrain.gd:	_left_arm_angle = 0.0
+  godot_project/scripts/build_terrain.gd:	_right_arm_angle = 0.0
+  godot_project/scripts/build_terrain.gd:	if _skeleton and _left_arm_idx != -1:
+  godot_project/scripts/build_terrain.gd:		_skeleton.set_bone_pose_rotation(_left_arm_idx, Quaternion(Vector3(0, 0, 1), -PI / 2))
+  godot_project/scripts/build_terrain.gd:	if _skeleton and _right_arm_idx != -1:
+  godot_project/scripts/build_terrain.gd:		_skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion(Vector3(0, 0, 1), PI / 2))
+  godot_project/scripts/build_terrain.gd:	# fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+  godot_project/scripts/build_terrain.gd:	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+  godot_project/scripts/build_terrain.gd:		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+  godot_project/scripts/build_terrain.gd:		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+  godot_project/scripts/build_terrain.gd:		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+  godot_project/scripts/build_terrain.gd:	call_deferred("_apply_arm_bone_overrides")
+  godot_project/scripts/build_terrain.gd:# Safe arm pose check (call after character is loaded)
+  godot_project/scripts/build_terrain.gd:func _check_arm_pose_safe() -> void:
+  godot_project/scripts/build_terrain.gd:	var left_arm = skeleton.get_bone_global_pose(8)
+  godot_project/scripts/build_terrain.gd:	var right_arm = skeleton.get_bone_global_pose(32)
+  godot_project/scripts/build_terrain.gd:	print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+  godot_project/scripts/build_terrain.gd:	print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+  godot_project/scripts/build_terrain.gd:	if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+  godot_project/scripts/build_terrain.gd:# TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+  godot_project/scripts/build_terrain.gd:# Replaces the monotonic ratchet at the old _rotate_arm L871
+  godot_project/scripts/build_terrain.gd:# (angle += _arm_rotation_step, clamped to PI, never decremented).
+  godot_project/scripts/build_terrain.gd:# v8: elbow stays straight on a shallow pull, flexes on a deep one.
+  godot_project/scripts/build_terrain.gd:var _arm_pull      := {"L": 0.0, "R": 0.0}
+  godot_project/scripts/build_terrain.gd:var _arm_vel       := {"L": 0.0, "R": 0.0}
+  godot_project/scripts/build_terrain.gd:var _arm_rest_q    := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+  godot_project/scripts/build_terrain.gd:var _arm_rest_ok   := false
+  godot_project/scripts/build_terrain.gd:var _arm_tel_header := false
+  godot_project/scripts/build_terrain.gd:var _arm_tel_t     := 0.0
+  godot_project/scripts/build_terrain.gd:var _arm_anim_ref  = null
+  godot_project/scripts/build_terrain.gd:func _arm_capture_rest() -> void:
+  godot_project/scripts/build_terrain.gd:	# Cache each arm's rest rotation once. The old code wrote an ABSOLUTE
+  godot_project/scripts/build_terrain.gd:	# set_bone_pose_rotation), discarding rest and mis-orienting the arm.
+  godot_project/scripts/build_terrain.gd:	if _arm_rest_ok:
+  godot_project/scripts/build_terrain.gd:	if _left_arm_idx == -1 or _right_arm_idx == -1:
+  godot_project/scripts/build_terrain.gd:	_arm_rest_q["L"] = _skeleton.get_bone_rest(_left_arm_idx).basis.get_rotation_quaternion()
+  godot_project/scripts/build_terrain.gd:	_arm_rest_q["R"] = _skeleton.get_bone_rest(_right_arm_idx).basis.get_rotation_quaternion()
+  godot_project/scripts/build_terrain.gd:	_arm_rest_ok = true
+  godot_project/scripts/build_terrain.gd:	print("[ARMTEL] rest captured L_idx=", _left_arm_idx,
+  godot_project/scripts/build_terrain.gd:		" R_idx=", _right_arm_idx,
+  godot_project/scripts/build_terrain.gd:		" restL=", _arm_rest_q["L"], " restR=", _arm_rest_q["R"])
+  godot_project/scripts/build_terrain.gd:func _arm_anim_pos() -> float:
+  godot_project/scripts/build_terrain.gd:	if _arm_anim_ref == null and _character and is_instance_valid(_character):
+  godot_project/scripts/build_terrain.gd:		_arm_anim_ref = _character.find_child("AnimationPlayer", true, false)
+  godot_project/scripts/build_terrain.gd:	if _arm_anim_ref == null:
+  godot_project/scripts/build_terrain.gd:	if not _arm_anim_ref.is_playing():
+  godot_project/scripts/build_terrain.gd:	if _arm_anim_ref.current_animation == "":
+  godot_project/scripts/build_terrain.gd:	return _arm_anim_ref.current_animation_position
+  godot_project/scripts/build_terrain.gd:func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+  godot_project/scripts/build_terrain.gd:	_arm_capture_rest()
+  godot_project/scripts/build_terrain.gd:	if not _arm_rest_ok:
+  godot_project/scripts/build_terrain.gd:	_arm_axis_probe()
+  godot_project/scripts/build_terrain.gd:	_arm_tel_t += delta
+  godot_project/scripts/build_terrain.gd:	if not _arm_tel_header:
+  godot_project/scripts/build_terrain.gd:		print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t")
+  godot_project/scripts/build_terrain.gd:		_arm_tel_header = true
+  godot_project/scripts/build_terrain.gd:	var anim_pos := _arm_anim_pos()
+  godot_project/scripts/build_terrain.gd:		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+  godot_project/scripts/build_terrain.gd:		var pull: float = _arm_pull[side]
+  godot_project/scripts/build_terrain.gd:		var vel: float = _arm_vel[side]
+  godot_project/scripts/build_terrain.gd:			_arm_hold_t[side] = _arm_hold_t[side] + delta
+  godot_project/scripts/build_terrain.gd:			_arm_hold_t[side] = 0.0
+  godot_project/scripts/build_terrain.gd:		var ramp: float = clampf(_arm_hold_t[side] / ARM_FORCE_RAMP_T, 0.0, 1.0)
+  godot_project/scripts/build_terrain.gd:		_arm_pull[side] = pull
+  godot_project/scripts/build_terrain.gd:		_arm_vel[side] = vel
+  godot_project/scripts/build_terrain.gd:		# Mirror the sweep axis so both arms move outward-down, not into the chest.
+  godot_project/scripts/build_terrain.gd:		var axis: Vector3 = _arm_axis_use(side)
+  godot_project/scripts/build_terrain.gd:		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
+  godot_project/scripts/build_terrain.gd:		_arm_q_stored[side] = q
+  godot_project/scripts/build_terrain.gd:		# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
+  godot_project/scripts/build_terrain.gd:		# pull keeps the arm straight and a deep pull draws the hand inward.
+  godot_project/scripts/build_terrain.gd:		var elbow_deg := 0.0
+  godot_project/scripts/build_terrain.gd:		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+  godot_project/scripts/build_terrain.gd:			var e_ax: Vector3 = _arm_elbow_axis[side]
+  godot_project/scripts/build_terrain.gd:			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+  godot_project/scripts/build_terrain.gd:			_arm_elbow_q_stored[side] = eq
+  godot_project/scripts/build_terrain.gd:			elbow_deg = rad_to_deg(e_ang)
+  godot_project/scripts/build_terrain.gd:			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+  godot_project/scripts/build_terrain.gd:				",", elbow_deg, ",", _arm_hold_t[side])
+  godot_project/scripts/build_terrain.gd:	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
+  godot_project/scripts/build_terrain.gd:	# of arms not pulling down despite spring-damper running correctly.
+  godot_project/scripts/build_terrain.gd:	_apply_arm_bone_overrides()
+  godot_project/scripts/build_terrain.gd:func _apply_arm_bone_overrides() -> void:
+  godot_project/scripts/build_terrain.gd:		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+  godot_project/scripts/build_terrain.gd:			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+  godot_project/scripts/build_terrain.gd:		var f_idx: int = _arm_fore_idx.get(side, -1)
+  godot_project/scripts/build_terrain.gd:		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+  godot_project/scripts/build_terrain.gd:			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+  godot_project/scripts/build_terrain.gd:# ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+  godot_project/scripts/build_terrain.gd:# resolved while v6's did not. _arm_find_bone() below tries both.
+  godot_project/scripts/build_terrain.gd:# _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+  godot_project/scripts/build_terrain.gd:var _arm_probe_done := false
+  godot_project/scripts/build_terrain.gd:var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+  godot_project/scripts/build_terrain.gd:var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+  godot_project/scripts/build_terrain.gd:var _arm_axis_solved := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+  godot_project/scripts/build_terrain.gd:var _arm_axis_ok := {"L": false, "R": false}
+  godot_project/scripts/build_terrain.gd:var _arm_solve_tries := 0
+  godot_project/scripts/build_terrain.gd:func _arm_find_bone(base: String) -> int:
+  godot_project/scripts/build_terrain.gd:func _arm_axis_use(side: String) -> Vector3:
+  godot_project/scripts/build_terrain.gd:	if _arm_axis_ok[side]:
+  godot_project/scripts/build_terrain.gd:		return _arm_axis_solved[side]
+  godot_project/scripts/build_terrain.gd:func _arm_axis_probe() -> void:
+  godot_project/scripts/build_terrain.gd:	if _arm_probe_done:
+  godot_project/scripts/build_terrain.gd:	_arm_solve_tries += 1
+  godot_project/scripts/build_terrain.gd:	if _arm_solve_tries > 120:
+  godot_project/scripts/build_terrain.gd:		_arm_probe_done = true
+  godot_project/scripts/build_terrain.gd:	var b_hips := _arm_find_bone("Hips")
+  godot_project/scripts/build_terrain.gd:	var b_head := _arm_find_bone("Head")
+  godot_project/scripts/build_terrain.gd:	var b_foot := _arm_find_bone("LeftFoot")
+  godot_project/scripts/build_terrain.gd:	var b_toe  := _arm_find_bone("LeftToe_End")
+  godot_project/scripts/build_terrain.gd:	var b_hl   := _arm_find_bone("LeftHand")
+  godot_project/scripts/build_terrain.gd:	var b_hr   := _arm_find_bone("RightHand")
+  godot_project/scripts/build_terrain.gd:		if _arm_solve_tries == 1:
+  godot_project/scripts/build_terrain.gd:	_arm_probe_done = true
+  godot_project/scripts/build_terrain.gd:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+  godot_project/scripts/build_terrain.gd:	# ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then
+  godot_project/scripts/build_terrain.gd:	var saved_l: Quaternion = _skeleton.get_bone_pose_rotation(_left_arm_idx)
+  godot_project/scripts/build_terrain.gd:	var saved_r: Quaternion = _skeleton.get_bone_pose_rotation(_right_arm_idx)
+  godot_project/scripts/build_terrain.gd:	_skeleton.set_bone_pose_rotation(_left_arm_idx, _arm_rest_q["L"])
+  godot_project/scripts/build_terrain.gd:	_skeleton.set_bone_pose_rotation(_right_arm_idx, _arm_rest_q["R"])
+  godot_project/scripts/build_terrain.gd:	# v9: publish for the elbow solve. Using the same direction there makes
+  godot_project/scripts/build_terrain.gd:	# the forearm carry the hand further forward and down, which is the
+  godot_project/scripts/build_terrain.gd:	# mechanical advantage the elbow bend exists to provide.
+  godot_project/scripts/build_terrain.gd:	_arm_d_want = d_want
+  godot_project/scripts/build_terrain.gd:	_arm_body_up = up
+  godot_project/scripts/build_terrain.gd:		var arm_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+  godot_project/scripts/build_terrain.gd:		var rest: Quaternion = _arm_rest_q[side]
+  godot_project/scripts/build_terrain.gd:		var arm_pose: Transform3D = _skeleton.get_bone_global_pose(arm_idx)
+  godot_project/scripts/build_terrain.gd:		var r_lever: Vector3 = p_hand0 - arm_pose.origin
+  godot_project/scripts/build_terrain.gd:		var w_local: Vector3 = (arm_pose.basis.inverse() * w_global).normalized()
+  godot_project/scripts/build_terrain.gd:		_arm_axis_solved[side] = w_local
+  godot_project/scripts/build_terrain.gd:		_arm_axis_ok[side] = true
+  godot_project/scripts/build_terrain.gd:				_skeleton.set_bone_pose_rotation(arm_idx, rest * Quaternion(ax, ang))
+  godot_project/scripts/build_terrain.gd:				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+  godot_project/scripts/build_terrain.gd:	_arm_solve_elbow()
+  godot_project/scripts/build_terrain.gd:	_skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+  godot_project/scripts/build_terrain.gd:	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+  godot_project/scripts/build_terrain.gd:	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+  godot_project/scripts/build_terrain.gd:# ELBOW FLEXION  (fix_arm_deep_elbow_v8)
+  godot_project/scripts/build_terrain.gd:# hand moves d = w x r, with r the hand taken relative to the forearm bone.
+  godot_project/scripts/build_terrain.gd:#   w = r.cross(d_want),  w_local = forearm_global_basis.inverse() * w
+  godot_project/scripts/build_terrain.gd:var _arm_hold_t      := {"L": 0.0, "R": 0.0}
+  godot_project/scripts/build_terrain.gd:var _arm_fore_idx    := {"L": -1, "R": -1}
+  godot_project/scripts/build_terrain.gd:var _arm_fore_rest_q := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+  godot_project/scripts/build_terrain.gd:var _arm_elbow_axis  := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+  godot_project/scripts/build_terrain.gd:var _arm_elbow_ok    := {"L": false, "R": false}
+  godot_project/scripts/build_terrain.gd:func _arm_solve_elbow() -> void:
+  godot_project/scripts/build_terrain.gd:		var f_idx := _arm_find_bone(fname)
+  godot_project/scripts/build_terrain.gd:		var h_idx := _arm_find_bone(hname)
+  godot_project/scripts/build_terrain.gd:		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+  godot_project/scripts/build_terrain.gd:				" hand=", h_idx, " arm=", a_idx)
+  godot_project/scripts/build_terrain.gd:		_arm_fore_idx[side] = f_idx
+  godot_project/scripts/build_terrain.gd:		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+  godot_project/scripts/build_terrain.gd:			print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm lever")
+  godot_project/scripts/build_terrain.gd:		# is parallel to the forearm when the arm is straight - the exact pose
+  godot_project/scripts/build_terrain.gd:		# (elbow_v8.txt reported the bail on both sides at rest).
+  godot_project/scripts/build_terrain.gd:			["pull_dir", _arm_d_want],
+  godot_project/scripts/build_terrain.gd:			["body_up", -_arm_body_up],
+  godot_project/scripts/build_terrain.gd:				" pull_dir=", _arm_d_want, " up=", _arm_body_up)
+  godot_project/scripts/build_terrain.gd:		_arm_elbow_axis[side] = w_local
+  godot_project/scripts/build_terrain.gd:		_arm_elbow_ok[side] = true
+  godot_project/scripts/build_terrain.gd:		var rest_f: Quaternion = _arm_fore_rest_q[side]
+  godot_project/scripts/build_terrain.gd:			var along: float = (p1 - p_h).dot(_arm_d_want)
+  godot_project/scripts/build_terrain.gd:# _arm_axis_probe() so _arm_solve_elbow() can reuse them.
+  godot_project/scripts/build_terrain.gd:var _arm_d_want := Vector3.ZERO
+  godot_project/scripts/build_terrain.gd:var _arm_body_up := Vector3.UP
+  godot_project/scripts/build_terrain.gd:# Control input is the toggle deflection already solved by the arm spring:
+  godot_project/scripts/build_terrain.gd:# _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+  godot_project/scripts/build_terrain.gd:	var bl: float = _arm_pull["L"]
+  godot_project/scripts/build_terrain.gd:	var br: float = _arm_pull["R"]
+  godot_project/scripts/toggle_arm_animator.gd:var left_arm_idx: int = -1
+  godot_project/scripts/toggle_arm_animator.gd:var right_arm_idx: int = -1
+  godot_project/scripts/toggle_arm_animator.gd:		left_arm_idx = skeleton.find_bone(name)
+  godot_project/scripts/toggle_arm_animator.gd:		if left_arm_idx != -1:
+  godot_project/scripts/toggle_arm_animator.gd:			print("[ToggleAnimator] Left arm: ", name, " [", left_arm_idx, "]")
+  godot_project/scripts/toggle_arm_animator.gd:		right_arm_idx = skeleton.find_bone(name)
+  godot_project/scripts/toggle_arm_animator.gd:		if right_arm_idx != -1:
+  godot_project/scripts/toggle_arm_animator.gd:			print("[ToggleAnimator] Right arm: ", name, " [", right_arm_idx, "]")
+  godot_project/scripts/toggle_arm_animator.gd:	if left_arm_idx == -1 or right_arm_idx == -1:
+  godot_project/scripts/toggle_arm_animator.gd:	if not skeleton or left_arm_idx == -1 or right_arm_idx == -1:
+  godot_project/scripts/toggle_arm_animator.gd:	_apply_arm_rotation(left_arm_idx, left_pull)
+  godot_project/scripts/toggle_arm_animator.gd:	_apply_arm_rotation(right_arm_idx, right_pull)
+  godot_project/scripts/toggle_arm_animator.gd:func _apply_arm_rotation(bone_idx: int, pull_amount: float) -> void:
+  godot_project/scripts/toggle_arm_animator.gd:	var mirror = -1 if bone_idx == left_arm_idx else 1
+
+3. Intersection (steering + arm):
+  godot_project/scripts/build_terrain.gd
+
+4. Git log for changes to 'arm', 'elbow', 'bend' in .gd files:
+commit c7f08d35fa7944d14e64d0030707ccba934a1053
+Author: swipswaps <ihydrocarbon@gmail.com>
+Date:   Sat Aug 1 18:40:03 2026 -0400
+
+    logs: dry-run arms v4 run output
+
+diff --git a/notes/dry_run_arms_v4_run.txt b/notes/dry_run_arms_v4_run.txt
+new file mode 100644
+index 0000000..e3629eb
+--- /dev/null
++++ b/notes/dry_run_arms_v4_run.txt
+@@ -0,0 +1,9 @@
++[main 9924c09] docs: dry-run audit for parachute arms – 20260801224002
++ 1 file changed, 6 insertions(+)
++ create mode 100644 notes/parachute_arms_audit_20260801224002.txt
++To https://github.com/swipswaps/parachute-cfd-game.git
++   02039ea..9924c09  main -> main
++Log written: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/parachute_arms_audit_20260801224002.txt
++
++=== RAW LOG URL ===
++https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/parachute_arms_audit_20260801224002.txt
+
+commit 02039ea4e1bf37089ec1d1cb538e2f64fb8f989f
+Author: swipswaps <ihydrocarbon@gmail.com>
+Date:   Sat Aug 1 17:10:49 2026 -0400
+
+    fix: allow cutaway on GOOD canopy with warning (USPA SIM) (20260801211000)
+    
+    GOOD canopy cutaway was blocked by early return. USPA SIM allows it
+    as an emergency procedure — changed to warn and proceed.
+
+
+5. Git log for 'pull_down' changes:
+commit f01e3baab78afbd326d686de5007da811e7d99ee
+Author: swipswaps <ihydrocarbon@gmail.com>
+Date:   Sat Aug 1 18:45:44 2026 -0400
+
+    docs: audit _deploy_canopy() functions – 20260801224543
+    
+    No code changes.
+
+diff --git a/notes/deploy_canopy_audit_20260801224543.txt b/notes/deploy_canopy_audit_20260801224543.txt
+new file mode 100644
+index 0000000..dfc53fb
+--- /dev/null
++++ b/notes/deploy_canopy_audit_20260801224543.txt
+@@ -0,0 +1,48 @@
++Audit of _deploy_canopy() functions – 2026-08-01T22:45:43.878153+00:00
++============================================================
++
++File: godot_project/scripts/build_terrain.gd
++  Line 821: func _deploy_canopy() -> void:
++  Function body (22 lines):
++    821: func _deploy_canopy() -> void:
++    822: 	print("[VERBATIM] ENTER _deploy_canopy gate=none")
++    823: 	if _canopy_deployed or not _canopy_instance:
++    824: 		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
++    825: 		return
++    826: 	_canopy_deployed = true
++    827: 	_canopy_instance.visible = true
++    828: 	_canopy_instance.scale = Vector3.ZERO
++    829: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
++    830: 	_game_state = GameState.OPENING_ANIM
+
+
+6. Direct assignments to animation_tree parameters (arm related):
+  No animation_tree.set for arm/elbow/pull found.
+
+7. Looking for arm calls in flight_controller.gd:
+  flight_controller.gd has no 'arm' reference.
+
+8. Looking for arm calls in build_terrain.gd:
+  build_terrain.gd contains 'arm'.
+    89: # Arm bones (Skeleton3D)
+    93: var _left_arm_idx := -1
+    94: var _right_arm_idx := -1
+    95: var _left_arm_angle := 0.0
+    96: var _right_arm_angle := 0.0
+    97: var _arm_rotation_step := deg_to_rad(45.0)
+    550: _check_arm_pose_safe()
+    573: # Gate: Verify arms are not extended (R099)
+    579: func _check_arm_pose() -> void:
+    582: print("[VERBATIM] ARM GATE: No skeleton found")
+    584: # Get left arm bone (index 8 from earlier log)
+    585: var left_arm = skeleton.get_bone_global_pose(8)
+    586: var right_arm = skeleton.get_bone_global_pose(32)
+    588: print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+    589: print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+    590: # If arms are extended (rotation around X near 0, Z near 0), suggest reset
+    591: if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+    592: print("[VERBATIM] ARM GATE WARNING: Arms appear extended, resetting to neutral")
+    616: # Load FBX character and find arm bones
+    653: if name == "mixamorig_LeftArm" or name == "mixamorig:LeftArm":
+    654: _left_arm_idx = i
+    655: print("[VERBATIM] Left arm bone found index ", i)
+    656: elif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":
+    657: _right_arm_idx = i
+    658: print("[VERBATIM] Right arm bone found index ", i)
+    686: # _force_neutral_arms()  # disabled – using RESET animation instead
+    687: # Play RESET animation to force arms to rest pose (R091/R092)
+    693: print("[VERBATIM] RESET animation played – arms at rest pose")
+    722: # Rule R092 / R083 – Force arms to neutral pose via bone override
+    723: func _force_neutral_arms() -> void:
+    726: print("[VERBATIM] ARM FIX: No skeleton found")
+    729: var left_idx = skeleton.find_bone("mixamorig:LeftArm")
+    730: var right_idx = skeleton.find_bone("mixamorig:RightArm")
+    736: # Rotate around Z axis (roll) by -90° to bring arm down
+    747: print("[VERBATIM] ARM FIX: Arms rotated around Z - adjust angle as needed (currently -90°)")
+    864: # Arm animation (pull down) – gated with skeleton and bone index checks
+    868: func _rotate_arm(left: bool) -> void:
+    869: print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+    871: print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+    873: var idx = _left_arm_idx if left else _right_arm_idx
+    875: print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+    877: # NEUTRALIZED (fix_arm_spring_v4): the old body was
+    878: #   angle += _arm_rotation_step   clamped to [0, PI]
+    882: # was dead code). Arm motion is now driven by _update_arm_physics(),
+    885: print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+    1069: # Stay in DIAGNOSIS so _update_canopy_glide and arm-pull steering run.
+    1321: _rotate_arm(true)
+    1325: _rotate_arm(false)
+    1629: _rotate_arm(true)
+    1633: _rotate_arm(false)
+    1636: # ParachuteController removed — steering via _turn_input + _arm_pull directly.
+    1662: _rotate_arm(true)
+    1666: _rotate_arm(false)
+    1798: _left_arm_angle = 0.0
+    1799: _right_arm_angle = 0.0
+    1800: if _skeleton and _left_arm_idx != -1:
+    1801: _skeleton.set_bone_pose_rotation(_left_arm_idx, Quaternion(Vector3(0, 0, 1), -PI / 2))
+    1802: if _skeleton and _right_arm_idx != -1:
+    1803: _skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion(Vector3(0, 0, 1), PI / 2))
+    1933: # fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+    1936: _update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+    2027: # Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+    2030: # Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+    2034: var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+    2107: call_deferred("_apply_arm_bone_overrides")
+    2412: # Safe arm pose check (call after character is loaded)
+    2413: func _check_arm_pose_safe() -> void:
+    2415: print("[VERBATIM] ARM GATE: Character not loaded yet")
+    2419: print("[VERBATIM] ARM GATE: No skeleton found")
+    2421: var left_arm = skeleton.get_bone_global_pose(8)
+    2422: var right_arm = skeleton.get_bone_global_pose(32)
+    2423: print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+    2424: print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+    2425: if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+    2426: print("[VERBATIM] ARM GATE WARNING: Arms appear extended")
+    2428: print("[VERBATIM] ARM GATE: Arms are lowered")
+    2736: # The Blender action name 'Armature|mixamo.com|Layer0' does not survive FBX import.
+    2786: # TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+    2788: # Replaces the monotonic ratchet at the old _rotate_arm L871
+    2789: # (angle += _arm_rotation_step, clamped to PI, never decremented).
+    2799: #   accel       = (input_force - tension - damping) / ARM_INERTIA
+    2802: # Damping ratio: C_DAMP / (2*sqrt(K_LINE*ARM_INERTIA)) = 0.62 (underdamped,
+    2811: const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below
+    2812: const ARM_K_LINE       := 8.0
+    2813: const ARM_C_DAMP       := 3.5
+    2814: const ARM_INERTIA      := 1.0
+    2815: const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+    2816: const ARM_EPS          := 0.0005
+    2821: const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap
+    2822: const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
+    2823: const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
+    2826: const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+    2827: const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+    2829: var _arm_pull      := {"L": 0.0, "R": 0.0}
+    2830: var _arm_vel       := {"L": 0.0, "R": 0.0}
+    2831: var _arm_rest_q    := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+    2832: var _arm_rest_ok   := false
+    2833: var _arm_tel_header := false
+    2834: var _arm_tel_t     := 0.0
+    2835: var _arm_anim_ref  = null
+    2838: func _arm_capture_rest() -> void:
+    2839: # Cache each arm's rest rotation once. The old code wrote an ABSOLUTE
+    2841: # set_bone_pose_rotation), discarding rest and mis-orienting the arm.
+    2843: if _arm_rest_ok:
+    2847: if _left_arm_idx == -1 or _right_arm_idx == -1:
+    2849: _arm_rest_q["L"] = _skeleton.get_bone_rest(_left_arm_idx).basis.get_rotation_quaternion()
+    2850: _arm_rest_q["R"] = _skeleton.get_bone_rest(_right_arm_idx).basis.get_rotation_quaternion()
+    2851: _arm_rest_ok = true
+    2852: print("[ARMTEL] rest captured L_idx=", _left_arm_idx,
+    2853: " R_idx=", _right_arm_idx,
+    2854: " restL=", _arm_rest_q["L"], " restR=", _arm_rest_q["R"])
+    2857: func _arm_anim_pos() -> float:
+    2863: if _arm_anim_ref == null and _character and is_instance_valid(_character):
+    2864: _arm_anim_ref = _character.find_child("AnimationPlayer", true, false)
+    2865: if _arm_anim_ref == null:
+    2867: if not _arm_anim_ref.is_playing():
+    2869: if _arm_anim_ref.current_animation == "":
+    2871: return _arm_anim_ref.current_animation_position
+    2874: func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+    2877: _arm_capture_rest()
+    2878: if not _arm_rest_ok:
+    2880: _arm_axis_probe()
+    2884: _arm_tel_t += delta
+    2885: if not _arm_tel_header:
+    2886: print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t")
+    2887: _arm_tel_header = true
+    2889: var anim_pos := _arm_anim_pos()
+    2893: var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+    2897: var pull: float = _arm_pull[side]
+    2898: var vel: float = _arm_vel[side]
+    2902: _arm_hold_t[side] = _arm_hold_t[side] + delta
+    2904: _arm_hold_t[side] = 0.0
+    2905: var ramp: float = clampf(_arm_hold_t[side] / ARM_FORCE_RAMP_T, 0.0, 1.0)
+    2908: force = ARM_FORCE_MIN + (ARM_FORCE_MAX - ARM_FORCE_MIN) * ramp
+    2909: var tension: float = ARM_K_LINE * pull
+    2910: var damping: float = ARM_C_DAMP * vel
+    2911: var accel: float = (force - tension - damping) / ARM_INERTIA
+    2925: _arm_pull[side] = pull
+    2926: _arm_vel[side] = vel
+    2929: # Mirror the sweep axis so both arms move outward-down, not into the chest.
+    2933: var axis: Vector3 = _arm_axis_use(side)
+    2934: var angle: float = pull * ARM_MAX_ANGLE
+    2935: var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
+    2936: _arm_q_stored[side] = q
+    2938: # v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
+    2939: # pull keeps the arm straight and a deep pull draws the hand inward.
+    2941: if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+    2942: var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+    2943: var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+    2944: var e_ang: float = e_t * ARM_ELBOW_MAX
+    2945: var e_ax: Vector3 = _arm_elbow_axis[side]
+    2946: var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+    2947: _arm_elbow_q_stored[side] = eq
+    2952: if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+    2953: print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+    2956: ",", elbow_deg, ",", _arm_hold_t[side])
+    2959: # _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
+    2961: # of arms not pulling down despite spring-damper running correctly.
+    2962: _apply_arm_bone_overrides()
+    2964: func _apply_arm_bone_overrides() -> void:
+    2968: var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+    2970: _skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+    2971: var f_idx: int = _arm_fore_idx.get(side, -1)
+    2972: if f_idx != -1 and _arm_elbow_ok.get(side, false):
+    2973: _skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+    2977: # ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+    2983: # resolved while v6's did not. _arm_find_bone() below tries both.
+    2987: # _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+    2995: const ARM_AXIS_L := Vector3(0, 0, -1)
+    2996: const ARM_AXIS_R := Vector3(0, 0, 1)
+    2998: var _arm_probe_done := false
+    2999: var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+    3000: var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+    3001: var _arm_axis_solved := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+    3002: var _arm_axis_ok := {"L": false, "R": false}
+    3003: var _arm_solve_tries := 0
+    3006: func _arm_find_bone(base: String) -> int:
+    3014: func _arm_axis_use(side: String) -> Vector3:
+    3015: if _arm_axis_ok[side]:
+    3016: return _arm_axis_solved[side]
+    3017: return ARM_AXIS_L if side == "L" else ARM_AXIS_R
+    3020: func _arm_axis_probe() -> void:
+    3021: if _arm_probe_done:
+    3025: _arm_solve_tries += 1
+    3026: if _arm_solve_tries > 120:
+    3027: _arm_probe_done = true
+    3031: var b_hips := _arm_find_bone("Hips")
+    3032: var b_head := _arm_find_bone("Head")
+    3033: var b_foot := _arm_find_bone("LeftFoot")
+    3034: var b_toe  := _arm_find_bone("LeftToe_End")
+    3035: var b_hl   := _arm_find_bone("LeftHand")
+    3036: var b_hr   := _arm_find_bone("RightHand")
+    3039: if _arm_solve_tries == 1:
+    3044: _arm_probe_done = true
+    3045: print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+    3049: # ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then
+    3069: var saved_l: Quaternion = _skeleton.get_bone_pose_rotation(_left_arm_idx)
+    3070: var saved_r: Quaternion = _skeleton.get_bone_pose_rotation(_right_arm_idx)
+    3071: _skeleton.set_bone_pose_rotation(_left_arm_idx, _arm_rest_q["L"])
+    3072: _skeleton.set_bone_pose_rotation(_right_arm_idx, _arm_rest_q["R"])
+    3087: # the forearm carry the hand further forward and down, which is the
+    3089: _arm_d_want = d_want
+    3090: _arm_body_up = up
+    3099: var arm_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+    3101: var rest: Quaternion = _arm_rest_q[side]
+    3103: var arm_pose: Transform3D = _skeleton.get_bone_global_pose(arm_idx)
+    3105: var r_lever: Vector3 = p_hand0 - arm_pose.origin
+    3112: var w_local: Vector3 = (arm_pose.basis.inverse() * w_global).normalized()
+    3113: _arm_axis_solved[side] = w_local
+    3114: _arm_axis_ok[side] = true
+    3131: _skeleton.set_bone_pose_rotation(arm_idx, rest * Quaternion(ax, ang))
+    3136: _skeleton.set_bone_pose_rotation(arm_idx, rest)
+    3139: _arm_solve_elbow()
+    3141: _skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+    3142: _skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+    3144: print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+    3148: # ELBOW FLEXION  (fix_arm_deep_elbow_v8)
+    3151: # hand moves d = w x r, with r the hand taken relative to the forearm bone.
+    3154: #   w = r.cross(d_want),  w_local = forearm_global_basis.inverse() * w
+    3164: var _arm_hold_t      := {"L": 0.0, "R": 0.0}
+    3165: var _arm_fore_idx    := {"L": -1, "R": -1}
+    3166: var _arm_fore_rest_q := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+    3167: var _arm_elbow_axis  := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+    3168: var _arm_elbow_ok    := {"L": false, "R": false}
+    3171: func _arm_solve_elbow() -> void:
+    3175: var fname: String = "LeftForeArm" if side == "L" else "RightForeArm"
+    3177: var f_idx := _arm_find_bone(fname)
+    3178: var h_idx := _arm_find_bone(hname)
+    3179: var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+    3182: " hand=", h_idx, " arm=", a_idx)
+    3185: _arm_fore_idx[side] = f_idx
+    3186: _arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+    3194: print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm lever")
+    3199: # is parallel to the forearm when the arm is straight - the exact pose
+    3205: ["pull_dir", _arm_d_want],
+    3207: ["body_up", -_arm_body_up],
+    3221: " pull_dir=", _arm_d_want, " up=", _arm_body_up)
+    3228: _arm_elbow_axis[side] = w_local
+    3229: _arm_elbow_ok[side] = true
+    3236: var rest_f: Quaternion = _arm_fore_rest_q[side]
+    3245: var along: float = (p1 - p_h).dot(_arm_d_want)
+    3252: # _arm_axis_probe() so _arm_solve_elbow() can reuse them.
+    3253: var _arm_d_want := Vector3.ZERO
+    3254: var _arm_body_up := Vector3.UP
+    3302: # Control input is the toggle deflection already solved by the arm spring:
+    3303: # _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+    3346: var bl: float = _arm_pull["L"]
+    3347: var br: float = _arm_pull["R"]
+
+9. toggle_arm_animator.gd content (if exists):
+  First 20 lines:
+    1: extends Node
+    2: 
+    3: @export var pull_speed: float = 2.5
+    4: @export var release_speed: float = 3.5
+    5: @export var max_pull_angle: float = 45.0
+    6: @export var forward_lean: float = 15.0
+    7: 
+    8: var skeleton: Skeleton3D = null
+    9: var left_arm_idx: int = -1
+    10: var right_arm_idx: int = -1
+    11: var left_pull: float = 0.0
+    12: var right_pull: float = 0.0
+    13: 
+    14: 
+    15: func _ready() -> void:
+    16: 	print("[ToggleAnimator] Initializing...")
+    17: 	var parent := get_parent()
+    18: 	while parent != null:
+    19: 		skeleton = parent.find_child("Skeleton3D", true, false) as Skeleton3D
+    20: 		if skeleton:
+
+================================================================================
+SUMMARY:
+  No active script sets 'pull_down' parameter.
+  Suspect the arm-bending code was removed from steering logic.
+  Check git history for recent changes to flight_controller.gd or build_terrain.gd.
+
+DB: Flagged flight_controller.gd as suspect.
