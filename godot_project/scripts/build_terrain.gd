@@ -944,6 +944,9 @@ func _malfunction_name() -> String:
 
 
 func _update_canopy_visuals() -> void:
+	# Skip when reserve is deployed — reserve appearance is set in _do_reserve.
+	if _reserve_done:
+		return
 	if not _canopy_material:
 		return
 	var mesh_child = _find_first_mesh(_canopy_instance) if _canopy_instance else null
@@ -1015,9 +1018,11 @@ func _do_cutaway() -> void:
 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
 		return
 	_cutaway_done = true
-	# USPA SIM: cutaway severs risers — main canopy departs visually.
+	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
+	# returns to brief freefall until reserve deployed.
 	if _canopy_instance:
 		_canopy_instance.visible = false
+	_canopy_deployed = false
 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
 	if not _replay_playing:
@@ -1057,10 +1062,13 @@ func _do_reserve() -> void:
 			var mesh_child = _find_first_mesh(_canopy_instance)
 			if mesh_child:
 				mesh_child.material_override = _canopy_material
-	# Stay in DIAGNOSIS briefly so Q/E steer the reserve; land after screenshot.
+	# USPA SIM: reserve glides and steers until touchdown.
+	# Stay in DIAGNOSIS so _update_canopy_glide and arm-pull steering run.
+	# _canopy_deployed must be true for glide physics to engage.
+	_canopy_deployed = true
 	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
 	call_deferred("_recreate_hud_if_needed")
-	_game_state = GameState.LANDED
+	# Land is deferred — player steers reserve first, then SPACE or altitude trigger landing.
 	_capture_3d_screenshot()
 
 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
