@@ -996,8 +996,8 @@ func _flight_control_check() -> void:
 
 
 func _do_cutaway() -> void:
-	if not Input.is_action_just_pressed("cutaway"):
-		return
+	# Guard removed: is_action_just_pressed fires false by the time _do_cutaway
+	# is called from _poll_controls which already verified the press.
 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
 	if not _canopy_deployed:
