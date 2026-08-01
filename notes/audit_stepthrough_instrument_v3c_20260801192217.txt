@@ -1,0 +1,166 @@
+audit_stepthrough_instrument_v3c | 2026-08-01T19:22:18.005048+00:00
+file: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+  funcs: 23
+======================================================================
+
+--- _resolve_hub_url (audit at line 75) ---
+      72: var _card_expanded: Dictionary = {}
+      73: 
+      74: func _resolve_hub_url() -> String:
+>>>   75: 	print("[AUDIT] _resolve_hub_url: ENTER")
+      76: 	var key := "application/forensic_hub/url"
+
+--- _mklabel (audit at line 87) ---
+      84: 	return DEFAULT_HUB_URL
+      85: 
+      86: func _mklabel(txt: String, color := Color(0.9, 0.95, 0.9, 1.0)) -> Label:
+>>>   87: 	print("[AUDIT] _mklabel: ENTER")
+      88: 	var l := Label.new()
+
+--- _mkbutton (audit at line 94) ---
+      91: 	return l
+      92: 
+      93: func _mkbutton(txt: String) -> Button:
+>>>   94: 	print("[AUDIT] _mkbutton: ENTER")
+      95: 	var b := Button.new()
+
+--- _panel_rect (audit at line 101) ---
+      98: 	return b
+      99: 
+     100: func _panel_rect() -> Rect2:
+>>>  101: 	print("[AUDIT] _panel_rect: ENTER")
+     102: 	var sz := _panel.size
+
+--- poll_forensic_hud (audit at line 121) ---
+     118: # at _ready() — root cause undetermined after exhaustive audit. Called
+     119: # explicitly from build_terrain.gd's _physics_process() instead.
+     120: func poll_forensic_hud() -> void:
+>>>  121: 	print("[AUDIT] poll_forensic_hud: ENTER")
+     122: 	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
+
+--- _input (audit at line 146) ---
+     143: 		_panel.position = mouse_pos - _drag_offset
+     144: 
+     145: func _input(event: InputEvent) -> void:
+>>>  146: 	print("[AUDIT] _input: ENTER")
+     147: # backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
+
+--- _build_ui (audit at line 161) ---
+     158: 	if event is InputEventMouseButton or event is InputEventMouseMotion:
+     159: 		_gui_input(event)
+     160: func _build_ui() -> void:
+>>>  161: 	print("[AUDIT] _build_ui: ENTER")
+     162: 	_layer = CanvasLayer.new()
+
+--- _load_saved_position (audit at line 220) ---
+     217: 	_vbox.add_child(_time_label)
+     218: 
+     219: func _load_saved_position() -> Vector2:
+>>>  220: 	print("[AUDIT] _load_saved_position: ENTER")
+     221: 	var config := ConfigFile.new()
+
+--- _save_position (audit at line 229) ---
+     226: 	return PANEL_START_POS
+     227: 
+     228: func _save_position() -> void:
+>>>  229: 	print("[AUDIT] _save_position: ENTER")
+     230: 	if _panel == null:
+
+--- _exit_tree (audit at line 237) ---
+     234: 	config.save(POS_CFG_PATH)
+     235: 
+     236: func _exit_tree() -> void:
+>>>  237: 	print("[AUDIT] _exit_tree: ENTER")
+     238: 	_save_position()
+
+--- _ready (audit at line 241) ---
+     238: 	_save_position()
+     239: 
+     240: func _ready() -> void:
+>>>  241: 	print("[AUDIT] _ready: ENTER")
+     242: 	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
+
+--- _poll_fast (audit at line 301) ---
+     298: 	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
+     299: 
+     300: func _poll_fast() -> void:
+>>>  301: 	print("[AUDIT] _poll_fast: ENTER")
+     302: 	# Guard: only fire a new request if the previous one completed.
+
+--- _poll_slow (audit at line 316) ---
+     313: 			_status_label.text = "leader err: %d" % err_b
+     314: 
+     315: func _poll_slow() -> void:
+>>>  316: 	print("[AUDIT] _poll_slow: ENTER")
+     317: 	if not _citations_loaded:
+
+--- _on_stats_completed (audit at line 329) ---
+     326: func _on_stats_completed(
+     327: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     328: ) -> void:
+>>>  329: 	print("[AUDIT] _on_stats_completed: ENTER")
+     330: 	_time_label.text = "t: " + Time.get_time_string_from_system()
+
+--- _on_leader_completed (audit at line 365) ---
+     362: func _on_leader_completed(
+     363: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     364: ) -> void:
+>>>  365: 	print("[AUDIT] _on_leader_completed: ENTER")
+     366: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+
+--- _on_cite_completed (audit at line 398) ---
+     395: func _on_cite_completed(
+     396: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     397: ) -> void:
+>>>  398: 	print("[AUDIT] _on_cite_completed: ENTER")
+     399: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+
+--- _on_integ_completed (audit at line 423) ---
+     420: func _on_integ_completed(
+     421: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     422: ) -> void:
+>>>  423: 	print("[AUDIT] _on_integ_completed: ENTER")
+     424: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+
+--- _add_citation_card (audit at line 436) ---
+     433: 		_status_label.add_theme_color_override("font_color", color)
+     434: 
+     435: func _add_citation_card(cite: Dictionary) -> void:
+>>>  436: 	print("[AUDIT] _add_citation_card: ENTER")
+     437: 	var cid := str(cite.get("id", "?"))
+
+--- _gui_input (audit at line 473) ---
+     470: 
+     471: 
+     472: func _gui_input(event: InputEvent) -> void:
+>>>  473: 	print("[AUDIT] _gui_input: ENTER")
+     474: 	# Only process if panel is visible
+
+--- _fetch_hub_data (audit at line 493) ---
+     490: 		get_viewport().set_input_as_handled()
+     491: 
+     492: func _fetch_hub_data():
+>>>  493: 	print("[AUDIT] _fetch_hub_data: ENTER")
+     494: 	# Fetch gamification data from the hub
+
+--- _on_hub_data_received (audit at line 510) ---
+     507: 		print("[HUD] HTTPRequest busy, skipping poll")
+     508: 
+     509: func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+>>>  510: 	print("[AUDIT] _on_hub_data_received: ENTER")
+     511: 	# Handle the HTTP response
+
+--- _setup_hud_label (audit at line 540) ---
+     537: 
+     538: 
+     539: func _setup_hud_label():
+>>>  540: 	print("[AUDIT] _setup_hud_label: ENTER")
+     541: 	# CanvasLayer draws its children on top of the scene tree
+
+--- _on_ctrl_health_completed (audit at line 563) ---
+     560: func _on_ctrl_health_completed(
+     561: 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+     562: ) -> void:
+>>>  563: 	print("[AUDIT] _on_ctrl_health_completed: ENTER")
+     564: 	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+
