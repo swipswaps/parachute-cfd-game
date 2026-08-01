@@ -138,9 +138,6 @@ func poll_forensic_hud() -> void:
 		_panel.position = mouse_pos - _drag_offset
 
 func _input(event: InputEvent) -> void:
-	print("[FHUD DEBUG] _input called with event: %s" % event)
-
-	print("[HUD_DIAG] _input called")
 # backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_QUOTELEFT:
@@ -290,12 +287,18 @@ func _ready() -> void:
 	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
 
 func _poll_fast() -> void:
-	var err_a := _stats_req.request(_hub_url + STATS_PATH)
-	if err_a != OK:
-		_status_label.text = "hub request err: %d (%s)" % [err_a, _hub_url + STATS_PATH]
-	var err_b := _leader_req.request(_hub_url + LEADER_PATH)
-	if err_b != OK:
-		_status_label.text = "leader err: %d" % err_b
+	# Guard: only fire a new request if the previous one completed.
+	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
+	if _stats_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+		if err_a != OK:
+			_status_label.text = "stats err: %d" % err_a
+	if _leader_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		var err_b := _leader_req.request(_hub_url + LEADER_PATH)
+		if err_b != OK:
+			_status_label.text = "leader err: %d" % err_b
 
 func _poll_slow() -> void:
 	if not _citations_loaded:
@@ -449,9 +452,6 @@ func _add_citation_card(cite: Dictionary) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
-
-	print("[HUD_DIAG] _gui_input called")
-	print("[HUD] _gui_input called: ", event)
 	# Only process if panel is visible
 	if _layer == null or not _layer.visible or _panel == null:
 		return
@@ -533,3 +533,35 @@ func _setup_hud_label():
 		add_child(http)
 		http.request_completed.connect(_on_hub_data_received)
 	_fetch_hub_data()
+
+
+func _on_ctrl_health_completed(
+	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+) -> void:
+	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+	# Ref: HTTPRequest.request_completed signal:
+	# https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+	# (general knowledge — not retrieved this session)
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		if _ctrl_label != null:
+			_ctrl_label.text = "control_health: hub unreachable (result=%d code=%d)" % [result, response_code]
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY or _ctrl_label == null:
+		return
+	var d: Dictionary = parsed
+	var baseline: Array = d.get("baseline", [])
+	var recent: Array = d.get("recent_events", [])
+	var out := PackedStringArray()
+	out.append("=== controls ===")
+	for row in baseline:
+		if typeof(row) != TYPE_DICTIONARY: continue
+		var st := str(row.get("status", "?"))
+		var mark := " OK" if ("CONFIRMED" in st or "FIXED" in st) else " !"
+		out.append("  %-14s%s  %s" % [str(row.get("action", "?")), mark, st])
+	if not recent.is_empty():
+		out.append("--- recent presses ---")
+		for ev in recent.slice(0, 8):
+			if typeof(ev) != TYPE_DICTIONARY: continue
+			out.append("  %s -> %s" % [str(ev.get("action", "?")), str(ev.get("result", "?"))])
+	_ctrl_label.text = "\n".join(out)
