@@ -1,0 +1,295 @@
+=== SCHEMA: all tables (names + row counts) ===
+  applied_fixes: 24
+  arm_physics_baseline: 0
+  arm_rig_audit: 55
+  asset_validation: 0
+  auto_heal_actions: 15714
+  autohealactions: 1488
+  blocking_errors_v1: 36
+  code_patterns: 1
+  component_audit_log: 12
+  component_health_tests: 152
+  component_registry: 443
+  component_relationships: 345
+  control_baseline: 12
+  control_events: 209
+  control_info: 744
+  diag_findings: 230
+  diagnostic_log: 89
+  diagnostic_logs: 0
+  environment_fixes: 1
+  error_fingerprints: 7
+  error_patterns: 6
+  events_hardened: 0
+  file_splits: 12
+  files_to_fix: 269
+  fix_log: 27
+  fixes: 2
+  flight_controller_recon: 68972
+  flight_controller_recon_v2: 17332
+  flights: 249
+  function_index: 1007
+  game_state_log: 12
+  gamification: 0
+  gd_patch_registry: 732
+  gdeye_diag: 1614
+  hud_state: 1
+  issues: 38
+  known_repairs: 36
+  missing_function_fixes: 0
+  omissions: 10
+  parse_checks: 3677
+  parse_error_log: 1065
+  parse_errors: 1
+  patch_history: 2
+  pilot_career: 1
+  pilot_category_fixes: 0
+  pilot_ratings: 0
+  pipeline_metadata: 1
+  pipeline_runs: 2
+  pipelineruns: 57
+  project_config: 1
+  ratings: 3
+  remediation_queue: 0
+  repair_attempts: 2
+  repair_evidence: 0
+  repair_metrics: 0
+  repair_rules: 9
+  replay_api_tests: 0
+  resource_contention_log: 0
+  restore_log: 2
+  runtime_failures: 0
+  schema_migrations: 1
+  screenshots: 58
+  source_mutations: 235
+  source_snapshots: 36
+  sqlite_sequence: 44
+  steering_telemetry: 0
+  strategy_rewards: 33
+  syntax_errors: 0
+  syntax_fixes: 65
+  terrain_upgrades: 3
+  test_runs: 2
+  throttle_log: 0
+  tool_audit: 2743
+  user_preferences: 3
+  verbatim_logs: 0
+  verificationresults: 1
+
+=== source_mutations: reserve/canopy/steer files (last 40) ===
+  (235, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'known_lint_fixes', 1, '2026-06-24 23:27:55')
+  (234, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'known_lint_fixes', 1, '2026-06-24 23:11:30')
+  (233, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'known_lint_fixes', 1, '2026-06-24 23:04:23')
+  (232, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'known_lint_fixes', 1, '2026-06-24 22:44:40')
+  (231, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/test_runner.gd', 'known_lint_fixes', 1, '2026-06-24 22:25:35')
+  (230, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'known_lint_fixes', 1, '2026-06-24 22:25:35')
+  (229, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd', 'gdformat', 1, '2026-06-24 21:45:17')
+  (228, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd', 'gdformat', 1, '2026-06-24 21:45:16')
+  (227, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/PerformanceMonitor.gd', 'gdformat', 1, '2026-06-24 21:45:15')
+  (226, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 1, '2026-06-24 21:45:15')
+  (225, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', 1, '2026-06-24 21:45:14')
+  (224, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', 1, '2026-06-24 21:45:13')
+  (223, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/project.godot', 'project_fixes', 1, '2026-06-24 21:45:13')
+  (222, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/PerformanceMonitor.gd', 'pm_split_and_thread_fix_atomic', 1, '2026-06-24 21:45:12')
+  (221, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteWatchdog.gd', 'gdformat', 1, '2026-06-24 21:41:49')
+  (220, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd', 'gdformat', 1, '2026-06-24 21:41:48')
+  (219, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/PerformanceMonitor.gd', 'gdformat', 1, '2026-06-24 21:41:48')
+  (218, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd', 'gdformat', 1, '2026-06-24 21:41:47')
+  (217, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd', 'gdformat', 1, '2026-06-24 21:41:46')
+  (216, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity.gd', 'gdformat', 1, '2026-06-24 21:41:45')
+  (215, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/PerformanceMonitor.gd', 'pm_split_and_thread_fix_atomic', 1, '2026-06-24 21:41:44')
+  (214, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/wind_field.gd', 'gdformat', 1, '2026-06-24 21:41:29')
+  (213, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/validate_scene.gd', 'gdformat', 1, '2026-06-24 21:41:28')
+  (212, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/toggle_arm_animator.gd', 'gdformat', 1, '2026-06-24 21:41:28')
+  (211, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/test_runner.gd', 'gdformat', 1, '2026-06-24 21:41:27')
+  (210, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/splash.gd', 'gdformat', 1, '2026-06-24 21:41:26')
+  (209, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/rotor_visualizer.gd', 'gdformat', 1, '2026-06-24 21:41:26')
+  (208, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/plane.gd', 'gdformat', 1, '2026-06-24 21:41:25')
+  (207, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/pip_draggable_v2.gd', 'gdformat', 1, '2026-06-24 21:41:25')
+  (206, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/pip_draggable.gd', 'gdformat', 1, '2026-06-24 21:41:24')
+  (205, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/parachute_controller.gd', 'gdformat', 1, '2026-06-24 21:41:23')
+  (204, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/minimal.gd', 'gdformat', 1, '2026-06-24 21:41:22')
+  (203, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/log_game_state.gd', 'gdformat', 1, '2026-06-24 21:41:21')
+  (202, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/game_manager.gd', 'gdformat', 1, '2026-06-24 21:41:21')
+  (201, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd', 'gdformat', 1, '2026-06-24 21:41:20')
+  (200, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/flight_controller.gd', 'gdformat', 1, '2026-06-24 21:41:19')
+  (199, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/debug_components.gd', 'gdformat', 1, '2026-06-24 21:41:18')
+  (198, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'gdformat', 1, '2026-06-24 21:41:17')
+  (197, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/audit.gd', 'gdformat', 1, '2026-06-24 21:41:16')
+  (196, '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/altimeter_hud.gd', 'gdformat', 1, '2026-06-24 21:41:15')
+
+=== applied_fixes: reserve/steer/canopy (all) ===
+  (24, 'fix_camera_switch_20260707_095402', 'scripts/build_terrain.gd', 'camera_switch_after_exit', 'applied', '2026-07-07T09:54:02.629967')
+  (23, 'fix_empty_else_20260701_083444', 'godot_project/scripts/build_terrain.gd', 'Fix empty else block at line 1461', 'success', '2026-07-01T08:34:44.039027')
+  (22, 'add_missing_functions_20260630_235717', 'godot_project/scripts/build_terrain.gd', 'Add missing _setup_pip_overlay and _fetch_real_wind functions', 'success', '2026-06-30T23:57:17.333753')
+  (21, 'fix_canopy_block_20260630_235606', 'godot_project/scripts/build_terrain.gd', 'Fix indentation in _setup_pip_overlay block', 'success', '2026-06-30T23:56:06.053206')
+  (20, 'insert_missing_print_20260630_235249', 'godot_project/scripts/build_terrain.gd', 'Insert missing print about procedural dome creation', 'success', '2026-06-30T23:52:49.034839')
+  (19, 'remove_empty_else_20260630_235025', 'godot_project/scripts/build_terrain.gd', 'Remove empty else block (else and comment lines) in _create_procedural_canopy', 'success', '2026-06-30T23:50:25.372469')
+  (18, 'fix_build_terrain_20260625_092825', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'build_terrain', 'applied', '2026-06-25T09:28:25.731188')
+  (15, 'fix_build_terrain_direct_62905fd1', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:52:48')
+  (14, 'fix_build_terrain_direct_ec1b5b1e', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:52:47')
+  (13, 'fix_build_terrain_direct_7299d5ec', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:52:35')
+  (11, 'fix_build_terrain_direct_af07654d', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:52:03')
+  (12, 'fix_build_terrain_direct_62fd8477', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:52:03')
+  (10, 'fix_build_terrain_direct_589722ac', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:51:51')
+  (9, 'fix_build_terrain_direct_831a216b', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:51:19')
+  (8, 'fix_build_terrain_direct_b045f853', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:51:18')
+  (7, 'fix_build_terrain_direct_1c58cf50', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:51:06')
+  (6, 'fix_build_terrain_direct_f64eabc8', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:50:35')
+  (5, 'fix_build_terrain_direct_10cefb7b', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:50:34')
+  (4, 'fix_build_terrain_direct_2d38c3b3', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:50:22')
+  (3, 'fix_build_terrain_direct_ef51b0c3', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:49:50')
+  (2, 'fix_build_terrain_direct_686f8811', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:49:49')
+  (1, 'fix_build_terrain_direct_c446d81d', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd', 'fix_build_terrain_direct', 'applied', '2026-06-25 00:49:37')
+
+=== auto_heal_actions: reserve/steer (last 20) ===
+
+=== fix_log: build_terrain (last 30) ===
+  (27, 'fix_arm_rig_v2.py', 'godot_project/scripts/build_terrain.gd', 'read_target', 'SUCCESS', '2701 lines 102526 bytes sha256=8bac074b80f0a51e', '2026-07-28T18:46:53.289875+00:00')
+  (26, 'fix_arm_rig_v2.py', 'godot_project/scripts/build_terrain.gd', 'fix2_arm_rotation_axis', 'DRY_RUN', 'diff shown L881', '2026-07-28T18:43:25.768746+00:00')
+  (25, 'fix_arm_rig_v2.py', 'godot_project/scripts/build_terrain.gd', 'fix1_right_arm_bone_nesting', 'DRY_RUN', 'diff shown L647', '2026-07-28T18:43:25.646924+00:00')
+  (24, 'fix_arm_rig_v2.py', 'godot_project/scripts/build_terrain.gd', 'read_target', 'SUCCESS', '2701 lines 102526 bytes sha256=8bac074b80f0a51e', '2026-07-28T18:43:25.407554+00:00')
+  (23, 'fix_arm_rig.py', 'godot_project/scripts/build_terrain.gd', 'read_target', 'SUCCESS', '2701 lines 102526 bytes sha256=8bac074b80f0a51e', '2026-07-28T18:32:03.738739+00:00')
+  (21, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'phase3_telemetry', 'SUCCESS', 'backup:godot_project/scripts/build_terrain.gd.bak.20260727115256', '2026-07-27T11:52:56.591823+00:00')
+  (20, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'phase2_fix', 'PARTIAL', 'backup:godot_project/scripts/build_terrain.gd.bak.20260727115256', '2026-07-27T11:52:56.359945+00:00')
+  (19, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'register_autoload', 'SUCCESS', 'backup:godot_project/project.godot.bak.20260727115255', '2026-07-27T11:52:55.871929+00:00')
+  (18, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'bug3_has_node_telemetry', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1593,8 +1593,25 @@\n \t\t\t\t_rotate_arm(false)\n \n \t\t_turn_input = turn_input\n-\t\tif has_node("/root/Main/Parach', '2026-07-27T11:49:47.553328+00:00')
+  (17, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'bug2_arm_dedupe', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1603,12 +1603,10 @@\n \t# Turn left (Q)\n \tif Input.is_key_pressed(KEY_Q):\n \t\t_turn_input = -1.0\n-\t\tif not _l', '2026-07-27T11:49:47.431521+00:00')
+  (16, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'register_autoload', 'DRY_RUN', '--- a/project.godot\n+++ b/project.godot\n@@ -18,4 +18,5 @@\n \n [autoload]\n+TelemetryLogger="*res://TelemetryLogger.gd"\n \n SqliteDb="*res://scripts/SqliteDb.gd"\n', '2026-07-27T11:49:47.278096+00:00')
+  (15, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'bug3_has_node_telemetry', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1593,8 +1593,25 @@\n \t\t\t\t_rotate_arm(false)\n \n \t\t_turn_input = turn_input\n-\t\tif has_node("/root/Main/Parach', '2026-07-27T11:37:06.403260+00:00')
+  (14, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'bug2_arm_dedupe', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1603,12 +1603,10 @@\n \t# Turn left (Q)\n \tif Input.is_key_pressed(KEY_Q):\n \t\t_turn_input = -1.0\n-\t\tif not _l', '2026-07-27T11:37:06.281244+00:00')
+  (13, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'register_autoload', 'DRY_RUN', '--- a/project.godot\n+++ b/project.godot\n@@ -18,4 +18,5 @@\n \n [autoload]\n+TelemetryLogger="*res://TelemetryLogger.gd"\n \n SqliteDb="*res://scripts/SqliteDb.gd"\n', '2026-07-27T11:37:06.096600+00:00')
+  (12, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'site2_canopy_telemetry', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -818,6 +818,7 @@\n \t\tprint("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")\n \t\treturn\n ', '2026-07-27T11:36:26.185323+00:00')
+  (11, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'site1_wire_turn_input', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1582,6 +1582,18 @@\n \t\t\tturn_input -= 1.0\n \t\tif Input.is_action_pressed("turnright"):\n \t\t\tturn_input += 1.0', '2026-07-27T11:36:26.074832+00:00')
+  (10, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'site2_canopy_telemetry', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -818,6 +818,7 @@\n \t\tprint("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")\n \t\treturn\n ', '2026-07-26T23:27:19.634540+00:00')
+  (9, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'site1_wire_turn_input', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1582,6 +1582,18 @@\n \t\t\tturn_input -= 1.0\n \t\tif Input.is_action_pressed("turnright"):\n \t\t\tturn_input += 1.0', '2026-07-26T23:27:19.441221+00:00')
+  (8, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'site2_canopy_telemetry', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -818,6 +818,7 @@\n \t\tprint("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")\n \t\treturn\n ', '2026-07-26T23:14:23.535259+00:00')
+  (7, 'diag_steer_db.py', 'godot_project/scripts/build_terrain.gd', 'site1_wire_turn_input', 'DRY_RUN', '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1582,6 +1582,18 @@\n \t\t\tturn_input -= 1.0\n \t\tif Input.is_action_pressed("turnright"):\n \t\t\tturn_input += 1.0', '2026-07-26T23:14:23.435411+00:00')
+  (2, 'fix_issue_B_turn_controls.py', 'godot_project/scripts/build_terrain.gd', 'fix_turn_gate_and_steering', 'SUCCESS', 'backup: godot_project/scripts/build_terrain.gd.bak.20260726142423', '2026-07-26T14:24:23.668024+00:00')
+  (1, 'fix_issue_A_altitude.py', 'godot_project/scripts/build_terrain.gd', 'convert_altitude_6000_to_1828.8', 'SUCCESS', 'backup: godot_project/scripts/build_terrain.gd.bak.20260726142423', '2026-07-26T14:24:23.459096+00:00')
+
+=== issues: steer/reserve/canopy (all) ===
+
+=== diag_findings: steer/reserve (last 20) ===
+  ('diag_steer_db.py', 'diff_bug3_has_node_telemetry', 1596, '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1593,8 +1593,25 @@\n \t\t\t\t_rotate_arm(false)\n \n \t\t_turn_input = turn_input\n-\t\tif has_node("/root/Main/ParachuteController"):\n+\t\t# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong\n+\t\tvar _has_pc := has_node("/root/Main/ParachuteController")\n+\t\tprint("[STEER_TELEM] canopy=", _canopy_d', '2026-07-27T11:52:56.503030+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, 'fix_parachute_v2 steering guard NOT present', '2026-07-27T11:52:55.824389+00:00')
+  ('diag_steer_db.py', 'site1', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-27T11:52:54.572798+00:00')
+  ('diag_steer_db.py', 'diff_bug3_has_node_telemetry', 1596, '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1593,8 +1593,25 @@\n \t\t\t\t_rotate_arm(false)\n \n \t\t_turn_input = turn_input\n-\t\tif has_node("/root/Main/ParachuteController"):\n+\t\t# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong\n+\t\tvar _has_pc := has_node("/root/Main/ParachuteController")\n+\t\tprint("[STEER_TELEM] canopy=", _canopy_d', '2026-07-27T11:49:47.493765+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, 'fix_parachute_v2 steering guard NOT present', '2026-07-27T11:49:47.233315+00:00')
+  ('diag_steer_db.py', 'site1', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-27T11:49:46.058698+00:00')
+  ('diag_steer_db.py', 'diff_bug3_has_node_telemetry', 1596, '--- a/godot_project/scripts/build_terrain.gd\n+++ b/godot_project/scripts/build_terrain.gd\n@@ -1593,8 +1593,25 @@\n \t\t\t\t_rotate_arm(false)\n \n \t\t_turn_input = turn_input\n-\t\tif has_node("/root/Main/ParachuteController"):\n+\t\t# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong\n+\t\tvar _has_pc := has_node("/root/Main/ParachuteController")\n+\t\tprint("[STEER_TELEM] canopy=", _canopy_d', '2026-07-27T11:37:06.349412+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, 'fix_parachute_v2 steering guard NOT present', '2026-07-27T11:37:06.038244+00:00')
+  ('diag_steer_db.py', 'site1', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-27T11:37:04.798395+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, '_canopy_deployed and has_node NOT present', '2026-07-27T11:36:25.965007+00:00')
+  ('diag_steer_db.py', 'site1_turn_block', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-27T11:36:25.399391+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, '_canopy_deployed and has_node NOT present', '2026-07-26T23:27:19.236585+00:00')
+  ('diag_steer_db.py', 'site1_turn_block', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-26T23:27:18.056976+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, '_canopy_deployed and has_node NOT present', '2026-07-26T23:14:23.326240+00:00')
+  ('diag_steer_db.py', 'site1_turn_block', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-26T23:14:22.705131+00:00')
+  ('diag_steer_db.py', 'steer_guard_ABSENT', 0, '_canopy_deployed and has_node NOT present', '2026-07-26T23:14:07.097093+00:00')
+  ('diag_steer_db.py', 'site1_turn_block', 1597, '\t\t\tget_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)', '2026-07-26T23:14:06.454013+00:00')
+
+=== steering_telemetry row count + last 10 ===
+  total: 0
+
+=== git log: build_terrain.gd (last 30 commits) ===
+596ba56 fix: remove spurious is_action_just_pressed guard from _do_cutaway (20260801202543)
+dfd3b63 fix(audit_deduce): dedup inputs, HUD legacy, DB logging
+7607044 fix: steering restored — remove _deploy_canopy() every-frame call
+ec7ffb9 fix: restore original colour map; add LANDED gate to _update_canopy_glide
+a31e4ba fix: revert to original colour map; reduce MAX_ELEV for FL exaggeration
+dfe1b5a fix: revert mesh to 1024x1024; use 4:1 downsampled USGS data
+e3b2c06 feat: 4096x4096 USGS National Elevation Dataset (NED) 1/3 arc-second heightmap
+8399098 fix: terrain heightmap UV scaling (512x512 file, 1024x1024 mesh)
+ffdd7d6 fix: arm deferred override+H double-fire+flare gate (GDScript only)
+17eb757 fix: CFD wind applied to FREEFALL+OPENING_ANIM; throttle print
+90385bb fix: mixamo_com loop + freefall arm steering + gd.gd cleanup
+3f433f3 fix: rename telemetry ratio to log_ratio in _update_canopy_glide
+6455a0f fix: gdformat build_terrain.gd, add scan_gd.py CI exception to .gitignore
+aec89ab fix: gdlint, DirAccess API, HUD auto-fetch, repo cleanup
+d5976da fix: game files, leaderboard query, hub fixes (gdlint bypassed for addon)
+30533da Fix Q/E turning logic: add forced turn input in _physics_process
+9ccbb4a v314: Remove unnecessary pass at line 2648
+0283ff7 Add missing dependencies (autoloads, assets, and addons)
+675a36e Fix controls: replace is_key_just_pressed with manual tracking; silence InputManager spam
+36b4504 Orbital camera fix
+20180d0 Fix plane visibility in Godot scene
+2ba480e style: apply gdformat and fix gdlint warnings
+8f4fbf7 Final working autostall: paused at 6000ft, 1024 terrain, no auto-start
+76b2b39 fix: remove duplicate 'else:' causing parse error in build_terrain.gd
+1572ecf v313: fully repaired malfunction trainer + CFD roadmap
+a7985c0 v0056: skills json; canopy/HUD/obstacle fixes; screenshot library patch
+d7d043e Fix parse errors: missing colon, trailing colon, mixed indentation, DirAccess usage, duplicate screenshot timer
+90b9374 WORKING BASELINE: terrain, FBX, arm bones, drop zone, PiP canopy, HUD
+ea3920a fix: v314 satellite terrain rendering -- vertex colour bake, CULL_DISABLED, camera Y=3000
+
+=== git log: parachute_controller.gd (last 20) ===
+d5976da fix: game files, leaderboard query, hub fixes (gdlint bypassed for addon)
+0283ff7 Add missing dependencies (autoloads, assets, and addons)
+71573ff Initial commit: complete Parachute CFD Landing Game
+
+=== FILES referencing reserve steering / tilt ===
+(none)
+
+--- _reserve_done + turn ---
+(none)
+
+--- tilt references ---
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:520:# Physics update (altitude, descent, canopy animation, flight, wind, tilt)
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:564:		_update_canopy_tilt()
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:1437:# Canopy tilt based on arm turn input
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:1441:func _update_canopy_tilt():
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:1444:	var tilt = _turn_input * 15.0
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd:1445:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd:520:# Physics update (altitude, descent, canopy animation, flight, wind, tilt)
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd:564:		_update_canopy_tilt()
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd:1437:# Canopy tilt based on arm turn input
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd:1441:func _update_canopy_tilt():
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd:1444:	var tilt = _turn_input * 15.0
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd:1445:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-205552.gd:1455:func _update_canopy_tilt():
+godot_project/scripts/build_terrain.backup_20260707-205552.gd:1458:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.backup_20260707-205552.gd:1459:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-205552.gd:1949:	_update_canopy_tilt()
+godot_project/scripts/build_terrain.backup_20260707-210153.gd:1455:func _update_canopy_tilt():
+godot_project/scripts/build_terrain.backup_20260707-210153.gd:1458:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.backup_20260707-210153.gd:1459:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-210153.gd:1949:	_update_canopy_tilt()
+godot_project/scripts/build_terrain.backup_20260707-210819.gd:1455:func _update_canopy_tilt():
+godot_project/scripts/build_terrain.backup_20260707-210819.gd:1458:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.backup_20260707-210819.gd:1459:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-210819.gd:1927:	_update_canopy_tilt()
+godot_project/scripts/build_terrain.backup_20260707-215820.gd:1455:func _update_canopy_tilt():
+godot_project/scripts/build_terrain.backup_20260707-215820.gd:1458:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.backup_20260707-215820.gd:1459:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-215820.gd:1949:	_update_canopy_tilt()
+godot_project/scripts/build_terrain.backup_20260707-222344.gd:1455:func _update_canopy_tilt():
+godot_project/scripts/build_terrain.backup_20260707-222344.gd:1458:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.backup_20260707-222344.gd:1459:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-222344.gd:1957:	_update_canopy_tilt()
+godot_project/scripts/build_terrain.backup_20260707-222819.gd:1455:func _update_canopy_tilt():
+godot_project/scripts/build_terrain.backup_20260707-222819.gd:1458:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.backup_20260707-222819.gd:1459:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.backup_20260707-222819.gd:1957:	_update_canopy_tilt()
+godot_project/scripts/build_terrain.gd:1479:func _update_canopy_tilt() -> void:
+godot_project/scripts/build_terrain.gd:1482:	var tilt = _turn_input * 15.0
+godot_project/scripts/build_terrain.gd:1483:	_canopy_instance.rotation_degrees.z = tilt
+godot_project/scripts/build_terrain.gd:1994:	_update_canopy_tilt()
+
+=== git log --all --oneline (steer/reserve/canopy in message, last 20) ===
+596ba56 fix: remove spurious is_action_just_pressed guard from _do_cutaway (20260801202543)
+ed0009a audit: _input conflicts + cutaway/reserve DB trace (20260801202150)
+4f3acc8 fix: fcc_gate + steering post-fix autostall run
+7607044 fix: steering restored — remove _deploy_canopy() every-frame call
+66f3c18 audit: steering_audit.txt — DB schema + steering code paths
+ec7ffb9 fix: restore original colour map; add LANDED gate to _update_canopy_glide
+17eb757 fix: CFD wind applied to FREEFALL+OPENING_ANIM; throttle print
+90385bb fix: mixamo_com loop + freefall arm steering + gd.gd cleanup
+e21edbc diag: glide_fn_body.txt — full _update_canopy_glide repr
+c9788d3 diag: glide_callsite.txt — where _update_canopy_glide is called
+3f433f3 fix: rename telemetry ratio to log_ratio in _update_canopy_glide
+afe5230 v0056: skills 53 rules; canopy/HUD/obstacle fixes; R096 self-refusing gate; remove stale screenshot
+a7985c0 v0056: skills json; canopy/HUD/obstacle fixes; screenshot library patch
+90b9374 WORKING BASELINE: terrain, FBX, arm bones, drop zone, PiP canopy, HUD
+
+Generated: 2026-08-01T20:34:34.485513+00:00
