@@ -1034,8 +1034,10 @@ func _do_cutaway() -> void:
 func _do_reserve() -> void:
 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
-	if not _canopy_deployed:
-		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
+	# USPA SIM: reserve is deployed after cutaway clears main canopy.
+	if not _cutaway_done and not _canopy_deployed:
+		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
 		return
 	if _reserve_done:

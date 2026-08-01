@@ -1,0 +1,29 @@
+fix_reserve_gate | 2026-08-01T20:56:05.363725+00:00
+Root cause: _do_reserve gated on _canopy_deployed; cutaway fix cleared it.
+Fix: gate on 'not _cutaway_done AND not _canopy_deployed' — either allows reserve.
+======================================================================
+
+=== git diff ===
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index f215fcb..b90f192 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -1034,8 +1034,10 @@ func _do_cutaway() -> void:
+ func _do_reserve() -> void:
+ 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+ 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+-	if not _canopy_deployed:
+-		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
++	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
++	# USPA SIM: reserve is deployed after cutaway clears main canopy.
++	if not _cutaway_done and not _canopy_deployed:
++		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
+ 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+ 		return
+ 	if _reserve_done:
+
+autostall exit=0
+cutaway_exec: 1
+reserve_exec: 1
+glide_lines: 348
+control_events: 232→238
