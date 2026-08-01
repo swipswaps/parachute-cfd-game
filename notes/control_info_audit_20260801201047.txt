@@ -1,0 +1,37 @@
+=== HIDDEN (visible=0), distinct node_path ===
+count: 0
+
+=== MOUSE_FILTER_IGNORE (mouse_filter=2), distinct node_path ===
+count: 6
+  ('/root/Main/HUD/Label0', 'Label', 1, 380.0, 24.0)
+  ('/root/Main/HUD/Label1', 'Label', 1, 380.0, 24.0)
+  ('/root/Main/HUD/Label2', 'Label', 1, 380.0, 24.0)
+  ('/root/Main/HUD/Label3', 'Label', 1, 380.0, 24.0)
+  ('/root/Main/HUD/Label4', 'Label', 1, 380.0, 24.0)
+  ('/root/Main/HUD/Label5', 'Label', 1, 380.0, 24.0)
+
+=== MOUSE_FILTER_PASS (mouse_filter=1), distinct node_path ===
+count: 0
+
+=== control_baseline ===
+  ('camera_cycle', 'CONFIRMED_WORKING', '2026-07-30 16:59:32')
+  ('cutaway', 'CONFIRMED_BY_DESIGN', '2026-07-30 16:59:32')
+  ('deploy', 'CONFIRMED_WORKING', '2026-07-30 16:59:32')
+  ('flare', 'FIXED_STATE_GATE', '2026-07-30 16:59:32')
+  ('flightcheck', 'FIXED_STATE_GATE', '2026-07-30 16:59:32')
+  ('j', 'CONFIRMED_WORKING', '2026-07-30 16:59:32')
+  ('pause', 'UNVERIFIED', '2026-07-30 16:59:32')
+  ('reserve', 'CONFIRMED_BY_DESIGN', '2026-07-30 16:59:32')
+  ('restart', 'UNVERIFIED', '2026-07-30 16:59:32')
+  ('togglehud', 'FIXED_DOUBLE_FIRE', '2026-07-30 16:59:32')
+  ('turnleft', 'FIXED', '2026-07-31 13:26:44')
+  ('turnright', 'FIXED', '2026-07-31 13:26:44')
+
+=== control_events by action (count, last state) ===
+  ('turnleft', 68, 4, '2026-08-01 20:09:41')
+  ('turnright', 51, 4, '2026-08-01 20:09:43')
+  ('j', 19, 1, '2026-08-01 20:01:34')
+  ('deploy', 15, 4, '2026-08-01 20:09:23')
+  ('reserve', 12, 2, '2026-08-01 20:09:36')
+  ('cutaway', 8, 2, '2026-08-01 20:09:35')
+  ('camera_cycle', 5, 2, '2026-08-01 14:51:54')
