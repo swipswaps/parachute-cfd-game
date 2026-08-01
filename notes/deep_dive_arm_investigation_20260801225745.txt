@@ -1,0 +1,215 @@
+================================================================================
+DEEP‑DIVE INVESTIGATION: Mixamo Arms Don't Bend at Elbow
+Timestamp: 2026-08-01T22:57:45.734188+00:00
+================================================================================
+
+================================================================================
+1. CALL STACK TRACE
+================================================================================
+
+[1.1] Functions named '_deploy_canopy':
+  godot_project/scripts/build_terrain.gd:821:func _deploy_canopy() -> void:
+  godot_project/scripts/flight_controller.gd:94:func _deploy_canopy() -> void:
+
+[1.2] Callers of _deploy_canopy():
+  godot_project/scripts/build_terrain.gd:1382:				_deploy_canopy()
+  godot_project/scripts/build_terrain.gd:1617:		_deploy_canopy()
+  godot_project/scripts/build_terrain.gd:1637:# FIX (fix_steering_v1): _deploy_canopy() here was called every frame in
+  godot_project/scripts/build_terrain.gd:1656:			_deploy_canopy()
+  godot_project/scripts/flight_controller.gd:52:			_deploy_canopy()
+
+================================================================================
+2. CODE WALKTHROUGH – Arm Logic in build_terrain.gd
+================================================================================
+
+[2.1] Arm‑related functions found: 10
+  Line 579: func _check_arm_pose() -> void:
+  Line 723: func _force_neutral_arms() -> void:
+  Line 868: func _rotate_arm(left: bool) -> void:
+  Line 2413: func _check_arm_pose_safe() -> void:
+  Line 2838: func _arm_capture_rest() -> void:
+  Line 2857: func _arm_anim_pos() -> float:
+  Line 3006: func _arm_find_bone(base: String) -> int:
+  Line 3014: func _arm_axis_use(side: String) -> Vector3:
+  Line 3020: func _arm_axis_probe() -> void:
+  Line 3171: func _arm_solve_elbow() -> void:
+
+[2.2] _check_arm_pose() function (lines 14‑28 from audit):
+  Lines 576-598:
+     576:   	# SELF-TEST TIMER INJECTED (v6.5.151)
+     577:   
+     578:   
+     579: > func _check_arm_pose() -> void:
+     580:   	var skeleton = _character.find_child("Skeleton3D", true, false)
+     581:   	if not skeleton:
+     582:   		print("[VERBATIM] ARM GATE: No skeleton found")
+     583:   		return
+     584:   	# Get left arm bone (index 8 from earlier log)
+     585:   	var left_arm = skeleton.get_bone_global_pose(8)
+     586:   	var right_arm = skeleton.get_bone_global_pose(32)
+     587:   	# Log rotation angles (approx)
+     588:   	print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+     589:   	print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+     590:   	# If arms are extended (rotation around X near 0, Z near 0), suggest reset
+     591:   	if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+     592:   		print("[VERBATIM] ARM GATE WARNING: Arms appear extended, resetting to neutral")
+     593:   		# Force a reset
+     594:   		skeleton.reset_bone_poses()
+     595:   
+     596:   	# SELF-TEST INJECTED
+     597:   
+     598:   
+
+[2.3] animation_tree.set calls in build_terrain.gd:
+  ❌ NO animation_tree.set calls found!
+
+[2.4] 'pull_down' references in build_terrain.gd:
+  ❌ NO 'pull_down' references found!
+
+================================================================================
+3. flight_controller.gd – Arm Logic Analysis
+================================================================================
+
+[3.1] _deploy_canopy() at line 94:
+    91:   	var main = get_tree().current_scene
+    92:   	if main and main.has_method("_flight_control_check"):
+    93:   		main._flight_control_check()
+    94: > func _deploy_canopy() -> void:
+    95:   	print("[VERBATIM] Deploying canopy from flight_controller")
+    96:   	# Add your canopy deployment logic here
+
+[3.2] Arm references in flight_controller.gd:
+  ❌ NO arm/elbow/bend/pull references found!
+
+================================================================================
+4. AnimationTree Resource Inspection
+================================================================================
+
+[4.1] .tres files containing 'pull_down': 0
+
+[4.2] .tres files containing 'elbow': 0
+
+================================================================================
+5. Git History – Deleted Arm‑Bending Code
+================================================================================
+
+[5.1] Commits that touched 'pull_down':
+  No commits found with 'pull_down' in .gd files.
+
+[5.2] Commits that deleted arm-related code:
+02039ea fix: allow cutaway on GOOD canopy with warning (USPA SIM) (20260801211000)
+be138b1 fix: call _apply_arm_bone_overrides at end of _update_arm_physics (20260801210504)
+ffdd7d6 fix: arm deferred override+H double-fire+flare gate (GDScript only)
+90385bb fix: mixamo_com loop + freefall arm steering + gd.gd cleanup
+90b9374 WORKING BASELINE: terrain, FBX, arm bones, drop zone, PiP canopy, HUD
+
+
+[5.3] Recent changes to build_terrain.gd:
+02039ea fix: allow cutaway on GOOD canopy with warning (USPA SIM) (20260801211000)
+be138b1 fix: call _apply_arm_bone_overrides at end of _update_arm_physics (20260801210504)
+1aaddb1 fix: _do_reserve gate — allow after cutaway clears _canopy_deployed (20260801205603)
+00be5b7 fix: cutaway freefall + reserve glide + canopy visual guard (20260801205254)
+4bb98ca fix: cutaway hides main canopy + reserve shows white mesh + tilt (20260801204134)
+
+
+================================================================================
+6. Runtime Execution Path Simulation
+================================================================================
+
+[6.1] What SHOULD happen when parachute deploys:
+
+  1. Player presses deploy key (e.g., Space)
+  2. InputManager processes key press
+  3. → Calls deploy function (likely in flight_controller.gd or player.gd)
+  4. → _deploy_canopy() is called
+  5. → Canopy appears, physics changes
+  6. → animation_tree.set("parameters/pull_down/blend_amount", 1.0) SHOULD be called
+  7. → AnimationTree blends Mixamo skeleton into arms‑down pose
+  8. → Elbow bends naturally as part of the animation
+
+[6.2] What ACTUALLY happens:
+
+  1. Player presses deploy key
+  2. InputManager processes key press
+  3. → Calls deploy function
+  4. → _deploy_canopy() is called
+  5. → Canopy appears, physics changes
+  6. → ❌ NO animation_tree.set() call for pull_down
+  7. → AnimationTree stays at default blend (0.0)
+  8. → Arms remain in idle/spread position
+  9. → Elbow does NOT bend
+
+[6.3] The Missing Link:
+
+  The critical line of code is MISSING from all active scripts:
+
+    animation_tree.set("parameters/pull_down/blend_amount", 1.0)
+
+  This line was either:
+  - Never written
+  - Written and then deleted
+  - Moved to a file that no longer exists (toggle_arm_animator.gd)
+
+
+================================================================================
+7. Affected Files – Context ±3 Lines
+================================================================================
+
+[File] godot_project/scripts/build_terrain.gd
+
+  Context around line 579:
+     576:   	# SELF-TEST TIMER INJECTED (v6.5.151)
+     577:   
+     578:   
+     579: > func _check_arm_pose() -> void:
+     580:   	var skeleton = _character.find_child("Skeleton3D", true, false)
+     581:   	if not skeleton:
+     582:   		print("[VERBATIM] ARM GATE: No skeleton found")
+
+  Context around line 723:
+     720:   
+     721:   
+     722:   # Rule R092 / R083 – Force arms to neutral pose via bone override
+     723: > func _force_neutral_arms() -> void:
+     724:   	var skeleton = _character.find_child("Skeleton3D", true, false)
+     725:   	if not skeleton:
+     726:   		print("[VERBATIM] ARM FIX: No skeleton found")
+
+  Context around line 821:
+     818:   	return null
+     819:   
+     820:   
+     821: > func _deploy_canopy() -> void:
+     822:   	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+     823:   	if _canopy_deployed or not _canopy_instance:
+     824:   		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+
+  Context around line 868:
+     865:   # Ref: https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+     866:   # Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+     867:   # ------------------------------------------------------------------
+     868: > func _rotate_arm(left: bool) -> void:
+     869:   	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+     870:   	if not _skeleton:
+     871:   		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+
+  Context around line 2413:
+    2410:   
+    2411:   
+    2412:   # Safe arm pose check (call after character is loaded)
+    2413: > func _check_arm_pose_safe() -> void:
+    2414:   	if not is_instance_valid(_character) or not _character:
+    2415:   		print("[VERBATIM] ARM GATE: Character not loaded yet")
+    2416:   		return
+
+[File] godot_project/scripts/flight_controller.gd
+
+  Context around line 94:
+      91:   	var main = get_tree().current_scene
+      92:   	if main and main.has_method("_flight_control_check"):
+      93:   		main._flight_control_check()
+      94: > func _deploy_canopy() -> void:
+      95:   	print("[VERBATIM] Deploying canopy from flight_controller")
+      96:   	# Add your canopy deployment logic here
+
+✅ DB: Flagged as PENDING_DRYRUN.
