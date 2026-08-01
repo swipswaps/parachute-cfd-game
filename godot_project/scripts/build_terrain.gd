@@ -1012,11 +1012,12 @@ func _do_cutaway() -> void:
 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
 		return
 	if _malfunction == MalfunctionType.GOOD:
-		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
-		_show_notification("GOOD canopy – do not cut away! Press F to flare.")
-		print("[DIAG] _do_cutaway: good canopy – skipped")
-		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
-		return
+		# USPA SIM: cutting away a good canopy is allowed but dangerous.
+		# Warn the skydiver — do not block the action.
+		print("[VERBATIM] WARNING: cutting away GOOD canopy — reserve must follow!")
+		_show_notification("WARNING: Good canopy cut! Deploy reserve NOW (V)!")
+		print("[DIAG] _do_cutaway: good canopy cutaway — proceeding with warning")
+		# fall through to execute cutaway
 	_cutaway_done = true
 	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
 	# returns to brief freefall until reserve deployed.

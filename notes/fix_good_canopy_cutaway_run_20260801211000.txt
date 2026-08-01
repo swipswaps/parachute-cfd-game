@@ -1,0 +1,36 @@
+fix_good_canopy_cutaway | 2026-08-01T21:10:05.623752+00:00
+USPA SIM: cutting away a good canopy is allowed (emergency procedure).
+Previous code blocked it with early return — changed to warn-only.
+Arms fix confirmed: armtel=166, elbow=11 lines in prior run.
+======================================================================
+
+=== git diff ===
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index 130debd..3230aaa 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -1012,11 +1012,12 @@ func _do_cutaway() -> void:
+ 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+ 		return
+ 	if _malfunction == MalfunctionType.GOOD:
+-		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+-		_show_notification("GOOD canopy – do not cut away! Press F to flare.")
+-		print("[DIAG] _do_cutaway: good canopy – skipped")
+-		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+-		return
++		# USPA SIM: cutting away a good canopy is allowed but dangerous.
++		# Warn the skydiver — do not block the action.
++		print("[VERBATIM] WARNING: cutting away GOOD canopy — reserve must follow!")
++		_show_notification("WARNING: Good canopy cut! Deploy reserve NOW (V)!")
++		print("[DIAG] _do_cutaway: good canopy cutaway — proceeding with warning")
++		# fall through to execute cutaway
+ 	_cutaway_done = true
+ 	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
+ 	# returns to brief freefall until reserve deployed.
+
+autostall exit=0
+cutaway_exec: 1
+good_cutaway_warnings: 0
+reserve_exec: 1
+armtel_lines: 403
+control_events: 254→261
