@@ -1,0 +1,965 @@
+=== _input() DEFINITIONS IN .gd FILES ===
+
+  FILE: godot_project/scripts/GameIntegrity_2606150714.gd
+    L303: func _input(event: InputEvent):
+    >>>  303: func _input(event: InputEvent):
+         304: 	print("[INPUT] GameIntegrity_2606150714.gd:303 _input/_unhandled_input triggered")
+         305: 	print("[INPUT] GameIntegrity_2606150714.gd:303 _input/_unhandled_input triggered")
+         306: 	print("[INPUT] GameIntegrity_2606150714.gd:303 _input/_unhandled_input triggered")
+         307: 	print("[INPUT] GameIntegrity_2606150714.gd:282 _input/_unhandled_input triggered")
+         308: 	print("[INPUT] GameIntegrity_2606150714.gd:282 _input/_unhandled_input triggered")
+         309: 	print("[INPUT] GameIntegrity_2606150714.gd:282 _input/_unhandled_input triggered")
+         310: 	print("[INPUT] GameIntegrity_2606150714.gd:282 _input/_unhandled_input triggered")
+         311: 	if event.is_action_pressed("jump"):
+
+  FILE: godot_project/scripts/InputManager.gd
+    L42: func _input(event: InputEvent) -> void:
+    >>>   42: func _input(event: InputEvent) -> void:
+          43: 	# Filter: only process key presses and mouse button events
+          44: 	if not (event is InputEventKey or event is InputEventMouseButton):
+          45: 		return
+          46: 
+          47: 	# Only log if the event is a press (not release)
+          48: 	if event is InputEventKey and event.pressed:
+          49: 		# Check for known actions
+          50: 		if InputMap.has_action("ui_accept") and event.is_action_pressed("ui_accept"):
+
+  FILE: godot_project/scripts/altimeter_hud.gd
+    L55: func _input(event: InputEvent) -> void:
+    >>>   55: func _input(event: InputEvent) -> void:
+          56: 	if event is InputEventKey and event.pressed and not event.echo:
+          57: 		if event.keycode == KEY_F4:
+          58: 			panel.visible = not panel.visible
+          59: 			get_viewport().set_input_as_handled()
+          60: 			return
+          61: 
+          62: 	if event is InputEventMouseButton:
+          63: 		var mb := event as InputEventMouseButton
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-205552.gd
+    L1830: func _input(event: InputEvent) -> void:
+    >>> 1830: func _input(event: InputEvent) -> void:
+        1831: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1832: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1833: 		var rel = (event as InputEventMouseMotion).relative
+        1834: 		# Adjust azimuth and elevation based on mouse drag
+        1835: 		_cam_azimuth -= rel.x * 0.005
+        1836: 		_cam_elevation -= rel.y * 0.005
+        1837: 		# Clamp elevation to avoid flipping
+        1838: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-210153.gd
+    L1830: func _input(event: InputEvent) -> void:
+    >>> 1830: func _input(event: InputEvent) -> void:
+        1831: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1832: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1833: 		var rel = (event as InputEventMouseMotion).relative
+        1834: 		# Adjust azimuth and elevation based on mouse drag
+        1835: 		_cam_azimuth -= rel.x * 0.005
+        1836: 		_cam_elevation -= rel.y * 0.005
+        1837: 		# Clamp elevation to avoid flipping
+        1838: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-210819.gd
+    L1831: func _input(event: InputEvent) -> void:
+    >>> 1831: func _input(event: InputEvent) -> void:
+        1832: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1833: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1834: 		var rel = (event as InputEventMouseMotion).relative
+        1835: 		# Adjust azimuth and elevation based on mouse drag
+        1836: 		_cam_azimuth -= rel.x * 0.005
+        1837: 		_cam_elevation -= rel.y * 0.005
+        1838: 		# Clamp elevation to avoid flipping
+        1839: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-215820.gd
+    L1830: func _input(event: InputEvent) -> void:
+    >>> 1830: func _input(event: InputEvent) -> void:
+        1831: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1832: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1833: 		var rel = (event as InputEventMouseMotion).relative
+        1834: 		# Adjust azimuth and elevation based on mouse drag
+        1835: 		_cam_azimuth -= rel.x * 0.005
+        1836: 		_cam_elevation -= rel.y * 0.005
+        1837: 		# Clamp elevation to avoid flipping
+        1838: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-222344.gd
+    L1830: func _input(event: InputEvent) -> void:
+    >>> 1830: func _input(event: InputEvent) -> void:
+        1831: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1832: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1833: 		var rel = (event as InputEventMouseMotion).relative
+        1834: 		# Adjust azimuth and elevation based on mouse drag
+        1835: 		_cam_azimuth -= rel.x * 0.005
+        1836: 		_cam_elevation -= rel.y * 0.005
+        1837: 		# Clamp elevation to avoid flipping
+        1838: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-222819.gd
+    L1830: func _input(event: InputEvent) -> void:
+    >>> 1830: func _input(event: InputEvent) -> void:
+        1831: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1832: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1833: 		var rel = (event as InputEventMouseMotion).relative
+        1834: 		# Adjust azimuth and elevation based on mouse drag
+        1835: 		_cam_azimuth -= rel.x * 0.005
+        1836: 		_cam_elevation -= rel.y * 0.005
+        1837: 		# Clamp elevation to avoid flipping
+        1838: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+
+  FILE: godot_project/scripts/build_terrain.gd
+    L1825: func _input(event: InputEvent) -> void:
+    >>> 1825: func _input(event: InputEvent) -> void:
+        1826: 	# Ignore F3 – let forensic_hud handle it
+        1827: 	if event is InputEventKey and event.keycode == KEY_F3:
+        1828: 		return
+        1829: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+        1830: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+        1831: 		var rel = (event as InputEventMouseMotion).relative
+        1832: 		# Adjust azimuth and elevation based on mouse drag
+        1833: 		_cam_azimuth -= rel.x * 0.005
+
+  FILE: godot_project/scripts/flight_controller.gd
+    L40: func _input(event: InputEvent) -> void:
+    >>>   40: func _input(event: InputEvent) -> void:
+          41: 	print("[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered")
+          42: 	print("[INPUT] flight_controller.gd:36 _input/_unhandled_input triggered")
+          43: 	# Only handle mouse and keyboard events here
+          44: 	if event is InputEventMouseMotion:
+          45: 		# Rotate character based on mouse movement
+          46: 		var sensitivity := 0.002
+          47: 		if _character:
+          48: 			_character.rotate_y(-event.relative.x * sensitivity)
+
+  FILE: godot_project/scripts/forensic_hud.gd
+    L145: func _input(event: InputEvent) -> void:
+    >>>  145: func _input(event: InputEvent) -> void:
+         146: 	print("[AUDIT] _input: ENTER")
+         147: # backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
+         148: 	if event is InputEventKey and event.pressed and not event.echo:
+         149: 		if event.keycode == KEY_QUOTELEFT:
+         150: 			if _layer != null:
+         151: 				_layer.visible = not _layer.visible
+         152: 			get_viewport().set_input_as_handled()
+         153: 		return
+
+  FILE: godot_project/scripts/forensic_hud_0001.gd
+    L102: func _input(event: InputEvent) -> void:
+    >>>  102: func _input(event: InputEvent) -> void:
+         103: 	if event is InputEventKey and event.pressed and not event.echo:
+         104: 		if event.keycode == KEY_F3:
+         105: 			_layer.visible = not _layer.visible
+         106: 			get_viewport().set_input_as_handled()
+         107: 		return
+         108: 	if not _layer.visible:
+         109: 		return
+         110: 	_handle_mouse(event)
+
+  FILE: godot_project/scripts/game_manager.backup_20260707-212959.gd
+    L179: func _input(event):
+    >>>  179: func _input(event):
+         180: 	"""
+         181: 	Handle player input for parachute control.
+         182: 
+         183: 	MENTAL MODEL: Arrow keys → steering input → parachute turns
+         184: 	FAILURE MODE: No parachute reference → input ignored
+         185: 	VERIFIES WITH: Parachute responds to arrow keys
+         186: 	"""
+         187: 	if current_state != GameState.FLYING:
+
+  FILE: godot_project/scripts/game_manager.gd
+    L179: func _input(_event) -> void:
+    >>>  179: func _input(_event) -> void:
+         180: 	"""
+         181: 	Handle player input for parachute control.
+         182: 
+         183: 	MENTAL MODEL: Arrow keys → steering input → parachute turns
+         184: 	FAILURE MODE: No parachute reference → input ignored
+         185: 	VERIFIES WITH: Parachute responds to arrow keys
+         186: 	"""
+         187: 	if current_state != GameState.FLYING:
+
+  FILE: godot_project/scripts/orbit_camera.gd
+    L29: func _input(event: InputEvent) -> void:
+    >>>   29: func _input(event: InputEvent) -> void:
+          30: 	print("[INPUT] orbit_camera.gd:29 _input/_unhandled_input triggered")
+          31: 	print("[INPUT] orbit_camera.gd:29 _input/_unhandled_input triggered")
+          32: 	print("[INPUT] orbit_camera.gd:29 _input/_unhandled_input triggered")
+          33: 	print("[INPUT] orbit_camera.gd:27 _input/_unhandled_input triggered")
+          34: 	print("[INPUT] orbit_camera.gd:27 _input/_unhandled_input triggered")
+          35: 	print("[INPUT] orbit_camera.gd:27 _input/_unhandled_input triggered")
+          36: 	print("[INPUT] orbit_camera.gd:27 _input/_unhandled_input triggered")
+          37: 	if not target:
+
+  FILE: godot_project/scripts/pip_draggable_v2.gd
+    L7: func _input(event) -> void:
+    >>>    7: func _input(event) -> void:
+           8: 	print("[INPUT] pip_draggable_v2.gd:7 _input/_unhandled_input triggered")
+           9: 	print("[INPUT] pip_draggable_v2.gd:7 _input/_unhandled_input triggered")
+          10: 	print("[INPUT] pip_draggable_v2.gd:7 _input/_unhandled_input triggered")
+          11: 	print("[INPUT] pip_draggable_v2.gd:6 _input/_unhandled_input triggered")
+          12: 	print("[INPUT] pip_draggable_v2.gd:6 _input/_unhandled_input triggered")
+          13: 	print("[INPUT] pip_draggable_v2.gd:6 _input/_unhandled_input triggered")
+          14: 	print("[INPUT] pip_draggable_v2.gd:6 _input/_unhandled_input triggered")
+          15: 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+
+  FILE: godot_project/scripts/screenshot_library.gd
+    L116: func _input(event: InputEvent) -> void:
+    >>>  116: func _input(event: InputEvent) -> void:
+         117: 	if event is InputEventKey and event.pressed and not event.echo:
+         118: 		if event.keycode == KEY_L:
+         119: 			cycle_screenshot()
+         120: 
+         121: func _on_ready_loading_deferred() -> void:
+         122: 	await get_tree().create_timer(2.0).timeout
+         123: 	_hide_loading_screen()
+         124: 	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " EXIT _ready (screenshot_library)")
+
+  FILE: godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd
+    L481: func _input(event):
+    >>>  481: func _input(event):
+         482: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:481 _input/_unhandled_input triggered")
+         483: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:481 _input/_unhandled_input triggered")
+         484: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:481 _input/_unhandled_input triggered")
+         485: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:1363 _input/_unhandled_input triggered")
+         486: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:1358 _input/_unhandled_input triggered")
+         487: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:1353 _input/_unhandled_input triggered")
+         488: 	print("[INPUT] build_terrain.backup.20260607_151124.gd:1348 _input/_unhandled_input triggered")
+         489: 	if event is InputEventMouseButton and event.pressed:
+
+  FILE: godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd
+    L481: func _input(event):
+    >>>  481: func _input(event):
+         482: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:481 _input/_unhandled_input triggered")
+         483: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:481 _input/_unhandled_input triggered")
+         484: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:481 _input/_unhandled_input triggered")
+         485: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:1363 _input/_unhandled_input triggered")
+         486: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:1358 _input/_unhandled_input triggered")
+         487: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:1353 _input/_unhandled_input triggered")
+         488: 	print("[INPUT] build_terrain.backup.20260607_151237.gd:1348 _input/_unhandled_input triggered")
+         489: 	if event is InputEventMouseButton and event.pressed:
+
+
+=== cutaway / reserve ACTION REFERENCES IN .gd FILES ===
+
+  FILE: godot_project/addons/gd_repair/validate_scene.gd
+    L145: 		"togglehud", "flightcheck", "cutaway", "reserve",
+
+  FILE: godot_project/scripts/InputManager.gd
+    L13: 	"cutaway": KEY_X,
+    L14: 	"reserve": KEY_V,
+    L170: 	if event.is_action_pressed("cutaway"):
+    L174: 				+ " [INFO] InputManager: action 'cutaway' pressed"
+    L177: 	if event.is_action_pressed("reserve"):
+    L181: 				+ " [INFO] InputManager: action 'reserve' pressed"
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-205552.gd
+    L110: var _cutaway_done: bool = false
+    L111: var _reserve_done: bool = false
+    L163: 	"cutaway": false,
+    L164: 	"reserve": false,
+    L463: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L980: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L985: func _do_cutaway():
+    L986: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L987: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L989: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L990: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L992: 	if _cutaway_done:
+    L993: 		print("[DIAG] _do_cutaway: already done")
+    L994: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L997: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L999: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1000: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1002: 	_cutaway_done = true
+    L1003: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1004: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1006: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1007: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1008: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1011: func _do_reserve():
+    L1012: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1013: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1015: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1016: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1018: 	if _reserve_done:
+    L1019: 		print("[DIAG] _do_reserve: already deployed")
+    L1020: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1022: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1023: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1024: 		_show_notification("Must cut away (X) before reserve!")
+    L1025: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1026: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1028: 	_reserve_done = true
+    L1036: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1037: 	_show_notification("Reserve deployed – safe landing!")
+    L1043: 	if _reserve_done and _cutaway_done:
+    L1048: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1049: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1050: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1066: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1272: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1273: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1290: 	if _controller_input_map["cutaway"]:
+    L1291: 		_do_cutaway()
+    L1292: 	if _controller_input_map["reserve"]:
+    L1293: 		_do_reserve()
+    L1342: 			"cutaway":
+    L1343: 				_do_cutaway()
+    L1344: 			"reserve":
+    L1345: 				_do_reserve()
+    L1393: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1397: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1398: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1414: 	if _reserve_done or _flare_done:
+    L1599: 		_do_cutaway()
+    L1602: 		_do_reserve()
+    L1648: 		_do_cutaway()
+    L1652: 		_do_reserve()
+    L1679: 	if Input.is_action_just_pressed("cutaway"):
+    L1680: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1681: 		_do_cutaway()
+    L1683: 	if Input.is_action_just_pressed("reserve"):
+    L1684: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1685: 		_do_reserve()
+    L1757: 	_cutaway_done = false
+    L1758: 	_reserve_done = false
+    L1870: 			action = "cutaway (X)"
+    L1872: 			action = "reserve (V)"
+    L2000: 	if _reserve_done:
+    L2001: 		ep_status = "RESERVE ✓"
+    L2002: 	if _cutaway_done:
+    L2003: 		ep_status = "CUTAWAY (need RESERVE)"
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-210153.gd
+    L110: var _cutaway_done: bool = false
+    L111: var _reserve_done: bool = false
+    L163: 	"cutaway": false,
+    L164: 	"reserve": false,
+    L463: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L980: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L985: func _do_cutaway():
+    L986: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L987: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L989: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L990: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L992: 	if _cutaway_done:
+    L993: 		print("[DIAG] _do_cutaway: already done")
+    L994: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L997: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L999: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1000: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1002: 	_cutaway_done = true
+    L1003: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1004: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1006: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1007: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1008: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1011: func _do_reserve():
+    L1012: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1013: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1015: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1016: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1018: 	if _reserve_done:
+    L1019: 		print("[DIAG] _do_reserve: already deployed")
+    L1020: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1022: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1023: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1024: 		_show_notification("Must cut away (X) before reserve!")
+    L1025: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1026: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1028: 	_reserve_done = true
+    L1036: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1037: 	_show_notification("Reserve deployed – safe landing!")
+    L1043: 	if _reserve_done and _cutaway_done:
+    L1048: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1049: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1050: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1066: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1272: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1273: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1290: 	if _controller_input_map["cutaway"]:
+    L1291: 		_do_cutaway()
+    L1292: 	if _controller_input_map["reserve"]:
+    L1293: 		_do_reserve()
+    L1342: 			"cutaway":
+    L1343: 				_do_cutaway()
+    L1344: 			"reserve":
+    L1345: 				_do_reserve()
+    L1393: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1397: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1398: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1414: 	if _reserve_done or _flare_done:
+    L1599: 		_do_cutaway()
+    L1602: 		_do_reserve()
+    L1648: 		_do_cutaway()
+    L1652: 		_do_reserve()
+    L1679: 	if Input.is_action_just_pressed("cutaway"):
+    L1680: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1681: 		_do_cutaway()
+    L1683: 	if Input.is_action_just_pressed("reserve"):
+    L1684: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1685: 		_do_reserve()
+    L1757: 	_cutaway_done = false
+    L1758: 	_reserve_done = false
+    L1870: 			action = "cutaway (X)"
+    L1872: 			action = "reserve (V)"
+    L2000: 	if _reserve_done:
+    L2001: 		ep_status = "RESERVE ✓"
+    L2002: 	if _cutaway_done:
+    L2003: 		ep_status = "CUTAWAY (need RESERVE)"
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-210819.gd
+    L110: var _cutaway_done: bool = false
+    L111: var _reserve_done: bool = false
+    L163: 	"cutaway": false,
+    L164: 	"reserve": false,
+    L463: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L980: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L985: func _do_cutaway():
+    L986: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L987: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L989: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L990: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L992: 	if _cutaway_done:
+    L993: 		print("[DIAG] _do_cutaway: already done")
+    L994: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L997: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L999: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1000: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1002: 	_cutaway_done = true
+    L1003: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1004: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1006: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1007: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1008: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1011: func _do_reserve():
+    L1012: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1013: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1015: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1016: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1018: 	if _reserve_done:
+    L1019: 		print("[DIAG] _do_reserve: already deployed")
+    L1020: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1022: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1023: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1024: 		_show_notification("Must cut away (X) before reserve!")
+    L1025: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1026: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1028: 	_reserve_done = true
+    L1036: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1037: 	_show_notification("Reserve deployed – safe landing!")
+    L1043: 	if _reserve_done and _cutaway_done:
+    L1048: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1049: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1050: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1066: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1272: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1273: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1290: 	if _controller_input_map["cutaway"]:
+    L1291: 		_do_cutaway()
+    L1292: 	if _controller_input_map["reserve"]:
+    L1293: 		_do_reserve()
+    L1342: 			"cutaway":
+    L1343: 				_do_cutaway()
+    L1344: 			"reserve":
+    L1345: 				_do_reserve()
+    L1393: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1397: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1398: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1414: 	if _reserve_done or _flare_done:
+    L1600: 		_do_cutaway()
+    L1603: 		_do_reserve()
+    L1649: 		_do_cutaway()
+    L1653: 		_do_reserve()
+    L1680: 	if Input.is_action_just_pressed("cutaway"):
+    L1681: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1682: 		_do_cutaway()
+    L1684: 	if Input.is_action_just_pressed("reserve"):
+    L1685: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1686: 		_do_reserve()
+    L1758: 	_cutaway_done = false
+    L1759: 	_reserve_done = false
+    L1871: 			action = "cutaway (X)"
+    L1873: 			action = "reserve (V)"
+    L1978: 	if _reserve_done:
+    L1979: 		ep_status = "RESERVE ✓"
+    L1980: 	if _cutaway_done:
+    L1981: 		ep_status = "CUTAWAY (need RESERVE)"
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-215820.gd
+    L110: var _cutaway_done: bool = false
+    L111: var _reserve_done: bool = false
+    L163: 	"cutaway": false,
+    L164: 	"reserve": false,
+    L463: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L980: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L985: func _do_cutaway():
+    L986: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L987: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L989: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L990: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L992: 	if _cutaway_done:
+    L993: 		print("[DIAG] _do_cutaway: already done")
+    L994: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L997: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L999: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1000: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1002: 	_cutaway_done = true
+    L1003: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1004: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1006: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1007: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1008: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1011: func _do_reserve():
+    L1012: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1013: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1015: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1016: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1018: 	if _reserve_done:
+    L1019: 		print("[DIAG] _do_reserve: already deployed")
+    L1020: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1022: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1023: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1024: 		_show_notification("Must cut away (X) before reserve!")
+    L1025: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1026: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1028: 	_reserve_done = true
+    L1036: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1037: 	_show_notification("Reserve deployed – safe landing!")
+    L1043: 	if _reserve_done and _cutaway_done:
+    L1048: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1049: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1050: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1066: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1272: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1273: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1290: 	if _controller_input_map["cutaway"]:
+    L1291: 		_do_cutaway()
+    L1292: 	if _controller_input_map["reserve"]:
+    L1293: 		_do_reserve()
+    L1342: 			"cutaway":
+    L1343: 				_do_cutaway()
+    L1344: 			"reserve":
+    L1345: 				_do_reserve()
+    L1393: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1397: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1398: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1414: 	if _reserve_done or _flare_done:
+    L1599: 		_do_cutaway()
+    L1602: 		_do_reserve()
+    L1648: 		_do_cutaway()
+    L1652: 		_do_reserve()
+    L1679: 	if Input.is_action_just_pressed("cutaway"):
+    L1680: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1681: 		_do_cutaway()
+    L1683: 	if Input.is_action_just_pressed("reserve"):
+    L1684: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1685: 		_do_reserve()
+    L1757: 	_cutaway_done = false
+    L1758: 	_reserve_done = false
+    L1870: 			action = "cutaway (X)"
+    L1872: 			action = "reserve (V)"
+    L2000: 	if _reserve_done:
+    L2001: 		ep_status = "RESERVE ✓"
+    L2002: 	if _cutaway_done:
+    L2003: 		ep_status = "CUTAWAY (need RESERVE)"
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-222344.gd
+    L110: var _cutaway_done: bool = false
+    L111: var _reserve_done: bool = false
+    L163: 	"cutaway": false,
+    L164: 	"reserve": false,
+    L463: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L980: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L985: func _do_cutaway():
+    L986: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L987: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L989: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L990: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L992: 	if _cutaway_done:
+    L993: 		print("[DIAG] _do_cutaway: already done")
+    L994: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L997: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L999: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1000: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1002: 	_cutaway_done = true
+    L1003: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1004: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1006: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1007: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1008: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1011: func _do_reserve():
+    L1012: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1013: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1015: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1016: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1018: 	if _reserve_done:
+    L1019: 		print("[DIAG] _do_reserve: already deployed")
+    L1020: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1022: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1023: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1024: 		_show_notification("Must cut away (X) before reserve!")
+    L1025: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1026: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1028: 	_reserve_done = true
+    L1036: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1037: 	_show_notification("Reserve deployed – safe landing!")
+    L1043: 	if _reserve_done and _cutaway_done:
+    L1048: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1049: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1050: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1066: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1272: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1273: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1290: 	if _controller_input_map["cutaway"]:
+    L1291: 		_do_cutaway()
+    L1292: 	if _controller_input_map["reserve"]:
+    L1293: 		_do_reserve()
+    L1342: 			"cutaway":
+    L1343: 				_do_cutaway()
+    L1344: 			"reserve":
+    L1345: 				_do_reserve()
+    L1393: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1397: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1398: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1414: 	if _reserve_done or _flare_done:
+    L1599: 		_do_cutaway()
+    L1602: 		_do_reserve()
+    L1648: 		_do_cutaway()
+    L1652: 		_do_reserve()
+    L1679: 	if Input.is_action_just_pressed("cutaway"):
+    L1680: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1681: 		_do_cutaway()
+    L1683: 	if Input.is_action_just_pressed("reserve"):
+    L1684: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1685: 		_do_reserve()
+    L1757: 	_cutaway_done = false
+    L1758: 	_reserve_done = false
+    L1870: 			action = "cutaway (X)"
+    L1872: 			action = "reserve (V)"
+    L2008: 	if _reserve_done:
+    L2009: 		ep_status = "RESERVE ✓"
+    L2010: 	if _cutaway_done:
+    L2011: 		ep_status = "CUTAWAY (need RESERVE)"
+
+  FILE: godot_project/scripts/build_terrain.backup_20260707-222819.gd
+    L110: var _cutaway_done: bool = false
+    L111: var _reserve_done: bool = false
+    L163: 	"cutaway": false,
+    L164: 	"reserve": false,
+    L463: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L980: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L985: func _do_cutaway():
+    L986: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L987: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L989: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L990: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L992: 	if _cutaway_done:
+    L993: 		print("[DIAG] _do_cutaway: already done")
+    L994: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L997: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L999: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1000: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1002: 	_cutaway_done = true
+    L1003: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1004: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1006: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1007: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1008: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1011: func _do_reserve():
+    L1012: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1013: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1015: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1016: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1018: 	if _reserve_done:
+    L1019: 		print("[DIAG] _do_reserve: already deployed")
+    L1020: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1022: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1023: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1024: 		_show_notification("Must cut away (X) before reserve!")
+    L1025: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1026: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1028: 	_reserve_done = true
+    L1036: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1037: 	_show_notification("Reserve deployed – safe landing!")
+    L1043: 	if _reserve_done and _cutaway_done:
+    L1048: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1049: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1050: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1066: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1272: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1273: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1290: 	if _controller_input_map["cutaway"]:
+    L1291: 		_do_cutaway()
+    L1292: 	if _controller_input_map["reserve"]:
+    L1293: 		_do_reserve()
+    L1342: 			"cutaway":
+    L1343: 				_do_cutaway()
+    L1344: 			"reserve":
+    L1345: 				_do_reserve()
+    L1393: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1397: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1398: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1414: 	if _reserve_done or _flare_done:
+    L1599: 		_do_cutaway()
+    L1602: 		_do_reserve()
+    L1648: 		_do_cutaway()
+    L1652: 		_do_reserve()
+    L1679: 	if Input.is_action_just_pressed("cutaway"):
+    L1680: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1681: 		_do_cutaway()
+    L1683: 	if Input.is_action_just_pressed("reserve"):
+    L1684: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1685: 		_do_reserve()
+    L1757: 	_cutaway_done = false
+    L1758: 	_reserve_done = false
+    L1870: 			action = "cutaway (X)"
+    L1872: 			action = "reserve (V)"
+    L2008: 	if _reserve_done:
+    L2009: 		ep_status = "RESERVE ✓"
+    L2010: 	if _cutaway_done:
+    L2011: 		ep_status = "CUTAWAY (need RESERVE)"
+
+  FILE: godot_project/scripts/build_terrain.gd
+    L111: var _cutaway_done: bool = false
+    L112: var _reserve_done: bool = false
+    L165: 	"cutaway": false,
+    L166: 	"reserve": false,
+    L474: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L993: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L998: func _do_cutaway() -> void:
+    L999: 	if not Input.is_action_just_pressed("cutaway"):
+    L1001: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    L1002: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L1004: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    L1005: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L1007: 	if _cutaway_done:
+    L1008: 		print("[DIAG] _do_cutaway: already done")
+    L1009: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L1012: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L1014: 		print("[DIAG] _do_cutaway: good canopy – skipped")
+    L1015: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L1017: 	_cutaway_done = true
+    L1018: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L1019: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L1021: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L1022: 	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+    L1023: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L1026: func _do_reserve() -> void:
+    L1027: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    L1028: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L1030: 		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
+    L1031: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L1033: 	if _reserve_done:
+    L1034: 		print("[DIAG] _do_reserve: already deployed")
+    L1035: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L1037: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L1038: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L1039: 		_show_notification("Must cut away (X) before reserve!")
+    L1040: 		print("[DIAG] _do_reserve: cutaway required but not done")
+    L1041: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L1043: 	_reserve_done = true
+    L1051: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L1052: 	_show_notification("Reserve deployed – safe landing!")
+    L1058: 	if _reserve_done and _cutaway_done:
+    L1063: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L1064: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
+    L1065: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L1081: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1287: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1288: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1305: 	if _controller_input_map["cutaway"]:
+    L1306: 		_do_cutaway()
+    L1307: 	if _controller_input_map["reserve"]:
+    L1308: 		_do_reserve()
+    L1357: 			"cutaway":
+    L1358: 				_do_cutaway()
+    L1359: 			"reserve":
+    L1360: 				_do_reserve()
+    L1408: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1412: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1413: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1429: 	if _reserve_done or _flare_done:
+    L1646: 		_do_cutaway()
+    L1650: 		_do_reserve()
+    L1676: 	if Input.is_action_just_pressed("cutaway"):
+    L1677: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+    L1678: 		_do_cutaway()
+    L1680: 	if Input.is_action_just_pressed("reserve"):
+    L1681: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+    L1682: 		_do_reserve()
+    L1752: 	_cutaway_done = false
+    L1753: 	_reserve_done = false
+    L1869: 			action = "cutaway (X)"
+    L1871: 			action = "reserve (V)"
+    L3474: 	"cutaway":      KEY_X,
+    L3475: 	"reserve":      KEY_V,
+
+  FILE: godot_project/scripts/validate_scene.gd
+    L162: 		"togglehud", "flightcheck", "cutaway", "reserve",
+
+  FILE: godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd
+    L113: var _cutaway_done: bool = false
+    L114: var _reserve_done: bool = false
+    L153: 	"cutaway": false,
+    L154: 	"reserve": false,
+    L398: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L586: 	elif _reserve_done:
+    L587: 		ep_status = "RESERVE ✓"
+    L588: 	elif _cutaway_done:
+    L589: 		ep_status = "CUTAWAY (need RESERVE)"
+    L869: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L873: func _do_cutaway():
+    L874: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L876: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L878: 	if _cutaway_done:
+    L879: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L882: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L884: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L886: 	_cutaway_done = true
+    L887: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L888: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L890: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L891: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L894: func _do_reserve():
+    L895: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L897: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L899: 	if _reserve_done:
+    L900: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L902: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L903: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L904: 		_show_notification("Must cut away (X) before reserve!")
+    L905: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L907: 	_reserve_done = true
+    L917: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L918: 	_show_notification("Reserve deployed – safe landing!")
+    L924: 	if _reserve_done and _cutaway_done:
+    L929: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L930: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L943: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1161: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1162: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1179: 	if _controller_input_map["cutaway"]:
+    L1180: 		_do_cutaway()
+    L1181: 	if _controller_input_map["reserve"]:
+    L1182: 		_do_reserve()
+    L1233: 			"cutaway":
+    L1234: 				_do_cutaway()
+    L1235: 			"reserve":
+    L1236: 				_do_reserve()
+    L1290: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1299: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1300: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1321: 	if _reserve_done or _flare_done:
+    L1537: 		_do_cutaway()
+    L1539: 		_do_reserve()
+    L1593: 	_cutaway_done = false
+    L1594: 	_reserve_done = false
+
+  FILE: godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd
+    L113: var _cutaway_done: bool = false
+    L114: var _reserve_done: bool = false
+    L153: 	"cutaway": false,
+    L154: 	"reserve": false,
+    L398: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+    L586: 	elif _reserve_done:
+    L587: 		ep_status = "RESERVE ✓"
+    L588: 	elif _cutaway_done:
+    L589: 		ep_status = "CUTAWAY (need RESERVE)"
+    L869: 		_show_notification("FC ✗ – MALFUNCTION! Cutaway (X) then Reserve (V)")
+    L873: func _do_cutaway():
+    L874: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+    L876: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    L878: 	if _cutaway_done:
+    L879: 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
+    L882: 		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+    L884: 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+    L886: 	_cutaway_done = true
+    L887: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    L888: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    L890: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+    L891: 	print("[VERBATIM] EXIT _do_cutaway ok=true")
+    L894: func _do_reserve():
+    L895: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    L897: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    L899: 	if _reserve_done:
+    L900: 		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+    L902: 	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+    L903: 		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+    L904: 		_show_notification("Must cut away (X) before reserve!")
+    L905: 		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
+    L907: 	_reserve_done = true
+    L917: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+    L918: 	_show_notification("Reserve deployed – safe landing!")
+    L924: 	if _reserve_done and _cutaway_done:
+    L929: 		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
+    L930: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+    L943: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+    L1161: 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+    L1162: 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+    L1179: 	if _controller_input_map["cutaway"]:
+    L1180: 		_do_cutaway()
+    L1181: 	if _controller_input_map["reserve"]:
+    L1182: 		_do_reserve()
+    L1233: 			"cutaway":
+    L1234: 				_do_cutaway()
+    L1235: 			"reserve":
+    L1236: 				_do_reserve()
+    L1290: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+    L1299: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+    L1300: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+    L1321: 	if _reserve_done or _flare_done:
+    L1537: 		_do_cutaway()
+    L1539: 		_do_reserve()
+    L1593: 	_cutaway_done = false
+    L1594: 	_reserve_done = false
+
+  FILE: godot_project/tools/setup_input_map.gd
+    L11: 		"cutaway": [KEY_X, JOY_BUTTON_X],
+    L12: 		"reserve": [KEY_V, JOY_BUTTON_B],
+
+
+=== control_events: cutaway + reserve (last 20 each) ===
+
+  cutaway (9 recent):
+    (185, '2026-08-01 20:13:17', 'cutaway', 2, 'pressed', '')
+    (160, '2026-08-01 20:09:35', 'cutaway', 2, 'pressed', '')
+    (149, '2026-08-01 20:00:37', 'cutaway', 1, 'pressed', '')
+    (131, '2026-08-01 19:46:14', 'cutaway', 2, 'pressed', '')
+    (126, '2026-08-01 19:45:46', 'cutaway', 1, 'pressed', '')
+    (118, '2026-08-01 19:37:22', 'cutaway', 2, 'pressed', '')
+    (100, '2026-08-01 19:22:54', 'cutaway', 2, 'pressed', '')
+    (99, '2026-08-01 19:22:53', 'cutaway', 2, 'pressed', '')
+    (85, '2026-08-01 19:11:17', 'cutaway', 2, 'pressed', '')
+
+  reserve (14 recent):
+    (186, '2026-08-01 20:13:18', 'reserve', 2, 'pressed', '')
+    (184, '2026-08-01 20:13:15', 'reserve', 2, 'pressed', '')
+    (161, '2026-08-01 20:09:36', 'reserve', 2, 'pressed', '')
+    (153, '2026-08-01 20:00:38', 'reserve', 1, 'pressed', '')
+    (152, '2026-08-01 20:00:38', 'reserve', 1, 'pressed', '')
+    (151, '2026-08-01 20:00:38', 'reserve', 1, 'pressed', '')
+    (150, '2026-08-01 20:00:37', 'reserve', 1, 'pressed', '')
+    (148, '2026-08-01 20:00:36', 'reserve', 1, 'pressed', '')
+    (147, '2026-08-01 20:00:35', 'reserve', 1, 'pressed', '')
+    (132, '2026-08-01 19:46:15', 'reserve', 2, 'pressed', '')
+    (127, '2026-08-01 19:45:48', 'reserve', 1, 'pressed', '')
+    (119, '2026-08-01 19:37:23', 'reserve', 2, 'pressed', '')
+    (101, '2026-08-01 19:22:56', 'reserve', 2, 'pressed', '')
+    (86, '2026-08-01 19:11:18', 'reserve', 2, 'pressed', '')
+
+
+=== control_baseline: cutaway + reserve ===
+  ('cutaway', 'OPENING_ANIM,DIAGNOSIS', '_canopy_deployed=true,_malfunction!=GOOD', 'Cut away malfunction', 'CONFIRMED_BY_DESIGN')
+  ('reserve', 'OPENING_ANIM,DIAGNOSIS', '_cutaway_done=true', 'Deploy reserve', 'CONFIRMED_BY_DESIGN')
+
+
+=== issues table (cutaway/reserve mentions) ===
+
+
+=== diag_findings (cutaway/reserve) ===
+
+
+Generated: 2026-08-01T20:21:51.256742+00:00
