@@ -1,0 +1,58 @@
+fix_cutaway_reserve_visuals | 2026-08-01T20:41:36.970479+00:00
+A: _do_cutaway — hide main canopy (_canopy_instance.visible=false)
+B: _do_reserve — show reserve (white, scale 0.12, reuse main mesh)
+C: _update_canopy_tilt — tilt allowed when _reserve_done
+======================================================================
+
+=== git diff ===
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index cf577f7..227d2bc 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -1015,6 +1015,9 @@ func _do_cutaway() -> void:
+ 		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+ 		return
+ 	_cutaway_done = true
++	# USPA SIM: cutaway severs risers — main canopy departs visually.
++	if _canopy_instance:
++		_canopy_instance.visible = false
+ 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+ 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+ 	if not _replay_playing:
+@@ -1043,6 +1046,18 @@ func _do_reserve() -> void:
+ 	_reserve_done = true
+ 	_safe_landing = true
+ 
++	# Show reserve canopy: reuse _canopy_instance mesh as reserve.
++	# USPA SIM: reserve is white, round, smaller than main ram-air.
++	if _canopy_instance:
++		_canopy_instance.visible = true
++		_canopy_instance.scale = Vector3(0.12, 0.09, 0.12)
++		_canopy_instance.rotation_degrees = Vector3.ZERO
++		if _canopy_material:
++			_canopy_material.albedo_color = Color(0.95, 0.95, 0.95)
++			var mesh_child = _find_first_mesh(_canopy_instance)
++			if mesh_child:
++				mesh_child.material_override = _canopy_material
++	# Stay in DIAGNOSIS briefly so Q/E steer the reserve; land after screenshot.
+ 	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
+ 	call_deferred("_recreate_hud_if_needed")
+ 	_game_state = GameState.LANDED
+@@ -1477,7 +1492,11 @@ func _update_cfd_wind(delta: float) -> void:
+ # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+ # ------------------------------------------------------------------
+ func _update_canopy_tilt() -> void:
+-	if not _canopy_instance or not _canopy_deployed:
++	# Allow tilt on main canopy (deployed) or reserve canopy (_reserve_done).
++	# USPA SIM: reserve glides and steers via toggle inputs until touchdown.
++	if not _canopy_instance:
++		return
++	if not _canopy_deployed and not _reserve_done:
+ 		return
+ 	var tilt = _turn_input * 15.0
+ 	_canopy_instance.rotation_degrees.z = tilt
+
+autostall exit=0
+cutaway_exec: 1
+reserve_exec: 1
+control_events: 209→216
