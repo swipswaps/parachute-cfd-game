@@ -1,0 +1,32 @@
+fix_poll_fast_run | 2026-08-01T19:35:58.903558+00:00
+Fix: expand _poll_fast guard + cancel_request() on error state
+======================================================================
+
+=== git diff forensic_hud.gd ===
+diff --git a/godot_project/scripts/forensic_hud.gd b/godot_project/scripts/forensic_hud.gd
+index 4b15986..02beac4 100644
+--- a/godot_project/scripts/forensic_hud.gd
++++ b/godot_project/scripts/forensic_hud.gd
+@@ -289,6 +289,17 @@ func _ready() -> void:
+ func _poll_fast() -> void:
+ 	# Guard: only fire a new request if the previous one completed.
+ 	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
++	# Reset any stuck error state before checking — fixes permanent ERR_BUSY block.
++	# After a failed request to an unreachable hub, status stays at
++	# STATUS_CONNECTION_ERROR (6) or STATUS_CANT_RESOLVE (2), neither of which
++	# was in the original guard list, silently skipping every timer tick.
++	# Ref: https://docs.godotengine.org/en/stable/classes/class_httpclient.html
++	# (general knowledge — not retrieved this session)
++	var _stats_status := _stats_req.get_http_client_status()
++	if _stats_status not in [
++			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
++			HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
++		_stats_req.cancel_request()
+ 	if _stats_req.get_http_client_status() in [
+ 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+ 		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+
+
+autostall exit=0
+_poll_fast hits: 0
+_on_stats_completed hits: 0

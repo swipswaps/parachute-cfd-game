@@ -1,0 +1,36 @@
+fix_poll_fast_diag | 2026-08-01T19:35:58.819682+00:00
+file: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+_poll_fast body (lines 300-314):
+======================================================================
+     299: 
+     300: func _poll_fast() -> void:
+>>>  301: 	print("[AUDIT] _poll_fast: ENTER")
+     302: 	# Guard: only fire a new request if the previous one completed.
+     303: 	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
+     304: 	if _stats_req.get_http_client_status() in [
+     305: 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+     306: 		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+     307: 		if err_a != OK:
+     308: 			_status_label.text = "stats err: %d" % err_a
+     309: 	if _leader_req.get_http_client_status() in [
+     310: 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+     311: 		var err_b := _leader_req.request(_hub_url + LEADER_PATH)
+     312: 		if err_b != OK:
+     313: 			_status_label.text = "leader err: %d" % err_b
+     314: 
+     315: func _poll_slow() -> void:
+     316: 	print("[AUDIT] _poll_slow: ENTER")
+
+HTTPClient status constants (Godot 4):
+  STATUS_DISCONNECTED    = 0
+  STATUS_RESOLVING       = 1
+  STATUS_CANT_RESOLVE    = 2
+  STATUS_CONNECTED       = 3
+  STATUS_REQUESTING      = 4
+  STATUS_BODY            = 5
+  STATUS_CONNECTION_ERROR= 6
+  STATUS_TLS_HANDSHAKE_ERROR=7
+
+Guard passes only for 0 (DISCONNECTED) and 3 (CONNECTED).
+After failed request: status=6 (CONNECTION_ERROR) → guard blocks forever.
+Fix: add cancel_request() + guard expansion to include error states.

@@ -72,6 +72,7 @@ var _citations_loaded: bool = false
 var _card_expanded: Dictionary = {}
 
 func _resolve_hub_url() -> String:
+	print("[AUDIT] _resolve_hub_url: ENTER")
 	var key := "application/forensic_hub/url"
 	if ProjectSettings.has_setting(key):
 		var v = ProjectSettings.get_setting(key)
@@ -83,18 +84,21 @@ func _resolve_hub_url() -> String:
 	return DEFAULT_HUB_URL
 
 func _mklabel(txt: String, color := Color(0.9, 0.95, 0.9, 1.0)) -> Label:
+	print("[AUDIT] _mklabel: ENTER")
 	var l := Label.new()
 	l.text = txt
 	l.add_theme_color_override("font_color", color)
 	return l
 
 func _mkbutton(txt: String) -> Button:
+	print("[AUDIT] _mkbutton: ENTER")
 	var b := Button.new()
 	b.text = txt
 	b.flat = true
 	return b
 
 func _panel_rect() -> Rect2:
+	print("[AUDIT] _panel_rect: ENTER")
 	var sz := _panel.size
 	if sz == Vector2.ZERO:
 		sz = PANEL_MIN_SIZE
@@ -114,6 +118,7 @@ func _panel_rect() -> Rect2:
 # at _ready() — root cause undetermined after exhaustive audit. Called
 # explicitly from build_terrain.gd's _physics_process() instead.
 func poll_forensic_hud() -> void:
+	print("[AUDIT] poll_forensic_hud: ENTER")
 	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
 	if backtick_pressed and not _toggle_latch:
 		_toggle_latch = true
@@ -138,6 +143,7 @@ func poll_forensic_hud() -> void:
 		_panel.position = mouse_pos - _drag_offset
 
 func _input(event: InputEvent) -> void:
+	print("[AUDIT] _input: ENTER")
 # backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_QUOTELEFT:
@@ -152,6 +158,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton or event is InputEventMouseMotion:
 		_gui_input(event)
 func _build_ui() -> void:
+	print("[AUDIT] _build_ui: ENTER")
 	_layer = CanvasLayer.new()
 	_layer.layer = 100
 	add_child(_layer)
@@ -210,6 +217,7 @@ func _build_ui() -> void:
 	_vbox.add_child(_time_label)
 
 func _load_saved_position() -> Vector2:
+	print("[AUDIT] _load_saved_position: ENTER")
 	var config := ConfigFile.new()
 	if config.load(POS_CFG_PATH) == OK:
 		var saved_pos = config.get_value("position", "panel", PANEL_START_POS)
@@ -218,6 +226,7 @@ func _load_saved_position() -> Vector2:
 	return PANEL_START_POS
 
 func _save_position() -> void:
+	print("[AUDIT] _save_position: ENTER")
 	if _panel == null:
 		return
 	var config := ConfigFile.new()
@@ -225,9 +234,11 @@ func _save_position() -> void:
 	config.save(POS_CFG_PATH)
 
 func _exit_tree() -> void:
+	print("[AUDIT] _exit_tree: ENTER")
 	_save_position()
 
 func _ready() -> void:
+	print("[AUDIT] _ready: ENTER")
 	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
 
 	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
@@ -287,8 +298,17 @@ func _ready() -> void:
 	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
 
 func _poll_fast() -> void:
+	print("[AUDIT] _poll_fast: ENTER")
 	# Guard: only fire a new request if the previous one completed.
 	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
+	# Reset stuck error state so timer retries after hub becomes reachable.
+	# After failed request: STATUS_CONNECTION_ERROR(6)/CANT_RESOLVE(2)
+	# were not in original guard → every timer tick silently skipped.
+	var stats_status := _stats_req.get_http_client_status()
+	if stats_status not in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
+			HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
+		_stats_req.cancel_request()
 	if _stats_req.get_http_client_status() in [
 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
 		var err_a := _stats_req.request(_hub_url + STATS_PATH)
@@ -301,6 +321,7 @@ func _poll_fast() -> void:
 			_status_label.text = "leader err: %d" % err_b
 
 func _poll_slow() -> void:
+	print("[AUDIT] _poll_slow: ENTER")
 	if not _citations_loaded:
 		var err_c := _cite_req.request(_hub_url + CITE_PATH)
 		if err_c != OK:
@@ -313,6 +334,7 @@ func _poll_slow() -> void:
 func _on_stats_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
+	print("[AUDIT] _on_stats_completed: ENTER")
 	_time_label.text = "t: " + Time.get_time_string_from_system()
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		_status_label.text = "hub offline (%s) result=%d code=%d" % [_hub_url, result, response_code]
@@ -348,6 +370,7 @@ func _on_stats_completed(
 func _on_leader_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
+	print("[AUDIT] _on_leader_completed: ENTER")
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		return
 	var parsed = JSON.parse_string(body.get_string_from_utf8())
@@ -380,6 +403,7 @@ func _on_leader_completed(
 func _on_cite_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
+	print("[AUDIT] _on_cite_completed: ENTER")
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		return
 	var parsed = JSON.parse_string(body.get_string_from_utf8())
@@ -404,6 +428,7 @@ func _on_cite_completed(
 func _on_integ_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
 ) -> void:
+	print("[AUDIT] _on_integ_completed: ENTER")
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		return
 	var parsed = JSON.parse_string(body.get_string_from_utf8())
@@ -416,6 +441,7 @@ func _on_integ_completed(
 		_status_label.add_theme_color_override("font_color", color)
 
 func _add_citation_card(cite: Dictionary) -> void:
+	print("[AUDIT] _add_citation_card: ENTER")
 	var cid := str(cite.get("id", "?"))
 	var label := str(cite.get("label", "(unlabeled)"))
 	var url := str(cite.get("url", ""))
@@ -452,6 +478,7 @@ func _add_citation_card(cite: Dictionary) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
+	print("[AUDIT] _gui_input: ENTER")
 	# Only process if panel is visible
 	if _layer == null or not _layer.visible or _panel == null:
 		return
@@ -471,6 +498,7 @@ func _gui_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func _fetch_hub_data():
+	print("[AUDIT] _fetch_hub_data: ENTER")
 	# Fetch gamification data from the hub
 	if http_request == null:
 		print("[HUD] HTTPRequest not initialized")
@@ -487,6 +515,7 @@ func _fetch_hub_data():
 		print("[HUD] HTTPRequest busy, skipping poll")
 
 func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+	print("[AUDIT] _on_hub_data_received: ENTER")
 	# Handle the HTTP response
 	if response_code != 200:
 		print("[HUD] Hub request failed with code: ", response_code)
@@ -516,6 +545,7 @@ func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStr
 
 
 func _setup_hud_label():
+	print("[AUDIT] _setup_hud_label: ENTER")
 	# CanvasLayer draws its children on top of the scene tree
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
 	var layer = CanvasLayer.new()
@@ -538,6 +568,7 @@ func _setup_hud_label():
 func _on_ctrl_health_completed(
 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
 ) -> void:
+	print("[AUDIT] _on_ctrl_health_completed: ENTER")
 	# Handler for /api/control_health — updates _ctrl_label with per-action status.
 	# Ref: HTTPRequest.request_completed signal:
 	# https://docs.godotengine.org/en/stable/classes/class_httprequest.html
