@@ -325,7 +325,7 @@ func _poll_slow() -> void:
 	# Guard: reset any stuck error state before firing — same fix as _poll_fast.
 	# Without this, ERR_BUSY(44) blocks every subsequent slow-timer tick.
 	for req in [_cite_req, _integ_req, _ctrl_health_req]:
-		var s := req.get_http_client_status()
+		var s: int = req.get_http_client_status()
 		if s not in [HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
 				HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
 			req.cancel_request()

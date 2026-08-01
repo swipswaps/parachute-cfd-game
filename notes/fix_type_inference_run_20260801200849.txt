@@ -1,0 +1,56 @@
+fix_type_inference | 2026-08-01T20:08:53.443877+00:00
+Fix: var s := → var s: int = (GDScript type inference on untyped array element)
+======================================================================
+
+=== control_info hidden/filtered nodes ===
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+  ('/root/Main/HUD/Label0', 'Label', 1, 2, 380.0, 24.0)
+
+=== git diff ===
+diff --git a/godot_project/scripts/forensic_hud.gd b/godot_project/scripts/forensic_hud.gd
+index e4b7faa..d002a58 100644
+--- a/godot_project/scripts/forensic_hud.gd
++++ b/godot_project/scripts/forensic_hud.gd
+@@ -325,7 +325,7 @@ func _poll_slow() -> void:
+ 	# Guard: reset any stuck error state before firing — same fix as _poll_fast.
+ 	# Without this, ERR_BUSY(44) blocks every subsequent slow-timer tick.
+ 	for req in [_cite_req, _integ_req, _ctrl_health_req]:
+-		var s := req.get_http_client_status()
++		var s: int = req.get_http_client_status()
+ 		if s not in [HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
+ 				HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
+ 			req.cancel_request()
+
+autostall exit=0
+_poll_slow hits: 3
+_on_cite_completed hits: 3
+_on_ctrl_health_completed hits: 3
+control_events total: 178
