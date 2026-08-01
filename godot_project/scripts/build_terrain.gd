@@ -2954,6 +2954,12 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
 				",", elbow_deg, ",", _arm_hold_t[side])
 
+	# Apply computed quaternions to skeleton bones every physics frame.
+	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
+	# computed above but were never written to the skeleton — root cause
+	# of arms not pulling down despite spring-damper running correctly.
+	_apply_arm_bone_overrides()
+
 func _apply_arm_bone_overrides() -> void:
 	if not _skeleton:
 		return

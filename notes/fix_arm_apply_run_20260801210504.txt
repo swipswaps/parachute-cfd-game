@@ -1,0 +1,31 @@
+fix_arm_apply | 2026-08-01T21:05:06.933078+00:00
+Root cause: _apply_arm_bone_overrides() computed arm+elbow quaternions
+every frame but was never called — skeleton never received the pose.
+Fix: call _apply_arm_bone_overrides() at end of _update_arm_physics.
+======================================================================
+
+=== git diff ===
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index b90f192..130debd 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -2954,6 +2954,12 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
+ 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+ 				",", elbow_deg, ",", _arm_hold_t[side])
+ 
++	# Apply computed quaternions to skeleton bones every physics frame.
++	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
++	# computed above but were never written to the skeleton — root cause
++	# of arms not pulling down despite spring-damper running correctly.
++	_apply_arm_bone_overrides()
++
+ func _apply_arm_bone_overrides() -> void:
+ 	if not _skeleton:
+ 		return
+
+autostall exit=0
+armtel_lines: 166
+elbow_lines: 11
+cutaway_exec: 0
+reserve_exec: 1
+control_events: 238→254
