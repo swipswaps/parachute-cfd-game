@@ -1,0 +1,70 @@
+[2026-07-30T12:50:28.051413+00:00] [SUCCESS] init_db: ready
+[2026-07-30T12:50:28.056449+00:00] [SUCCESS] read: 3537 lines
+[2026-07-30T12:50:28.058013+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260730125028
+[2026-07-30T12:50:28.058594+00:00] [SUCCESS] precondition:wind_log_timer_var: 1 match
+[2026-07-30T12:50:28.059815+00:00] [SUCCESS] precondition:wind_application: 1 match
+[2026-07-30T12:50:28.068003+00:00] [SUCCESS] raw: verified
+[2026-07-30T12:50:28.262520+00:00] [SUCCESS] record: build_terrain.gd:1447 → FIXED
+[2026-07-30T12:50:28.406225+00:00] [SUCCESS] record: build_terrain.gd:1449 → FIXED
+[2026-07-30T12:50:28.406443+00:00] [SUCCESS] hard_gate: passed
+[2026-07-30T12:50:28.436479+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:50:28.441839+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:50:28.442003+00:00] [SUCCESS] staged_count: 3 files
+[2026-07-30T12:50:33.853777+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:50:35.176109+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:50:35.179682+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:50:35.179826+00:00] [SUCCESS] COMPLETE: fix_wind_integration_v1 done
+
+=== FIX A: _wind_log_timer var ===
+OLD: 'var _wind_current_gust: float = 0.0\n'
+NEW: 'var _wind_current_gust: float = 0.0\nvar _wind_log_timer: float = 0.0  # throttle [WIND] print to 5-second intervals\n'
+
+=== FIX B: wind applied to FREEFALL + OPENING_ANIM + throttled print ===
+  OLD: 	if _game_state == GameState.DIAGNOSIS:
+  OLD: 		_velocity_vec += wind_vec * delta * 0.5
+  OLD: 	print(
+  OLD: 		"[VERBATIM] CFD wind: speed ",
+  OLD: 		final_speed,
+  OLD: 		" kts, dir ",
+  OLD: 		_wind_base_direction,
+  OLD: 		"°, gust ",
+  OLD: 		_wind_current_gust
+  OLD: 	)
+  NEW: 	if _game_state == GameState.DIAGNOSIS:
+  NEW: 		_velocity_vec += wind_vec * delta * 0.5
+  NEW: 	elif _game_state == GameState.FREEFALL:
+  NEW: 		# Body drifts ~30% of canopy drift — smaller cross-section in freefall.
+  NEW: 		# Ref: USPA BSR body-position standards (general knowledge).
+  NEW: 		_character.position += wind_vec * delta * 0.3
+  NEW: 	elif _game_state == GameState.OPENING_ANIM:
+  NEW: 		# Canopy rides the air mass fully — primary landing-spot offset driver.
+  NEW: 		# wind_vec already in m/s (kts * 0.514444 applied above).
+  NEW: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  NEW: 		# (general knowledge — not retrieved this session)
+  NEW: 		_character.position += wind_vec * delta
+  NEW: 	# Throttle: was ~60 lines/s; now 1 line per 5 seconds.
+  NEW: 	_wind_log_timer -= delta
+  NEW: 	if _wind_log_timer <= 0.0:
+  NEW: 		_wind_log_timer = 5.0
+  NEW: 		print("[WIND] speed ", final_speed, " kts  dir ",
+  NEW: 			_wind_base_direction, "°  gust ", _wind_current_gust,
+  NEW: 			"  vec_ms ", wind_vec)
+  | .gitignore
+  | godot_project/scripts/build_terrain.gd
+  | notes/fix_wind_integration_result_20260730125028.txt
+
+=== staged (3) ===
+  .gitignore
+  godot_project/scripts/build_terrain.gd
+  notes/fix_wind_integration_result_20260730125028.txt
+  | Success: no problems found
+  | [main 17eb757] fix: CFD wind applied to FREEFALL+OPENING_ANIM; throttle print
+  |  3 files changed, 25 insertions(+), 8 deletions(-)
+  |  create mode 100644 notes/fix_wind_integration_result_20260730125028.txt
+  | To https://github.com/swipswaps/parachute-cfd-game.git
+  |    400ded3..17eb757  main -> main
+  | main
+
+=== LLM fetch URLs ===
+Result: https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_wind_integration_result_20260730125028.txt
+File:   https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/godot_project/scripts/build_terrain.gd

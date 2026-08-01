@@ -1,0 +1,246 @@
+audit_diagnostic_extract_v1  |  mode=DRY-RUN  |  2026-08-01T17:03:42.917807+00:00
+======================================================================
+
+[BASELINE] control_events rows: 77
+
+----------------------------------------------------------------------
+AFFECTED FILE 1/4: build_terrain.gd
+----------------------------------------------------------------------
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+ANCHOR: control_events INSERT block  (line 3532)
+======================================================================
+     3528: 	for action in CONTROL_KEYS:
+     3529: 		if not InputMap.has_action(action):
+     3530: 			continue
+     3531: 		if Input.is_action_just_pressed(action):
+ >>> 3532: 			# DB: persist confirmed keypress to control_events
+     3533: 			var _cdb = get_node_or_null('/root/SqliteDb')
+     3534: 			if _cdb != null:
+     3535: 				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+     3536: 				if _cdb.has_method('execute'): _cdb.execute(_sql)
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+ANCHOR: is_action_just_pressed trigger  (line 3531)
+======================================================================
+     3528: 	for action in CONTROL_KEYS:
+     3529: 		if not InputMap.has_action(action):
+     3530: 			continue
+ >>> 3531: 		if Input.is_action_just_pressed(action):
+     3532: 			# DB: persist confirmed keypress to control_events
+     3533: 			var _cdb = get_node_or_null('/root/SqliteDb')
+     3534: 			if _cdb != null:
+
+----------------------------------------------------------------------
+AFFECTED FILE 2/4: forensic_hud.gd
+----------------------------------------------------------------------
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: DEFAULT_HUB_URL constant  (line 34)
+======================================================================
+       31: # card has a [+]/[-] toggle; URL rows open via OS.shell_open.
+       32: # ==========================================================================
+       33: 
+ >>>   34: const DEFAULT_HUB_URL := "http://127.0.0.1:8765"
+       35: const STATS_PATH      := "/api/gamification"
+       36: const LEADER_PATH     := "/api/leaderboard"
+       37: const CITE_PATH       := "/api/citations"
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _hub_url variable declaration  (line 46)
+======================================================================
+       43: const PANEL_MIN_SIZE  := Vector2(360, 480)
+       44: const POS_CFG_PATH    := "user://forensic_hud.cfg"
+       45: 
+ >>>   46: var _hub_url: String = ""
+       47: var _layer: CanvasLayer
+       48: var _panel: PanelContainer
+       49: var _vbox: VBoxContainer
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _resolve_hub_url() assignment  (line 244)
+======================================================================
+      241: 		" is_inside_tree()=", is_inside_tree(),
+      242: 		" frame=", Engine.get_process_frames(),
+      243: 		" process_mode=", process_mode)
+ >>>  244: 	_hub_url = _resolve_hub_url()
+      245: 	_build_ui()
+      246: 
+      247: 	for child in get_tree().get_nodes_in_group("forensic_text"):
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _ctrl_health_req.request() call  (line 311)
+======================================================================
+      307: 			_status_label.text = "cite err: %d" % err_c
+      308: 	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+      309: 	if err_i != OK:
+      310: 		_status_label.text = "integ err: %d" % err_i
+ >>>  311: 	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+      312: 
+      313: func _on_stats_completed(
+      314: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+      315: ) -> void:
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _on_ctrl_health_completed handler signature  (line 538)
+======================================================================
+      534: 		http.request_completed.connect(_on_hub_data_received)
+      535: 	_fetch_hub_data()
+      536: 
+      537: 
+ >>>  538: func _on_ctrl_health_completed(
+      539: 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+      540: ) -> void:
+      541: 	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+      542: 	# Ref: HTTPRequest.request_completed signal:
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _ctrl_label.text update  (line 567)
+======================================================================
+      564: 		for ev in recent.slice(0, 8):
+      565: 			if typeof(ev) != TYPE_DICTIONARY: continue
+      566: 			out.append("  %s -> %s" % [str(ev.get("action", "?")), str(ev.get("result", "?"))])
+ >>>  567: 	_ctrl_label.text = "\n".join(out)
+
+----------------------------------------------------------------------
+AFFECTED FILE 3/4: HubManager.gd
+----------------------------------------------------------------------
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+ANCHOR: port variable  (line 8)
+======================================================================
+        5: 	call_deferred("_ensure_hub")
+        6: 
+        7: func _ensure_hub():
+ >>>    8: 	var port = 8765
+        9: 	var endpoint = "/api/gamification"
+       10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+       11: 	var output = []
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+ANCHOR: forensic_hub_server.py start_cmd  (line 32)
+======================================================================
+       28: 	# run. Fixed by cd-ing up one level before invoking the script.
+       29: 	# FIX (this session): script requires <project_root> positional arg.
+       30: 	# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"
+       31: 	# After the cd, "." is the outer project root the script needs.
+ >>>   32: 	var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir
+       33: 	OS.execute("/bin/sh", ["-c", start_cmd])
+       34: 	# Wait a moment and re-check
+       35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+       36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+ANCHOR: Hub startup recheck timer  (line 39)
+======================================================================
+       34: 	# Wait a moment and re-check
+       35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+       36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+       37: 	# always fired before the server was listening. Confirmed via
+       38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+ >>>   39: 	await get_tree().create_timer(5.0).timeout
+       40: 	var output2 = []
+       41: 	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+       42: 	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
+       43: 		print("[HubManager] Hub started successfully.")
+       44: 	else:
+
+----------------------------------------------------------------------
+AFFECTED FILE 4/4: forensic_hub_server.py
+----------------------------------------------------------------------
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: CONTROL_HEALTH_PATH constant  (line 49)
+======================================================================
+       46: HUB_PORT  = 8765
+       47: HUB_BIND  = "127.0.0.1"
+       48: CONTROL_PATH = "/api/control"
+ >>>   49: CONTROL_HEALTH_PATH = "/api/control_health"
+       50: _hub_state = {"paused": False}  # module-level control flag; single-process, no locking needed
+       51: STATS_PATH  = "/api/gamification"
+       52: LEADER_PATH = "/api/leaderboard"
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: route dispatch to _serve_control_health  (line 304)
+======================================================================
+      300:         path = urlparse(self.path).path
+      301:         if _hub_state["paused"] and path in (STATS_PATH, LEADER_PATH, CITE_PATH, INTEG_PATH):
+      302:             self._json({"paused": True})
+      303:             return
+ >>>  304:         if path == CONTROL_HEALTH_PATH:
+      305:             self._serve_control_health()
+      306:             return
+      307:         if path == STATS_PATH:
+      308:             self._json(query_gamification(self.db_path))
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: _serve_control_health() definition  (line 305)
+======================================================================
+      300:         path = urlparse(self.path).path
+      301:         if _hub_state["paused"] and path in (STATS_PATH, LEADER_PATH, CITE_PATH, INTEG_PATH):
+      302:             self._json({"paused": True})
+      303:             return
+      304:         if path == CONTROL_HEALTH_PATH:
+ >>>  305:             self._serve_control_health()
+      306:             return
+      307:         if path == STATS_PATH:
+      308:             self._json(query_gamification(self.db_path))
+      309:         elif path == LEADER_PATH:
+      310:             self._json(query_leaderboard(self.db_path))
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: ReuseAddrHTTPServer bind  (line 346)
+======================================================================
+      342: 
+      343:     kill_port_blocking(HUB_PORT)
+      344: 
+      345:     ForensicHubHandler.db_path = db_path
+ >>>  346:     server = ReuseAddrHTTPServer((HUB_BIND, HUB_PORT), ForensicHubHandler)
+      347:     # FIX 2: 3-second delay lets Godot complete _ready() DB open
+      348:     # before this process competes for SQLite connections.
+      349:     # Grounded: _0283 shows Godot _ready DB open at T+0, hub
+      350:     # kill_port_blocking runs at T-3s — delay separates them.
+
+======================================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: HUB_BIND / HUB_PORT  (line 46)
+======================================================================
+       44: from urllib.parse import urlparse
+       45: 
+ >>>   46: HUB_PORT  = 8765
+       47: HUB_BIND  = "127.0.0.1"
+       48: CONTROL_PATH = "/api/control"
+
+======================================================================
+SUMMARY OF AFFECTED REGIONS
+======================================================================
+  build_terrain.gd    : lines 3528-3539  (control_events INSERT)
+  forensic_hud.gd     : lines 31-37     (DEFAULT_HUB_URL)
+                        lines 43-49     (_hub_url declaration)
+                        lines 241-247   (_resolve_hub_url call)
+                        lines 307-315   (_ctrl_health_req.request)
+                        lines 534-542   (_on_ctrl_health_completed)
+                        lines 564-570   (_ctrl_label update)
+  HubManager.gd       : lines 5-11      (port, check_cmd)
+                        lines 28-36     (start_cmd construction)
+                        lines 34-46     (startup recheck timer)
+  forensic_hub_server.py: lines 46-52   (CONTROL_HEALTH_PATH)
+                        lines 300-309   (route dispatch)
+                        lines 300-310   (_serve_control_health entry)
+                        lines 342-350   (server bind)
+======================================================================

@@ -1,0 +1,82 @@
+audit_disconnect_v2  |  mode=DRY-RUN  |  2026-08-01T15:55:42.840345+00:00
+======================================================================
+
+--- 1. HUB SERVER DISCOVERY ---
+[OK] forensic_hub_server.py exists = True
+
+  forensic_hub_server.py route signatures (1 found):
+    line  265: def _serve_control_health(self):
+
+  SQLite references in hub_py: 12 matches
+  Hub port detected: 0278
+
+--- 2. HubManager.gd LAUNCH LOGIC ---
+  Launch references (7 found):
+    line   12: var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
+    line   25: # but forensic_hub_server.py lives one directory up, at the outer
+    line   30: # Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_roo
+    line   32: var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.
+    line   33: OS.execute("/bin/sh", ["-c", start_cmd])
+    line   35: # FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+    line   41: var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+  HubManager port reference: 8765
+
+--- 3. forensic_hud.gd TARGET CONFIG ---
+  CTRL_HEALTH_PATH = NOT_FOUND
+  _hub_url = NOT_FOUND
+  POLL_FAST_SEC = NOT_FOUND
+
+--- 4. _on_ctrl_health_completed FULL BODY ---
+  (30 lines)
+     538: func _on_ctrl_health_completed(
+     539: 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+     540: ) -> void:
+     541: 	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+     542: 	# Ref: HTTPRequest.request_completed signal:
+     543: 	# https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+     544: 	# (general knowledge — not retrieved this session)
+     545: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+     546: 		if _ctrl_label != null:
+     547: 			_ctrl_label.text = "control_health: hub unreachable (result=%d code=%d)" % [result, response_code]
+     548: 		return
+     549: 	var parsed = JSON.parse_string(body.get_string_from_utf8())
+     550: 	if typeof(parsed) != TYPE_DICTIONARY or _ctrl_label == null:
+     551: 		return
+     552: 	var d: Dictionary = parsed
+     553: 	var baseline: Array = d.get("baseline", [])
+     554: 	var recent: Array = d.get("recent_events", [])
+     555: 	var out := PackedStringArray()
+     556: 	out.append("=== controls ===")
+     557: 	for row in baseline:
+     558: 		if typeof(row) != TYPE_DICTIONARY: continue
+     559: 		var st := str(row.get("status", "?"))
+     560: 		var mark := " OK" if ("CONFIRMED" in st or "FIXED" in st) else " !"
+     561: 		out.append("  %-14s%s  %s" % [str(row.get("action", "?")), mark, st])
+     562: 	if not recent.is_empty():
+     563: 		out.append("--- recent presses ---")
+     564: 		for ev in recent.slice(0, 8):
+     565: 			if typeof(ev) != TYPE_DICTIONARY: continue
+     566: 			out.append("  %s -> %s" % [str(ev.get("action", "?")), str(ev.get("result", "?"))])
+     567: 	_ctrl_label.text = "\n".join(out)
+
+--- 5. BRIDGE GAP ANALYSIS ---
+  control_events rows: 77
+  Last 3 rows:
+    ('2026-08-01 15:01:20', 'turnleft', 2, 'pressed')
+    ('2026-08-01 15:01:19', 'turnright', 2, 'pressed')
+    ('2026-08-01 15:01:18', 'turnright', 2, 'pressed')
+  hub_py queries control_events: True
+  hub_py has endpoint 'NOT_FOUND': False
+  port alignment (hub_py=0278, HM=8765, URL=NOT_FOUND): False
+
+======================================================================
+DEDUCTIONS
+======================================================================
+[DISCONNECT] HUB: forensic_hub_server.py has NO route for 'NOT_FOUND' — HUD GETs 404
+[DISCONNECT] PORT: hub listens on 0278 but HUD targets NOT_FOUND — request goes to wrong socket
+[DISCONNECT] ARCH: build_terrain writes SQLite control_events; forensic_hud reads HTTP /api/control_health
+[DISCONNECT]        → bridge requires: (a) hub_py serves the endpoint, (b) hub_py queries the DB, (c) port matches
+
+======================================================================
+END OF AUDIT
+======================================================================

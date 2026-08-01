@@ -1,0 +1,188 @@
+=== AUDIT/DEDUCE 20260801_135725 mode=DRY-RUN ===
+=== DB INSPECTION ===
+Tables:
+applied_fixes               omissions                 
+arm_physics_baseline        parse_checks              
+arm_rig_audit               parse_error_log           
+asset_validation            parse_errors              
+auto_heal_actions           patch_history             
+autohealactions             pilot_career              
+blocking_errors_v1          pilot_category_fixes      
+code_patterns               pilot_ratings             
+component_audit_log         pipeline_metadata         
+component_health_tests      pipeline_runs             
+component_registry          pipelineruns              
+component_relationships     project_config            
+control_baseline            ratings                   
+control_events              remediation_queue         
+control_info                repair_attempts           
+diag_findings               repair_evidence           
+diagnostic_log              repair_metrics            
+diagnostic_logs             repair_rules              
+environment_fixes           replay_api_tests          
+error_fingerprints          resource_contention_log   
+error_patterns              restore_log               
+events_hardened             runtime_failures          
+file_splits                 schema_migrations         
+files_to_fix                screenshots               
+fix_log                     source_mutations          
+fixes                       source_snapshots          
+flight_controller_recon     steering_telemetry        
+flight_controller_recon_v2  strategy_rewards          
+flights                     syntax_errors             
+function_index              syntax_fixes              
+game_state_log              terrain_upgrades          
+gamification                test_runs                 
+gd_patch_registry           throttle_log              
+gdeye_diag                  tool_audit                
+hud_state                   user_preferences          
+issues                      verbatim_logs             
+known_repairs               verificationresults       
+missing_function_fixes    
+control_events schema:
+CREATE TABLE control_events(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,ts TEXT,action TEXT,key TEXT,
+        state_num INTEGER,result TEXT,reason TEXT,pull_l REAL DEFAULT 0.0,pull_r REAL DEFAULT 0.0);
+control_events row count:
+0
+PRAGMA integrity_check:
+ok
+
+=== FIX 1: build_terrain.gd — dedup _poll_controls (indent-based) ===
+_poll_controls: lines 1540–1606 (67 lines)
+  Total lines to remove: 0
+[FIX1_dedup_poll_controls] no change needed
+
+=== FIX 2: forensic_hud.gd — legacy removal + control_health ===
+  patch OK (1): 'const INTEG_PATH      := "/api/integrity"\n'
+  patch OK (1): 'var _integ_req: HTTPRequest\n'
+  patch OK (1): '\t# Initialize HTTP request node for hub data\n\tif http_r'
+  patch OK (1): '\t_setup_hud_label()\n'
+  patch OK (1): '\t_integ_req.request_completed.connect(_on_integ_complet'
+  patch OK (1): '\t_vbox.add_child(HSeparator.new())\n\t_time_label = _mkla'
+  patch OK (1): '\tvar err_i := _integ_req.request(_hub_url + INTEG_PATH)'
+  patch OK (1): 'var http_request: HTTPRequest = null\n'
+
+--- FIX2_forensic_hud ---
+--- a/godot_project/scripts/forensic_hud.gd
++++ b/godot_project/scripts/forensic_hud.gd
+@@ -1,5 +1,5 @@
+ extends Node
+-var http_request: HTTPRequest = null
++# var http_request removed (fix_forensic_hud_v1)
+ 
+ var dragging: bool = false
+ var drag_offset: Vector2 = Vector2.ZERO
+@@ -36,6 +36,7 @@
+ const LEADER_PATH     := "/api/leaderboard"
+ const CITE_PATH       := "/api/citations"
+ const INTEG_PATH      := "/api/integrity"
++const CTRL_HEALTH_PATH := "/api/control_health"
+ const POLL_FAST_SEC   := 2.0
+ const POLL_SLOW_SEC   := 10.0
+ const PANEL_START_POS := Vector2(24, 24)
+@@ -59,6 +60,8 @@
+ var _leader_req: HTTPRequest
+ var _cite_req: HTTPRequest
+ var _integ_req: HTTPRequest
++var _ctrl_health_req: HTTPRequest
++var _ctrl_label: Label
+ var _fast_timer: Timer
+ var _slow_timer: Timer
+ 
+@@ -201,6 +204,11 @@
+ 	_vbox.add_child(_cite_vbox)
+ 
+ 	_vbox.add_child(HSeparator.new())
++	_vbox.add_child(_mklabel("Controls", Color(0.55,1.0,0.55,1.0)))
++	_ctrl_label = _mklabel("control_health: (loading...)")
++	_ctrl_label.autowrap_mode = TextServer.AUTOWRAP_WORD
++	_vbox.add_child(_ctrl_label)
++	_vbox.add_child(HSeparator.new())
+ 	_time_label = _mklabel("t: --:--:--", Color(0.6, 0.75, 0.6, 1.0))
+ 	_vbox.add_child(_time_label)
+ 
+@@ -223,14 +231,7 @@
+ 	_save_position()
+ 
+ func _ready() -> void:
+-	# Initialize HTTP request node for hub data
+-	if http_request == null:
+-		http_request = HTTPRequest.new()
+-		add_child(http_request)
+-		http_request.request_completed.connect(_on_hub_data_received)
+-	# Fetch data after a short delay to allow hub to be ready
+-	await get_tree().create_timer(0.5).timeout
+-	_fetch_hub_data()
++	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
+ 
+ 	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+ 
+@@ -262,6 +263,9 @@
+ 	_leader_req.request_completed.connect(_on_leader_completed)
+ 	_cite_req.request_completed.connect(_on_cite_completed)
+ 	_integ_req.request_completed.connect(_on_integ_completed)
++	_ctrl_health_req = HTTPRequest.new()
++	add_child(_ctrl_health_req)
++	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+ 
+ 	_fast_timer = Timer.new()
+ 	_fast_timer.wait_time = POLL_FAST_SEC
+@@ -283,7 +287,7 @@
+ 		label.position = Vector2(10, 10)
+ 		label.visible = true
+ 
+-	_setup_hud_label()
++	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
+ 
+ func _poll_fast() -> void:
+ 	var err_a := _stats_req.request(_hub_url + STATS_PATH)
+@@ -301,6 +305,7 @@
+ 	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+ 	if err_i != OK:
+ 		_status_label.text = "integ err: %d" % err_i
++	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+ 
+ func _on_stats_completed(
+ 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+
+[FIX2_forensic_hud] DRY-RUN: would modify godot_project/scripts/forensic_hud.gd
+
+=== FIX 3: build_terrain.gd — control_events DB writes ===
+
+--- FIX3_db_logging ---
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -3528,6 +3528,15 @@
+ 	for action in CONTROL_KEYS:
+ 		if not InputMap.has_action(action):
+ 			continue
++		# DB: write every control press to control_events for forensic HUD
++		var _cdb = get_node_or_null('/root/SqliteDb')
++		if _cdb != null:
++			var _states = ['IN_PLANE','FREEFALL','OPENING_ANIM','DIAGNOSIS','LANDED','GAME_OVER']
++			var _sname = _states[_game_state] if _game_state < _states.size() else str(_game_state)
++			var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)'
++				+ ' VALUES(datetime("now"),"' + action + '","' + action + '",' + str(_game_state) + ',"attempted","")')
++			if _cdb.has_method('execute'): _cdb.execute(_sql)
++			elif _cdb.has_method('_query'): _cdb._query(_sql)
+ 		if Input.is_action_just_pressed(action):
+ 			print("[CTRL] pressed=", action,
+ 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+
+[FIX3_db_logging] DRY-RUN: would modify godot_project/scripts/build_terrain.gd
+  Inserted 9-line DB block before line 3531
+
+=== SUMMARY ===
+Mode: DRY-RUN — no files modified
+Note: notes/audit_deduce_20260801_135725.txt
+[main 1906a8c] audit: dry-run audit_deduce_20260801_135725
+ 2 files changed, 179 insertions(+)
+ create mode 100644 notes/audit_deduce_20260801_135725.txt
+To https://github.com/swipswaps/parachute-cfd-game.git
+   daeae7c..1906a8c  main -> main
+
+=== DRY-RUN AUDIT LOG (paste to LLM) ===
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/audit_deduce_20260801_135725.txt
+
+Review the diffs above, then: bash audit_deduce.sh --apply

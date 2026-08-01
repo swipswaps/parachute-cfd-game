@@ -1,0 +1,7 @@
+[2026-07-31T12:49:06.093622+00:00] [FAIL] tnm: HTTP Error 504: Gateway Timeout
+[2026-07-31T12:49:35.336927+00:00] [FAIL] tnm: HTTP Error 504: Gateway Timeout
+[2026-07-31T12:50:04.481594+00:00] [FAIL] tnm: HTTP Error 504: Gateway Timeout
+Bbox: W=-81.30459 S=29.04900 E=-81.26341 N=29.08500
+
+NAIP failed. Check manually:
+curl -s 'https://tnmaccess.nationalmap.gov/api/v1/products?bbox=-81.30459,29.04900,-81.26341,29.08500&datasets=USDA+NAIP+Imagery&outputFormat=JSON' | python3 -m json.tool | head -40

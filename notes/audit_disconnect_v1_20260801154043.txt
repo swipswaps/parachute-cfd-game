@@ -1,0 +1,413 @@
+audit_disconnect_v1  |  mode=DRY-RUN  |  2026-08-01T15:40:43.943529+00:00
+============================================================
+[OK] DB: control_events rows = 77
+
+============================================================
+CONTEXT: build_terrain.gd — control_events INSERT
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+============================================================
+
+--- match at line 3532 ---
+     3528: 	for action in CONTROL_KEYS:
+     3529: 		if not InputMap.has_action(action):
+     3530: 			continue
+     3531: 		if Input.is_action_just_pressed(action):
+ >>> 3532: 			# DB: persist confirmed keypress to control_events
+     3533: 			var _cdb = get_node_or_null('/root/SqliteDb')
+     3534: 			if _cdb != null:
+     3535: 				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+     3536: 				if _cdb.has_method('execute'): _cdb.execute(_sql)
+
+--- match at line 3535 ---
+     3531: 		if Input.is_action_just_pressed(action):
+     3532: 			# DB: persist confirmed keypress to control_events
+     3533: 			var _cdb = get_node_or_null('/root/SqliteDb')
+     3534: 			if _cdb != null:
+ >>> 3535: 				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+     3536: 				if _cdb.has_method('execute'): _cdb.execute(_sql)
+     3537: 				elif _cdb.has_method('_query'): _cdb._query(_sql)
+     3538: 			print("[CTRL] pressed=", action,
+     3539: 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+
+============================================================
+CONTEXT: build_terrain.gd — input action detection
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+============================================================
+
+--- match at line 999 ---
+      996: 
+      997: 
+      998: func _do_cutaway() -> void:
+ >>>  999: 	if not Input.is_action_just_pressed("cutaway"):
+     1000: 		return
+     1001: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+     1002: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+
+--- match at line 1549 ---
+     1546: 		# reliable across _physics_process/_process frame boundary).
+     1547: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+     1548: 		var _exit_pressed = (
+ >>> 1549: 			Input.is_action_just_pressed("deploy")
+     1550: 			or Input.is_key_pressed(KEY_J)
+     1551: 			or _headless_auto_jump
+     1552: 		)
+
+--- match at line 1577 ---
+     1574: 		return
+     1575: 
+     1576: 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+ >>> 1577: 		if Input.is_action_just_pressed("restart"):
+     1578: 			print("[DIAG] _poll_controls: restart pressed")
+     1579: 			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+     1580: 			_reset_game()
+
+--- match at line 1585 ---
+     1582: 		return
+     1583: 
+     1584: 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+ >>> 1585: 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+     1586: 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
+     1587: 		_deploy_canopy()
+     1588: 
+
+--- match at line 1610 ---
+     1607: # FIX (fix_steering_v1): _deploy_canopy() here was called every frame in
+     1608: # OPENING_ANIM/DIAGNOSIS, resetting _canopy_heading=0 each frame so the
+     1609: # canopy could never accumulate a turn. Guard was commented out; call removed.
+ >>> 1610: 		# Deploy on SPACE is handled by is_action_just_pressed at line ~1585.
+     1611: 	# ----- Direct key checks (bypass Input Map) -----
+     1612: 	# Deploy (SPACE)
+     1613: 	# SPACE: toggle canopy in plane, deploy in freefall
+
+--- match at line 1664 ---
+     1661: 		_save_camera_settings()
+     1662: 		print("[CAMERA] Settings saved manually (from _poll_controls)")
+     1663: 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
+ >>> 1664: 	if Input.is_action_just_pressed("camera_cycle"):
+     1665: 		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
+     1666: 		_cycle_camera()
+     1667: 
+
+--- match at line 1668 ---
+     1665: 		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
+     1666: 		_cycle_camera()
+     1667: 
+ >>> 1668: 	if Input.is_action_just_pressed("togglehud"):
+     1669: 		print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
+     1670: 		_toggle_hud()
+     1671: 
+
+--- match at line 1672 ---
+     1669: 		print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
+     1670: 		_toggle_hud()
+     1671: 
+ >>> 1672: 	if Input.is_action_just_pressed("flightcheck"):
+     1673: 		print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
+     1674: 		_flight_control_check()
+     1675: 
+
+--- match at line 1676 ---
+     1673: 		print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
+     1674: 		_flight_control_check()
+     1675: 
+ >>> 1676: 	if Input.is_action_just_pressed("cutaway"):
+     1677: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+     1678: 		_do_cutaway()
+     1679: 
+
+--- match at line 1680 ---
+     1677: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+     1678: 		_do_cutaway()
+     1679: 
+ >>> 1680: 	if Input.is_action_just_pressed("reserve"):
+     1681: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+     1682: 		_do_reserve()
+     1683: 
+
+--- match at line 1684 ---
+     1681: 		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+     1682: 		_do_reserve()
+     1683: 
+ >>> 1684: 	if Input.is_action_just_pressed("flare"):
+     1685: 		print("[VERBATIM] POLL: flare pressed - calling _do_flare")
+     1686: 		_do_flare()
+     1687: 
+
+--- match at line 1709 ---
+     1706: 	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+     1707: 
+     1708: 	# --- Camera toggle on J (when not in plane) ---
+ >>> 1709: 	if Input.is_action_just_pressed("j") and _game_state != GameState.IN_PLANE:
+     1710: 		if camera_target == "plane":
+     1711: 			camera_target = "character"
+     1712: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+
+--- match at line 3450 ---
+     3447: # CONTROL BINDINGS + PRESS TELEMETRY  (fix_controls_v13)
+     3448: #
+     3449: # Every action below already has a handler in this file - see the
+ >>> 3450: # Input.is_action_just_pressed call sites around lines 997, 1566-1582,
+     3451: # 1688-1733 and 1836. What was never verified is whether those actions are
+     3452: # bound to any key, and no InputMap dump appears in any run so far.
+     3453: #
+
+--- match at line 3531 ---
+     3528: 	for action in CONTROL_KEYS:
+     3529: 		if not InputMap.has_action(action):
+     3530: 			continue
+ >>> 3531: 		if Input.is_action_just_pressed(action):
+     3532: 			# DB: persist confirmed keypress to control_events
+     3533: 			var _cdb = get_node_or_null('/root/SqliteDb')
+     3534: 			if _cdb != null:
+
+============================================================
+CONTEXT: forensic_hud.gd — handler definition
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+============================================================
+
+--- match at line 265 ---
+      261: 	_cite_req.request_completed.connect(_on_cite_completed)
+      262: 	_integ_req.request_completed.connect(_on_integ_completed)
+      263: 	_ctrl_health_req = HTTPRequest.new()
+      264: 	add_child(_ctrl_health_req)
+ >>>  265: 	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+      266: 
+      267: 	_fast_timer = Timer.new()
+      268: 	_fast_timer.wait_time = POLL_FAST_SEC
+      269: 	_fast_timer.autostart = true
+
+--- match at line 538 ---
+      534: 		http.request_completed.connect(_on_hub_data_received)
+      535: 	_fetch_hub_data()
+      536: 
+      537: 
+ >>>  538: func _on_ctrl_health_completed(
+      539: 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+      540: ) -> void:
+      541: 	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+      542: 	# Ref: HTTPRequest.request_completed signal:
+
+============================================================
+CONTEXT: forensic_hud.gd — _poll_fast hub polling
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+============================================================
+
+--- match at line 270 ---
+      265: 	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+      266: 
+      267: 	_fast_timer = Timer.new()
+      268: 	_fast_timer.wait_time = POLL_FAST_SEC
+      269: 	_fast_timer.autostart = true
+ >>>  270: 	_fast_timer.timeout.connect(_poll_fast)
+      271: 	add_child(_fast_timer)
+      272: 
+      273: 	_slow_timer = Timer.new()
+      274: 	_slow_timer.wait_time = POLL_SLOW_SEC
+      275: 	_slow_timer.autostart = true
+
+--- match at line 279 ---
+      274: 	_slow_timer.wait_time = POLL_SLOW_SEC
+      275: 	_slow_timer.autostart = true
+      276: 	_slow_timer.timeout.connect(_poll_slow)
+      277: 	add_child(_slow_timer)
+      278: 
+ >>>  279: 	_poll_fast()
+      280: 	_poll_slow()
+      281: 	# Ensure HUD is visible and label is at a safe position
+      282: 	var label = find_child("HubDataLabel", true, false)
+      283: 	if label != null:
+      284: 		label.position = Vector2(10, 10)
+
+--- match at line 289 ---
+      284: 		label.position = Vector2(10, 10)
+      285: 		label.visible = true
+      286: 
+      287: 	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
+      288: 
+ >>>  289: func _poll_fast() -> void:
+      290: 	# Guard: only fire a new request if the previous one completed.
+      291: 	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
+      292: 	if _stats_req.get_http_client_status() in [
+      293: 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+      294: 		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+
+============================================================
+CONTEXT: forensic_hud.gd — _ctrl_health_req setup
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+============================================================
+
+--- match at line 63 ---
+       59: var _stats_req: HTTPRequest
+       60: var _leader_req: HTTPRequest
+       61: var _cite_req: HTTPRequest
+       62: var _integ_req: HTTPRequest
+ >>>   63: var _ctrl_health_req: HTTPRequest
+       64: var _ctrl_label: Label
+       65: var _fast_timer: Timer
+       66: var _slow_timer: Timer
+       67: 
+
+--- match at line 263 ---
+      259: 	_stats_req.request_completed.connect(_on_stats_completed)
+      260: 	_leader_req.request_completed.connect(_on_leader_completed)
+      261: 	_cite_req.request_completed.connect(_on_cite_completed)
+      262: 	_integ_req.request_completed.connect(_on_integ_completed)
+ >>>  263: 	_ctrl_health_req = HTTPRequest.new()
+      264: 	add_child(_ctrl_health_req)
+      265: 	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+      266: 
+      267: 	_fast_timer = Timer.new()
+
+--- match at line 264 ---
+      260: 	_leader_req.request_completed.connect(_on_leader_completed)
+      261: 	_cite_req.request_completed.connect(_on_cite_completed)
+      262: 	_integ_req.request_completed.connect(_on_integ_completed)
+      263: 	_ctrl_health_req = HTTPRequest.new()
+ >>>  264: 	add_child(_ctrl_health_req)
+      265: 	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+      266: 
+      267: 	_fast_timer = Timer.new()
+      268: 	_fast_timer.wait_time = POLL_FAST_SEC
+
+--- match at line 265 ---
+      261: 	_cite_req.request_completed.connect(_on_cite_completed)
+      262: 	_integ_req.request_completed.connect(_on_integ_completed)
+      263: 	_ctrl_health_req = HTTPRequest.new()
+      264: 	add_child(_ctrl_health_req)
+ >>>  265: 	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+      266: 
+      267: 	_fast_timer = Timer.new()
+      268: 	_fast_timer.wait_time = POLL_FAST_SEC
+      269: 	_fast_timer.autostart = true
+
+--- match at line 311 ---
+      307: 			_status_label.text = "cite err: %d" % err_c
+      308: 	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+      309: 	if err_i != OK:
+      310: 		_status_label.text = "integ err: %d" % err_i
+ >>>  311: 	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+      312: 
+      313: func _on_stats_completed(
+      314: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+      315: ) -> void:
+
+============================================================
+CONTEXT: forensic_hud.gd — _ctrl_label display
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+============================================================
+
+--- match at line 64 ---
+       61: var _cite_req: HTTPRequest
+       62: var _integ_req: HTTPRequest
+       63: var _ctrl_health_req: HTTPRequest
+ >>>   64: var _ctrl_label: Label
+       65: var _fast_timer: Timer
+       66: var _slow_timer: Timer
+       67: 
+
+--- match at line 205 ---
+      202: 
+      203: 	_vbox.add_child(HSeparator.new())
+      204: 	_vbox.add_child(_mklabel("Controls", Color(0.55,1.0,0.55,1.0)))
+ >>>  205: 	_ctrl_label = _mklabel("control_health: (loading...)")
+      206: 	_ctrl_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+      207: 	_vbox.add_child(_ctrl_label)
+      208: 	_vbox.add_child(HSeparator.new())
+
+--- match at line 206 ---
+      203: 	_vbox.add_child(HSeparator.new())
+      204: 	_vbox.add_child(_mklabel("Controls", Color(0.55,1.0,0.55,1.0)))
+      205: 	_ctrl_label = _mklabel("control_health: (loading...)")
+ >>>  206: 	_ctrl_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+      207: 	_vbox.add_child(_ctrl_label)
+      208: 	_vbox.add_child(HSeparator.new())
+      209: 	_time_label = _mklabel("t: --:--:--", Color(0.6, 0.75, 0.6, 1.0))
+
+--- match at line 207 ---
+      204: 	_vbox.add_child(_mklabel("Controls", Color(0.55,1.0,0.55,1.0)))
+      205: 	_ctrl_label = _mklabel("control_health: (loading...)")
+      206: 	_ctrl_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+ >>>  207: 	_vbox.add_child(_ctrl_label)
+      208: 	_vbox.add_child(HSeparator.new())
+      209: 	_time_label = _mklabel("t: --:--:--", Color(0.6, 0.75, 0.6, 1.0))
+      210: 	_vbox.add_child(_time_label)
+
+--- match at line 541 ---
+      538: func _on_ctrl_health_completed(
+      539: 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+      540: ) -> void:
+ >>>  541: 	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+      542: 	# Ref: HTTPRequest.request_completed signal:
+      543: 	# https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+      544: 	# (general knowledge — not retrieved this session)
+
+--- match at line 546 ---
+      543: 	# https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+      544: 	# (general knowledge — not retrieved this session)
+      545: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+ >>>  546: 		if _ctrl_label != null:
+      547: 			_ctrl_label.text = "control_health: hub unreachable (result=%d code=%d)" % [result, response_code]
+      548: 		return
+      549: 	var parsed = JSON.parse_string(body.get_string_from_utf8())
+
+--- match at line 547 ---
+      544: 	# (general knowledge — not retrieved this session)
+      545: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+      546: 		if _ctrl_label != null:
+ >>>  547: 			_ctrl_label.text = "control_health: hub unreachable (result=%d code=%d)" % [result, response_code]
+      548: 		return
+      549: 	var parsed = JSON.parse_string(body.get_string_from_utf8())
+      550: 	if typeof(parsed) != TYPE_DICTIONARY or _ctrl_label == null:
+
+--- match at line 550 ---
+      547: 			_ctrl_label.text = "control_health: hub unreachable (result=%d code=%d)" % [result, response_code]
+      548: 		return
+      549: 	var parsed = JSON.parse_string(body.get_string_from_utf8())
+ >>>  550: 	if typeof(parsed) != TYPE_DICTIONARY or _ctrl_label == null:
+      551: 		return
+      552: 	var d: Dictionary = parsed
+      553: 	var baseline: Array = d.get("baseline", [])
+
+--- match at line 567 ---
+      564: 		for ev in recent.slice(0, 8):
+      565: 			if typeof(ev) != TYPE_DICTIONARY: continue
+      566: 			out.append("  %s -> %s" % [str(ev.get("action", "?")), str(ev.get("result", "?"))])
+ >>>  567: 	_ctrl_label.text = "\n".join(out)
+
+============================================================
+CONTEXT: HubManager.gd — control_health endpoint
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+============================================================
+
+[PATTERN NOT FOUND] 'control_health'
+
+============================================================
+CONTEXT: HubManager.gd — server listen
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+============================================================
+
+--- match at line 37 ---
+       34: 	# Wait a moment and re-check
+       35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+       36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+ >>>   37: 	# always fired before the server was listening. Confirmed via
+       38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+       39: 	await get_tree().create_timer(5.0).timeout
+       40: 	var output2 = []
+
+============================================================
+CONTEXT: HubManager.gd — TCPServer
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+============================================================
+
+[PATTERN NOT FOUND] 'TCPServer'
+
+============================================================
+DEDUCTIONS
+============================================================
+[DISCONNECT] HUB: HubManager.gd has no control_health endpoint — HUD request will 404
+[DISCONNECT] ARCH: build_terrain writes to SQLite; forensic_hud reads from HTTP hub — bridge required
+
+============================================================
+END OF AUDIT
+============================================================

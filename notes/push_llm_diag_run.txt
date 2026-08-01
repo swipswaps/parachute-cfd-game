@@ -1,0 +1,132 @@
+[2026-07-29T20:25:22Z] [SUCCESS] cd: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+[2026-07-29T20:25:22Z] [SUCCESS] gd_exists: 3523 lines
+=== generated: 2026-07-29T20:25:22Z on fedora ===
+=== source: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd ===
+=== wc -l: 3523 lines ===
+
+=== var ratio declarations (all occurrences) ===
+3323:	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+3341:		var ratio: float = 0.0
+
+=== lines 3280-3380 ===
+3280	const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+3281	const GLIDE_TARGET_RATIO := 2.6    # reference glide ratio, for the log only
+3282	
+3283	var _canopy_heading := 0.0
+3284	var _glide_tel_t := 0.0
+3285	var _glide_tel_hdr := false
+3286	var _glide_last_log := 0.0
+3287	
+3288	
+3289	func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+3290		if not _canopy_deployed:
+3291			return
+3292		if _character == null or not is_instance_valid(_character):
+3293			return
+3294		if delta <= 0.0:
+3295			return
+3296	
+3297		var bl: float = _arm_pull["L"]
+3298		var br: float = _arm_pull["R"]
+3299		var sym: float = (bl + br) * 0.5
+3300		var diff: float = br - bl
+3301	
+3302		# Forward airspeed: symmetric brake slows the wing.
+3303		var fwd_speed: float = GLIDE_FULL_SPEED * (1.0 - GLIDE_BRAKE_SLOW * sym)
+3304		fwd_speed = maxf(fwd_speed, GLIDE_MIN_SPEED)
+3305	
+3306		# Turn rate: differential brake, less authority when both brakes are deep.
+3307		var turn_rate: float = GLIDE_TURN_RATE * GLIDE_TURN_SIGN * diff \
+3308			* (1.0 - 0.35 * sym)
+3309		_canopy_heading += turn_rate * delta
+3310		_canopy_heading = wrapf(_canopy_heading, -PI, PI)
+3311	
+3312		# Horizontal travel along the heading.
+3313		var fwd := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+3314		var before := _character.position
+3315		_character.position += fwd * fwd_speed * delta
+3316		_character.rotation.y = _canopy_heading
+3317	
+3318		# v12: the caller already subtracted descent_this_frame, which measured
+3319		# 18.0 m/s flat across all 1541 rows of glide_v11.txt - 3543 ft/min, and
+3320		# a glide ratio near 0.5. Undo it and apply a wing-consistent sink while
+3321		# deployed. _get_current_descent_rate() is left alone so the malfunction
+3322		# model still governs freefall and any non-deployed state.
+3323		var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+3324		ratio = maxf(ratio, 0.6)
+3325		var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sym * sym * sym
+3326		_character.position.y += descent_this_frame - sink * delta
+3327	
+3328		# ---- telemetry -------------------------------------------------------
+3329		_glide_tel_t += delta
+3330		if not _glide_tel_hdr:
+3331			print("[GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,"
+3332				+ "heading_deg,descent_m_s,glide_ratio,x,z,raw_descent")
+3333			_glide_tel_hdr = true
+3334	
+3335		# log on change or twice a second, so a straight glide stays readable
+3336		var moving: bool = absf(diff) > 0.002 or sym > 0.002
+3337		if moving or _glide_tel_t - _glide_last_log > 0.5:
+3338			_glide_last_log = _glide_tel_t
+3339			var desc_rate: float = sink
+3340			var raw_rate: float = descent_this_frame / delta
+3341			var ratio: float = 0.0
+3342			if absf(desc_rate) > 0.0001:
+3343				ratio = fwd_speed / desc_rate
+3344			print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+3345				",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+3346				rad_to_deg(_canopy_heading), ",", desc_rate, ",", ratio,
+3347				",", _character.position.x, ",", _character.position.z,
+3348				",", raw_rate)
+3349			if before.distance_to(_character.position) < 0.0001 and fwd_speed > 0.1:
+3350				print("[GLIDE] WARNING: position did not change despite fwd_speed=",
+3351					fwd_speed, " - something downstream is overwriting position")
+3352	
+3353	# ===========================================================================
+3354	# GLIDE TUNING + LIVE PiP  (fix_altitude_pip_v12)
+3355	#
+3356	# glide_v11.txt measured descent 18.0 m/s flat and glide ratio 0.39-0.61.
+3357	# A ram-air canopy sits near 2.6 at full flight, degrading under brake, with
+3358	# sink rising sharply as it approaches stall.
+3359	#   brakes off: 11.00 / 2.6           = 4.23 m/s
+3360	#   full brake:  3.08 / 1.2 + 3.0     = 5.57 m/s
+3361	#
+3362	# PiP: _setup_pip_overlay builds a standalone SubViewport mini-scene with its
+3363	# own canopy model and light (build_terrain.gd 2180-2226), so it shows a prop,
+3364	# not the real canopy. Sharing the main World3D into that SubViewport and
+3365	# driving its camera from the character makes it a genuine overhead view:
+3366	# the aircraft receding before deploy, the real canopy after.
+3367	#
+3368	# The mini-scene props are hidden rather than freed, so nothing that
+3369	# _setup_pip_overlay still holds a reference to is invalidated.
+3370	#
+3371	# Refs (general knowledge - not retrieved this session):
+3372	#   https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+3373	#   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+3374	# ===========================================================================
+3375	
+3376	const GLIDE_RATIO_BEST       := 2.6    # full flight, brakes off
+3377	const GLIDE_RATIO_BRAKE_LOSS := 1.4    # ratio lost at full brake (-> 1.2)
+3378	const GLIDE_STALL_SINK       := 3.0    # m/s extra sink approaching stall
+3379	
+3380	var _pip_ready := false
+
+=== function boundary before line 3341 ===
+last func: 3289: func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+[2026-07-29T20:25:22Z] [SUCCESS] collect: wrote /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/llm_diag_ratio_20260729202522.txt
+[2026-07-29T20:25:22Z] [FAILURE] gitignore_check: ignored: .gitignore:145:notes/	/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/llm_diag_ratio_20260729202522.txt — adding negation
+=== staged (2) ===
+.gitignore
+notes/llm_diag_ratio_20260729202522.txt
+[2026-07-29T20:25:23Z] [SUCCESS] staged_count: 2 file(s)
+[main 169610d] diag: llm_diag_ratio_20260729202522.txt — var ratio collision context for LLM
+ 2 files changed, 114 insertions(+)
+ create mode 100644 notes/llm_diag_ratio_20260729202522.txt
+[2026-07-29T20:25:26Z] [SUCCESS] commit: ok
+To https://github.com/swipswaps/parachute-cfd-game.git
+   e6dd5af..169610d  main -> main
+[2026-07-29T20:25:30Z] [SUCCESS] push: ok
+
+=== LLM raw fetch URL ===
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/llm_diag_ratio_20260729202522.txt
+Paste that URL into the chat.

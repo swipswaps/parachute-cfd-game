@@ -1,0 +1,25 @@
+audit_runtime_proof_v1  |  mode=DRY-RUN  |  2026-08-01T16:55:17.934061+00:00
+======================================================================
+
+--- 1. STATIC ALIGNMENT SUMMARY (from v1-v4) ---
+  control_events rows: 77
+  HUD origin:          http://127.0.0.1:8765 (DEFAULT_HUB_URL)
+  HUD path:            /api/control_health (CTRL_HEALTH_PATH)
+  Hub bind:            127.0.0.1:8765 (HUB_BIND, HUB_PORT)
+  Hub route:           path == CONTROL_HEALTH_PATH -> _serve_control_health()
+  Static verdict:      ALIGNED (no symbolic/routing/port disconnects)
+
+--- 2. RUNTIME TRACE CAPTURE ---
+  [DRY-RUN] Skipped autostall execution
+
+--- 3. TRACE PATTERN ANALYSIS ---
+  [SKIP] No runtime log available (dry-run or execution failed)
+
+======================================================================
+RUNTIME VERDICT
+======================================================================
+[PENDING] Runtime proof requires --apply (autostall execution)
+
+======================================================================
+END OF AUDIT
+======================================================================

@@ -1,0 +1,32 @@
+audit_stepthrough_instrument_v1  |  mode=DRY-RUN  |  2026-08-01T18:28:27.004431+00:00
+======================================================================
+
+[BASELINE] control_events rows: 77
+
+--- 1. EXISTING PRINT COVERAGE ---
+
+  forensic_hud.gd: 11 print(s), 23 function(s)
+    [BLIND] _resolve_hub_url at line 74
+    [BLIND] _poll_fast at line 289
+    [BLIND] _on_ctrl_health_completed at line 538
+
+  HubManager.gd: 5 print(s), 2 function(s)
+
+  forensic_hub_server.py: 25 print(s), 16 function(s)
+    [BLIND] _serve_control_health at line 265
+    [BLIND] do_GET at line 299
+
+  build_terrain.gd: 330 print(s), 96 function(s)
+
+--- 2. INSTRUMENT (dry-run skip) ---
+  Would instrument 5 blind spot(s)
+
+--- 3. RUNTIME CAPTURE ---
+  [DRY-RUN] Skipped autostall execution
+
+--- 4. STEP-THROUGH VERDICT ---
+  [PENDING] Runtime step-through requires --apply
+
+======================================================================
+END OF AUDIT
+======================================================================

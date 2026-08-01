@@ -1,0 +1,57 @@
+audit_disconnect_v4  |  mode=DRY-RUN  |  2026-08-01T16:08:46.112373+00:00
+======================================================================
+
+--- 1. BROAD-SPECTRUM _hub_url HUNT in forensic_hud.gd ---
+  URL-like hub references (1 found):
+    line   34: const DEFAULT_HUB_URL := "http://127.0.0.1:8765"
+
+  Config/ProjectSettings references (5 found):
+    line   76: 	if ProjectSettings.has_setting(key):
+    line   77: 		var v = ProjectSettings.get_setting(key)
+    line  213: 	var config := ConfigFile.new()
+    line  214: 	if config.load(POS_CFG_PATH) == OK:
+    line  223: 	var config := ConfigFile.new()
+
+  String literals resembling URLs (2 unique):
+    line   34: 'http://127.0.0.1:8765'  |  const DEFAULT_HUB_URL := "http://127.0.0.1:8765"
+    line  478: 'http://127.0.0.1:8765/api/gamification'  |  	var url = "http://127.0.0.1:8765/api/gamification"
+
+  Lines containing '_hub_url' with assignment (9 found):
+    line   46: var _hub_url: String = ""
+    line  183: 	_url_label = _mklabel("hub: " + _hub_url, Color(0.65, 0.85, 0.65, 1.0))
+    line  244: 	_hub_url = _resolve_hub_url()
+    line  294: 		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+    line  299: 		var err_b := _leader_req.request(_hub_url + LEADER_PATH)
+    line  305: 		var err_c := _cite_req.request(_hub_url + CITE_PATH)
+    line  308: 	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+    line  318: 		_status_label.text = "hub offline (%s) result=%d code=%d" % [_hub_url, result, response_code]
+    line  329: 	_status_label.text = "hub OK  (%s)" % _hub_url
+
+--- 2. HubManager.gd URL PROPAGATION ---
+  HubManager URL references (2 found):
+    line    8: 	var port = 8765
+    line   10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.
+
+  HubManager -> HUD references (0 found):
+
+--- 3. HUB_PY CONTROL_HEALTH_PATH CONSTANT ---
+  CONTROL_HEALTH_PATH references (2 found):
+    line   49: CONTROL_HEALTH_PATH = "/api/control_health"
+    line  304:         if path == CONTROL_HEALTH_PATH:
+
+--- 4. FULL ALIGNMENT MATRIX ---
+  _hub_url (best guess): http://127.0.0.1:8765
+  CTRL_HEALTH_PATH:      /api/control_health
+  Full request URI:      http://127.0.0.1:8765/api/control_health
+  Hub bind address:      127.0.0.1:8765
+  control_events rows:   77
+
+======================================================================
+DEDUCTIONS
+======================================================================
+[ALIGN] Origin address matches hub bind — port and host aligned
+[CLEAR] All symbols resolved, route registered, port aligned, origin known — bridge is functional
+
+======================================================================
+END OF AUDIT
+======================================================================

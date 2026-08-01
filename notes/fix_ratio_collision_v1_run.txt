@@ -1,0 +1,49 @@
+[2026-07-29T20:56:20.794628+00:00] [SUCCESS] init_db: ready
+[2026-07-29T20:56:20.796459+00:00] [SUCCESS] read: 3523 lines
+[2026-07-29T20:56:20.797073+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260729205620
+[2026-07-29T20:56:20.799142+00:00] [FAILURE] precondition: expected 1 match, found 0 — ABORT
+
+=== ERROR CONTEXT (pre-fix, lines 3338-3352) ===
+    3338: 		_glide_last_log = _glide_tel_t
+    3339: 		var desc_rate: float = sink
+    3340: 		var raw_rate: float = descent_this_frame / delta
+>>> 3341: 		var log_ratio: float = 0.0
+    3342: 		if absf(desc_rate) > 0.0001:
+    3343: 			log_ratio = fwd_speed / desc_rate
+    3344: 		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+    3345: 			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+    3346: 			rad_to_deg(_canopy_heading), ",", desc_rate, ",", log_ratio,
+    3347: 			",", _character.position.x, ",", _character.position.z,
+    3348: 			",", raw_rate)
+    3349: 		if before.distance_to(_character.position) < 0.0001 and fwd_speed > 0.1:
+    3350: 			print("[GLIDE] WARNING: position did not change despite fwd_speed=",
+    3351: 				fwd_speed, " - something downstream is overwriting position")
+    3352: 
+
+
+=== PROPOSED CHANGE (telemetry block only; line 3323 untouched) ===
+OLD:
+  3341: 		var ratio: float = 0.0
+  3342: 		if absf(desc_rate) > 0.0001:
+  3343: 			ratio = fwd_speed / desc_rate
+  3344: 		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+  3345: 			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+  3346: 			rad_to_deg(_canopy_heading), ",", desc_rate, ",", ratio,
+  3347: 			",", _character.position.x, ",", _character.position.z,
+  3348: 			",", raw_rate)
+NEW:
+  3341: 		var log_ratio: float = 0.0
+  3342: 		if absf(desc_rate) > 0.0001:
+  3343: 			log_ratio = fwd_speed / desc_rate
+  3344: 		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+  3345: 			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+  3346: 			rad_to_deg(_canopy_heading), ",", desc_rate, ",", log_ratio,
+  3347: 			",", _character.position.x, ",", _character.position.z,
+  3348: 			",", raw_rate)
+Traceback (most recent call last):
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/fix_ratio_collision_v1.py", line 189, in <module>
+    main()
+    ~~~~^^
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/fix_ratio_collision_v1.py", line 110, in main
+    raise AssertionError(f"PRECONDITION: expected 1 match, got {count}")
+AssertionError: PRECONDITION: expected 1 match, got 0

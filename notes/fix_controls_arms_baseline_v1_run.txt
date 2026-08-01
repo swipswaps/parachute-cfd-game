@@ -1,0 +1,33 @@
+[2026-07-30T16:59:32.840085+00:00] [SUCCESS] setup_db: control_baseline has 12 rows
+[2026-07-30T16:59:32.843764+00:00] [SUCCESS] backup: bt=/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260730165932
+[2026-07-30T16:59:32.844036+00:00] [SUCCESS] precondition:arm_vars: 1 match
+[2026-07-30T16:59:32.845147+00:00] [SUCCESS] precondition:arm_store: 1 match
+[2026-07-30T16:59:32.846303+00:00] [SUCCESS] precondition:arm_fn: 1 match
+[2026-07-30T16:59:32.847399+00:00] [SUCCESS] precondition:arm_defer: 1 match
+[2026-07-30T16:59:32.848516+00:00] [SUCCESS] precondition:h_fire: 1 match
+[2026-07-30T16:59:32.849581+00:00] [SUCCESS] precondition:fcc_gate: 1 match
+[2026-07-30T16:59:32.851700+00:00] [SUCCESS] precondition:exit_print: 1 match
+[2026-07-30T16:59:32.853434+00:00] [SUCCESS] precondition:hub_method: 1 match
+[2026-07-30T16:59:32.853856+00:00] [FAILURE] precondition:hub_route: expected 1, got 0
+
+=== DB baseline ===
+
+=== GDScript fixes ===
+  arm_vars
+  arm_store
+  arm_fn
+  arm_defer
+  h_fire
+  fcc_gate
+  exit_print
+
+=== Hub fix ===
+Traceback (most recent call last):
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/fix_controls_arms_baseline_v1.py", line 244, in <module>
+    if __name__=="__main__": main()
+                             ~~~~^^
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/fix_controls_arms_baseline_v1.py", line 203, in main
+    mod_hub=guarded_replace(mod_hub,HUB_GET_OLD,HUB_GET_NEW,"hub_route")
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/fix_controls_arms_baseline_v1.py", line 28, in guarded_replace
+    raise AssertionError(f"PRECONDITION ({label}): {count} matches")
+AssertionError: PRECONDITION (hub_route): 0 matches

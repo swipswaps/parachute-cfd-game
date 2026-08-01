@@ -1,0 +1,138 @@
+[2026-07-30T12:32:16.533177+00:00] [SUCCESS] init_db: ready
+[2026-07-30T12:32:16.537117+00:00] [SUCCESS] read: 3523 lines
+[2026-07-30T12:32:16.538245+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260730123216
+[2026-07-30T12:32:16.539585+00:00] [SUCCESS] precondition:mixamo_loop: 1 match replaced
+[2026-07-30T12:32:16.540693+00:00] [SUCCESS] precondition:freefall_steering: 1 match replaced
+[2026-07-30T12:32:16.547815+00:00] [SUCCESS] raw:build_terrain.gd: verified
+[2026-07-30T12:32:16.883729+00:00] [SUCCESS] record: build_terrain.gd:2756 → FIXED
+[2026-07-30T12:32:17.082986+00:00] [SUCCESS] record: build_terrain.gd:2017 → FIXED
+[2026-07-30T12:32:17.083123+00:00] [SUCCESS] hard_gate: all criteria met
+[2026-07-30T12:32:17.098944+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.423979+00:00] [SUCCESS] delete:audit.gd.gd: deleted
+[2026-07-30T12:32:17.425219+00:00] [SUCCESS] delete:debug_components.gd.gd: deleted
+[2026-07-30T12:32:17.427802+00:00] [SUCCESS] delete:forensic_hud.gd.gd: deleted
+[2026-07-30T12:32:17.428708+00:00] [SUCCESS] delete:pip_draggable.gd.gd: deleted
+[2026-07-30T12:32:17.429506+00:00] [SUCCESS] delete:pip_draggable_v2.gd.gd: deleted
+[2026-07-30T12:32:17.430382+00:00] [SUCCESS] delete:plane.gd.gd: deleted
+[2026-07-30T12:32:17.431034+00:00] [SUCCESS] delete:toggle_arm_animator.gd.gd: deleted
+[2026-07-30T12:32:17.431664+00:00] [SUCCESS] delete:validate_scene.gd.gd: deleted
+[2026-07-30T12:32:17.443391+00:00] [SUCCESS] delete:game_manager.gd.gd: deleted
+[2026-07-30T12:32:17.443873+00:00] [SUCCESS] corruption: project.godot clean
+[2026-07-30T12:32:17.481031+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.484778+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.491498+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.500589+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.507534+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.517008+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.524003+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.532685+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.540005+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.549985+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.656305+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:17.656606+00:00] [SUCCESS] staged_count: 11 files
+[2026-07-30T12:32:25.781319+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:27.135583+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:27.137807+00:00] [SUCCESS] stream_run: exit=0
+[2026-07-30T12:32:27.137914+00:00] [SUCCESS] COMPLETE: fix_all_remaining_v1 done
+
+=== FIX A: mixamo_com loop mode ===
+OLD:
+  	if not is_instance_valid(ap):
+  		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
+  		return
+  	ap.play(chosen)
+  	ap.speed_scale = 1.0
+NEW:
+  	if not is_instance_valid(ap):
+  		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
+  		return
+  	# Set loop mode on the Animation resource — must be set on the resource,
+  	# not as a play() argument. Animation.LOOP_LINEAR = 1.
+  	# Ref: https://docs.godotengine.org/en/stable/classes/class_animation.html
+  	# (general knowledge — not retrieved this session)
+  	var _anim_res = ap.get_animation(chosen)
+  	if _anim_res:
+  		_anim_res.loop_mode = Animation.LOOP_LINEAR
+  	ap.play(chosen)
+  	ap.speed_scale = 1.0
+
+=== FIX B: freefall arm steering ===
+OLD:
+  		# Freefall body turning (asymmetric drag)
+  		if abs(_turn_input) > 0.001:
+  			_character.rotate_y(-_turn_input * 2.0 * delta)
+NEW:
+  		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+  		if abs(_turn_input) > 0.001:
+  			_character.rotate_y(-_turn_input * 2.0 * delta)
+  		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+  		# 1.5 rad/s at full differential ≈ 86 deg/s.
+  		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  		# (general knowledge — not retrieved this session)
+  		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+  		if absf(ff_diff) > 0.002:
+  			_character.rotate_y(-ff_diff * 1.5 * delta)
+
+=== FIX C: *.gd.gd cleanup ===
+  | godot_project/scripts/audit.gd.gd
+  | godot_project/scripts/debug_components.gd.gd
+  | godot_project/scripts/forensic_hud.gd.gd
+  | godot_project/scripts/pip_draggable.gd.gd
+  | godot_project/scripts/pip_draggable_v2.gd.gd
+  | godot_project/scripts/plane.gd.gd
+  | godot_project/scripts/toggle_arm_animator.gd.gd
+  | godot_project/scripts/validate_scene.gd.gd
+  | godot_project/scripts/game_manager.gd.gd
+
+=== CHECK D: project.godot corruption ===
+  | rm 'godot_project/scripts/debug_components.gd.gd'
+  | rm 'godot_project/scripts/forensic_hud.gd.gd'
+  | rm 'godot_project/scripts/pip_draggable.gd.gd'
+  | rm 'godot_project/scripts/pip_draggable_v2.gd.gd'
+  | rm 'godot_project/scripts/plane.gd.gd'
+  | rm 'godot_project/scripts/toggle_arm_animator.gd.gd'
+  | rm 'godot_project/scripts/validate_scene.gd.gd'
+  | rm 'godot_project/scripts/game_manager.gd.gd'
+  | .gitignore
+  | godot_project/scripts/build_terrain.gd
+  | godot_project/scripts/debug_components.gd.gd
+  | godot_project/scripts/forensic_hud.gd.gd
+  | godot_project/scripts/game_manager.gd.gd
+  | godot_project/scripts/pip_draggable.gd.gd
+  | godot_project/scripts/pip_draggable_v2.gd.gd
+  | godot_project/scripts/plane.gd.gd
+  | godot_project/scripts/toggle_arm_animator.gd.gd
+  | godot_project/scripts/validate_scene.gd.gd
+  | notes/fix_all_remaining_result_20260730123216.txt
+
+=== staged (11) ===
+  .gitignore
+  godot_project/scripts/build_terrain.gd
+  godot_project/scripts/debug_components.gd.gd
+  godot_project/scripts/forensic_hud.gd.gd
+  godot_project/scripts/game_manager.gd.gd
+  godot_project/scripts/pip_draggable.gd.gd
+  godot_project/scripts/pip_draggable_v2.gd.gd
+  godot_project/scripts/plane.gd.gd
+  godot_project/scripts/toggle_arm_animator.gd.gd
+  godot_project/scripts/validate_scene.gd.gd
+  notes/fix_all_remaining_result_20260730123216.txt
+  | Success: no problems found
+  | [main 90385bb] fix: mixamo_com loop + freefall arm steering + gd.gd cleanup
+  |  11 files changed, 24 insertions(+), 820 deletions(-)
+  |  delete mode 100755 godot_project/scripts/debug_components.gd.gd
+  |  delete mode 100755 godot_project/scripts/forensic_hud.gd.gd
+  |  delete mode 100644 godot_project/scripts/game_manager.gd.gd
+  |  delete mode 100755 godot_project/scripts/pip_draggable.gd.gd
+  |  delete mode 100755 godot_project/scripts/pip_draggable_v2.gd.gd
+  |  delete mode 100755 godot_project/scripts/plane.gd.gd
+  |  delete mode 100755 godot_project/scripts/toggle_arm_animator.gd.gd
+  |  delete mode 100755 godot_project/scripts/validate_scene.gd.gd
+  |  create mode 100644 notes/fix_all_remaining_result_20260730123216.txt
+  | To https://github.com/swipswaps/parachute-cfd-game.git
+  |    53fc6bb..90385bb  main -> main
+  | main
+
+=== LLM fetch URLs ===
+Result: https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_all_remaining_result_20260730123216.txt
+File:   https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/godot_project/scripts/build_terrain.gd

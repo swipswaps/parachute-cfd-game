@@ -1,0 +1,88 @@
+audit_disconnect_v3  |  mode=DRY-RUN  |  2026-08-01T16:01:06.999117+00:00
+======================================================================
+
+--- 1. forensic_hud.gd SYMBOL RESOLUTION ---
+  CTRL_HEALTH_PATH = /api/control_health  (matched: const\s+CTRL_HEALTH_PATH\s*:=\s*"([^"]+)")
+  _hub_url         = NOT_FOUND     (matched: none)
+  POLL_FAST_SEC    = 2.0    (matched: const\s+POLL_FAST_SEC\s*:=\s*(\d+\.?\d*))
+
+  Context for CTRL_HEALTH_PATH (line 39):
+       38: const INTEG_PATH      := "/api/integrity"
+ >>>   39: const CTRL_HEALTH_PATH := "/api/control_health"
+       40: const POLL_FAST_SEC   := 2.0
+       41: const POLL_SLOW_SEC   := 10.0
+
+  Context for POLL_FAST_SEC (line 40):
+       39: const CTRL_HEALTH_PATH := "/api/control_health"
+ >>>   40: const POLL_FAST_SEC   := 2.0
+       41: const POLL_SLOW_SEC   := 10.0
+       42: const PANEL_START_POS := Vector2(24, 24)
+
+--- 2. forensic_hub_server.py ROUTE REGISTRATION ---
+  _serve_control_health defined at line: 305
+  Route decorators / add_route lines (5 found):
+    line    8: #   it needs. Python's BaseHTTPRequestHandler raises BrokenPipeError
+    line   43: from http.server import BaseHTTPRequestHandler, HTTPServer
+    line  205: class ForensicHubHandler(BaseHTTPRequestHandler):
+    line  345: ForensicHubHandler.db_path = db_path
+    line  346: server = ReuseAddrHTTPServer((HUB_BIND, HUB_PORT), ForensicHubHandler)
+
+  Context around _serve_control_health (lines 300-320):
+      300:         path = urlparse(self.path).path
+      301:         if _hub_state["paused"] and path in (STATS_PATH, LEADER_PATH, CITE_PATH, INTEG_PATH):
+      302:             self._json({"paused": True})
+      303:             return
+      304:         if path == CONTROL_HEALTH_PATH:
+ >>>  305:             self._serve_control_health()
+      306:             return
+      307:         if path == STATS_PATH:
+      308:             self._json(query_gamification(self.db_path))
+      309:         elif path == LEADER_PATH:
+      310:             self._json(query_leaderboard(self.db_path))
+      311:         elif path == CITE_PATH:
+      312:             self._json(query_citations(self.db_path))
+      313:         elif path == INTEG_PATH:
+      314:             ic = integrity_check(self.db_path)
+      315:             self._json({"quick_check": ic, "db": self.db_path,
+      316:                          "timestamp": datetime.datetime.now(
+      317:                              datetime.timezone.utc).isoformat()})
+      318:         elif path in ("/health", "/"):
+      319:             self._json({"status": "ok", "paused": _hub_state["paused"],
+      320:                          "port": HUB_PORT, "db": self.db_path,
+
+  String '/api/control_health' anywhere in hub_py: True
+
+--- 3. PORT VERIFICATION ---
+  Server startup / port references (16 found):
+    line   18: #   The game IS running — _physics_process fired, plane orbits at 6025m,
+    line   30: # │  #1  │ Claims trace to a run command│ BrokenPipeError root cause confirmed  │ Reproduc
+    line   47: HUB_BIND  = "127.0.0.1"
+    line   71: """Rule #32: blocking subprocess.run(), not fire-and-forget os.system()."""
+    line   72: r = subprocess.run(f"lsof -ti:{port} | xargs kill -9 2>/dev/null || true",
+    line  107: total = conn.execute("SELECT count(*) FROM pipelineruns").fetchone()[0]
+    line  109: "SELECT count(*) FROM pipelineruns WHERE status='success'"
+    line  182: "verbatim": "Every factual claim traces to a command actually run.",
+    line  346: server = ReuseAddrHTTPServer((HUB_BIND, HUB_PORT), ForensicHubHandler)
+    line  350: # kill_port_blocking runs at T-3s — delay separates them.
+    line  355: f'{STARTUP_DELAY_SEC}s delay complete — binding now')
+    line  356: threading.Thread(target=server.serve_forever, daemon=True).start()
+    line  357: log_result("http_hub", True, f"http://{HUB_BIND}:{HUB_PORT}")
+    line  360: print(f"Forensic hub: http://{HUB_BIND}:{HUB_PORT}")
+    line  370: print("GAME START: the game IS running when you see [INIT] Press SPACE.")
+
+  Likely hub_py port (heuristic): 8765
+
+--- 4. ENDPOINT ALIGNMENT MATRIX ---
+  control_events rows: 77
+  HUD requests: UNKNOWN (symbol resolution failed)
+  Hub serves:   /api/control_health  ✓
+  Port match:   cannot verify
+
+======================================================================
+DEDUCTIONS
+======================================================================
+[DISCONNECT] SYMBOL: _hub_url declaration pattern unknown — HUD target address unresolved
+
+======================================================================
+END OF AUDIT
+======================================================================

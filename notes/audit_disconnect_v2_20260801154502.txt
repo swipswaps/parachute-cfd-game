@@ -1,0 +1,176 @@
+audit_disconnect_v2  |  mode=DRY-RUN  |  2026-08-01T15:45:02.818947+00:00
+============================================================
+
+[V1 LOG FOUND] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/audit_disconnect_v1_20260801154043.txt
+
+--- Deep Hub Route Audit ---
+
+============================================================
+ROUTE AUDIT: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+============================================================
+
+Found 1 potential route(s):
+  line    9: /api/gamification         | var endpoint = "/api/gamification"
+
+============================================================
+ROUTE AUDIT: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+============================================================
+
+Found 7 potential route(s):
+  line   48: /api/control              | CONTROL_PATH = "/api/control"
+  line   49: /api/control_health       | CONTROL_HEALTH_PATH = "/api/control_health"
+  line   51: /api/gamification         | STATS_PATH  = "/api/gamification"
+  line   52: /api/leaderboard          | LEADER_PATH = "/api/leaderboard"
+  line   53: /api/citations            | CITE_PATH   = "/api/citations"
+  line   54: /api/integrity            | INTEG_PATH  = "/api/integrity"
+  line   87: /api/integrity            | served live at /api/integrity so the HUD shows DB health."""
+
+============================================================
+CONTEXT: forensic_hud.gd — CTRL_HEALTH_PATH constant
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+============================================================
+
+--- match at line 39 ---
+       37: const CITE_PATH       := "/api/citations"
+       38: const INTEG_PATH      := "/api/integrity"
+ >>>   39: const CTRL_HEALTH_PATH := "/api/control_health"
+       40: const POLL_FAST_SEC   := 2.0
+       41: const POLL_SLOW_SEC   := 10.0
+
+--- match at line 311 ---
+      309: 	if err_i != OK:
+      310: 		_status_label.text = "integ err: %d" % err_i
+ >>>  311: 	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+      312: 
+      313: func _on_stats_completed(
+
+============================================================
+CONTEXT: forensic_hud.gd — _hub_url target
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+============================================================
+
+--- match at line 46 ---
+       44: const POS_CFG_PATH    := "user://forensic_hud.cfg"
+       45: 
+ >>>   46: var _hub_url: String = ""
+       47: var _layer: CanvasLayer
+       48: var _panel: PanelContainer
+
+--- match at line 74 ---
+       72: var _card_expanded: Dictionary = {}
+       73: 
+ >>>   74: func _resolve_hub_url() -> String:
+       75: 	var key := "application/forensic_hub/url"
+       76: 	if ProjectSettings.has_setting(key):
+
+--- match at line 183 ---
+      181: 	_title_label = _mklabel("FORENSIC HUB", Color(0.55, 1.0, 0.55, 1.0))
+      182: 	_vbox.add_child(_title_label)
+ >>>  183: 	_url_label = _mklabel("hub: " + _hub_url, Color(0.65, 0.85, 0.65, 1.0))
+      184: 	_vbox.add_child(_url_label)
+      185: 	_vbox.add_child(HSeparator.new())
+
+--- match at line 244 ---
+      242: 		" frame=", Engine.get_process_frames(),
+      243: 		" process_mode=", process_mode)
+ >>>  244: 	_hub_url = _resolve_hub_url()
+      245: 	_build_ui()
+      246: 
+
+--- match at line 294 ---
+      292: 	if _stats_req.get_http_client_status() in [
+      293: 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+ >>>  294: 		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+      295: 		if err_a != OK:
+      296: 			_status_label.text = "stats err: %d" % err_a
+
+--- match at line 299 ---
+      297: 	if _leader_req.get_http_client_status() in [
+      298: 			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+ >>>  299: 		var err_b := _leader_req.request(_hub_url + LEADER_PATH)
+      300: 		if err_b != OK:
+      301: 			_status_label.text = "leader err: %d" % err_b
+
+--- match at line 305 ---
+      303: func _poll_slow() -> void:
+      304: 	if not _citations_loaded:
+ >>>  305: 		var err_c := _cite_req.request(_hub_url + CITE_PATH)
+      306: 		if err_c != OK:
+      307: 			_status_label.text = "cite err: %d" % err_c
+
+--- match at line 308 ---
+      306: 		if err_c != OK:
+      307: 			_status_label.text = "cite err: %d" % err_c
+ >>>  308: 	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+      309: 	if err_i != OK:
+      310: 		_status_label.text = "integ err: %d" % err_i
+
+--- match at line 311 ---
+      309: 	if err_i != OK:
+      310: 		_status_label.text = "integ err: %d" % err_i
+ >>>  311: 	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+      312: 
+      313: func _on_stats_completed(
+
+--- match at line 318 ---
+      316: 	_time_label.text = "t: " + Time.get_time_string_from_system()
+      317: 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+ >>>  318: 		_status_label.text = "hub offline (%s) result=%d code=%d" % [_hub_url, result, response_code]
+      319: 		return
+      320: 	var parsed = JSON.parse_string(body.get_string_from_utf8())
+
+--- match at line 329 ---
+      327: 		_gam_label.text = "(no pipeline DB found)"
+      328: 		return
+ >>>  329: 	_status_label.text = "hub OK  (%s)" % _hub_url
+      330: 	var lv = d.get("level", "-")
+      331: 	var xp = d.get("xp", "-")
+
+============================================================
+CONTEXT: HubManager.gd — port 8765
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+============================================================
+
+--- match at line 8 ---
+        5: 	call_deferred("_ensure_hub")
+        6: 
+        7: func _ensure_hub():
+ >>>    8: 	var port = 8765
+        9: 	var endpoint = "/api/gamification"
+       10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+       11: 	var output = []
+
+============================================================
+CONTEXT: HubManager.gd — listen
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/HubManager.gd
+============================================================
+
+--- match at line 37 ---
+       34: 	# Wait a moment and re-check
+       35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+       36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+ >>>   37: 	# always fired before the server was listening. Confirmed via
+       38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+       39: 	await get_tree().create_timer(5.0).timeout
+       40: 	var output2 = []
+
+--- DB Bridge Audit ---
+Last 5 control_events rows:
+  ('2026-08-01 15:01:20', 'turnleft', 2, 'pressed')
+  ('2026-08-01 15:01:19', 'turnright', 2, 'pressed')
+  ('2026-08-01 15:01:18', 'turnright', 2, 'pressed')
+  ('2026-08-01 15:01:15', 'turnleft', 2, 'pressed')
+  ('2026-08-01 15:01:13', 'turnright', 2, 'pressed')
+
+DB tables: ['source_snapshots', 'sqlite_sequence', 'source_mutations', 'parse_checks', 'issues', 'screenshots', 'parse_errors', 'game_state_log', 'omissions', 'resource_contention_log', 'runtime_failures', 'asset_validation', 'verbatim_logs', 'throttle_log', 'file_splits', 'syntax_errors', 'syntax_fixes', 'error_patterns', 'files_to_fix', 'pipelineruns', 'autohealactions', 'gd_patch_registry', 'verificationresults', 'applied_fixes', 'repair_metrics', 'repair_evidence', 'schema_migrations', 'auto_heal_actions', 'pipeline_runs', 'error_fingerprints', 'parse_error_log', 'pipeline_metadata', 'known_repairs', 'strategy_rewards', 'replay_api_tests', 'repair_attempts', 'tool_audit', 'repair_rules', 'component_registry', 'component_relationships', 'flight_controller_recon', 'flight_controller_recon_v2', 'blocking_errors_v1', 'fixes', 'diagnostic_log', 'restore_log', 'environment_fixes', 'patch_history', 'test_runs', 'user_preferences', 'diagnostic_logs', 'project_config', 'gamification', 'pilot_career', 'ratings', 'pilot_ratings', 'pilot_category_fixes', 'flights', 'code_patterns', 'missing_function_fixes', 'function_index', 'gdeye_diag', 'hud_state', 'component_health_tests', 'events_hardened', 'remediation_queue', 'control_info', 'component_audit_log', 'fix_log', 'diag_findings', 'steering_telemetry', 'arm_rig_audit', 'control_baseline', 'control_events', 'arm_physics_baseline', 'terrain_upgrades']
+Bridge tables found: ['gamification']
+
+============================================================
+DEDUCTIONS
+============================================================
+[DISCONNECT] HUB: HubManager.gd has NO /api/control_health route — _ctrl_health_req.request() returns 404
+[DISCONNECT] PATH: forensic_hud requests 'unknown' but hub does not serve it
+
+============================================================
+END OF AUDIT
+============================================================
