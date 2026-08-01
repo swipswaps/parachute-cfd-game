@@ -1,0 +1,144 @@
+diag_arm_apply | 2026-08-01T21:03:06.709905+00:00
+======================================================================
+
+=== arm apply block L2936-2970 ===
+2936: 
+2937: 		# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
+2938: 		# pull keeps the arm straight and a deep pull draws the hand inward.
+2939: 		var elbow_deg := 0.0
+2940: 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+2941: 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+2942: 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+2943: 			var e_ang: float = e_t * ARM_ELBOW_MAX
+2944: 			var e_ax: Vector3 = _arm_elbow_axis[side]
+2945: 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+2946: 			_arm_elbow_q_stored[side] = eq
+2947: 			elbow_deg = rad_to_deg(e_ang)
+2948: 
+2949: 		# Telemetry only while the system is doing something, so idle frames
+2950: 		# stay quiet and a pull/release cycle produces a dense readable curve.
+2951: 		if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+2952: 			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+2953: 				",", force, ",", tension, ",", damping, ",", accel,
+2954: 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+2955: 				",", elbow_deg, ",", _arm_hold_t[side])
+2956: 
+2957: func _apply_arm_bone_overrides() -> void:
+2958: 	if not _skeleton:
+2959: 		return
+2960: 	for side in ["L", "R"]:
+2961: 		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+2962: 		if idx != -1:
+2963: 			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+2964: 		var f_idx: int = _arm_fore_idx.get(side, -1)
+2965: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+2966: 			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+2967: 
+2968: 
+2969: # ===========================================================================
+2970: # ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+
+=== apply block enclosing gate L2950-2975 ===
+2950: 		# stay quiet and a pull/release cycle produces a dense readable curve.
+2951: 		if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+2952: 			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+2953: 				",", force, ",", tension, ",", damping, ",", accel,
+2954: 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+2955: 				",", elbow_deg, ",", _arm_hold_t[side])
+2956: 
+2957: func _apply_arm_bone_overrides() -> void:
+2958: 	if not _skeleton:
+2959: 		return
+2960: 	for side in ["L", "R"]:
+2961: 		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+2962: 		if idx != -1:
+2963: 			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+2964: 		var f_idx: int = _arm_fore_idx.get(side, -1)
+2965: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+2966: 			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+2967: 
+2968: 
+2969: # ===========================================================================
+2970: # ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+2971: #
+2972: # v6 could not run: it looked up "mixamorig:Hips" and friends, but Godot's
+2973: # FBX importer stores the separator as '_', so every lookup returned -1
+2974: # (0716.txt: six MISSING BONE lines, then ABORT). build_terrain.gd L649
+2975: # already hedged by testing both forms - that is why bone indices 8 and 32
+
+=== _sync_main_canopy (L3269) ===
+3269: func _sync_main_canopy() -> void:
+3270: 	if _main_canopy_node == null or not is_instance_valid(_main_canopy_node):
+3271: 		return
+3272: 	if _canopy_instance == null or not is_instance_valid(_canopy_instance):
+3273: 		return
+3274: 	var want: bool = _canopy_instance.visible
+3275: 	if _main_canopy_node.visible != want:
+3276: 		_main_canopy_node.visible = want
+3277: 		print("[CANOPYSYNC] main canopy visible -> ", want,
+3278: 			"  state=", _game_state, "  deployed=", _canopy_deployed)
+3279: 	var w: int = 1 if want else 0
+3280: 	if _canopy_sync_last != w:
+3281: 		_canopy_sync_last = w
+3282: 		print("[CANOPYSYNC] transition at state=", _game_state,
+3283: 			" deployed=", _canopy_deployed, " visible=", want)
+3284: 
+3285: # ===========================================================================
+3286: # CANOPY GLIDE  (fix_canopy_glide_v11)
+3287: #
+3288: # A ram-air canopy is a wing with no thrust: it trades height for forward
+3289: # speed and is steered by asymmetric brake. Before this, _physics_process
+3290: # wrote only _character.position.y, so there was no forward flight to steer -
+3291: # which is why turning appeared to do nothing after deployment, and why
+3292: # 0778.txt shows the turning block executing every frame against a null
+3293: # controller (has_pc=false).
+3294: #
+3295: # Control input is the toggle deflection already solved by the arm spring:
+3296: # _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+3297: #
+3298: #   sym  = (L+R)/2   symmetric brake -> slows the wing
+
+=== _ensure_controls (L3516) ===
+3516: func _ensure_controls() -> void:
+3517: 	if _controls_ready:
+3518: 		return
+3519: 	_controls_ready = true
+3520: 	print("[CONTROLS] ---- InputMap audit and repair ----")
+3521: 	var added := 0
+3522: 	for action in CONTROL_KEYS:
+3523: 		var want: int = CONTROL_KEYS[action]
+3524: 		var existed: bool = InputMap.has_action(action)
+3525: 		if not existed:
+3526: 			InputMap.add_action(action)
+3527: 		var had: Array = []
+3528: 		for ev in InputMap.action_get_events(action):
+3529: 			if ev is InputEventKey:
+3530: 				var kc: int = ev.physical_keycode
+3531: 				if kc == 0:
+3532: 					kc = ev.keycode
+3533: 				had.append(OS.get_keycode_string(kc))
+3534: 		var need: bool = not InputMap.action_has_event(action, _key_event(want))
+3535: 		if need:
+
+=== _arm_solve_elbow callsites ===
+    3130: 				_skeleton.force_update_all_bone_transforms()
+    3131: 
+>>> 3132: 	_arm_solve_elbow()
+    3133: 
+    3134: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+
+    3162: 
+    3163: 
+>>> 3164: func _arm_solve_elbow() -> void:
+    3165: 	if not _skeleton:
+    3166: 		return
+
+=== _arm_axis_probe callsites ===
+    2877: 	if not _arm_rest_ok:
+    2878: 		return
+>>> 2879: 	_arm_axis_probe()
+    2880: 	if delta <= 0.0:
+    2881: 		return
+
+
+Generated: 2026-08-01T21:03:06.714964+00:00
