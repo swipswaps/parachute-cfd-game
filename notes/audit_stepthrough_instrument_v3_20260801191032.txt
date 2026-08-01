@@ -1,0 +1,166 @@
+audit_stepthrough_instrument_v3 | 2026-08-01T19:10:32.281471+00:00
+file: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+funcs instrumented: 23
+======================================================================
+
+--- _resolve_hub_url (audit at line 75) ---
+      73: 
+      74: func _resolve_hub_url() -> String:
+>>>   75: 	print("[AUDIT] _resolve_hub_url: ENTER")
+      76: 	var key := "application/forensic_hub/url"
+      77: 	if ProjectSettings.has_setting(key):
+
+--- _mklabel (audit at line 87) ---
+      85: 
+      86: func _mklabel(txt: String, color := Color(0.9, 0.95, 0.9, 1.0)) -> Label:
+>>>   87: 	print("[AUDIT] _mklabel: ENTER")
+      88: 	var l := Label.new()
+      89: 	l.text = txt
+
+--- _mkbutton (audit at line 94) ---
+      92: 
+      93: func _mkbutton(txt: String) -> Button:
+>>>   94: 	print("[AUDIT] _mkbutton: ENTER")
+      95: 	var b := Button.new()
+      96: 	b.text = txt
+
+--- _panel_rect (audit at line 101) ---
+      99: 
+     100: func _panel_rect() -> Rect2:
+>>>  101: 	print("[AUDIT] _panel_rect: ENTER")
+     102: 	var sz := _panel.size
+     103: 	if sz == Vector2.ZERO:
+
+--- poll_forensic_hud (audit at line 121) ---
+     119: # explicitly from build_terrain.gd's _physics_process() instead.
+     120: func poll_forensic_hud() -> void:
+>>>  121: 	print("[AUDIT] poll_forensic_hud: ENTER")
+     122: 	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
+     123: 	if backtick_pressed and not _toggle_latch:
+
+--- _input (audit at line 146) ---
+     144: 
+     145: func _input(event: InputEvent) -> void:
+>>>  146: 	print("[AUDIT] _input: ENTER")
+     147: # backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
+     148: 	if event is InputEventKey and event.pressed and not event.echo:
+
+--- _build_ui (audit at line 161) ---
+     159: 		_gui_input(event)
+     160: func _build_ui() -> void:
+>>>  161: 	print("[AUDIT] _build_ui: ENTER")
+     162: 	_layer = CanvasLayer.new()
+     163: 	_layer.layer = 100
+
+--- _load_saved_position (audit at line 220) ---
+     218: 
+     219: func _load_saved_position() -> Vector2:
+>>>  220: 	print("[AUDIT] _load_saved_position: ENTER")
+     221: 	var config := ConfigFile.new()
+     222: 	if config.load(POS_CFG_PATH) == OK:
+
+--- _save_position (audit at line 229) ---
+     227: 
+     228: func _save_position() -> void:
+>>>  229: 	print("[AUDIT] _save_position: ENTER")
+     230: 	if _panel == null:
+     231: 		return
+
+--- _exit_tree (audit at line 237) ---
+     235: 
+     236: func _exit_tree() -> void:
+>>>  237: 	print("[AUDIT] _exit_tree: ENTER")
+     238: 	_save_position()
+     239: 
+
+--- _ready (audit at line 241) ---
+     239: 
+     240: func _ready() -> void:
+>>>  241: 	print("[AUDIT] _ready: ENTER")
+     242: 	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
+     243: 
+
+--- _poll_fast (audit at line 301) ---
+     299: 
+     300: func _poll_fast() -> void:
+>>>  301: 	print("[AUDIT] _poll_fast: ENTER")
+     302: 	# Guard: only fire a new request if the previous one completed.
+     303: 	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
+
+--- _poll_slow (audit at line 316) ---
+     314: 
+     315: func _poll_slow() -> void:
+>>>  316: 	print("[AUDIT] _poll_slow: ENTER")
+     317: 	if not _citations_loaded:
+     318: 		var err_c := _cite_req.request(_hub_url + CITE_PATH)
+
+--- _on_stats_completed (audit at line 327) ---
+     325: 
+     326: func _on_stats_completed(
+>>>  327: 	print("[AUDIT] _on_stats_completed: ENTER")
+     328: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     329: ) -> void:
+
+--- _on_leader_completed (audit at line 363) ---
+     361: 
+     362: func _on_leader_completed(
+>>>  363: 	print("[AUDIT] _on_leader_completed: ENTER")
+     364: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     365: ) -> void:
+
+--- _on_cite_completed (audit at line 396) ---
+     394: 
+     395: func _on_cite_completed(
+>>>  396: 	print("[AUDIT] _on_cite_completed: ENTER")
+     397: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     398: ) -> void:
+
+--- _on_integ_completed (audit at line 421) ---
+     419: 
+     420: func _on_integ_completed(
+>>>  421: 	print("[AUDIT] _on_integ_completed: ENTER")
+     422: 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+     423: ) -> void:
+
+--- _add_citation_card (audit at line 436) ---
+     434: 
+     435: func _add_citation_card(cite: Dictionary) -> void:
+>>>  436: 	print("[AUDIT] _add_citation_card: ENTER")
+     437: 	var cid := str(cite.get("id", "?"))
+     438: 	var label := str(cite.get("label", "(unlabeled)"))
+
+--- _gui_input (audit at line 473) ---
+     471: 
+     472: func _gui_input(event: InputEvent) -> void:
+>>>  473: 	print("[AUDIT] _gui_input: ENTER")
+     474: 	# Only process if panel is visible
+     475: 	if _layer == null or not _layer.visible or _panel == null:
+
+--- _fetch_hub_data (audit at line 493) ---
+     491: 
+     492: func _fetch_hub_data():
+>>>  493: 	print("[AUDIT] _fetch_hub_data: ENTER")
+     494: 	# Fetch gamification data from the hub
+     495: 	if http_request == null:
+
+--- _on_hub_data_received (audit at line 510) ---
+     508: 
+     509: func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+>>>  510: 	print("[AUDIT] _on_hub_data_received: ENTER")
+     511: 	# Handle the HTTP response
+     512: 	if response_code != 200:
+
+--- _setup_hud_label (audit at line 540) ---
+     538: 
+     539: func _setup_hud_label():
+>>>  540: 	print("[AUDIT] _setup_hud_label: ENTER")
+     541: 	# CanvasLayer draws its children on top of the scene tree
+     542: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+
+--- _on_ctrl_health_completed (audit at line 561) ---
+     559: 
+     560: func _on_ctrl_health_completed(
+>>>  561: 	print("[AUDIT] _on_ctrl_health_completed: ENTER")
+     562: 	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+     563: ) -> void:
+
