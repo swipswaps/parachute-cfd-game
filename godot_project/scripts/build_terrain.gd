@@ -3529,6 +3529,12 @@ func _log_control_presses() -> void:
 		if not InputMap.has_action(action):
 			continue
 		if Input.is_action_just_pressed(action):
+			# DB: persist confirmed keypress to control_events
+			var _cdb = get_node_or_null('/root/SqliteDb')
+			if _cdb != null:
+				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+				if _cdb.has_method('execute'): _cdb.execute(_sql)
+				elif _cdb.has_method('_query'): _cdb._query(_sql)
 			print("[CTRL] pressed=", action,
 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
 				"  state=", _game_state,

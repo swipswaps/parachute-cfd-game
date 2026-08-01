@@ -36,6 +36,7 @@ const STATS_PATH      := "/api/gamification"
 const LEADER_PATH     := "/api/leaderboard"
 const CITE_PATH       := "/api/citations"
 const INTEG_PATH      := "/api/integrity"
+const CTRL_HEALTH_PATH := "/api/control_health"
 const POLL_FAST_SEC   := 2.0
 const POLL_SLOW_SEC   := 10.0
 const PANEL_START_POS := Vector2(24, 24)
@@ -59,6 +60,8 @@ var _stats_req: HTTPRequest
 var _leader_req: HTTPRequest
 var _cite_req: HTTPRequest
 var _integ_req: HTTPRequest
+var _ctrl_health_req: HTTPRequest
+var _ctrl_label: Label
 var _fast_timer: Timer
 var _slow_timer: Timer
 
@@ -201,6 +204,11 @@ func _build_ui() -> void:
 	_vbox.add_child(_cite_vbox)
 
 	_vbox.add_child(HSeparator.new())
+	_vbox.add_child(_mklabel("Controls", Color(0.55,1.0,0.55,1.0)))
+	_ctrl_label = _mklabel("control_health: (loading...)")
+	_ctrl_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_vbox.add_child(_ctrl_label)
+	_vbox.add_child(HSeparator.new())
 	_time_label = _mklabel("t: --:--:--", Color(0.6, 0.75, 0.6, 1.0))
 	_vbox.add_child(_time_label)
 
@@ -223,14 +231,7 @@ func _exit_tree() -> void:
 	_save_position()
 
 func _ready() -> void:
-	# Initialize HTTP request node for hub data
-	if http_request == null:
-		http_request = HTTPRequest.new()
-		add_child(http_request)
-		http_request.request_completed.connect(_on_hub_data_received)
-	# Fetch data after a short delay to allow hub to be ready
-	await get_tree().create_timer(0.5).timeout
-	_fetch_hub_data()
+	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
 
 	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
 
@@ -262,6 +263,9 @@ func _ready() -> void:
 	_leader_req.request_completed.connect(_on_leader_completed)
 	_cite_req.request_completed.connect(_on_cite_completed)
 	_integ_req.request_completed.connect(_on_integ_completed)
+	_ctrl_health_req = HTTPRequest.new()
+	add_child(_ctrl_health_req)
+	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
 
 	_fast_timer = Timer.new()
 	_fast_timer.wait_time = POLL_FAST_SEC
@@ -283,7 +287,7 @@ func _ready() -> void:
 		label.position = Vector2(10, 10)
 		label.visible = true
 
-	_setup_hud_label()
+	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
 
 func _poll_fast() -> void:
 	var err_a := _stats_req.request(_hub_url + STATS_PATH)
@@ -301,6 +305,7 @@ func _poll_slow() -> void:
 	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
 	if err_i != OK:
 		_status_label.text = "integ err: %d" % err_i
+	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
 
 func _on_stats_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
@@ -471,9 +476,15 @@ func _fetch_hub_data():
 		print("[HUD] HTTPRequest not initialized")
 		return
 	var url = "http://127.0.0.1:8765/api/gamification"
-	var error = http_request.request(url)
-	if error != OK:
-		print("[HUD] Failed to request hub data: ", error)
+	# Guard against ERR_BUSY (44) — Godot HTTPRequest.request() fails
+	# if a prior request is still processing. Check status first.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+	if http_request.get_http_client_status() == HTTPClient.STATUS_DISCONNECTED:
+		var error = http_request.request(url)
+		if error != OK:
+			print("[HUD] Failed to request hub data: ", error)
+	else:
+		print("[HUD] HTTPRequest busy, skipping poll")
 
 func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
 	# Handle the HTTP response
