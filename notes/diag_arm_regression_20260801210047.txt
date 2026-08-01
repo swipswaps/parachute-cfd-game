@@ -1,0 +1,156 @@
+diag_arm_regression | 2026-08-01T21:00:47.133404+00:00
+======================================================================
+
+=== _arm_q_stored read/apply sites ===
+2935: 		_arm_q_stored[side] = q
+2963: 			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+2992: var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+
+=== _arm_axis_use definition ===
+3007: func _arm_axis_use(side: String) -> Vector3:
+3008: 	if _arm_axis_ok[side]:
+3009: 		return _arm_axis_solved[side]
+3010: 	return ARM_AXIS_L if side == "L" else ARM_AXIS_R
+3011: 
+3012: 
+3013: func _arm_axis_probe() -> void:
+
+=== ARM_MAX_ANGLE constant ===
+2814: const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+2933: 		var angle: float = pull * ARM_MAX_ANGLE
+
+=== set_bone_pose_rotation callsites (arm) ===
+    1799: 	if _skeleton and _left_arm_idx != -1:
+>>> 1800: 		_skeleton.set_bone_pose_rotation(_left_arm_idx, Quaternion(Vector3(0, 0, 1), -PI / 2))
+    1801: 	if _skeleton and _right_arm_idx != -1:
+    1802: 		_skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion(Vector3(0, 0, 1), PI / 2))
+
+    1801: 	if _skeleton and _right_arm_idx != -1:
+>>> 1802: 		_skeleton.set_bone_pose_rotation(_right_arm_idx, Quaternion(Vector3(0, 0, 1), PI / 2))
+    1803: 	_show_notification("Game reset")
+    1804: 	print("[VERBATIM] Reset complete. New malfunction: ", _malfunction_name())
+
+    2962: 		if idx != -1:
+>>> 2963: 			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+    2964: 		var f_idx: int = _arm_fore_idx.get(side, -1)
+    2965: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+
+    2965: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+>>> 2966: 			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+    2967: 
+    2968: 
+
+    3063: 	var saved_r: Quaternion = _skeleton.get_bone_pose_rotation(_right_arm_idx)
+>>> 3064: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, _arm_rest_q["L"])
+    3065: 	_skeleton.set_bone_pose_rotation(_right_arm_idx, _arm_rest_q["R"])
+    3066: 	_skeleton.force_update_all_bone_transforms()
+
+    3064: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, _arm_rest_q["L"])
+>>> 3065: 	_skeleton.set_bone_pose_rotation(_right_arm_idx, _arm_rest_q["R"])
+    3066: 	_skeleton.force_update_all_bone_transforms()
+    3067: 
+
+    3123: 				var ax: Vector3 = t[1]
+>>> 3124: 				_skeleton.set_bone_pose_rotation(arm_idx, rest * Quaternion(ax, ang))
+    3125: 				_skeleton.force_update_all_bone_transforms()
+    3126: 				var d: Vector3 = _skeleton.get_bone_global_pose(hand_idx).origin - p_hand0
+
+    3128: 					",", d.dot(fwd), ",", d.dot(up), ",", d.dot(right))
+>>> 3129: 				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+    3130: 				_skeleton.force_update_all_bone_transforms()
+    3131: 
+
+    3133: 
+>>> 3134: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+    3135: 	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+    3136: 	_skeleton.force_update_all_bone_transforms()
+
+    3134: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+>>> 3135: 	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+    3136: 	_skeleton.force_update_all_bone_transforms()
+    3137: 	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+
+    3232: 		for ang_deg in [30.0, 75.0]:
+>>> 3233: 			_skeleton.set_bone_pose_rotation(f_idx,
+    3234: 				rest_f * Quaternion(w_local, deg_to_rad(ang_deg)))
+    3235: 			_skeleton.force_update_all_bone_transforms()
+
+    3240: 				",", d1 - d0, ",", along)
+>>> 3241: 			_skeleton.set_bone_pose_rotation(f_idx, rest_f)
+    3242: 			_skeleton.force_update_all_bone_transforms()
+    3243: 
+
+
+=== _update_arm_physics callsite L1920-1945 ===
+1920: 		ForensicHUD.poll_forensic_hud()
+1921: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+1922: 		ForensicPanel.poll_forensic_panel()
+1923: 	if _character and is_instance_valid(_character):
+1924: 		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+1925: 	# --- Q/E turn input (checked first so it's available for all states) ---
+1926: 	if Input.is_key_pressed(KEY_Q):
+1927: 		_turn_input = -1.0
+1928: 	elif Input.is_key_pressed(KEY_E):
+1929: 		_turn_input = 1.0
+1930: 	else:
+1931: 		_turn_input = 0.0
+1932: 	# fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+1933: 	# Held state is read directly from the keys here, so release is handled
+1934: 	# (the old edge-triggered path executed nothing on key-up).
+1935: 	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+1936: 	_ensure_controls()
+1937: 	_log_control_presses()
+1938: 	_sync_main_canopy()
+1939: 	_pip_live_view(delta)
+1940: 
+1941: 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
+1942: 	if _game_state == GameState.IN_PLANE:
+1943: 		print("[DIAG] _physics_process: IN_PLANE branch entered")
+1944: 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+1945: 		if _plane_node:
+1946: 			_plane_node.position = Vector3(
+
+=== elbow references in live file ===
+2825: const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+2826: const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+2885: 		print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t")
+2939: 		var elbow_deg := 0.0
+2940: 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+2941: 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+2942: 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+2943: 			var e_ang: float = e_t * ARM_ELBOW_MAX
+2944: 			var e_ax: Vector3 = _arm_elbow_axis[side]
+2946: 			_arm_elbow_q_stored[side] = eq
+2947: 			elbow_deg = rad_to_deg(e_ang)
+2955: 				",", elbow_deg, ",", _arm_hold_t[side])
+2964: 		var f_idx: int = _arm_fore_idx.get(side, -1)
+2965: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+2966: 			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+2993: var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+3132: 	_arm_solve_elbow()
+3158: var _arm_fore_idx    := {"L": -1, "R": -1}
+3160: var _arm_elbow_axis  := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+3161: var _arm_elbow_ok    := {"L": false, "R": false}
+3164: func _arm_solve_elbow() -> void:
+3174: 			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+3178: 		_arm_fore_idx[side] = f_idx
+3187: 			print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm lever")
+3212: 			print("[ELBOWSOLVE] ", side,
+3216: 		print("[ELBOWSOLVE] ", side, " reference=", src)
+3221: 		_arm_elbow_axis[side] = w_local
+3222: 		_arm_elbow_ok[side] = true
+3224: 		print("[ELBOWSOLVE] ", side, " fore_idx=", f_idx,
+3226: 			" d_want=", d_want, " ELBOW_AXIS_LOCAL=", w_local)
+3231: 		print("[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive")
+3239: 			print("[ELBOWSOLVE],", side, ",", ang_deg, ",", d0, ",", d1,
+
+=== git log: arm/elbow commits ===
+c99b525 diag: arm+glide regression read (20260801205000)
+ffdd7d6 fix: arm deferred override+H double-fire+flare gate (GDScript only)
+806e275 diag: diag_handlers_arm2.txt — handler bodies + arm physics full
+bbd07b5 diag: diag_controls_arms.txt — arm physics + control handlers + anim
+90385bb fix: mixamo_com loop + freefall arm steering + gd.gd cleanup
+e6dd5af Fix altitude, turn controls, arm animation; clean up index
+90b9374 WORKING BASELINE: terrain, FBX, arm bones, drop zone, PiP canopy, HUD
+
+Generated: 2026-08-01T21:00:47.483631+00:00
