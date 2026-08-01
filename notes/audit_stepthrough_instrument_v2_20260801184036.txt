@@ -1,0 +1,107 @@
+audit_stepthrough_instrument_v2  |  mode=APPLY  |  2026-08-01T18:40:36.640354+00:00
+======================================================================
+
+[BASELINE] control_events rows: 77
+
+--- 1. SMOKE TEST (unmodified, 20s) ---
+  Smoke test: TIMEOUT after 20s (game may need longer to load)
+
+--- 2. BLIND SPOT DISCOVERY ---
+  Found 5 blind spot(s):
+    forensic_hud.gd:_resolve_hub_url at line 74
+    forensic_hud.gd:_poll_fast at line 289
+    forensic_hud.gd:_on_ctrl_health_completed at line 538
+    forensic_hub_server.py:_serve_control_health at line 265
+    forensic_hub_server.py:do_GET at line 299
+
+--- 3. INSTRUMENTING (reverse order per file) ---
+  [INSTRUMENTED] forensic_hud.gd:_on_ctrl_health_completed at original line 538
+  [INSTRUMENTED] forensic_hud.gd:_poll_fast at original line 289
+  [INSTRUMENTED] forensic_hud.gd:_resolve_hub_url at original line 74
+  [INSTRUMENTED] forensic_hub_server.py:do_GET at original line 299
+  [INSTRUMENTED] forensic_hub_server.py:_serve_control_health at original line 265
+
+--- 4. POST-INSTRUMENT VERIFICATION (±3 lines) ---
+
+============================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _resolve_hub_url() — AFTER instrument  (line 74)
+============================================================
+       71: var _citations_loaded: bool = false
+       72: var _card_expanded: Dictionary = {}
+       73: 
+ >>>   74: func _resolve_hub_url() -> String:
+       75: 	print("[AUDIT] _resolve_hub_url: ENTER")
+       76: 	var key := "application/forensic_hub/url"
+       77: 	if ProjectSettings.has_setting(key):
+
+============================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _poll_fast() — AFTER instrument  (line 289)
+============================================================
+      286: 		label.visible = true
+      287: 
+      288: 	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
+ >>>  289: 
+      290: func _poll_fast() -> void:
+      291: 	print("[AUDIT] _poll_fast: ENTER")
+      292: 	print("[AUDIT] _poll_fast: _hub_url=", _hub_url, " CTRL_PATH=", CTRL_HEALTH_PATH)
+
+============================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+ANCHOR: _on_ctrl_health_completed() — AFTER instrument  (line 538)
+============================================================
+      535: 		http.name = "HTTPRequest"
+      536: 		add_child(http)
+      537: 		http.request_completed.connect(_on_hub_data_received)
+ >>>  538: 	_fetch_hub_data()
+      539: 
+      540: 
+      541: func _on_ctrl_health_completed(
+
+============================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: _serve_control_health() — AFTER instrument  (line 265)
+============================================================
+      262:         log_result("hub_control", True, f"action={action} paused={_hub_state['paused']}")
+      263:         self._json({"paused": _hub_state["paused"]})
+      264: 
+ >>>  265:     def _serve_control_health(self):
+      266:         print(f"[AUDIT] _serve_control_health: ENTER", flush=True)
+      267:         print(f"[AUDIT] _serve_control_health: ENTER db_path={self.db_path}", flush=True)
+      268:         """Control baseline + recent events from parachute_mutations.db."""
+
+============================================================
+FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/forensic_hub_server.py
+ANCHOR: do_GET() — AFTER instrument  (line 299)
+============================================================
+      296:                 ],
+      297:             })
+      298:         except Exception as exc:
+ >>>  299:             self._json({"error": str(exc)})
+      300: 
+      301:     def do_GET(self):
+      302:         print(f"[AUDIT] do_GET: ENTER", flush=True)
+
+--- 5. RUNTIME CAPTURE (120s timeout) ---
+  Autostall exit: 0 after 55.5s
+  Game log: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/autostall_stepthrough_20260801184036.txt
+  Hub log:  /tmp/hub_server.log NOT FOUND
+
+--- 6. STEP-THROUGH VERDICT ---
+  [MISS] S1 (HUD) _resolve_hub_url: 0 hit(s)
+  [MISS] S2 (HUD) _poll_fast: 0 hit(s)
+  [MISS] S3 (HUD) _ctrl_health_req: 0 hit(s)
+  [MISS] S4 (HUB) do_GET: 0 hit(s)
+  [MISS] S5 (HUB) _serve_control_health: 0 hit(s)
+  [MISS] S6 (HUD) _on_ctrl_health_completed: 0 hit(s)
+  [MISS] S7 (HUD) _ctrl_label update: 0 hit(s)
+  [ERROR] GDScript compile error: 6 hit(s)
+
+--- 7. RESTORING ORIGINAL FILES ---
+  [RESTORED] forensic_hud.gd
+  [RESTORED] forensic_hub_server.py
+
+======================================================================
+END OF AUDIT
+======================================================================
