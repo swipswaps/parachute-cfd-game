@@ -1,0 +1,48 @@
+Audit of _deploy_canopy() functions – 2026-08-01T22:45:43.878153+00:00
+============================================================
+
+File: godot_project/scripts/build_terrain.gd
+  Line 821: func _deploy_canopy() -> void:
+  Function body (22 lines):
+    821: func _deploy_canopy() -> void:
+    822: 	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+    823: 	if _canopy_deployed or not _canopy_instance:
+    824: 		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+    825: 		return
+    826: 	_canopy_deployed = true
+    827: 	_canopy_instance.visible = true
+    828: 	_canopy_instance.scale = Vector3.ZERO
+    829: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+    830: 	_game_state = GameState.OPENING_ANIM
+    831: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+    832: 
+    833: 	if not _replay_playing:
+    834: 		_replay_recording.clear()
+    835: 		_replay_recording.append({"action": "deploy", "time": Time.get_ticks_msec()})
+    836: 	print("[VERBATIM] EXIT _deploy_canopy ok=true")
+    837: 
+    838: 
+    839: # ------------------------------------------------------------------
+    840: # Procedural fallback canopy (blue dome)
+    841: # Ref: https://docs.godotengine.org/en/stable/classes/class_spheremesh.html
+    842: # ------------------------------------------------------------------
+  Sets pull_down? False
+  ISSUE: Missing animation_tree.set('parameters/pull_down/blend_amount', 1.0)
+  SUGGESTED FIX: add that line after the deployment logic.
+
+
+File: godot_project/scripts/flight_controller.gd
+  Line 94: func _deploy_canopy() -> void:
+  Function body (3 lines):
+    94: func _deploy_canopy() -> void:
+    95: 	print("[VERBATIM] Deploying canopy from flight_controller")
+    96: 	# Add your canopy deployment logic here
+  Sets pull_down? False
+  ISSUE: Missing animation_tree.set('parameters/pull_down/blend_amount', 1.0)
+  SUGGESTED FIX: add that line after the deployment logic.
+
+
+Additional search for 'pull_down' in active scripts:
+No other references found.
+
+DB: Flagged both files as PENDING_DRYRUN.
