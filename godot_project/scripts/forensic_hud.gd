@@ -322,14 +322,25 @@ func _poll_fast() -> void:
 
 func _poll_slow() -> void:
 	print("[AUDIT] _poll_slow: ENTER")
+	# Guard: reset any stuck error state before firing — same fix as _poll_fast.
+	# Without this, ERR_BUSY(44) blocks every subsequent slow-timer tick.
+	for req in [_cite_req, _integ_req, _ctrl_health_req]:
+		var s := req.get_http_client_status()
+		if s not in [HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
+				HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
+			req.cancel_request()
 	if not _citations_loaded:
 		var err_c := _cite_req.request(_hub_url + CITE_PATH)
 		if err_c != OK:
 			_status_label.text = "cite err: %d" % err_c
-	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
-	if err_i != OK:
-		_status_label.text = "integ err: %d" % err_i
-	_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+	if _integ_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+		if err_i != OK:
+			_status_label.text = "integ err: %d" % err_i
+	if _ctrl_health_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
 
 func _on_stats_completed(
 	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
