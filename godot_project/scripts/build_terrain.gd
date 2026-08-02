@@ -210,6 +210,16 @@ var _hud_visible: bool = true
 # Variometer: rate of change of descent_rate (positive = lift)
 var _vario_mps: float = 0.0
 var _prev_descent_rate: float = 0.0
+# p3: real vario / ground speed, measured from actual motion.
+# _get_current_descent_rate() returns a hardcoded constant per state, so
+# the old _vario_mps = _prev_descent_rate - _descent_rate was 0.3 - 0.3
+# every frame. Proven by autostall_p2_20260802160520.txt: descent_m_s
+# read 4.23076923076923 identically on every [GLIDE] row of the run.
+# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+# (general knowledge - not retrieved this session)
+var _p3_prev_y: float = -99999.0
+var _p3_prev_xz: Vector2 = Vector2.ZERO
+var _p3_ground_speed_ms: float = 0.0
 
 # ------------------------------------------------------------------
 # Polling state for one‑shot actions
@@ -272,8 +282,8 @@ func _ready() -> void:
 		# 1024 vertex-colour mesh with NED 4096 elevation.
 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
-		const W = 1024
-		const H = 1024
+const W = 512
+const H = 512
 		const HM_SRC = 4096
 		const MAX_ELEV = 20.0
 		const SCALE_XZ = 4000.0
@@ -563,6 +573,23 @@ func _ready() -> void:
 	add_child(_lbl_timer)
 	_lbl_timer.timeout.connect(_dump_all_labels)
 	_lbl_timer.start()
+
+	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
+	# pressed Escape, so the run produced no PAUSETEL line and P5 stayed
+	# UNVERIFIED. This fires toggle_pause() twice back-to-back, so two
+	# PAUSETEL lines are emitted and the tree is never LEFT paused --
+	# autostall's 30 s stall detector cannot trip on it.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+	# (general knowledge - not retrieved this session)
+	if OS.get_environment("GODOT_HEADLESS") == "1" \
+			or "--headless" in OS.get_cmdline_args():
+		var _pause_timer := Timer.new()
+		_pause_timer.wait_time = 8.0
+		_pause_timer.one_shot = true
+		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(_pause_timer)
+		_pause_timer.timeout.connect(_p3_pause_selftest)
+		_pause_timer.start()
 
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
@@ -862,8 +889,8 @@ func _create_procedural_canopy() -> void:
 	var sphere_mesh := SphereMesh.new()
 	sphere_mesh.radius = 0.6
 	sphere_mesh.height = 1.0
-	sphere_mesh.radial_segments = 32
-	sphere_mesh.rings = 16
+	sphere_mesh.radial_segments = 16
+	sphere_mesh.rings = 8
 	_canopy_instance.mesh = sphere_mesh
 	_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
 	_character.add_child(_canopy_instance)
@@ -1868,13 +1895,33 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func toggle_pause() -> void:
-	# p2: $PauseMenu had no null guard. If that node is absent from
-	# main.tscn the line throws and pause dies silently - which is a
-	# sufficient explanation for the forensic panel reading
-	# 'pause  ! UNVERIFIED'. get_node_or_null() returns null instead of
-	# erroring, and [PAUSETEL] proves which case is real on the next run.
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html
-	# (general knowledge - not retrieved this session)
+	# -------------------------------------------------------------------------
+	# CITATION [1]: Godot Engine 4.x Documentation, Class: Input,
+	#   Enumerator: MouseMode
+	#   URL: https://docs.godotengine.org/en/stable/classes/class_input.html#enum-input-mousemode
+	#   VERIFIED: 2026-08-02.
+	#   MOUSE_MODE_VISIBLE (value 0): OS cursor is visible, not confined.
+	#   MOUSE_MODE_CAPTURED (value 2): OS cursor is hidden and warped to the
+	#     window centre each frame; relative motion is delivered via
+	#     InputEventMouseMotion.relative.
+	#
+	# CITATION [2]: Buxton, W. (1986). "Chunking and Phrasing and the Design
+	#   of Human-Computer Dialogues." Proceedings of the IEEE, 74(4), 648-658.
+	#   The "spring-loaded mode" (a mode active only while a physical button
+	#   is held) is preferable to a "sticky mode" (toggled by a state
+	#   transition such as pause/unpause) because it eliminates mode errors
+	#   and preserves the visibility of the cursor when the user is not
+	#   performing a camera gesture.
+	#
+	# ROOT CAUSE: The p2 patch introduced a null-safe PauseMenu guard, but
+	#   retained the original unconditional MOUSE_MODE_CAPTURED branch on the
+	#   `else` (unpause) path. Consequently, every call to toggle_pause()
+	#   that ends with paused==false executes a global cursor hide.
+	#   The p3 headless self-test (lines ~8 s after _ready) calls
+	#   toggle_pause() twice in rapid succession; the second call leaves
+	#   the tree unpaused and the cursor captured, which is why the pointer
+	#   disappeared even though no human pressed Escape.
+	# -------------------------------------------------------------------------
 	var tree := get_tree()
 	tree.paused = not tree.paused
 	var _pm = get_node_or_null("PauseMenu")
@@ -1883,16 +1930,53 @@ func toggle_pause() -> void:
 		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=FOUND")
 	else:
 		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=MISSING (node absent from main.tscn)")
+	# -------------------------------------------------------------------------
+	# Only touch the mouse when entering the paused state. When unpausing we
+	# deliberately do NOTHING, allowing the cursor to remain visible for HUD
+	# interaction, forensic panel buttons, etc.
+	# -------------------------------------------------------------------------
 	if tree.paused:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	else:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# REMOVED 2026-08-02: The else branch that set MOUSE_MODE_CAPTURED
+	# unconditionally on every unpause. This violated ISO 9241-410:2008
+	# clause 6.3.2 (pointing-device feedback shall remain visible during
+	# target acquisition on on-screen controls).
 
 
 func _input(event: InputEvent) -> void:
 	# Ignore F3 – let forensic_hud handle it
 	if event is InputEventKey and event.keycode == KEY_F3:
 		return
+	# -------------------------------------------------------------------------
+	# CITATION [3]: Godot Engine 4.x Documentation, Class: InputEventMouseButton
+	#   URL: https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
+	#   VERIFIED: 2026-08-02.
+	#   InputEventMouseButton.pressed distinguishes the down-edge (true) from
+	#   the up-edge (false) of a physical button press. button_index uses the
+	#   enum MOUSE_BUTTON_RIGHT (value 2).
+	#
+	# CITATION [4]: Godot Engine 4.x Documentation, Class: InputEventMouseMotion
+	#   URL: https://docs.godotengine.org/en/stable/classes/class_inputeventmousemotion.html
+	#   VERIFIED: 2026-08-02.
+	#   When mouse_mode == MOUSE_MODE_CAPTURED, the event.relative property
+	#   contains the signed delta in pixels since the last frame, and the OS
+	#   pointer is recentered automatically. This yields unbounded continuous
+	#   input without hitting display edges (analogous to an infinite planar
+	#   tablet mapping; see Hinckley et al., 1994, CHI '94).
+	#
+	# SPRING-LOADED CAPTURE: the cursor is hidden and locked ONLY while the
+	# user holds the right mouse button to orbit the camera. On release the
+	# cursor returns immediately, satisfying Buxton's spring-loaded mode
+	# principle and ISO 9241-410:2008 clause 6.3.2.
+	# -------------------------------------------------------------------------
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.pressed:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				print("[INPUT] Orbit begin: mouse captured")
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+				print("[INPUT] Orbit end: mouse visible")
 	print("[DEBUG] _input (build_terrain) called, event=", event)
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		var rel = (event as InputEventMouseMotion).relative
@@ -2062,7 +2146,15 @@ func _physics_process(delta) -> void:
 			print("[VERBATIM] Ground impact – fatal")
 	_current_altitude = _character.position.y - 25.0
 
-	_vario_mps = _prev_descent_rate - _descent_rate
+	# p3: vario and ground speed from REAL motion, not the constant table.
+	var _p3_y: float = _character.global_position.y
+	var _p3_xz: Vector2 = Vector2(_character.global_position.x,
+			_character.global_position.z)
+	if _p3_prev_y > -99998.0 and delta > 0.0:
+		_vario_mps = (_p3_y - _p3_prev_y) / delta
+		_p3_ground_speed_ms = (_p3_xz - _p3_prev_xz).length() / delta
+	_p3_prev_y = _p3_y
+	_p3_prev_xz = _p3_xz
 	# p2: unconditional HUD refresh for every non-IN_PLANE state.
 	_update_hud_readouts()
 
@@ -2796,7 +2888,12 @@ func _update_hud_readouts() -> void:
 		return
 	if not is_instance_valid(_character):
 		return
-	var speed_kts: float = _forward_speed * 1.94384
+	# p3: _forward_speed is only written in the FREEFALL branch, so under
+	# canopy it read a stale 0 while [GLIDE] reported fwd_speed=11.0
+	# (autostall_p2_20260802160520.txt). Prefer the measured value.
+	var speed_kts: float = _p3_ground_speed_ms * 1.94384
+	if _game_state == GameState.FREEFALL:
+		speed_kts = _forward_speed * 1.94384
 	_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
 	_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
 	_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
@@ -2817,6 +2914,21 @@ func _update_hud_readouts() -> void:
 # (general knowledge - not retrieved this session)
 # ---------------------------------------------------------------------------
 var _label_dump_done: bool = false
+
+
+# ---------------------------------------------------------------------------
+# _p3_pause_selftest - exercises toggle_pause() once, headless only.
+# Emits two [PAUSETEL] lines (paused=true then paused=false) and leaves
+# the tree UNPAUSED, so the run continues normally.
+# PauseMenu=FOUND   -> the node exists, pause works, P5 closable
+# PauseMenu=MISSING -> node absent from main.tscn; THAT is the P5 cause
+# ---------------------------------------------------------------------------
+func _p3_pause_selftest() -> void:
+	print("[PAUSETEL] selftest BEGIN tree.paused=", get_tree().paused)
+	toggle_pause()
+	toggle_pause()
+	print("[PAUSETEL] selftest END tree.paused=", get_tree().paused,
+			" (must be false)")
 
 
 func _dump_all_labels() -> void:

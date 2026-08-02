@@ -1,0 +1,183 @@
+======================================================================================================================================================================
+BUILD_TERRAIN.GD MARKER INVENTORY -- read-only, nothing modified
+generated 2026-08-02T20:19:59.990253+00:00
+
+toggle column:  CAPTURED = live MOUSE_MODE_CAPTURED assignment in
+                           toggle_pause() (the actual defect)
+                comment-only = the constant appears only in a comment
+                clean  = absent    NOFUNC = toggle_pause not found
+sp column:      Y = file contains space-indented code (Rule #31 fail)
+
+Marker -> substring tested:
+  P1deploy  <- '_headless_auto_deploy'
+  P2hud     <- '_update_hud_readouts'
+  P2dump    <- '_dump_all_labels'
+  P2pause   <- 'get_node_or_null("PauseMenu")'
+  P3vario   <- '_p3_prev_y'
+  P3self    <- '_p3_pause_selftest'
+  LOD512    <- '512'
+
+NOTE: LOD512 tests for the bare string '512' and will match
+      unrelated numbers. Treat it as weak evidence only.
+
+file                                 bytes lines sha8      mtime(UTC)           toggle       sp  P1deploy  P2hud     P2dump    P2pause   P3vario   P3self    LOD512   
+======================================================================================================================================================================
+*** CURRENT ***                     153848  3824 cdae80c8  2026-08-02 19:10:15  comment-only -   Y         Y         Y         Y         Y         Y         Y        
+build_terrain.gd.bak                 99877  2661 733b5dd0  2026-07-14 18:50:54  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260718141333   99315  2644 992135dc  2026-07-16 17:49:24  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260718141803   99315  2644 992135dc  2026-07-18 18:17:31  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260718162836   99342  2645 4fd7c45f  2026-07-18 18:18:03  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260720041743   99547  2652 e7bc5882  2026-07-19 17:49:46  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260720042511   99547  2652 e7bc5882  2026-07-19 17:49:46  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260720091744   99547  2652 e7bc5882  2026-07-19 17:49:46  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260722203347   99668  2654 26778713  2026-07-20 09:17:44  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723095811  100191  2663 ac1d95e3  2026-07-23 00:33:47  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723100530  100191  2663 ac1d95e3  2026-07-23 00:33:47  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723101430  100179  2663 0e56f124  2026-07-23 14:05:30  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723102552  100553  2668 f0ca6512  2026-07-23 14:14:30  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723111748  100638  2668 9f6a8b3d  2026-07-23 14:25:52  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723114647  100783  2668 3127e7c7  2026-07-23 15:17:48  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260723203503  101297  2668 efef75ff  2026-07-23 15:46:47  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260724124148359987  101607  2674 ec4ead56  2026-07-23 20:35:03  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260724124900324562  101607  2674 ec4ead56  2026-07-24 16:41:48  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260724130454791646  101657  2674 690280ec  2026-07-24 16:49:00  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260724131753266426  101702  2676 49285424  2026-07-24 17:04:54  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260725163513148483  101756  2677 8abd1567  2026-07-24 17:17:53  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260726120627  101773  2683 aa458c0d  2026-07-25 20:35:14  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260726121327  101773  2683 aa458c0d  2026-07-25 20:35:14  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260726122535  101773  2683 aa458c0d  2026-07-25 20:35:14  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260726125122  101499  2683 32982ad2  2026-07-26 12:25:35  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260726142423  101791  2683 60e8fae8  2026-07-26 14:24:23  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260727115140  101959  2684 4d688db9  2026-07-26 14:40:26  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260727115256  102111  2683 7ccd5c9d  2026-07-27 11:52:56  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260727152133  102699  2702 8bc216ec  2026-07-27 11:52:56  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729013912  102696  2701 8bac074b  2026-07-27 16:18:49  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729014632  102696  2701 8bac074b  2026-07-27 16:18:49  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729130249  103994  2730 eb6a7e5f  2026-07-29 01:46:32  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729135040  104675  2748 d69a38e2  2026-07-29 13:02:49  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729141016  109724  2875 5883b271  2026-07-29 13:50:40  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729141726  114343  2988 b77d7cca  2026-07-29 14:10:16  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729141915  116651  3039 20677d5c  2026-07-29 14:17:26  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729142819  116651  3039 20677d5c  2026-07-29 14:17:26  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729144519  117047  3050 03ea2a23  2026-07-29 14:28:19  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729150217  122302  3165 fcd7cee5  2026-07-29 14:45:19  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729191024  122302  3165 fcd7cee5  2026-07-29 14:45:19  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729191156  123535  3198 e9535153  2026-07-29 19:10:24  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729192116  125412  3240 896316c9  2026-07-29 19:11:56  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729192542  125412  3240 896316c9  2026-07-29 19:11:56  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729193332  125412  3240 896316c9  2026-07-29 19:11:56  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729194535  129674  3337 ab578ecd  2026-07-29 19:33:32  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729195031  133697  3430 b1f1880b  2026-07-29 19:50:31  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729204959  136963  3524 3a8f2317  2026-07-29 19:50:31  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729205524  136975  3524 e1a591fd  2026-07-29 20:49:59  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260729205620  136975  3524 e1a591fd  2026-07-29 20:49:59  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260730123216  136975  3524 e1a591fd  2026-07-29 20:49:59  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260730125028  137759  3538 00e06585  2026-07-30 12:32:16  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260730164901  138554  3548 76a88d6a  2026-07-30 12:50:28  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260730165932  138554  3548 76a88d6a  2026-07-30 12:50:28  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260730170438  138554  3548 76a88d6a  2026-07-30 12:50:28  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260730233326  139140  3561 89fe869e  2026-07-30 17:04:38  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260731001411  139509  3567 8209c74b  2026-07-30 23:33:26  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260731003707  139517  3567 d7e989f0  2026-07-31 00:14:11  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260731004756  139523  3567 4521b37f  2026-07-31 00:37:07  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260731131248  139578  3567 e6f24ce4  2026-07-31 00:47:56  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260731132644  139769  3571 bc2fc0c7  2026-07-31 13:12:51  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260731133047  138665  3537 f1e66dae  2026-07-31 13:26:44  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801142925  138665  3537 f1e66dae  2026-07-31 13:26:44  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801202543  139082  3543 3e40088e  2026-08-01 14:29:25  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801204134  139168  3543 b1d9bc37  2026-08-01 20:25:43  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801205254  140050  3562 cffa64bf  2026-08-01 20:41:34  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801205603  140437  3570 eb98ec02  2026-08-01 20:52:54  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801210504  140635  3572 21eb396f  2026-08-01 20:56:03  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260801211000  140942  3578 aa1cb39f  2026-08-01 21:05:04  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802005936  141062  3579 42d4b8ed  2026-08-01 21:10:00  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802011150  141810  3591 08a88da7  2026-08-02 00:59:36  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802011712  141810  3591 08a88da7  2026-08-02 00:59:36  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802090153665563  142232  3592 d2792a8d  2026-08-02 13:01:39  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802110730  142107  3595 d7755728  2026-08-02 01:17:12  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802112204  142107  3595 50e62897  2026-08-02 11:07:30  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802112524  142107  3595 50e62897  2026-08-02 11:07:30  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802123500  142295  3597 5e3d546e  2026-08-02 11:25:24  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802125429  142099  3595 2b5cdc98  2026-08-02 12:35:01  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802130139  142058  3591 5bb6e948  2026-08-02 12:54:37  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802152226  142453  3597 4fec906e  2026-08-02 13:01:53  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802160516  143150  3608 a0129e98  2026-08-02 15:22:27  CAPTURED     -   Y         -         -         -         -         -         Y        
+build_terrain.gd.bak.20260802161550  147725  3712 18296662  2026-08-02 16:05:16  CAPTURED     -   Y         Y         Y         Y         -         -         Y        
+build_terrain.gd.bak.20260802184253  150464  3767 fea43f60  2026-08-02 16:15:50  CAPTURED     -   Y         Y         Y         Y         Y         Y         Y        
+build_terrain.gd.bak.20260802191015  153855  3824 1de9ae6f  2026-08-02 18:42:53  comment-only -   Y         Y         Y         Y         Y         Y         Y        
+build_terrain.gd.bak_0314             8575   227 3659feab  2026-06-25 16:01:13  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260706-144724   84930  2303 07dc217f  2026-07-06 18:47:24  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260706-150526   66188  1821 ef55ed81  2026-07-06 19:02:59  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260706-150709   66188  1821 ef55ed81  2026-07-06 19:02:59  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260707_173928   95042  2541 513514d1  2026-07-07 21:39:28  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260707_181426   96379  2601 7270ae51  2026-07-07 22:14:26  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260707_183634   97997  2643 82da90b0  2026-07-07 22:36:34  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260707_193643   98492  2655 9c0cd72d  2026-07-07 23:36:43  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_214645   98762  2628 6629577d  2026-07-10 01:29:20  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_215923   98800  2628 10558c76  2026-07-10 01:46:45  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_222207   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_222653   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_223046   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_223251   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_223347   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_225015   99214  2655 2380dbc8  2026-07-10 02:39:28  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_225239   99210  2655 f64bde6a  2026-07-10 02:50:15  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_225316   99210  2655 f64bde6a  2026-07-10 02:50:15  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_225334   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_225402   99007  2648 7439e924  2026-07-10 02:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260709_225600   99007  2648 7439e924  2026-07-10 02:55:52  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_20260711_024216   13150   362 b4651244  2026-07-11 06:42:17  NOFUNC       -   -         -         -         -         -         -         -        
+build_terrain.gd.bak_20260711_025213   99325  2660 0f3ef22d  2026-07-11 06:52:13  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_attach2         57178  1552 a9ea7d1b  2026-07-03 22:30:25  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_attach_fc       56825  1544 fa371f91  2026-07-02 01:54:53  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_before_fix      84782  2302 58813d4b  2026-07-06 14:46:03  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_before_restore_20260706-150945   66188  1821 ef55ed81  2026-07-06 19:02:59  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_cam_pos_20260706_195949   85873  2322 0069fa14  2026-07-06 23:34:54  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_camera_fix      96543  2573 ac2dc95e  2026-07-07 20:32:04  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_camera_save_both   94850  2535 92eb25d1  2026-07-07 21:09:35  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_final_20260706-150018   66154  1819 0a03a479  2026-07-06 19:00:18  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fix_20260706-145212   66162  1819 c5c01f2f  2026-07-06 18:52:12  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fix_20260706-145233   66154  1819 0a03a479  2026-07-06 18:52:33  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fix_20260706_181416   85804  2322 247f3a28  2026-07-06 19:48:32  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fix_duplicate   95407  2549 c2d01774  2026-07-07 21:15:40  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fix_plane       84679  2299 2d31da60  2026-07-06 13:42:46  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fix_setup_plane   84760  2301 84c2e9ec  2026-07-06 14:37:38  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_fixed           93923  2519 cfc340a9  2026-07-07 18:28:56  CAPTURED     Y   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_frustum_full_20260706_203238   86190  2326 370429e1  2026-07-07 00:26:54  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_indent_fix      84785  2302 a35c16e6  2026-07-06 14:43:12  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_indent_fix_20260706_200624   86009  2324 10a133d5  2026-07-06 23:59:49  CAPTURED     Y   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_input_debug     95886  2562 17716903  2026-07-07 20:23:34  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_input_debug2    96496  2572 aaa563b7  2026-07-07 20:27:37  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_input_fix       94751  2533 cc2d22f3  2026-07-07 20:48:41  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_iterative_29_20260706_202654   86009  2324 5f1d0dc2  2026-07-07 00:06:24  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_look_at_character   84667  2299 d52950e1  2026-07-06 15:46:17  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_lookat_20260706_195303   85873  2322 0069fa14  2026-07-06 23:34:54  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_nullcheck       76659  2064 fa16f088  2026-06-25 16:01:13  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_orbit_v2_20260706_192123   85804  2322 247f3a28  2026-07-06 19:48:32  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_orbit_v3_20260706_192607   85883  2322 291e12d3  2026-07-06 23:21:23  CAPTURED     Y   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_orbit_v5_20260706_193055   85883  2322 291e12d3  2026-07-06 23:21:23  CAPTURED     Y   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_orbit_v6_20260706_193454   85883  2322 291e12d3  2026-07-06 23:21:23  CAPTURED     Y   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_paused_camera   92578  2479 4ce75aee  2026-07-07 20:44:25  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_paused_start    94445  2527 94172440  2026-07-07 19:55:48  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_planesave       93923  2519 cfc340a9  2026-07-07 18:30:46  CAPTURED     Y   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_precommit       92428  2454 ddad1350  2026-07-07 17:37:48  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_remove          56360  1535 23cc63c0  2026-07-01 15:25:22  NOFUNC       -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_save_load       92578  2479 4ce75aee  2026-07-07 18:27:08  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_tree_fix        95868  2562 7cbc7731  2026-07-07 20:04:55  CAPTURED     -   -         -         -         -         -         -         Y        
+build_terrain.gd.bak_tree_fix2       95880  2562 7fe25d1b  2026-07-07 20:11:22  CAPTURED     -   -         -         -         -         -         -         Y        
+======================================================================================================================================================================
+
+CURRENT FILE VERDICT:
+  toggle_pause defect present : comment-only
+  space-indented code (Rule 31): no
+  fixes present               : P1deploy, P2hud, P2dump, P2pause, P3vario, P3self, LOD512
+  fixes ABSENT                : (none)
+
+HOW TO READ THIS:
+  If CURRENT already has more Y marks than every backup, a restore
+  can only LOSE work -- patch the one defect instead.
+  If a specific fix shows '-' on CURRENT but 'Y' on some backup,
+  that fix was lost; recover THAT FUNCTION from that backup, do not
+  roll the whole file back.
+  Identical sha8 values mean identical files -- those backups are
+  redundant regardless of their differing timestamps.

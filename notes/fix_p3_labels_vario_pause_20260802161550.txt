@@ -1,0 +1,97 @@
+fix_p3_labels_vario_pause.py - 20260802161550 UTC
+build_terrain.gd: 147519 -> 150258 bytes
+backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260802161550
+main.tscn step: APPLIED
+
+EVIDENCE (all from notes/autostall_p2_20260802160520.txt):
+  P1 CLOSED:
+    [VERBATIM] Headless auto-deploy triggered (FREEFALL).
+    [VERBATIM] Parachute deployment started - state=OPENING_ANIM
+    [CANOPYSYNC] main canopy visible -> true state=2 deployed=true
+  p2 HUD unfreeze CONFIRMED:
+    LABELDUMP row 11 ALT: 6017 ft (build_terrain HUD)
+    LABELDUMP row 29 ALT: 6018 ft (AltimeterHUD)
+    -> 1 ft apart; was 6044 vs 4175 before p2
+  ORPHANS LOCATED:
+    rows 12-17 Label0..Label5, parent /root/Main/HUD, script none
+  VARIO ROOT CAUSE:
+    descent_m_s = 4.23076923076923 on EVERY [GLIDE] row
+    -> constant lookup, so prev-minus-current is 0 by construction
+  SPD ROOT CAUSE:
+    HUD 'SPD: 0 kts' vs [GLIDE] fwd_speed=11.0
+  PAUSETEL: zero occurrences - Escape never pressed
+
+STEP A: main.tscn = 1644 bytes
+STEP A: found 6 Label0-5 node headers with parent="HUD"
+STEP A: backup main.tscn.bak.20260802161550
+STEP A: REMOVING VERBATIM ->
+[node name="Label5" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 180.0
+offset_right = 400.0
+offset_bottom = 204.0
+text = "Label5"
+
+STEP A: REMOVING VERBATIM ->
+[node name="Label4" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 148.0
+offset_right = 400.0
+offset_bottom = 172.0
+text = "Label4"
+
+
+STEP A: REMOVING VERBATIM ->
+[node name="Label3" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 116.0
+offset_right = 400.0
+offset_bottom = 140.0
+text = "Label3"
+
+
+STEP A: REMOVING VERBATIM ->
+[node name="Label2" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 84.0
+offset_right = 400.0
+offset_bottom = 108.0
+text = "Label2"
+
+
+STEP A: REMOVING VERBATIM ->
+[node name="Label1" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 52.0
+offset_right = 400.0
+offset_bottom = 76.0
+text = "Label1"
+
+
+STEP A: REMOVING VERBATIM ->
+[node name="Label0" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 400.0
+offset_bottom = 44.0
+text = "Label0"
+
+
+STEP A: removed 6 node block(s), main.tscn now 780 bytes
+
+EXPECTED ON NEXT RUN - verify each, do not assume:
+  1. grep -c 'Label0' <log>   -> LABELDUMP no longer lists
+     Label0..Label5 under /root/Main/HUD
+  2. LABELDUMP total drops from 30 to 24
+  3. VARIO in the LABELDUMP SPD row is NON-ZERO
+  4. SPD in that row is non-zero and near [GLIDE] fwd_speed
+  5. [PAUSETEL] selftest BEGIN / two toggle lines / END false
+     PauseMenu=FOUND or =MISSING decides the real P5 fix
+
+STILL NOT ADDRESSED (Rule #14 - not yet grounded):
+  - terrain hatching despite sigma=6 blur
+  - canopy scale/placement vs jumper
+  - PiP framing
+  - grey void where the mesh does not cover
+  - restart (R) still has no telemetry
+  - 105 untracked scratch files in the working tree
