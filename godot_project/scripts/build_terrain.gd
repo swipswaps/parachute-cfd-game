@@ -126,6 +126,7 @@ var _canopy_instance: Node3D
 var _canopy_material: StandardMaterial3D
 var _canopy_deployed: bool = false
 var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
 var _deployment_timer
 var _screenshot_save_timer: float = 0.0
 const DEPLOY_TIME: float = 1.2
@@ -538,6 +539,11 @@ func _ready() -> void:
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+	# Headless auto‑start: simulate SPACE press
+	if OS.get_environment("GODOT_HEADLESS") == "1":
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] Headless auto‑start triggered.")
 	# Headless auto-start: simulate SPACE/deploy press
 	# Ref: OS.get_environment (general knowledge, not retrieved this session)
 	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
@@ -1610,6 +1616,15 @@ func _poll_controls() -> void:
 		return
 
 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+	# _deploy_canopy() requires state==FREEFALL; this flag is consumed only here,
+	# so it fires on the first FREEFALL _poll_controls() call.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+	# (general knowledge — not retrieved this session)
+	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+		_headless_auto_deploy = false
+		print("[VERBATIM] Headless auto-deploy triggered (FREEFALL).")
+		_deploy_canopy()
 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
 		_deploy_canopy()
@@ -1956,6 +1971,7 @@ func _physics_process(delta) -> void:
 					ProjectSettings.set_setting("_headless_space_fired", true)
 					Input.action_press("deploy")
 					Input.action_release("deploy")
+					_headless_auto_deploy = true
 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
 		else:
