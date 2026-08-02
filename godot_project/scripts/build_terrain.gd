@@ -253,14 +253,14 @@ func _ready() -> void:
 	# Terrain generation (full – uses heightmap and baked colours) with fallback
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
 	# --------------------------------------------------------------
-	var file = FileAccess.open("res://assets/terrain/heightmap_1024_hd.raw", FileAccess.READ)
+	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
 	if file:
 		# --- Heightmap exists: generate detailed terrain ---
 		var data = file.get_buffer(file.get_length())
 		file.close()
 
 		var _baked := PackedByteArray()
-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
 		if _bf:
 			_baked = _bf.get_buffer(_bf.get_length())
 			_bf.close()
@@ -270,8 +270,8 @@ func _ready() -> void:
 
 		var verts := []
 		var uvs := []
-		const W = 1024
-		const H = 1024
+		const W = 4096
+		const H = 4096
 		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
 		const SCALE_XZ = 4000.0
 		for z in range(H):
@@ -282,9 +282,9 @@ func _ready() -> void:
 				# Direct index (z*W + x) overflows 512-wide rows for x/z > 511
 				# -> returns raw=0 -> flat y=0 for 75% of the mesh.
 				# Fix: map vertex UV to heightmap pixel coords (nearest-neighbour).
-				var hm_x := int(float(x) / float(W - 1) * 511.0)
-				var hm_z := int(float(z) / float(H - 1) * 511.0)
-				var idx := (hm_z * 512 + hm_x) * 2
+				var hm_x := int(float(x) / float(W - 1) * 4095.0)
+				var hm_z := int(float(z) / float(H - 1) * 4095.0)
+				var idx := (hm_z * 4096 + hm_x) * 2
 				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
 				var py = (float(raw) / 65535.0) * MAX_ELEV
 				verts.push_back(Vector3(px, py, pz))
