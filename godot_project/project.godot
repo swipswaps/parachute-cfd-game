@@ -18,6 +18,7 @@ boot_splash_bg_color=Color(0, 0, 0, 1)
 
 [autoload]
 
+TelemetryLogger="*res://TelemetryLogger.gd"
 SqliteDb="*res://scripts/SqliteDb.gd"
 HealthChecker="*res://autoloads/HealthChecker.gd"
 HubManager="*res://scripts/HubManager.gd"
