@@ -1,0 +1,42 @@
+fix_hud_vario_pause_p2.py - 20260802160516 UTC
+Target: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+Backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260802160516
+Bytes:  142944 -> 147519
+
+PATCHES APPLIED (all verified exactly-1-match before writing):
+  A  HUD writes moved out of FREEFALL-only branch
+  B  _descent_rate member assigned (VARIO was hardwired to 0.00)
+  C  _update_hud_readouts() called on the common path
+  D  $PauseMenu null-guarded + [PAUSETEL] telemetry
+  E  _update_hud_readouts() and _dump_all_labels() appended
+  F  one-shot label dump scheduled from _ready()
+
+EVIDENCE THIS FIX WAS BUILT FROM:
+  Screenshots 2026-08-02 11:24:47 / 11:25:10 / 11:25:37 / 11:25:57
+    altimeter panel: 5142 -> 4813 -> 4443 -> 4175 ft (live)
+    HUD Label0:      6044 ft in ALL FOUR (frozen)
+    HUD VARIO:       +0.0 / 0.00 m/s in ALL FOUR (hardwired zero)
+    HUD TURN:        50 in ALL FOUR (frozen)
+    forensic panel:  pause ! UNVERIFIED, restart ! UNVERIFIED
+    six orphan Labels named Label0..Label5 over the HUD
+
+EXPECTED EVIDENCE ON THE NEXT RUN - verify each, do not assume:
+  1. HUD ALT tracks the altimeter panel after canopy deploy
+     (they must agree to within one frame, not diverge)
+  2. HUD VARIO shows a NON-ZERO value during descent
+  3. [PAUSETEL] toggle_pause paused=... PauseMenu=FOUND|MISSING
+     -> FOUND  = pause works, P5 closable for pause
+     -> MISSING = PauseMenu absent from main.tscn, that is the
+                  real P5 root cause and the next thing to fix
+  4. [LABELDUMP_HDR] then [LABELDUMP],N,<name>,<parent>,<script>,<text>
+     -> find the rows named Label0..Label5 and read their parent
+        path and script. THAT is the file creating them.
+  5. [LABELDUMP] total Label nodes in tree: N
+
+NOT FIXED THIS ROUND (deliberately, per Rule #14 - not yet grounded):
+  - orphan Label0..Label5: diagnostic only, creator unknown
+  - terrain hatching still visible despite sigma=6 blur
+  - canopy scale/placement relative to jumper looks wrong
+  - PiP shows disembodied forearms, no canopy framing
+  - large grey void where terrain mesh does not cover
+  - restart (R) still UNVERIFIED; no telemetry added for it yet

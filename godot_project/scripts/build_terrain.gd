@@ -552,6 +552,18 @@ func _ready() -> void:
 		print("[VERBATIM] Headless auto‑start triggered.")
 	_check_arm_pose_safe()
 
+	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
+	# Deferred ~2 s so every autoload and CanvasLayer has finished building.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
+	# (general knowledge - not retrieved this session)
+	var _lbl_timer := Timer.new()
+	_lbl_timer.wait_time = 2.0
+	_lbl_timer.one_shot = true
+	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(_lbl_timer)
+	_lbl_timer.timeout.connect(_dump_all_labels)
+	_lbl_timer.start()
+
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
 
@@ -1856,9 +1868,21 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func toggle_pause() -> void:
+	# p2: $PauseMenu had no null guard. If that node is absent from
+	# main.tscn the line throws and pause dies silently - which is a
+	# sufficient explanation for the forensic panel reading
+	# 'pause  ! UNVERIFIED'. get_node_or_null() returns null instead of
+	# erroring, and [PAUSETEL] proves which case is real on the next run.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html
+	# (general knowledge - not retrieved this session)
 	var tree := get_tree()
 	tree.paused = not tree.paused
-	$PauseMenu.visible = tree.paused
+	var _pm = get_node_or_null("PauseMenu")
+	if _pm != null:
+		_pm.visible = tree.paused
+		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=FOUND")
+	else:
+		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=MISSING (node absent from main.tscn)")
 	if tree.paused:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	else:
@@ -2017,8 +2041,14 @@ func _physics_process(delta) -> void:
 		_camera.look_at(target, Vector3.UP)
 		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
 	_prev_descent_rate = _descent_rate
+	# p2 VARIO FIX: the result of _get_current_descent_rate() used to go
+	# into a LOCAL named `descent`; the member _descent_rate was never
+	# assigned, so _vario_mps = _prev_descent_rate - _descent_rate was
+	# 0.0 - 0.0 on every frame. Assigned BEFORE _apply_malfunction_effects()
+	# so that function's `_descent_rate += ...` additions survive.
+	_descent_rate = _get_current_descent_rate()
 	_apply_malfunction_effects(delta)
-	var descent = _get_current_descent_rate() * 60.0 * delta
+	var descent = _descent_rate * 60.0 * delta
 	_character.position.y -= descent
 	# v11: only .y was ever written here, so the canopy had no forward
 	# flight at all. Horizontal glide and turning are applied below.
@@ -2033,6 +2063,8 @@ func _physics_process(delta) -> void:
 	_current_altitude = _character.position.y - 25.0
 
 	_vario_mps = _prev_descent_rate - _descent_rate
+	# p2: unconditional HUD refresh for every non-IN_PLANE state.
+	_update_hud_readouts()
 
 	_update_cfd_wind(delta)
 	_update_canopy_tilt()
@@ -2058,10 +2090,12 @@ func _physics_process(delta) -> void:
 		if _velocity_vec.length() > 0.5:
 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
-		var speed_kts = _forward_speed * 1.94384
-		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
-		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
-		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+		# p2: the three _hud_labels writes that used to live here ran ONLY in
+		# FREEFALL, so the HUD froze the instant _deploy_canopy() moved state
+		# to OPENING_ANIM. Screenshots 11:24:47-11:25:57 showed the altimeter
+		# panel falling 5142->4175 ft while HUD Label0 stayed at 6044 ft.
+		# They are now in _update_hud_readouts(), called unconditionally from
+		# the common path below.
 		_check_decision_altitude()
 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
 		if _screenshot_save_timer > 0:
@@ -2741,6 +2775,76 @@ func _recreate_hud_if_needed() -> void:
 
 func build_chunk(chunk_coords: Vector2) -> void:
 	pass
+
+
+# ---------------------------------------------------------------------------
+# _update_hud_readouts - p2
+#
+# Holds the three HUD writes that previously lived inside the FREEFALL-only
+# branch of _physics_process. Called unconditionally from the common path so
+# ALT / SPD / VARIO / TURN keep updating through OPENING_ANIM, DIAGNOSIS and
+# LANDED - not just FREEFALL.
+#
+# Guarded on _hud_labels.size() because _ready() can return early before the
+# labels are built (the `if _hud_layer: return` guard), and indexing an empty
+# array would throw once per physics frame.
+# Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
+# (general knowledge - not retrieved this session)
+# ---------------------------------------------------------------------------
+func _update_hud_readouts() -> void:
+	if _hud_labels.size() < 8:
+		return
+	if not is_instance_valid(_character):
+		return
+	var speed_kts: float = _forward_speed * 1.94384
+	_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+	_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+	_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+	_hud_labels[6].text = "MALF: " + _malfunction_name()
+
+
+# ---------------------------------------------------------------------------
+# _dump_all_labels - p2 DIAGNOSTIC ONLY, NOT A FIX (Rule #14)
+#
+# Screenshots dated 2026-08-02 11:24:47-11:25:57 show six Labels named
+# Label0..Label5 rendering on top of the real HUD text. Their creator was NOT
+# found in build_terrain.gd, so nothing is being changed blind. This walks the
+# whole tree once and prints every Label with its name, text, parent path and
+# attached script, so the next round can patch the actual source.
+#
+# Runs once, ~2 s after _ready, then never again.
+# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html
+# (general knowledge - not retrieved this session)
+# ---------------------------------------------------------------------------
+var _label_dump_done: bool = false
+
+
+func _dump_all_labels() -> void:
+	if _label_dump_done:
+		return
+	_label_dump_done = true
+	print("[LABELDUMP_HDR] idx,name,parent_path,script,text")
+	var found: int = 0
+	var stack: Array = [get_tree().root]
+	while stack.size() > 0:
+		var n = stack.pop_back()
+		if n == null:
+			continue
+		if n is Label:
+			var scr: String = "none"
+			if n.get_script() != null:
+				scr = str(n.get_script().resource_path)
+			var par: String = "orphan"
+			if n.get_parent() != null:
+				par = str(n.get_parent().get_path())
+			print("[LABELDUMP],", found, ",", n.name, ",", par, ",", scr,
+					",", n.text.replace(",", ";"))
+			found += 1
+		for c in n.get_children():
+			stack.push_back(c)
+	print("[LABELDUMP] total Label nodes in tree: ", found)
+	print("[LABELDUMP] _hud_labels.size()=", _hud_labels.size())
+
 
 
 # ---------------------------------------------------------------------------
