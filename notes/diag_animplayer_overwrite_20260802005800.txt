@@ -1,0 +1,119 @@
+diag_animplayer_overwrite | 2026-08-02T00:58:00.307510+00:00
+======================================================================
+
+=== _anim_player member var ===
+  L688: 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+
+=== _setup_anim_player (L2747) ===
+2747: func _setup_anim_player(ap) -> void:
+2748: 	const CLIP := "mixamo_com"
+2749: 	if ap == null:
+2750: 		print("[VERBATIM] _setup_anim_player: ap is null")
+2751: 		return
+2752: 	if not ap.has_method("get_animation_list"):
+2753: 		print("[VERBATIM] _setup_anim_player: node is not an AnimationPlayer: ", ap)
+2754: 		return
+2755: 	var clips = ap.get_animation_list()
+2756: 	print("[VERBATIM] _setup_anim_player: clips=", clips)
+2757: 	var chosen := ""
+2758: 	if CLIP in clips:
+2759: 		chosen = CLIP
+2760: 	else:
+2761: 		for c in clips:
+2762: 			if c != "Take 001":
+2763: 				chosen = c
+2764: 				break
+2765: 	if chosen == "":
+2766: 		print("[VERBATIM] _setup_anim_player: no usable clip in ", clips)
+2767: 		return
+2768: 	print("[VERBATIM] _setup_anim_player: deferring play of ", chosen)
+2769: 	await get_tree().process_frame
+2770: 	await get_tree().process_frame
+2771: 	if not is_instance_valid(ap):
+2772: 		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
+2773: 		return
+2774: 	# Set loop mode on the Animation resource — must be set on the resource,
+2775: 	# not as a play() argument. Animation.LOOP_LINEAR = 1.
+2776: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_animation.html
+2777: 	# (general knowledge — not retrieved this session)
+2778: 	var _anim_res = ap.get_animation(chosen)
+2779: 	if _anim_res:
+2780: 		_anim_res.loop_mode = Animation.LOOP_LINEAR
+2781: 	ap.play(chosen)
+2782: 	ap.speed_scale = 1.0
+2783: 	print("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)
+2784: 
+2785: # ===========================================================================
+2786: # TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+2787: #
+2788: # Replaces the monotonic ratchet at the old _rotate_arm L871
+2789: # (angle += _arm_rotation_step, clamped to PI, never decremented).
+2790: #
+2791: # A steering toggle hangs on lines that cascade to the canopy. Canopy tension
+2792: # is a restoring force: it pulls the toggle back toward neutral whenever the
+2793: # hand stops pulling. Modelled as a forced, damped spring in normalized
+2794: # deflection `pull` in [0, 1]:
+2795: #
+2796: #   input_force = held ? PULL_FORCE : 0.0
+2797: #   tension     = K_LINE * pull
+2798: #   damping     = C_DAMP * pull_vel
+2799: #   accel       = (input_force - tension - damping) / ARM_INERTIA
+2800: #
+2801: # Equilibrium while held: PULL_FORCE / K_LINE = 0.75 (75% brake).
+2802: # Damping ratio: C_DAMP / (2*sqrt(K_LINE*ARM_INERTIA)) = 0.62 (underdamped,
+2803: # so the toggle springs back with a small natural overshoot).
+2804: #
+2805: # Refs (general knowledge - not retrieved this session):
+2806: #   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+2807: #   https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+2808: #   https://docs.godotengine.org/en/stable/classes/class_animationplayer.html
+2809: # ===========================================================================
+2810: 
+2811: const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below
+2812: const ARM_K_LINE       := 8.0
+2813: const ARM_C_DAMP       := 3.5
+2814: const ARM_INERTIA      := 1.0
+2815: const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+2816: const ARM_EPS          := 0.0005
+2817: 
+2818: # v8: a constant force settles at a constant deflection (eq = F/K), so a
+2819: # longer hold used to change nothing after ~1 s. Ramping the force while
+2820: # held makes a sustained pull go deeper, which is what a real flare does.
+2821: const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap
+2822: const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
+2823: const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
+2824: 
+2825: # v8: elbow stays straight on a shallow pull, flexes on a deep one.
+2826: const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+2827: const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+2828: 
+2829: var _arm_pull      := {"L": 0.0, "R": 0.0}
+2830: var _arm_vel       := {"L": 0.0, "R": 0.0}
+2831: var _arm_rest_q    := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+2832: var _arm_rest_ok   := false
+2833: var _arm_tel_header := false
+2834: var _arm_tel_t     := 0.0
+2835: var _arm_anim_ref  = null
+2836: 
+2837: 
+
+=== _anim_player play/stop/pause calls ===
+     688: 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+     689: 	if _anim_player and _anim_player.has_animation("RESET"):
+>>>  690: 		_anim_player.play("RESET")
+     691: 		await get_tree().process_frame
+     692: 		_anim_player.stop()
+
+     690: 		_anim_player.play("RESET")
+     691: 		await get_tree().process_frame
+>>>  692: 		_anim_player.stop()
+     693: 		print("[VERBATIM] RESET animation played – arms at rest pose")
+     694: 	else:
+
+=== AnimationPlayer process_mode / callback_mode refs ===
+  L244: 	process_mode = PROCESS_MODE_ALWAYS
+  L394: 		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+  L2525: 		plane.process_mode = PROCESS_MODE_ALWAYS
+  L3060: 			" process_mode=", ap.callback_mode_process,
+
+Generated: 2026-08-02T00:58:00.322899+00:00
