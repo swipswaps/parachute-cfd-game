@@ -686,6 +686,7 @@ func _load_character() -> void:
 	# _force_neutral_arms()  # disabled – using RESET animation instead
 	# Play RESET animation to force arms to rest pose (R091/R092)
 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+	_the_anim_player = _anim_player  # store for arm physics pause/resume
 	if _anim_player and _anim_player.has_animation("RESET"):
 		_anim_player.play("RESET")
 		await get_tree().process_frame
@@ -2833,6 +2834,7 @@ var _arm_rest_ok   := false
 var _arm_tel_header := false
 var _arm_tel_t     := 0.0
 var _arm_anim_ref  = null
+var _the_anim_player = null  # stored so arm physics can pause/resume it
 
 
 func _arm_capture_rest() -> void:
@@ -2960,6 +2962,16 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 	# computed above but were never written to the skeleton — root cause
 	# of arms not pulling down despite spring-damper running correctly.
 	_apply_arm_bone_overrides()
+	# Stop the looping Mixamo AnimationPlayer when arm pull is active so
+	# it cannot overwrite the bone poses we just set. Resume when at rest.
+	# Root cause of regression ffdd7d6: AnimationPlayer.play(mixamo_com)
+	# runs every frame and overwrites set_bone_pose_rotation every frame.
+	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
+	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+		if any_pull and _the_anim_player.is_playing():
+			_the_anim_player.stop()
+		elif not any_pull and not _the_anim_player.is_playing():
+			_the_anim_player.play("mixamo_com")
 
 func _apply_arm_bone_overrides() -> void:
 	if not _skeleton:
