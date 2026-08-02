@@ -530,7 +530,7 @@ def main():
     game_completed = False
     _flare_injected = False   # Rule sec5.2: inject F after glide
     _glide_start_t = None     # time of first [GLIDE] line seen
-    FLARE_DELAY_S = 90.0      # seconds of glide before injecting flare
+    FLARE_DELAY_S = 45.0      # seconds of glide before injecting flare
     grace_until = 0.0
     seen_errors = set()
 

@@ -1,0 +1,28 @@
+fix_blur_flare | 2026-08-02T12:47:46.540798+00:00
+FIX A: Gaussian blur sigma=2.0 on baked_colours_4096.bin.
+  Root: naip_texture.png mode=P (256 colours). Hard palette edges
+  at 3.9m vertex spacing cause hatching. Blur smooths edges >3.9m.
+  Runway lines (~10m wide = ~10px at 4096) preserved above blur radius.
+FIX B: FLARE_DELAY_S 90->45s in autostall_patched.py.
+  Root: 80s game load leaves ~40s physics in 120s window.
+  90s delay never elapses. 45s fires at ~125s total -> needs --no-timeout
+  OR increase autostall timeout. Recommend: autostall_patched.py --no-timeout
+  for flare testing until game load time improves.
+  NOTE: diagonal grey line in screenshot is NOT the runway -- likely
+  a DZ marker or mesh seam. Runway alignment needs georeferencing.
+======================================================================
+
+=== autostall diff ===
+diff --git a/autostall_patched.py b/autostall_patched.py
+index c0a8924..fdce883 100644
+--- a/autostall_patched.py
++++ b/autostall_patched.py
+@@ -530,7 +530,7 @@ def main():
+     game_completed = False
+     _flare_injected = False   # Rule sec5.2: inject F after glide
+     _glide_start_t = None     # time of first [GLIDE] line seen
+-    FLARE_DELAY_S = 90.0      # seconds of glide before injecting flare
++    FLARE_DELAY_S = 45.0      # seconds of glide before injecting flare
+     grace_until = 0.0
+     seen_errors = set()
+ 
