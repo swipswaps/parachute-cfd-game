@@ -178,5 +178,5 @@ var _pip_container: SubViewportContainer = null
 #
 # The PiP container is created dynamically in build_terrain.gd.
 
-func _get_drag_data(at_position: Vector2) -> Dictionary:
+func _get_drag_data(_at_position: Vector2) -> Dictionary:
 	return {}

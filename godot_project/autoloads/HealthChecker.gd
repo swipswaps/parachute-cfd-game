@@ -16,13 +16,8 @@ var _db = null
 
 func _ready():
 	dump_control_hierarchy()
-	# Wait for game to stabilise
-	await get_tree().process_frame
-	await get_tree().create_timer(1.0).timeout
-	_db = get_node_or_null("/root/SqliteDb")
-	if not _db:
-		print("[HealthChecker] SqliteDb not available – cannot log tests.")
-		return
+	# Wait for game to stabilise — moved to deferred func (G7 fix)
+	call_deferred("_on_ready_stabilise_deferred")
 
 	test_forensic_hud_drag()
 	test_forensic_hud_html()
@@ -41,10 +36,11 @@ func test_forensic_hud_drag():
 		return
 
 	# vPR1: reset panel to (100,100) before test so drift never pushes it offscreen
-	panel.position = Vector2(100.0, 100.0)
+	# R8 FIXED: position moved to test_panel after duplicate() — see below
 	var initial_pos = panel.position
 	# vHC1.2: operate on a duplicate so the live panel is never teleported.
 	var test_panel = panel.duplicate()
+	test_panel.position = Vector2(100.0, 100.0)  # R8 FIX: set on duplicate, not on live panel
 	panel.get_parent().add_child(test_panel)
 	test_panel.position = initial_pos
 	# Simulate mouse press and drag
@@ -143,21 +139,21 @@ func dump_control_hierarchy():
 	# Ensure table exists
 	var create_table = '''
 CREATE TABLE IF NOT EXISTS control_info (
-    node_path TEXT,
-    class_name TEXT,
-    position_x REAL,
-    position_y REAL,
-    size_x REAL,
-    size_y REAL,
-    global_position_x REAL,
-    global_position_y REAL,
-    mouse_filter INTEGER,
-    visible INTEGER,
-    z_index INTEGER,
-    modulate_r REAL,
-    modulate_g REAL,
-    modulate_b REAL,
-    timestamp TEXT
+	node_path TEXT,
+	class_name TEXT,
+	position_x REAL,
+	position_y REAL,
+	size_x REAL,
+	size_y REAL,
+	global_position_x REAL,
+	global_position_y REAL,
+	mouse_filter INTEGER,
+	visible INTEGER,
+	z_index INTEGER,
+	modulate_r REAL,
+	modulate_g REAL,
+	modulate_b REAL,
+	timestamp TEXT
 )
 '''
 	db._query(create_table)
@@ -187,10 +183,10 @@ func _traverse_controls(node, db, timestamp):
 		var cls = node.get_class()
 		var sql = '''
 INSERT INTO control_info (
-    node_path, class_name, position_x, position_y,
-    size_x, size_y, global_position_x, global_position_y,
-    mouse_filter, visible, z_index, modulate_r, modulate_g, modulate_b,
-    timestamp
+	node_path, class_name, position_x, position_y,
+	size_x, size_y, global_position_x, global_position_y,
+	mouse_filter, visible, z_index, modulate_r, modulate_g, modulate_b,
+	timestamp
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 '''
 		db._query(sql, [
@@ -203,3 +199,10 @@ INSERT INTO control_info (
 		])
 	for child in node.get_children():
 		_traverse_controls(child, db, timestamp)
+
+func _on_ready_stabilise_deferred() -> void:
+	await get_tree().process_frame
+	await get_tree().create_timer(1.0).timeout
+	_db = get_node_or_null("/root/SqliteDb")
+	if not _db:
+		print("[HealthChecker] SqliteDb not available – cannot log tests.")
