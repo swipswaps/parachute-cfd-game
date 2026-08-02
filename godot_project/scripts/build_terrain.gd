@@ -339,17 +339,13 @@ func _ready() -> void:
 		print("[VERBATIM] Flat terrain fallback created")
 
 	# --------------------------------------------------------------
-	# Runways (three predefined) – always added
+	# Runways: placeholder positions removed (did not match KDED layout).
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+	# TODO: re-add with georeferenced KDED runway 05/23 position/heading
+	#   after naip_texture is replaced with a proper GeoTIFF source.
+	#   KDED rwy 05/23: heading ~050deg, length ~1219m, width ~23m.
 	# --------------------------------------------------------------
-	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
-	add_child(
-		_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))
-	)
-	add_child(
-		_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))
-	)
-	print("[VERBATIM] Runways added")
+	print("[VERBATIM] Runways: placeholder positions disabled pending georef")
 
 	# --------------------------------------------------------------
 	# Character (skydiver) – loads FBX with skeleton

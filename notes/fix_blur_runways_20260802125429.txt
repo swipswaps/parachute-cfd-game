@@ -1,0 +1,39 @@
+fix_blur_runways | 2026-08-02T12:54:42.553397+00:00
+FIX A: baked_colours_4096.bin re-blurred sigma=6.0 (was 2.0).
+  sigma=2.0 = 1.95m blur -- insufficient for mode=P palette runs.
+  sigma=6.0 = 5.86m blur -- smooths palette noise, preserves >24px features.
+  Runway width ~30m = ~31px at 4096 -> mostly preserved at sigma=6.
+FIX B: 3 hardcoded placeholder runways removed from build_terrain.gd.
+  Positions z=+1300, z=-1300, x=-800 do not match KDED runway 05/23.
+  _create_runway() function kept intact for georeferenced re-add later.
+  TODO: add real KDED runway after naip_texture replaced with GeoTIFF.
+======================================================================
+
+=== build_terrain.gd diff ===
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index ab5c08d..58e736b 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -339,17 +339,13 @@ func _ready() -> void:
+ 		print("[VERBATIM] Flat terrain fallback created")
+ 
+ 	# --------------------------------------------------------------
+-	# Runways (three predefined) – always added
++	# Runways: placeholder positions removed (did not match KDED layout).
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
++	# TODO: re-add with georeferenced KDED runway 05/23 position/heading
++	#   after naip_texture is replaced with a proper GeoTIFF source.
++	#   KDED rwy 05/23: heading ~050deg, length ~1219m, width ~23m.
+ 	# --------------------------------------------------------------
+-	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+-	add_child(
+-		_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))
+-	)
+-	add_child(
+-		_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))
+-	)
+-	print("[VERBATIM] Runways added")
++	print("[VERBATIM] Runways: placeholder positions disabled pending georef")
+ 
+ 	# --------------------------------------------------------------
+ 	# Character (skydiver) – loads FBX with skeleton
