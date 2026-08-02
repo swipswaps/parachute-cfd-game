@@ -22,3 +22,68 @@ toplevel: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-c
   IGNORED (will force):  push_audit_logs.sh
 
 === STAGING WITH -f ===
+  staged: notes/ (all)
+  staged: godot_project/scripts/build_terrain.gd
+  staged: inventory_backups.py
+  staged: fix_p3_labels_vario_pause.py
+  staged: fix_hud_vario_pause_p2.py
+  staged: fix_headless_deploy_p1.py
+  staged: recover_and_push.sh
+  staged: diag_why_no_push.sh
+  staged: push_audit_logs.sh
+
+=== RULE #43 STAGED SCOPE CHECK (before commit) ===
+staged file count: 9
+fix_p3_labels_vario_pause.py
+godot_project/scripts/build_terrain.gd
+inventory_backups.py
+notes/fix_p3_labels_vario_pause_20260802161550.txt
+notes/inventory_backups_20260802201959.txt
+notes/inventory_backups_20260802202156.txt
+notes/push_audit_logs_20260802202836.txt
+notes/recover_and_push_20260802155256.txt
+push_audit_logs.sh
+
+=== COMMIT (--no-verify: bypasses the pre-commit hook) ===
+[main 15cd6c9] audit: backup marker inventory + session logs (20260802202836)
+ 9 files changed, 1486 insertions(+), 15 deletions(-)
+ create mode 100755 fix_p3_labels_vario_pause.py
+ create mode 100644 inventory_backups.py
+ create mode 100644 notes/fix_p3_labels_vario_pause_20260802161550.txt
+ create mode 100644 notes/inventory_backups_20260802201959.txt
+ create mode 100644 notes/inventory_backups_20260802202156.txt
+ create mode 100644 notes/push_audit_logs_20260802202836.txt
+ create mode 100755 push_audit_logs.sh
+commit exit: 0
+
+=== PUSH origin main ===
+To https://github.com/swipswaps/parachute-cfd-game.git
+   71e60f2..15cd6c9  main -> main
+push exit: 0
+
+=== RULE #29 POST-PUSH SHA VERIFICATION ===
+15cd6c9dfc9486919d636f531cde9f5186f4f3b9	refs/heads/main
+local HEAD: 15cd6c9dfc9486919d636f531cde9f5186f4f3b9
+push returned 0 -- the two shas above MUST match.
+
+=== RAW LINKS FOR LLM REVIEW ===
+--- this run ---
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/push_audit_logs_20260802202836.txt
+--- backup marker inventory ---
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/inventory_backups_20260802201959.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/inventory_backups_20260802202156.txt
+--- most recent autostall runs ---
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/autostall_v9.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/post_fix_autostall.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/post_fixes_autostall.txt
+--- most recent fix reports ---
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_terrain_resolution_20260802110730.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_terrain_texture_20260802112524.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_type_inference_run_20260801200849.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_wind_integration_result_20260730125028.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/fix_wind_integration_v1_run.txt
+--- current source ---
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/godot_project/scripts/build_terrain.gd
+
+NOTE: a link 404s until its file is BOTH committed and pushed.
+      Re-check the sha comparison above if any link fails.

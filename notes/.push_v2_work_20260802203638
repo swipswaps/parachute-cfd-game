@@ -1,0 +1,22 @@
+=== push_audit_logs_v2.sh -- 20260802203638 UTC ===
+toplevel: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+
+=== STATE BEFORE ===
+* main 15cd6c9 [origin/main] audit: backup marker inventory + session logs (20260802202836)
+--- unpushed commits (empty means already in sync) ---
+--- notes/*.txt on disk / tracked by git ---
+on disk: 146   tracked: 149
+
+=== RULE #39/#45 CHECK-IGNORE AUDIT (before any -f) ===
+notes/: not ignored
+  not ignored:           godot_project/scripts/build_terrain.gd
+  not ignored:           inventory_backups.py
+  not ignored:           fix_p3_labels_vario_pause.py
+  not ignored:           fix_hud_vario_pause_p2.py
+  not ignored:           fix_headless_deploy_p1.py
+  not ignored:           recover_and_push.sh
+  not ignored:           diag_why_no_push.sh
+  not ignored:           push_audit_logs.sh
+  IGNORED (will force):  push_audit_logs_v2.sh
+
+=== STAGING WITH -f ===
