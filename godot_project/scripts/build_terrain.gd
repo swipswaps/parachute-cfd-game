@@ -538,8 +538,9 @@ func _ready() -> void:
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
-	# Headless auto‑start: simulate SPACE press
-	if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+	# Headless auto-start: simulate SPACE/deploy press
+	# Ref: OS.get_environment (general knowledge, not retrieved this session)
+	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
 		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
 		# Input.action_release("deploy") removed — flag-based now
 		print("[VERBATIM] Headless auto‑start triggered.")
@@ -1950,7 +1951,7 @@ func _physics_process(delta) -> void:
 			# Headless auto-start: fire SPACE on first IN_PLANE frame
 			# (Rule #1 grounded: this is the first rendered frame, confirmed
 			#  by _0283.txt showing plane position update before stall)
-			if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
 				if not ProjectSettings.has_setting("_headless_space_fired"):
 					ProjectSettings.set_setting("_headless_space_fired", true)
 					Input.action_press("deploy")
