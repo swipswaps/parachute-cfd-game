@@ -1,0 +1,68 @@
+diag_elbow_constants | 2026-08-02T01:14:13.427711+00:00
+======================================================================
+
+=== ARM_ELBOW at L2827 ===
+2824: 'const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX\n'
+2825: '\n'
+2826: '# v8: elbow stays straight on a shallow pull, flexes on a deep one.\n'
+2827: 'const ARM_ELBOW_START  := 0.35              # pull below this -> straight\n'
+2828: 'const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull\n'
+2829: '\n'
+2830: 'var _arm_pull      := {"L": 0.0, "R": 0.0}\n'
+
+=== ARM_ELBOW at L2828 ===
+2825: '\n'
+2826: '# v8: elbow stays straight on a shallow pull, flexes on a deep one.\n'
+2827: 'const ARM_ELBOW_START  := 0.35              # pull below this -> straight\n'
+2828: 'const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull\n'
+2829: '\n'
+2830: 'var _arm_pull      := {"L": 0.0, "R": 0.0}\n'
+2831: 'var _arm_vel       := {"L": 0.0, "R": 0.0}\n'
+
+=== ARM_ELBOW at L2940 ===
+2937: '\t\tvar q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)\n'
+2938: '\t\t_arm_q_stored[side] = q\n'
+2939: '\n'
+2940: '\t\t# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow\n'
+2941: '\t\t# pull keeps the arm straight and a deep pull draws the hand inward.\n'
+2942: '\t\tvar elbow_deg := 0.0\n'
+2943: '\t\tif _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:\n'
+
+=== ARM_ELBOW at L2944 ===
+2941: '\t\t# pull keeps the arm straight and a deep pull draws the hand inward.\n'
+2942: '\t\tvar elbow_deg := 0.0\n'
+2943: '\t\tif _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:\n'
+2944: '\t\t\tvar span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)\n'
+2945: '\t\t\tvar e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)\n'
+2946: '\t\t\tvar e_ang: float = e_t * ARM_ELBOW_MAX\n'
+2947: '\t\t\tvar e_ax: Vector3 = _arm_elbow_axis[side]\n'
+
+=== ARM_ELBOW at L2945 ===
+2942: '\t\tvar elbow_deg := 0.0\n'
+2943: '\t\tif _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:\n'
+2944: '\t\t\tvar span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)\n'
+2945: '\t\t\tvar e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)\n'
+2946: '\t\t\tvar e_ang: float = e_t * ARM_ELBOW_MAX\n'
+2947: '\t\t\tvar e_ax: Vector3 = _arm_elbow_axis[side]\n'
+2948: '\t\t\tvar eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)\n'
+
+=== ARM_ELBOW at L2946 ===
+2943: '\t\tif _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:\n'
+2944: '\t\t\tvar span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)\n'
+2945: '\t\t\tvar e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)\n'
+2946: '\t\t\tvar e_ang: float = e_t * ARM_ELBOW_MAX\n'
+2947: '\t\t\tvar e_ax: Vector3 = _arm_elbow_axis[side]\n'
+2948: '\t\t\tvar eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)\n'
+2949: '\t\t\t_arm_elbow_q_stored[side] = eq\n'
+
+=== elbow span block (L2944) ===
+2942: '\t\tvar elbow_deg := 0.0\n'
+2943: '\t\tif _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:\n'
+2944: '\t\t\tvar span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)\n'
+2945: '\t\t\tvar e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)\n'
+2946: '\t\t\tvar e_ang: float = e_t * ARM_ELBOW_MAX\n'
+2947: '\t\t\tvar e_ax: Vector3 = _arm_elbow_axis[side]\n'
+2948: '\t\t\tvar eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)\n'
+2949: '\t\t\t_arm_elbow_q_stored[side] = eq\n'
+2950: '\t\t\telbow_deg = rad_to_deg(e_ang)\n'
+2951: '\n'
