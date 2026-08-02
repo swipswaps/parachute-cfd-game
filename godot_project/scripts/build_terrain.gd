@@ -268,60 +268,62 @@ func _ready() -> void:
 		else:
 			print("[VERBATIM] BAKE FALLBACK")
 
+		# GPU texture terrain: 256x256 elevation mesh + 4096x4096 colour texture.
+		# 4096^2 SurfaceTool needed 1.15GB RAM; machine had 870MB free -> lockup.
+		# 256^2 mesh = ~3MB RAM. 4096 GPU texture = 50MB VRAM. Total: ~53MB.
+		const MESH_W = 256
+		const MESH_H = 256
+		const HM_SRC = 4096
+		const MAX_ELEV = 20.0
+		const SCALE_XZ = 4000.0
 		var verts := []
 		var uvs := []
-		const W = 4096
-		const H = 4096
-		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
-		const SCALE_XZ = 4000.0
-		for z in range(H):
-			for x in range(W):
-				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
-				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
-								# heightmap_512.raw is 512x512; mesh is 1024x1024.
-				# Direct index (z*W + x) overflows 512-wide rows for x/z > 511
-				# -> returns raw=0 -> flat y=0 for 75% of the mesh.
-				# Fix: map vertex UV to heightmap pixel coords (nearest-neighbour).
-				var hm_x := int(float(x) / float(W - 1) * 4095.0)
-				var hm_z := int(float(z) / float(H - 1) * 4095.0)
-				var idx := (hm_z * 4096 + hm_x) * 2
-				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+		for z in range(MESH_H):
+			for x in range(MESH_W):
+				var px = (float(x) / float(MESH_W - 1) - 0.5) * SCALE_XZ
+				var pz = (float(z) / float(MESH_H - 1) - 0.5) * SCALE_XZ
+				var hm_x := int(float(x) / float(MESH_W - 1) * float(HM_SRC - 1))
+				var hm_z := int(float(z) / float(MESH_H - 1) * float(HM_SRC - 1))
+				var hidx := (hm_z * HM_SRC + hm_x) * 2
+				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
 				var py = (float(raw) / 65535.0) * MAX_ELEV
 				verts.push_back(Vector3(px, py, pz))
-				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
+				uvs.push_back(Vector2(float(x) / float(MESH_W - 1), float(z) / float(MESH_H - 1)))
 		var indices := []
-		for z in range(H - 1):
-			for x in range(W - 1):
-				var a = z * W + x
+		for z in range(MESH_H - 1):
+			for x in range(MESH_W - 1):
+				var a = z * MESH_W + x
 				var b = a + 1
-				var c = a + W
+				var c = a + MESH_W
 				var d = c + 1
 				indices.append_array([a, c, b, b, c, d])
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		st.set_color(Color(1.0, 1.0, 1.0, 1.0))
 		for i in range(verts.size()):
-			var ci = i * 3
-			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
-			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
-			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
-			st.set_color(Color(cr, cg, cb, 1.0))
 			st.set_uv(uvs[i])
 			st.add_vertex(verts[i])
-		for idx in indices:
-			st.add_index(idx)
+		for tidx in indices:
+			st.add_index(tidx)
 		st.generate_normals()
 		st.generate_tangents()
 		var terrain_mesh = st.commit()
 		var terrain_inst := MeshInstance3D.new()
 		terrain_inst.mesh = terrain_mesh
 		var terrain_mat := StandardMaterial3D.new()
-		terrain_mat.vertex_color_use_as_albedo = true
+		if _baked.size() == 4096 * 4096 * 3:
+			var img := Image.create_from_data(4096, 4096, false, Image.FORMAT_RGB8, _baked)
+			var tex := ImageTexture.create_from_image(img)
+			terrain_mat.albedo_texture = tex
+			terrain_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+			print("[VERBATIM] Terrain texture: 4096x4096 GPU texture applied")
+		else:
+			terrain_mat.albedo_color = Color(0.3, 0.5, 0.25)
+			print("[VERBATIM] Terrain texture: baked_colours size mismatch, size was: ", _baked.size())
 		terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		terrain_inst.material_override = terrain_mat
 		add_child(terrain_inst)
-		print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+		print("[VERBATIM] Terrain created: 256x256 mesh + 4096 GPU texture, verts: ", verts.size())
 	else:
 		# --- Heightmap missing: flat terrain fallback ---
 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
