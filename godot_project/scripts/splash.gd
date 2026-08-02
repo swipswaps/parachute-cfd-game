@@ -13,10 +13,7 @@ func _ready() -> void:
 	if status_label:
 		status_label.text = "Checking game integrity..."
 
-	await get_tree().process_frame
-	# Check if GameIntegrity autoload exists
-	if not has_node("/root/GameIntegrity"):
-		print("[VERBATIM] GameIntegrity autoload not found – skipping integrity check")
+	call_deferred("_on_ready_integrity_check")
 		_load_game()
 		return
 
@@ -44,20 +41,20 @@ func _load_game() -> void:
 			status_label.text = "ERROR: Failed to load scene"
 		return
 
-	var _tree := get_tree()
+	var tree := get_tree()
 	var status = ResourceLoader.THREAD_LOAD_IN_PROGRESS
 	while status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		var progress := []
 		status = ResourceLoader.load_threaded_get_status(scene_path, progress)
 		if progress.size() > 0 and progress_bar:
 			progress_bar.value = progress[0] * 100
-		if not is_instance_valid(_tree): break
-		await _tree.process_frame
+		if not is_instance_valid(tree): break
+		await tree.process_frame
 
 	if status == ResourceLoader.THREAD_LOAD_LOADED:
 		var main_scene = ResourceLoader.load_threaded_get(scene_path)
 		if main_scene != null:
-			if is_instance_valid(_tree): _tree.change_scene_to_packed(main_scene)
+			if is_instance_valid(tree): tree.change_scene_to_packed(main_scene)
 			print("[VERBATIM] Main scene loaded")
 		else:
 			print("[VERBATIM] ERROR: loaded scene is null")
@@ -77,3 +74,9 @@ func _load_game() -> void:
 		if status_label:
 			status_label.text = "ERROR: Scene load failed"
 # IMPLEMENTATION COMPLETE
+
+func _on_ready_integrity_check() -> void:
+	await get_tree().process_frame
+	# Check if GameIntegrity autoload exists
+	if not has_node("/root/GameIntegrity"):
+		print("[VERBATIM] GameIntegrity autoload not found – skipping integrity check")

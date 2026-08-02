@@ -63,7 +63,8 @@ func _process(delta: float) -> void:
 
 func _apply_arm_rotation(bone_idx: int, pull_amount: float) -> void:
 	var pitch := deg_to_rad(-pull_amount * max_pull_angle)
-	var forward := deg_to_rad(-pull_amount * forward_lean)
+	var mirror = -1 if bone_idx == left_arm_idx else 1
+	var forward := deg_to_rad(mirror * pull_amount * forward_lean)
 	var target_rot = Quaternion.from_euler(Vector3(pitch, 0.0, forward))
 	skeleton.set_bone_pose_rotation(bone_idx, target_rot)
 

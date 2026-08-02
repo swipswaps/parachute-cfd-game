@@ -63,7 +63,7 @@ func _handle_mouse_button(event: InputEventMouseButton) -> void:
 # ---------------------------------------------------------------------------
 # _handle_mouse_motion – EVIDENTIAL GROUNDING: moves based on actual event
 # ---------------------------------------------------------------------------
-func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
+func _handle_mouse_motion(_event: InputEventMouseMotion) -> void:
 	# Move the control to follow the mouse
 	global_position = get_global_mouse_position() - _drag_offset
 	# Clamp to viewport (optional, postcondition)

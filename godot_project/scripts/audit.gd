@@ -12,14 +12,14 @@ func _ready() -> void:
 		_writeln("=== AUDIT START ===")
 		_writeln("Engine version: %s" % Engine.get_version_info().string)
 		_writeln("Platform: %s" % OS.get_name())
-		var _rd = RenderingServer.get_rendering_device()
-		var _rname = _rd.get_device_name() if _rd else "OpenGL/Compatibility"
-		_writeln("Renderer: %s" % _rname)
+		var rd = RenderingServer.get_rendering_device()
+		var rname = rd.get_device_name() if rd else "OpenGL/Compatibility"
+		_writeln("Renderer: %s" % rname)
 	else:
 		push_warning("Audit: Failed to open log file")
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Basic per-frame metrics
 	var now = Time.get_ticks_usec()
 	var elapsed_ms = (now - _start_time_usec) / 1000.0

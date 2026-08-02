@@ -29,10 +29,7 @@ func _ready() -> void:
 	# old code re-fired (with an await mid-_input()!) on every single
 	# key/mouse event. Same fix pattern as build_terrain.gd Defect 3.
 	if "--headless" in OS.get_cmdline_args():
-		await get_tree().process_frame
-		Input.action_press("ui_accept")
-		Input.action_release("ui_accept")
-		print("[VERBATIM] InputManager auto‑start triggered.")
+		call_deferred("_on_ready_headless_deferred")
 
 
 # ------------------------------------------------------------------
@@ -193,3 +190,9 @@ func _unhandled_input(event) -> void:
 			Time.get_datetime_string_from_system() + " [INFO] InputManager: action 'pause' pressed"
 		)
 # IMPLEMENTATION COMPLETE
+
+func _on_ready_headless_deferred() -> void:
+	await get_tree().process_frame
+	Input.action_press("ui_accept")
+	Input.action_release("ui_accept")
+	print("[VERBATIM] InputManager auto‑start triggered.")

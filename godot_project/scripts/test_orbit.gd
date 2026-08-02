@@ -10,8 +10,7 @@ var _game: Node
 var _test_results := {}
 
 func _ready() -> void:
-	await get_tree().process_frame
-	await get_tree().process_frame
+	call_deferred("_on_ready_deferred")
 	# Find the main game node (it's the root of the main scene)
 	# The main scene is typically a Node named "Game" or the root.
 	# We'll search for the main scene by looking for the build_terrain script.
@@ -102,3 +101,9 @@ func _run_tests() -> void:
 	# Final report
 	print("[TEST_RESULTS] ", JSON.stringify(_test_results))
 	get_tree().quit()
+
+func _on_ready_deferred() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	# TODO: move original post-await body here
+	_run_orbit_tests()

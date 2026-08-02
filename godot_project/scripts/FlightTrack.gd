@@ -35,9 +35,8 @@ func get_state_at_time(t: float) -> Dictionary:
 	var idx = lo
 	if idx == 0:
 		return {"pos": points[0].pos, "vel": points[0].vel}
-	elif idx >= points.size():
+	if idx >= points.size():
 		return {"pos": points[-1].pos, "vel": points[-1].vel}
-	else:
 		var a = points[idx - 1]
 		var b = points[idx]
 		var frac = clamp((t - a.time) / (b.time - a.time), 0.0, 1.0)

@@ -1,8 +1,6 @@
 
 func _ready():
-    await get_tree().create_timer(1.0).timeout
-    _set_selectable_on_children(self)
-    _fetch_and_display_hub_data()
+	call_deferred("_on_ready_deferred")
 
 extends CanvasLayer
 # forensic_hud.gd – manages the on-screen forensic overlay and PiP windows.
@@ -74,7 +72,7 @@ func _ready() -> void:
 # --------------------------------------
 # PiP management
 # --------------------------------------
-func open_pip(id: String, title: String, content: Control) -> PiPControl:
+func open_pip(id: String, _title: String, _content: Control) -> PiPControl:
 	if _pips.has(id):
 		return _pips[id] as PiPControl
 
@@ -108,53 +106,58 @@ func _confirm_drag_attached() -> void:
 
 # Added by fix_forensic_hud.py – make all labels selectable
 func _set_selectable_on_children(node):
-    for child in node.get_children():
-        if child is Label:
-            child.selectable = true
-        elif child is RichTextLabel:
-            child.selection_enabled = true
-        _set_selectable_on_children(child)
+	for child in node.get_children():
+		if child is Label:
+			child.selectable = true
+		elif child is RichTextLabel:
+			child.selection_enabled = true
+		_set_selectable_on_children(child)
 
 
 # Added by fix_forensic_hud.py – fetch and display hub data
 func _fetch_and_display_hub_data():
-    var http = HTTPRequest.new()
-    add_child(http)
-    http.request_completed.connect(_on_hub_data_received)
-    var error = http.request("http://127.0.0.1:8765/api/gamification")
-    if error != OK:
-        print("[HUD] HTTP request failed: ", error)
-    else:
-        print("[HUD] Fetching hub data...")
+	var http = HTTPRequest.new()
+	add_child(http)
+	http.request_completed.connect(_on_hub_data_received)
+	var error = http.request("http://127.0.0.1:8765/api/gamification")
+	if error != OK:
+		print("[HUD] HTTP request failed: ", error)
+	else:
+		print("[HUD] Fetching hub data...")
 
-func _on_hub_data_received(result, response_code, headers, body):
-    if response_code != 200:
-        print("[HUD] Hub data fetch failed: ", response_code)
-        return
-    var data = JSON.parse_string(body.get_string_from_utf8())
-    if data == null:
-        print("[HUD] Failed to parse JSON response.")
-        return
-    var display = get_node_or_null("HUB_DATA_LABEL")
-    if not display:
-        display = Label.new()
-        display.name = "HUB_DATA_LABEL"
-        display.visible = true
-        display.text = "Hub Data:"
-        display.position = Vector2(10, 10)
-        display.selectable = true
-        add_child(display)
-    var text = "Hub Data:\n"
-    text += "Status: " + str(data.get("status", "unknown")) + "\n"
-    text += "Port: " + str(data.get("port", "N/A")) + "\n"
-    text += "DB: " + str(data.get("db", "N/A")) + "\n"
-    var endpoints = data.get("endpoints", [])
-    if endpoints is Array:
-        text += "Endpoints:\n"
-        for ep in endpoints:
-            text += "  - " + str(ep) + "\n"
-    for key in data.keys():
-        if key not in ["status", "port", "db", "endpoints"]:
-            text += str(key) + ": " + str(data[key]) + "\n"
-    display.text = text
-    print("[HUD] Hub data displayed.")
+func _on_hub_data_received(_result, response_code, _headers, body):
+	if response_code != 200:
+		print("[HUD] Hub data fetch failed: ", response_code)
+		return
+	var data = JSON.parse_string(body.get_string_from_utf8())
+	if data == null:
+		print("[HUD] Failed to parse JSON response.")
+		return
+	var display = get_node_or_null("HUB_DATA_LABEL")
+	if not display:
+		display = Label.new()
+		display.name = "HUB_DATA_LABEL"
+		display.visible = true
+		display.text = "Hub Data:"
+		display.position = Vector2(10, 10)
+		display.selectable = true
+		add_child(display)
+	var text = "Hub Data:\n"
+	text += "Status: " + str(data.get("status", "unknown")) + "\n"
+	text += "Port: " + str(data.get("port", "N/A")) + "\n"
+	text += "DB: " + str(data.get("db", "N/A")) + "\n"
+	var endpoints = data.get("endpoints", [])
+	if endpoints is Array:
+		text += "Endpoints:\n"
+		for ep in endpoints:
+			text += "  - " + str(ep) + "\n"
+	for key in data.keys():
+		if key not in ["status", "port", "db", "endpoints"]:
+			text += str(key) + ": " + str(data[key]) + "\n"
+	display.text = text
+	print("[HUD] Hub data displayed.")
+
+func _on_ready_deferred() -> void:
+	await get_tree().create_timer(1.0).timeout
+	_set_selectable_on_children(self)
+	_fetch_and_display_hub_data()

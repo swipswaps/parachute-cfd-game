@@ -9,9 +9,7 @@ func _ready() -> void:
 	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _ready (screenshot_library)")
 	_init_library()
 	_show_loading_screen()
-	await get_tree().create_timer(2.0).timeout
-	_hide_loading_screen()
-	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " EXIT _ready (screenshot_library)")
+	call_deferred("_on_ready_loading_deferred")
 
 func _init_library() -> void:
 	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _init_library")
@@ -119,3 +117,8 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_L:
 			cycle_screenshot()
+
+func _on_ready_loading_deferred() -> void:
+	await get_tree().create_timer(2.0).timeout
+	_hide_loading_screen()
+	print("[VERBATIM] ", Time.get_datetime_string_from_system(), " EXIT _ready (screenshot_library)")
