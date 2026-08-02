@@ -1,0 +1,86 @@
+fix_sync_canopy_arm_overwrite | 2026-08-02T00:52:22.597358+00:00
+Root cause: _sync_main_canopy resets arm bones after _apply_arm_bone_overrides.
+L1935: _update_arm_physics -> _apply_arm_bone_overrides (sets arm pose)
+L1938: _sync_main_canopy -> set_bone_pose_rotation(arm_idx, _arm_rest_q) (overwrites)
+Regression introduced in: ffdd7d6 fix: arm deferred override
+======================================================================
+
+=== _sync_main_canopy body ===
+3276: func _sync_main_canopy() -> void:
+3277: 	if _main_canopy_node == null or not is_instance_valid(_main_canopy_node):
+3278: 		return
+3279: 	if _canopy_instance == null or not is_instance_valid(_canopy_instance):
+3280: 		return
+3281: 	var want: bool = _canopy_instance.visible
+3282: 	if _main_canopy_node.visible != want:
+3283: 		_main_canopy_node.visible = want
+3284: 		print("[CANOPYSYNC] main canopy visible -> ", want,
+3285: 			"  state=", _game_state, "  deployed=", _canopy_deployed)
+3286: 	var w: int = 1 if want else 0
+3287: 	if _canopy_sync_last != w:
+3288: 		_canopy_sync_last = w
+3289: 		print("[CANOPYSYNC] transition at state=", _game_state,
+3290: 			" deployed=", _canopy_deployed, " visible=", want)
+3291: 
+3292: # ===========================================================================
+3293: # CANOPY GLIDE  (fix_canopy_glide_v11)
+3294: #
+3295: # A ram-air canopy is a wing with no thrust: it trades height for forward
+3296: # speed and is steered by asymmetric brake. Before this, _physics_process
+3297: # wrote only _character.position.y, so there was no forward flight to steer -
+3298: # which is why turning appeared to do nothing after deployment, and why
+3299: # 0778.txt shows the turning block executing every frame against a null
+3300: # controller (has_pc=false).
+3301: #
+3302: # Control input is the toggle deflection already solved by the arm spring:
+3303: # _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+3304: #
+3305: #   sym  = (L+R)/2   symmetric brake -> slows the wing
+3306: #   diff = R - L     differential    -> turn rate
+3307: #
+3308: # GLIDE_TURN_SIGN exists so the turn direction can be reversed with a single
+3309: # constant if right-toggle-turns-right comes out backwards. That is a
+3310: # convention question the telemetry below answers directly - do not guess it.
+3311: #
+3312: # Descent is intentionally left to _get_current_descent_rate(), which already
+3313: # carries the malfunction model. The achieved glide ratio is logged so the
+3314: # coupling can be tuned from measurement.
+3315: #
+3316: # Refs (general knowledge - not retrieved this session):
+3317: #   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+3318: #   https://github.com/addmix/godot_aerodynamic_physics
+3319: # ===========================================================================
+3320: 
+3321: const GLIDE_FULL_SPEED := 11.0     # m/s forward, brakes off (typical 9-cell)
+3322: const GLIDE_MIN_SPEED  := 2.5      # m/s at full brakes, before stall
+3323: const GLIDE_BRAKE_SLOW := 0.72     # fraction of speed removed at full brake
+3324: const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+3325: const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+
+=== arm/skeleton refs in _sync_main_canopy ===
+  L3303: # Control input is the toggle deflection already solved by the arm spring:
+  L3304: # _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+
+=== mixamo_com animation references (live, non-comment) ===
+  L653: 			if name == "mixamorig_LeftArm" or name == "mixamorig:LeftArm":
+  L656: 			elif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":
+  L729: 	var left_idx = skeleton.find_bone("mixamorig:LeftArm")
+  L730: 	var right_idx = skeleton.find_bone("mixamorig:RightArm")
+  L2748: 	const CLIP := "mixamo_com"
+  L3008: 	var i := _skeleton.find_bone("mixamorig_" + base)
+  L3010: 		i = _skeleton.find_bone("mixamorig:" + base)
+
+=== _anim_player references (live) ===
+  L664: 		_setup_anim_player(ap)
+  L688: 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+  L689: 	if _anim_player and _anim_player.has_animation("RESET"):
+  L690: 		_anim_player.play("RESET")
+  L692: 		_anim_player.stop()
+  L2747: func _setup_anim_player(ap) -> void:
+  L2750: 		print("[VERBATIM] _setup_anim_player: ap is null")
+  L2753: 		print("[VERBATIM] _setup_anim_player: node is not an AnimationPlayer: ", ap)
+  L2756: 	print("[VERBATIM] _setup_anim_player: clips=", clips)
+  L2766: 		print("[VERBATIM] _setup_anim_player: no usable clip in ", clips)
+  L2768: 	print("[VERBATIM] _setup_anim_player: deferring play of ", chosen)
+  L2772: 		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
+  L2783: 	print("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)
