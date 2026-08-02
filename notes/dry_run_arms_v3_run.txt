@@ -1,0 +1,13 @@
+The following paths are ignored by one of your .gitignore files:
+notes
+hint: Use -f if you really want to add them.
+hint: Disable this message with "git config set advice.addIgnoredFile false"
+Log written: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/parachute_arms_audit_20260801223859.txt
+Traceback (most recent call last):
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/dry_run_arms_v3.py", line 94, in <module>
+    subprocess.run(["git", "add", log_path], cwd=PROJECT_DIR, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['git', 'add', '/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/notes/parachute_arms_audit_20260801223859.txt']' returned non-zero exit status 1.

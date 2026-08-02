@@ -1,0 +1,469 @@
+=== PHASE 1: DIAGNOSIS — 20260802155256 UTC ===
+toplevel: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+expected: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+
+=== HYPOTHESIS A: PRE-COMMIT HOOK BLOCKING COMMITS ===
+--- .git/hooks contents (non-.sample entries are LIVE hooks) ---
+total 72
+drwxr-xr-x. 1 owner owner  646 Jul 25 14:42 .
+drwxr-xr-x. 1 owner owner  166 Aug  2 11:45 ..
+-rwxr-xr-x. 1 owner owner  482 Jun 17 21:30 applypatch-msg.sample
+-rwxr-xr-x. 1 owner owner  900 Jun 17 21:30 commit-msg.sample
+-rwxr-xr-x. 1 owner owner 4726 Jun 17 21:30 fsmonitor-watchman.sample
+-rwxr-xr-x. 1 owner owner  193 Jun 17 21:30 post-update.sample
+-rwxr-xr-x. 1 owner owner  428 Jun 17 21:30 pre-applypatch.sample
+-rwxr-xr-x. 1 owner owner  665 Jul 25 14:42 pre-commit
+-rwxr-xr-x. 1 owner owner  905 Jul 25 14:32 pre-commit.bak.20260725144243187657
+-rwxr-xr-x. 1 owner owner 1653 Jun 17 21:30 pre-commit.sample
+-rwxr-xr-x. 1 owner owner  420 Jun 17 21:30 pre-merge-commit.sample
+-rwxr-xr-x. 1 owner owner 1496 Jun 17 21:30 prepare-commit-msg.sample
+-rwxr-xr-x. 1 owner owner 1378 Jun 17 21:30 pre-push.sample
+-rwxr-xr-x. 1 owner owner 4902 Jun 17 21:30 pre-rebase.sample
+-rwxr-xr-x. 1 owner owner  548 Jun 17 21:30 pre-receive.sample
+-rwxr-xr-x. 1 owner owner 2787 Jun 17 21:30 push-to-checkout.sample
+-rwxr-xr-x. 1 owner owner 2312 Jun 17 21:30 sendemail-validate.sample
+-rwxr-xr-x. 1 owner owner 3654 Jun 17 21:30 update.sample
+--- is there an executable pre-commit hook? ---
+RESULT: *** EXECUTABLE pre-commit HOOK PRESENT ***
+        This is why plain `git commit` failed. First 40 lines:
+#!/bin/sh
+# Pre-commit hook to enforce tab indentation in GDScript files.
+# Uses gdlint (from gdtoolkit).
+
+if ! command -v gdlint >/dev/null 2>&1; then
+    echo "gdlint not found. Please install: pip install gdtoolkit"
+    exit 1
+fi
+
+# Check only staged .gd files
+staged_gd_files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.gd$')
+if [ -z "$staged_gd_files" ]; then
+    exit 0
+fi
+
+# Run gdlint on each file
+for file in $staged_gd_files; do
+    gdlint "$file"
+    if [ $? -ne 0 ]; then
+        echo "gdlint found issues in $file. Commit aborted."
+        exit 1
+    fi
+done
+
+# Indentation checked by gdlint above (understands string contexts)
+
+exit 0
+--- core.hooksPath override? ---
+  (not set — using .git/hooks)
+
+=== HYPOTHESIS B: GITIGNORE SWALLOWING THE FILES (Rule #45) ===
+--- full .gitignore ---
+# Godot 4+ generated folders
+.godot/
+.import/
+# Backup and temporary files
+*.backup_*
+*.tmp
+# Python cache
+__pycache__/
+*.pyc
+# Local databases (unless game data)
+*.db
+# Godot script UID files (optional)
+*.gd.uid
+# Editor-specific (optional)
+.vscode/
+.idea/
+# Logs and audit outputs
+*.log
+audit_logs/
+# Temporary and backup files
+*.backup_*
+*.tmp
+*.bak
+*.orig
+*.swp
+# Python scripts that are not core tools
+*.pyc
+__pycache__/
+*.sh
+*.py
+!controlled_edit.py
+!prepare_repo.py
+!backup_and_clean.py
+!forensic_hub_server.py
+# Godot editor and cache
+.godot/
+.import/
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+parachute_mutations.db
+# Godot script UID files
+*.gd.uid
+# Editor-specific
+.vscode/
+.idea/
+# Godot 4+ generated folders (observed in git status)
+# Backup and temporary files (present in >10,000 untracked items)
+# Python cache and virtual environments (from git status: .venv/, __pycache__/)
+.venv/
+venv/
+# Local databases (parachute_mutations.db, .db-shm, .db-wal)
+# Godot script UID files (optional – seen in git status)
+# Editor-specific (seen in untracked files)
+# OS metadata
+.DS_Store
+Thumbs.db
+external_repos/
+godot_aerodynamic_physics_cache/
+godot_source/
+
+# === v2 additions ===
+# Timestamped backup files (*.bak.YYYYMMDD*, *.bak.*, etc.)
+*.bak.*
+*.bak_*
+# Backup directories
+backup_archives/
+backups/
+# Autostall backup files
+autostall*.bak*
+autostall*.txt
+# DB maintenance directories
+db_maintain_*/
+db_audit_*/
+# Archive directories
+archive/
+cleanup_surface_*/
+fix_*/
+fix_altimeter_*/
+fix_autostall_*/
+fix_crosshair_*/
+fix_dg_dupstate_*/
+fix_drag_*/
+fix_fhp_*/
+fix_gate_*/
+fix_hc_*/
+fix_output_*/
+fix_panel_*/
+fix_runtime_*/
+drag_verify_*/
+# Godot editor backup
+godot_project/.godot.bak_*/
+# Audit output directories
+audit_output_*/
+# Diagnostics directory
+diagnostics/
+# Upstream/external repos
+upstream_aero_check/
+# PDF reports
+*.pdf
+# Large binary/data files
+*.tgz
+*.tar
+*.b64
+*.sha256
+# CFD data
+cases/
+cfd_mesh/
+*_0[0-9][0-9][0-9].txt
+*_0[0-9][0-9][0-9][0-9].txt
+# Downloaded files
+downloaded_files/
+geckodriver-*.tar.gz
+# Misc scratch
+chunk_aa
+first_half*.txt
+game_files.*
+*.b64
+node_modules/
+bin/
+*.pyc
+__pycache__/
+srtm_*.tif
+srtm_*.tif.aux.xml
+terminal*.png
+terminal-*.png
+page-*.png
+page_*.png
+page_*.txt
+Screenshot*.png
+*.db.bak.*
+forensics.db.bak.*
+terrain/*.obj
+game_data/DOF.csv
+parachute_mutations.db.bak.*
+!scan_gd.py
+
+*.bak.*
+*.backup.*
+*.gd.gd
+*.txt
+diag_*.txt
+audit_*.txt
+notes/
+__pycache__/
+*.pyc
+!notes/llm_diag_*.txt
+!notes/fix_ratio_result_*.txt
+!notes/raw_bytes_3341.txt
+!notes/autostall_v13b.txt
+!notes/v13b_evidence.txt
+!notes/glide_callsite.txt
+!notes/glide_context.txt
+!notes/glide_context2.txt
+!notes/glide_fn_body.txt
+!notes/hubmanager_start_cmd.txt
+!notes/diag_all_remaining.txt
+!notes/fix_all_remaining_result_*.txt
+!notes/wind_fn_body.txt
+!notes/fix_wind_integration_result_*.txt
+!notes/diag_controls_arms.txt
+!notes/diag_handlers_arm2.txt
+!notes/control_health_verify.json
+!notes/fcc_gate_verify.txt
+!notes/control_health_verify.json
+!notes/fcc_gate_verify.txt
+!notes/steering_audit.txt
+!notes/steering_post_fix.txt
+!notes/steering_evidence.txt
+!notes/probe_fix_inputs.txt
+!notes/audit_deduce_*.txt
+!notes/audit_deduce_*.txt
+!notes/audit_deduce_*.txt
+!notes/audit_deduce_*.txt
+!notes/audit_deduce_20260801_142925.txt
+!notes/fix_hud_handler_result_*.txt
+!notes/post_fix_autostall.txt
+
+!notes/*.txt
+
+!notes/audit_stepthrough_instrument_v3_20260801191032.txt
+
+!notes/autostall_stepthrough_20260801191032.txt
+
+!notes/audit_stepthrough_instrument_v3c_20260801192217.txt
+
+!notes/autostall_stepthrough_20260801192217.txt
+
+!notes/fix_poll_fast_diag_20260801193558.txt
+
+!notes/fix_poll_fast_run_20260801193558.txt
+
+!notes/autostall_post_poll_fix_20260801193558.txt
+
+!notes/fix_poll_fast_v3_run_20260801194432.txt
+
+!notes/autostall_post_poll_fix_v3_20260801194432.txt
+
+!notes/fix_poll_slow_run_20260801195933.txt
+
+!notes/autostall_post_slow_fix_20260801195933.txt
+
+!notes/fix_type_inference_run_20260801200849.txt
+
+!notes/autostall_post_type_fix_20260801200849.txt
+
+!notes/input_conflict_audit_20260801202150.txt
+
+!notes/fix_cutaway_guard_run_20260801202543.txt
+
+!notes/autostall_post_cutaway_fix_20260801202543.txt
+
+!notes/reserve_steer_regression_audit_20260801203419.txt
+
+!notes/fix_cutaway_reserve_visuals_run_20260801204134.txt
+
+!notes/autostall_post_cutaway_reserve_20260801204134.txt
+
+!notes/diag_arm_glide_20260801205000.txt
+
+!notes/fix_emergency_procedures_run_20260801205254.txt
+
+!notes/autostall_post_emergency_20260801205254.txt
+
+!notes/fix_reserve_gate_run_20260801205603.txt
+
+!notes/autostall_post_reserve_gate_20260801205603.txt
+
+!notes/diag_arm_regression_20260801210047.txt
+
+!notes/diag_arm_apply_20260801210306.txt
+
+!notes/fix_arm_apply_run_20260801210504.txt
+
+!notes/autostall_post_arm_apply_20260801210504.txt
+
+!notes/fix_good_canopy_cutaway_run_20260801211000.txt
+
+!notes/autostall_post_good_cutaway_20260801211000.txt
+
+!notes/fix_sync_canopy_arm_overwrite_run_20260802005222.txt
+
+!notes/diag_animplayer_overwrite_20260802005800.txt
+
+!notes/fix_arm_animplayer_run_20260802005936.txt
+
+!notes/autostall_post_arm_animplayer_20260802005936.txt
+
+!notes/diag_elbow_constants_20260802011413.txt
+
+!notes/diag_elbow_constants_20260802011521.txt
+
+!notes/fix_arm_elbow_neutral_run_20260802011712.txt
+
+!notes/autostall_post_elbow_neutral_20260802011712.txt
+
+!autostall_patched.py
+
+!notes/fix_terrain_resolution_20260802110730.txt
+
+!fix_terrain_resolution.py
+
+!notes/fix_terrain_texture_20260802112524.txt
+
+!fix_terrain_texture.py
+
+!notes/bake_naip_restore_20260802123500.txt
+
+!bake_naip_and_restore.py
+
+!notes/fix_blur_flare_20260802124739.txt
+
+!fix_blur_and_flare.py
+
+!notes/fix_blur_runways_20260802125429.txt
+
+!fix_blur_sigma_and_runways.py
+
+!notes/fix_autostart_20260802130139.txt
+
+!fix_autostart_headless.py
+
+--- check-ignore on everything this session tried to push ---
+.gitignore:30:*.py	fix_headless_deploy_p1.py
+.gitignore:30:*.py	fix_hud_vario_pause_p2.py
+.gitignore:29:*.sh	diag_why_no_push.sh
+--- any notes/*.txt currently ignored? ---
+notes/autostall_p2_20260802153636.txt
+notes/autostall_post_deploy_20260802152227.txt
+notes/diag_why_no_push_20260802154526.txt
+notes/dry_run_arms_v3_run.txt
+notes/dry_run_parachute_arms_run.txt
+notes/dry_run_parachute_arms_v2_run.txt
+notes/fix_headless_deploy_p1_20260802152227.txt
+notes/fix_parachute_arms_run.txt
+notes/parachute_arms_audit_20260801223808.txt
+notes/parachute_arms_audit_20260801223859.txt
+notes/recover_and_push_20260802155256.txt
+
+=== HYPOTHESIS C: DID THE FIX SCRIPTS TOUCH THE FILE ON DISK? ===
+--- P1 marker _headless_auto_deploy ---
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+1619:	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1624:	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+1625:		_headless_auto_deploy = false
+1974:					_headless_auto_deploy = true
+--- P2 marker _update_hud_readouts ---
+  ZERO MATCHES — P2 NOT on disk
+--- P2 marker _dump_all_labels ---
+  ZERO MATCHES — P2 NOT on disk
+--- P2 marker get_node_or_null PauseMenu ---
+  ZERO MATCHES — P2 NOT on disk
+--- do the fix scripts exist? ---
+ls: cannot access 'fix_hud_vario_pause_p2.py': No such file or directory
+-rw-r--r--. 1 owner owner 10295 Aug  2 11:21 fix_headless_deploy_p1.py
+--- backups (proof a fix script got past its pre-check gate) ---
+-rw-r--r--. 1 owner owner 141810 Aug  1 20:59 godot_project/scripts/build_terrain.gd.bak.20260802011150
+-rw-r--r--. 1 owner owner 141810 Aug  1 20:59 godot_project/scripts/build_terrain.gd.bak.20260802011712
+-rw-r--r--. 1 owner owner 142232 Aug  2 09:01 godot_project/scripts/build_terrain.gd.bak.20260802090153665563
+-rw-r--r--. 1 owner owner 142107 Aug  1 21:17 godot_project/scripts/build_terrain.gd.bak.20260802110730
+-rw-r--r--. 1 owner owner 142107 Aug  2 07:07 godot_project/scripts/build_terrain.gd.bak.20260802112204
+-rw-r--r--. 1 owner owner 142107 Aug  2 07:07 godot_project/scripts/build_terrain.gd.bak.20260802112524
+-rw-r--r--. 1 owner owner 142295 Aug  2 07:25 godot_project/scripts/build_terrain.gd.bak.20260802123500
+-rw-r--r--. 1 owner owner 142099 Aug  2 08:35 godot_project/scripts/build_terrain.gd.bak.20260802125429
+-rw-r--r--. 1 owner owner 142058 Aug  2 08:54 godot_project/scripts/build_terrain.gd.bak.20260802130139
+-rw-r--r--. 1 owner owner 142453 Aug  2 09:01 godot_project/scripts/build_terrain.gd.bak.20260802152226
+
+=== HYPOTHESIS D: COMMITTED BUT NOT PUSHED / WRONG REMOTE ===
+origin	https://github.com/swipswaps/parachute-cfd-game.git (fetch)
+origin	https://github.com/swipswaps/parachute-cfd-game.git (push)
+* main 9bba9fd [origin/main] P1: headless auto-deploy flag — closes FREEFALL no-canopy bug
+--- unpushed commits (HEAD not on origin/main) ---
+--- remote main sha vs local HEAD sha ---
+9bba9fd04d07d4f1081160d341a3f72087b106de	refs/heads/main
+local HEAD: 9bba9fd04d07d4f1081160d341a3f72087b106de
+--- last 8 commits ---
+9bba9fd P1: headless auto-deploy flag — closes FREEFALL no-canopy bug
+9193505 evidence: autostall timed run post-blur notes/autostall_timed_20260802131041.txt
+4ff5459 evidence: autostall post-autostart fix notes/autostall_post_autostart_20260802130152.txt
+6924123 fix: restore GODOT_HEADLESS env check in autostart blocks (20260802130139)
+4208133 fix: blur sigma=6 + remove placeholder runways (20260802125429)
+2ee4846 evidence: autostall post-blur run notes/autostall_post_blur_20260802124827.txt
+251882b fix: gaussian blur terrain + flare delay 45s (20260802124739)
+b765955 evidence: autostall post-NAIP terrain run 20260802124201
+
+=== WORKING TREE ===
+ M forensic_hub_server.py
+ M gate_log.txt
+ M godot_project/assets/terrain/baked_colours_4096.bin
+ M godot_project/scripts/SqliteDb.gd
+?? .quarantine/
+?? 02.gd
+?? 1
+?? 1.
+?? =
+?? GameIntegrity_0002.gd
+?? GameIntegrity_2606201818.gd
+?? InputManager_0003.gd
+?? PerformanceMonitor_0002.gd
+?? SqliteDb_0002.gd
+?? SqliteWatchdog_0002.gd
+?? StructuredLogger.gd
+?? TelemetryLogger.gd
+?? [owner@192.168.1.152-20260616-173650parachute-cfd-game]$
+?? alembic.ini
+?? altimeter_hud_0002.gd
+?? apply_v5_repairs.sh.bad
+?? argparse
+?? autostall_post_revert.txtclear
+?? autostall_summary.json
+?? blosm/
+?? build_terrain_0123.gd
+?? build_terrain_patch.gd
+?? check_inputmap.gd
+?? combined_edits.json
+?? context_20260619T143131.zip
+?? debug_components_0002.gd
+?? difflib
+?? eof
+?? fu
+?? game_manager_0002.gd
+?? godot_aerodynamic_physics.zip
+?? godot_project/TelemetryLogger.gd
+?? godot_project/add_input_actions.gd
+?? godot_project/assets/aircraft/Cessna.glb
+?? godot_project/assets/aircraft/cesna_airplane_0.png
+porcelain count: 105
+
+=== END PHASE 1 ===
+
+=== PHASE 2: PUSH WITH THE PROVEN RECIPE ===
+Using: git add -f  /  git commit --no-verify  /  git push origin main
+This is the exact form that worked in the prior session.
+
+--- pre-add check-ignore on each intended file ---
+  tracked/clean:          godot_project/scripts/build_terrain.gd
+  IGNORED  (will use -f): notes/recover_and_push_20260802155256.txt
+  IGNORED  (will use -f): fix_headless_deploy_p1.py
+  ABSENT (skipping):      fix_hud_vario_pause_p2.py
+  IGNORED  (will use -f): diag_why_no_push.sh
+  IGNORED  (will use -f): recover_and_push.sh
+
+--- staging with -f (only files that exist) ---
+  staged: godot_project/scripts/build_terrain.gd
+  staged: notes/recover_and_push_20260802155256.txt
+  staged: fix_headless_deploy_p1.py
+  staged: diag_why_no_push.sh
+  staged: recover_and_push.sh

@@ -1,0 +1,13 @@
+fix_headless_deploy_p1.py ran at 20260802152227 UTC
+Target: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+Backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260802152226
+Patches applied:
+  1. Added var _headless_auto_deploy: bool = false
+  2. Set _headless_auto_deploy = true in _physics_process IN_PLANE headless block
+  3. Consume flag in _poll_controls() FREEFALL branch — calls _deploy_canopy()
+Expected evidence after next autostall run:
+  [VERBATIM] Headless auto-deploy triggered (FREEFALL).
+  [VERBATIM] ENTER _deploy_canopy gate=none
+  [VERBATIM] Parachute deployment started — state=OPENING_ANIM
+  [VERBATIM] EXIT _deploy_canopy ok=true
+  Then GLIDE lines with non-zero pull values.
