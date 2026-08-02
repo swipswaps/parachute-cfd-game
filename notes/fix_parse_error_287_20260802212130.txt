@@ -1,0 +1,2983 @@
+=== fix_parse_error_287.sh — 20260802212130 UTC ===
+
+=== BEFORE: lines 280-300 (the parse error zone) ===
+ 280: 			print("[VERBATIM] BAKE FALLBACK")
+ 281: 
+ 282: 		# 1024 vertex-colour mesh with NED 4096 elevation.
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: const W = 512
+ 286: const H = 512
+ 287: 		const HM_SRC = 4096
+ 288: 		const MAX_ELEV = 20.0
+ 289: 		const SCALE_XZ = 4000.0
+ 290: 		var verts := []
+ 291: 		var uvs := []
+ 292: 		for z in range(H):
+ 293: 			for x in range(W):
+ 294: 				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+ 295: 				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+ 296: 				var hm_x := int(float(x) / float(W - 1) * float(HM_SRC - 1))
+ 297: 				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC - 1))
+ 298: 				var hidx := (hm_z * HM_SRC + hm_x) * 2
+ 299: 				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
+ 300: 				var py = (float(raw) / 65535.0) * MAX_ELEV
+
+=== APPLYING FIX (python3, not sed) ===
+backup: build_terrain.gd.bak.20260802212130 sha=cdae80c8e5582578
+orphan block matches: 1
+WARNING: 1131 possibly orphaned indented line(s):
+  line 28: 	IN_PLANE,
+  line 29: 	FREEFALL,
+  line 30: 	OPENING_ANIM,
+  line 31: 	DIAGNOSIS,
+  line 32: 	LANDED,
+  line 33: 	GAME_OVER,
+  line 81: 	DOWNWIND,
+  line 82: 	BASE,
+  line 83: 	FINAL,
+  line 103: 	GOOD,
+  line 104: 	LINE_TWISTS,
+  line 105: 	BAG_LOCK,
+  line 106: 	LINE_OVER,
+  line 107: 	PILOT_IN_TOW,
+  line 142: 	TRAINING,
+  line 143: 	ADVANCED,
+  line 144: 	EXPERT,
+  line 150: 	"first_jump": false,
+  line 151: 	"perfect_landing": false,
+  line 152: 	"malfunction_ace": false,
+  line 153: 	"rapid_ep": false,
+  line 163: 	"turn_left": false,
+  line 164: 	"turn_right": false,
+  line 165: 	"flightcheck": false,
+  line 166: 	"cutaway": false,
+  line 167: 	"reserve": false,
+  line 168: 	"flare": false,
+  line 169: 	"reset": false,
+  line 228: 	"Q": false,
+  line 229: 	"E": false,
+  line 230: 	"C": false,
+  line 231: 	"X": false,
+  line 232: 	"V": false,
+  line 233: 	"F": false,
+  line 234: 	"R": false,
+  line 235: 	"UP": false,
+  line 236: 	"DOWN": false,
+  line 237: 	"LEFT": false,
+  line 238: 	"RIGHT": false,
+  line 239: 	"W": false,
+  line 240: 	"S": false,
+  line 241: 	"A": false,
+  line 242: 	"D": false,
+  line 253: 	_load_camera_settings()
+  line 254: 	get_tree().paused = true
+  line 255: 	process_mode = PROCESS_MODE_ALWAYS
+  line 256: 	print("[INIT] Press SPACE to start")
+  line 257: 	print("[DIAG] _ready: ENTER")
+  line 258: 	print("[VERBATIM] ", Time.get_datetime_string_from_system()
+  line 267: 	var file = FileAccess.open("res://assets/terrain/heightmap_
+  line 268: 	if file:
+  line 270: 		var data = file.get_buffer(file.get_length())
+  line 271: 		file.close()
+  line 273: 		var _baked := PackedByteArray()
+  line 274: 		var _bf = FileAccess.open("res://assets/terrain/baked_colo
+  line 275: 		if _bf:
+  line 276: 			_baked = _bf.get_buffer(_bf.get_length())
+  line 277: 			_bf.close()
+  line 278: 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
+  line 279: 		else:
+  line 280: 			print("[VERBATIM] BAKE FALLBACK")
+  line 287: 		const HM_SRC = 4096
+  line 288: 		const MAX_ELEV = 20.0
+  line 289: 		const SCALE_XZ = 4000.0
+  line 290: 		var verts := []
+  line 291: 		var uvs := []
+  line 292: 		for z in range(H):
+  line 293: 			for x in range(W):
+  line 294: 				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+  line 295: 				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+  line 296: 				var hm_x := int(float(x) / float(W - 1) * float(HM_SRC -
+  line 297: 				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC -
+  line 298: 				var hidx := (hm_z * HM_SRC + hm_x) * 2
+  line 299: 				var raw = data.decode_u16(hidx) if hidx + 1 < data.size(
+  line 300: 				var py = (float(raw) / 65535.0) * MAX_ELEV
+  line 301: 				verts.push_back(Vector3(px, py, pz))
+  line 302: 				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) 
+  line 303: 		var indices := []
+  line 304: 		for z in range(H - 1):
+  line 305: 			for x in range(W - 1):
+  line 306: 				var a = z * W + x
+  line 307: 				var b = a + 1
+  line 308: 				var c = a + W
+  line 309: 				var d = c + 1
+  line 310: 				indices.append_array([a, c, b, b, c, d])
+  line 311: 		var st := SurfaceTool.new()
+  line 312: 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+  line 313: 		st.set_color(Color(1.0, 1.0, 1.0, 1.0))
+  line 314: 		for i in range(verts.size()):
+  line 315: 			var ci = i * 3
+  line 316: 			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() 
+  line 317: 			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked
+  line 318: 			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked
+  line 319: 			st.set_color(Color(cr, cg, cb, 1.0))
+  line 320: 			st.set_uv(uvs[i])
+  line 321: 			st.add_vertex(verts[i])
+  line 322: 		for idx in indices:
+  line 323: 			st.add_index(idx)
+  line 324: 		st.generate_normals()
+  line 325: 		st.generate_tangents()
+  line 326: 		var terrain_mesh = st.commit()
+  line 327: 		var terrain_inst := MeshInstance3D.new()
+  line 328: 		terrain_inst.mesh = terrain_mesh
+  line 329: 		var terrain_mat := StandardMaterial3D.new()
+  line 330: 		terrain_mat.vertex_color_use_as_albedo = true
+  line 331: 		terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+  line 332: 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNS
+  line 333: 		terrain_inst.material_override = terrain_mat
+  line 334: 		add_child(terrain_inst)
+  line 335: 		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=bake
+  line 336: 	else:
+  line 338: 		print("[VERBATIM] WARNING: heightmap_512.raw not found – u
+  line 339: 		var flat_mesh := PlaneMesh.new()
+  line 340: 		flat_mesh.size = Vector2(8000, 8000)
+  line 341: 		flat_mesh.subdivide_width = 64
+  line 342: 		flat_mesh.subdivide_depth = 64
+  line 343: 		var flat_inst := MeshInstance3D.new()
+  line 344: 		flat_inst.mesh = flat_mesh
+  line 345: 		var flat_mat := StandardMaterial3D.new()
+  line 346: 		flat_mat.albedo_color = Color(0.2, 0.5, 0.15)
+  line 347: 		flat_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHAD
+  line 348: 		flat_inst.material_override = flat_mat
+  line 349: 		add_child(flat_inst)
+  line 350: 		print("[VERBATIM] Flat terrain fallback created")
+  line 359: 	print("[VERBATIM] Runways: placeholder positions disabled p
+  line 365: 	_character = Node3D.new()
+  line 366: 	add_child(_character)
+  line 367: 	_character.position = Vector3(100.0, 1828.8, -100.0)
+  line 368: 	print("[DEBUG] _character position after set: ", _character
+  line 369: 	print("[DEBUG] _character global_position: ", _character.gl
+  line 370: 	_load_character()
+  line 371: 	print("[DIAG] _ready: character loaded")
+  line 376: 	_create_plane()
+  line 377: 	_setup_plane_node()
+  line 378: 	print("[DIAG] _ready: plane created, _plane_node=", _plane_
+  line 384: 	_camera = Camera3D.new()
+  line 385: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+  line 386: 	_camera.fov = 75.0
+  line 387: 	_camera.near = 0.1
+  line 388: 	_camera.far = 10000.0
+  line 389: 	add_child(_camera)
+  line 392: 	if _plane_node:
+  line 394: 		var plane_pos = _plane_node.global_position
+  line 395: 		var offset = Vector3(0, 0, -_cam_distance)
+  line 396: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  line 397: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  line 398: 		_camera.global_position = plane_pos + offset
+  line 399: 		_camera.look_at(plane_pos, Vector3.UP)
+  line 400: 		_camera.current = true
+  line 401: 		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit 
+  line 402: 		print("[DEBUG] Plane position: ", plane_pos)
+  line 403: 		print("[DEBUG] Camera position: ", _camera.global_position
+  line 404: 		print("[DIAG] _ready: camera positioned")
+  line 405: 	else:
+  line 406: 		print("[ERROR] Plane node is null, camera not positioned."
+  line 407: 		print("[DIAG] _ready: ERROR – plane node null")
+  line 409: 	print("[VERBATIM] Camera attached to root, following plane"
+  line 415: 	var dz := MeshInstance3D.new()
+  line 416: 	var cyl := CylinderMesh.new()
+  line 417: 	cyl.top_radius = 3.0
+  line 418: 	cyl.bottom_radius = 3.0
+  line 419: 	cyl.radial_segments = 32
+  line 420: 	dz.mesh = cyl
+  line 421: 	dz.position = Vector3(0.0, 25.0, 0.0)
+  line 422: 	var dz_mat := StandardMaterial3D.new()
+  line 423: 	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+  line 424: 	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+  line 425: 	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+  line 426: 	dz.material_override = dz_mat
+  line 427: 	add_child(dz)
+  line 428: 	print("[VERBATIM] Drop zone created")
+  line 429: 	_load_faa_obstacles()
+  line 436: 	if _hud_layer:
+  line 437: 		return
+  line 438: 	_hud_layer = CanvasLayer.new()
+  line 439: 	_hud_layer.layer = 1
+  line 440: 	var bg_panel := Panel.new()
+  line 441: 	bg_panel.anchor_right = 1.0
+  line 442: 	bg_panel.anchor_bottom = 1.0
+  line 443: 	var style := StyleBoxEmpty.new()
+  line 444: 	bg_panel.add_theme_stylebox_override("panel", style)
+  line 445: 	_hud_layer.add_child(bg_panel)
+  line 446: 	add_child(_hud_layer)
+  line 447: 	var font = ThemeDB.fallback_font
+  line 448: 	var label_names := ["ALT", "SPD", "HDG", "BRG", "TURN", "LE
+  line 449: 	for i in range(8):
+  line 450: 		var lbl := Label.new()
+  line 451: 		lbl.add_theme_font_override("font", font)
+  line 452: 		lbl.add_theme_font_size_override("font_size", 14)
+  line 453: 		lbl.add_theme_color_override("font_color", Color(0, 1, 0))
+  line 454: 		lbl.position = Vector2(50, 10 + i * 22)
+  line 455: 		lbl.custom_minimum_size = Vector2(220, 20)
+  line 456: 		lbl.text = label_names[i] + ": --"
+  line 457: 		_hud_layer.add_child(lbl)
+  line 458: 		_hud_labels.append(lbl)
+  line 460: 	var _hud_bg_panel := ColorRect.new()
+  line 461: 	_hud_bg_panel.color = Color(0, 0, 0, 0.35)
+  line 462: 	_hud_bg_panel.size = Vector2(280, 210)
+  line 463: 	_hud_bg_panel.position = Vector2(5, 5)
+  line 464: 	_hud_layer.add_child(_hud_bg_panel)
+  line 466: 	_score_label = Label.new()
+  line 467: 	_score_label.add_theme_font_override("font", font)
+  line 468: 	_score_label.add_theme_font_size_override("font_size", 16)
+  line 469: 	_score_label.add_theme_color_override("font_color", Color(1
+  line 470: 	_score_label.position = Vector2(10, 200)
+  line 471: 	_hud_layer.add_child(_score_label)
+  line 473: 	_notification_label = Label.new()
+  line 474: 	_notification_label.add_theme_font_override("font", font)
+  line 475: 	_notification_label.add_theme_font_size_override("font_size
+  line 476: 	_notification_label.add_theme_color_override("font_color", 
+  line 477: 	_notification_label.position = Vector2(400, 20)
+  line 478: 	_hud_layer.add_child(_notification_label)
+  line 480: 	_focus_label = Label.new()
+  line 481: 	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E 
+  line 482: 	_focus_label.add_theme_font_override("font", font)
+  line 483: 	_focus_label.add_theme_font_size_override("font_size", 16)
+  line 484: 	_focus_label.add_theme_color_override("font_color", Color(1
+  line 485: 	_focus_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CE
+  line 486: 	_focus_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+  line 487: 	_focus_label.set_anchors_and_offsets_preset(Control.PRESET_
+  line 488: 	_hud_layer.add_child(_focus_label)
+  line 489: 	print("[VERBATIM] HUD created")
+  line 490: 	print("[DIAG] _ready: HUD created, _hud_labels size=", _hud
+  line 495: 	var heading_text = _hud_labels[2].text
+  line 496: 	var parts = heading_text.split("°")
+  line 497: 	if parts.size() > 0:
+  line 498: 		var sub = parts[0].split(":")
+  line 499: 		if sub.size() > 1:
+  line 500: 			_initial_heading = float(sub[1].strip_edges())
+  line 501: 	_turn_target_heading = _initial_heading
+  line 502: 	print("[VERBATIM] Initial heading set to ", _initial_headin
+  line 507: 	_fetch_real_wind()
+  line 508: 	_setup_pip_overlay()
+  line 513: 	_init_achievements()
+  line 514: 	_init_mission()
+  line 515: 	_init_leaderboard()
+  line 516: 	_init_controller()
+  line 517: 	_init_sentry()
+  line 523: 	var canopy_path = "res://assets/canopy/parachute_sanitized.
+  line 524: 	if ResourceLoader.exists(canopy_path):
+  line 525: 		var scene = load(canopy_path)
+  line 526: 		if scene:
+  line 527: 			_canopy_instance = scene.instantiate()
+  line 528: 			if _canopy_instance:
+  line 529: 				_character.add_child(_canopy_instance)
+  line 530: 				_canopy_instance.position = Vector3(0, 3.2, 0)
+  line 531: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+  line 532: 				_canopy_material = StandardMaterial3D.new()
+  line 533: 				var _mesh_child := _find_first_mesh(_canopy_instance)
+  line 534: 				if _mesh_child:
+  line 535: 					_mesh_child.material_override = _canopy_material
+  line 536: 				_canopy_instance.visible = false
+  line 537: 				print("[VERBATIM] Clean GLB loaded from: ", canopy_path)
+  line 538: 			else:
+  line 539: 				_create_procedural_canopy()
+  line 540: 		else:
+  line 541: 			_create_procedural_canopy()
+  line 542: 	else:
+  line 543: 		print("[VERBATIM] Clean GLB not found – using procedural d
+  line 544: 		_create_procedural_canopy()
+  line 549: 	_randomize_malfunction()
+  line 550: 	print("[VERBATIM] Initial malfunction: ", _malfunction_name
+  line 551: 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to d
+  line 553: 	if OS.get_environment("GODOT_HEADLESS") == "1":
+  line 554: 		Input.action_press("ui_accept")
+  line 555: 		Input.action_release("ui_accept")
+  line 556: 		print("[VERBATIM] Headless auto‑start triggered.")
+  line 559: 	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headle
+  line 560: 		_headless_auto_jump = true  # timing-safe flag; checked in
+  line 562: 		print("[VERBATIM] Headless auto‑start triggered.")
+  line 563: 	_check_arm_pose_safe()
+  line 569: 	var _lbl_timer := Timer.new()
+  line 570: 	_lbl_timer.wait_time = 2.0
+  line 571: 	_lbl_timer.one_shot = true
+  line 572: 	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+  line 573: 	add_child(_lbl_timer)
+  line 574: 	_lbl_timer.timeout.connect(_dump_all_labels)
+  line 575: 	_lbl_timer.start()
+  line 584: 	if OS.get_environment("GODOT_HEADLESS") == "1" \
+  line 585: 			or "--headless" in OS.get_cmdline_args():
+  line 586: 		var _pause_timer := Timer.new()
+  line 587: 		_pause_timer.wait_time = 8.0
+  line 588: 		_pause_timer.one_shot = true
+  line 589: 		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+  line 590: 		add_child(_pause_timer)
+  line 591: 		_pause_timer.timeout.connect(_p3_pause_selftest)
+  line 592: 		_pause_timer.start()
+  line 594: 	print("[VERBATIM] ... EXIT _ready ok=true")
+  line 595: 	print("[DIAG] _ready: EXIT")
+  line 598: 	var args = OS.get_cmdline_args()
+  line 599: 	if "--run-tests" in args:
+  line 600: 		print("[VERBATIM] Running self-tests (timer-based)...")
+  line 601: 		var timer := Timer.new()
+  line 602: 		timer.wait_time = 1.5
+  line 603: 		timer.one_shot = true
+  line 604: 		add_child(timer)
+  line 605: 		timer.timeout.connect(_run_self_tests)
+  line 606: 		timer.start()
+  line 607: 		print("[VERBATIM] Self-test timer started.")
+  line 689: 	_skeleton = _character.find_child("Skeleton3D", true, false
+  line 690: 	if _skeleton:
+  line 691: 		for i in _skeleton.get_bone_count():
+  line 692: 			var name = _skeleton.get_bone_name(i)
+  line 693: 			if name == "mixamorig_LeftArm" or name == "mixamorig:Left
+  line 694: 				_left_arm_idx = i
+  line 695: 				print("[VERBATIM] Left arm bone found index ", i)
+  line 696: 			elif name == "mixamorig_RightArm" or name == "mixamorig:R
+  line 697: 				_right_arm_idx = i
+  line 698: 				print("[VERBATIM] Right arm bone found index ", i)
+  line 699: 	else:
+  line 700: 		print("[VERBATIM] No skeleton found")
+  line 702: 	var ap = _character.find_child("AnimationPlayer", true, fal
+  line 703: 	if ap:
+  line 704: 		_setup_anim_player(ap)
+  line 707: 	var anim_player = _character.find_child("AnimationPlayer", 
+  line 708: 	if anim_player:
+  line 709: 		if anim_player.has_animation("RESET"):
+  line 710: 			anim_player.play("RESET")
+  line 711: 			anim_player.advance(0)
+  line 712: 			anim_player.stop()
+  line 713: 		else:
+  line 714: 			var skeleton = _character.find_child("Skeleton3D", true, 
+  line 715: 			if skeleton:
+  line 716: 				skeleton.reset_bone_poses()
+  line 718: 	if anim_player.has_animation("RESET"):
+  line 719: 		anim_player.play("RESET")
+  line 720: 		anim_player.advance(0)
+  line 721: 		anim_player.stop()
+  line 722: 	else:
+  line 723: 		var skeleton = _character.find_child("Skeleton3D", true, f
+  line 724: 		if skeleton:
+  line 725: 			skeleton.reset_bone_poses()
+  line 728: 	var _anim_player = _character.find_child("AnimationPlayer",
+  line 729: 	_the_anim_player = _anim_player  # store for arm physics pa
+  line 730: 	if _anim_player and _anim_player.has_animation("RESET"):
+  line 731: 		_anim_player.play("RESET")
+  line 732: 		await get_tree().process_frame
+  line 733: 		_anim_player.stop()
+  line 734: 		print("[VERBATIM] RESET animation played – arms at rest po
+  line 735: 	else:
+  line 736: 		print("[VERBATIM] RESET animation not available – using fa
+  line 738: 	print("[VERBATIM] EXIT _load_character ok=true")
+  line 770: 	var left_idx = skeleton.find_bone("mixamorig:LeftArm")
+  line 771: 	var right_idx = skeleton.find_bone("mixamorig:RightArm")
+  line 772: 	if left_idx == -1:
+  line 773: 		left_idx = 8
+  line 774: 	if right_idx == -1:
+  line 775: 		right_idx = 32
+  line 779: 	var angle := deg_to_rad(-75)
+  line 780: 	var neutral_rot := Basis(Vector3(0, 0, 1), angle)
+  line 782: 	skeleton.set_bone_global_pose_override(
+  line 783: 		left_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, tru
+  line 784: 	)
+  line 785: 	skeleton.set_bone_global_pose_override(
+  line 786: 		right_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, tr
+  line 787: 	)
+  line 788: 	print("[VERBATIM] ARM FIX: Arms rotated around Z - adjust a
+  line 874: 	if not _replay_playing:
+  line 875: 		_replay_recording.clear()
+  line 876: 		_replay_recording.append({"action": "deploy", "time": Time
+  line 877: 	print("[VERBATIM] EXIT _deploy_canopy ok=true")
+  line 1100: 	if _canopy_instance:
+  line 1101: 		_canopy_instance.visible = true
+  line 1102: 		_canopy_instance.scale = Vector3(0.12, 0.09, 0.12)
+  line 1103: 		_canopy_instance.rotation_degrees = Vector3.ZERO
+  line 1104: 		if _canopy_material:
+  line 1105: 			_canopy_material.albedo_color = Color(0.95, 0.95, 0.95)
+  line 1106: 			var mesh_child = _find_first_mesh(_canopy_instance)
+  line 1107: 			if mesh_child:
+  line 1108: 				mesh_child.material_override = _canopy_material
+  line 1112: 	_canopy_deployed = true
+  line 1114: 	call_deferred("_recreate_hud_if_needed")
+  line 1116: 	_capture_3d_screenshot()
+  line 1118: 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
+  line 1119: 	_show_notification("Reserve deployed – safe landing!")
+  line 1120: 	_update_canopy_visuals()
+  line 1121: 	_calculate_score()
+  line 1123: 	if not _achievements["first_jump"]:
+  line 1124: 		_unlock_achievement("first_jump")
+  line 1125: 	if _reserve_done and _cutaway_done:
+  line 1126: 		if not _achievements["malfunction_ace"]:
+  line 1127: 			_unlock_achievement("malfunction_ace")
+  line 1129: 	if not _replay_playing:
+  line 1130: 		_replay_recording.append({"action": "reserve", "time": Tim
+  line 1131: 	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_d
+  line 1132: 	print("[VERBATIM] EXIT _do_reserve ok=true")
+  line 1163: 	print("[VERBATIM] FLARE executed – GOOD canopy landing")
+  line 1164: 	_show_notification("Flare – good landing!")
+  line 1165: 	_update_canopy_visuals()
+  line 1166: 	_calculate_score()
+  line 1168: 	if not _achievements["first_jump"]:
+  line 1169: 		_unlock_achievement("first_jump")
+  line 1170: 	if _score >= 900:
+  line 1171: 		if not _achievements["perfect_landing"]:
+  line 1172: 			_unlock_achievement("perfect_landing")
+  line 1174: 	if not _replay_playing:
+  line 1175: 		_replay_recording.append({"action": "flare", "time": Time.
+  line 1176: 	print("[DIAG] _do_flare: EXIT, flare_done=", _flare_done)
+  line 1177: 	print("[VERBATIM] EXIT _do_flare ok=true")
+  line 1359: 	if _controller_input_map["turn_left"]:
+  line 1360: 		_turn_input = -1.0
+  line 1361: 		if not _last_frame_keys["Q"]:
+  line 1362: 			_rotate_arm(true)
+  line 1363: 	elif _controller_input_map["turn_right"]:
+  line 1364: 		_turn_input = 1.0
+  line 1365: 		if not _last_frame_keys["E"]:
+  line 1366: 			_rotate_arm(false)
+  line 1367: 	else:
+  line 1368: 		pass
+  line 1370: 	if _controller_input_map["flightcheck"]:
+  line 1371: 		_flight_control_check()
+  line 1372: 	if _controller_input_map["cutaway"]:
+  line 1373: 		_do_cutaway()
+  line 1374: 	if _controller_input_map["reserve"]:
+  line 1375: 		_do_reserve()
+  line 1376: 	if _controller_input_map["flare"]:
+  line 1377: 		_do_flare()
+  line 1378: 	if _controller_input_map["reset"]:
+  line 1379: 		_reset_game()
+  line 1615: 	if _game_state == GameState.IN_PLANE:
+  line 1619: 		var _exit_pressed = (
+  line 1620: 			Input.is_action_just_pressed("deploy")
+  line 1621: 			or Input.is_key_pressed(KEY_J)
+  line 1622: 			or _headless_auto_jump
+  line 1623: 		)
+  line 1624: 		_headless_auto_jump = false  # consume the flag
+  line 1625: 		if _exit_pressed:
+  line 1626: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+  line 1627: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL"
+  line 1628: 			_game_state = GameState.FREEFALL
+  line 1629: 			_cam_distance = 5.0
+  line 1630: 			if _plane_node:
+  line 1631: 				_plane_node.visible = false
+  line 1632: 			_character.visible = true
+  line 1633: 			if _plane_node:
+  line 1634: 				_character.position = _plane_node.position + Vector3(0, 
+  line 1635: 			else:
+  line 1636: 				_character.position = Vector3(100, 1828.8, -100)
+  line 1637: 			_show_notification("Jumped! Deploy parachute (SPACE) abov
+  line 1639: 			if is_instance_valid(_character) and is_instance_valid(_c
+  line 1640: 				_camera.global_position = _character.global_position + V
+  line 1641: 				_camera.look_at(_character.global_position, Vector3.UP)
+  line 1642: 				print("[CAMERA] Switched to character after exit")
+  line 1643: 				_camera.current = true  # ensure the camera becomes acti
+  line 1644: 		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
+  line 1645: 		return
+  line 1647: 	if _game_state == GameState.LANDED or _game_state == GameSt
+  line 1648: 		if Input.is_action_just_pressed("restart"):
+  line 1649: 			print("[DIAG] _poll_controls: restart pressed")
+  line 1650: 			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OV
+  line 1651: 			_reset_game()
+  line 1652: 		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
+  line 1653: 		return
+  line 1655: 	print("[VERBATIM] POLL: checking deploy state=", _game_stat
+  line 1661: 	if _headless_auto_deploy and _game_state == GameState.FREEF
+  line 1662: 		_headless_auto_deploy = false
+  line 1663: 		print("[VERBATIM] Headless auto-deploy triggered (FREEFALL
+  line 1664: 		_deploy_canopy()
+  line 1665: 	if Input.is_action_just_pressed("deploy") and not _canopy_d
+  line 1666: 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_c
+  line 1667: 		_deploy_canopy()
+  line 1669: 	if _game_state == GameState.DIAGNOSIS or _game_state == Gam
+  line 1670: 		var turn_input := 0.0
+  line 1671: 		if Input.is_action_pressed("turnleft"):
+  line 1672: 			turn_input -= 1.0
+  line 1673: 		if Input.is_action_pressed("turnright"):
+  line 1674: 			turn_input += 1.0
+  line 1676: 		if turn_input < 0.0:
+  line 1677: 			print("[VERBATIM] POLL: turnleft pressed - left turn")
+  line 1678: 			if not _last_frame_keys["Q"]:
+  line 1679: 				_rotate_arm(true)
+  line 1680: 		elif turn_input > 0.0:
+  line 1681: 			print("[VERBATIM] POLL: turnright pressed - right turn")
+  line 1682: 			if not _last_frame_keys["E"]:
+  line 1683: 				_rotate_arm(false)
+  line 1685: 		_turn_input = turn_input
+  line 1694: 	if Input.is_key_pressed(KEY_SPACE) and not _last_frame_keys
+  line 1695: 		if _game_state == GameState.IN_PLANE:
+  line 1696: 			if _canopy_deployed:
+  line 1697: 				_canopy_deployed = false
+  line 1698: 				_canopy_instance.visible = false
+  line 1699: 				_show_notification("Canopy closed – safe to jump")
+  line 1700: 			else:
+  line 1701: 				_canopy_deployed = true
+  line 1702: 				_canopy_instance.visible = true
+  line 1703: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+  line 1704: 				_show_notification("WARNING: Canopy deployed inside airc
+  line 1705: 		elif _game_state == GameState.FREEFALL and not _canopy_dep
+  line 1706: 			_deploy_canopy()
+  line 1707: 	_last_frame_keys["SPACE"] = Input.is_key_pressed(KEY_SPACE)
+  line 1709: 	if Input.is_key_pressed(KEY_Q):
+  line 1710: 		_turn_input = -1.0
+  line 1711: 		if not _last_frame_keys.get("Q", false):
+  line 1712: 			_rotate_arm(true)
+  line 1713: 	elif Input.is_key_pressed(KEY_E):
+  line 1714: 		_turn_input = 1.0
+  line 1715: 		if not _last_frame_keys.get("E", false):
+  line 1716: 			_rotate_arm(false)
+  line 1717: 	else:
+  line 1718: 		if _turn_input == 0.0:
+  line 1719: 			pass
+  line 1721: 	if Input.is_key_pressed(KEY_C) and not _last_frame_keys.get
+  line 1722: 		_flight_control_check()
+  line 1723: 	_last_frame_keys["C"] = Input.is_key_pressed(KEY_C)
+  line 1725: 	if Input.is_key_pressed(KEY_X) and not _last_frame_keys.get
+  line 1726: 		_do_cutaway()
+  line 1727: 	_last_frame_keys["X"] = Input.is_key_pressed(KEY_X)
+  line 1729: 	if Input.is_key_pressed(KEY_V) and not _last_frame_keys.get
+  line 1730: 		_do_reserve()
+  line 1731: 	_last_frame_keys["V"] = Input.is_key_pressed(KEY_V)
+  line 1733: 	if Input.is_key_pressed(KEY_F) and not _last_frame_keys.get
+  line 1734: 		_do_flare()
+  line 1735: 	_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
+  line 1738: 	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+  line 1740: 	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get
+  line 1741: 		_save_camera_settings()
+  line 1742: 		print("[CAMERA] Settings saved manually (from _poll_contro
+  line 1743: 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
+  line 1744: 	if Input.is_action_just_pressed("camera_cycle"):
+  line 1745: 		print("[VERBATIM] POLL: cyclecamera pressed - cycling came
+  line 1746: 		_cycle_camera()
+  line 1748: 	if Input.is_action_just_pressed("togglehud"):
+  line 1749: 		print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
+  line 1750: 		_toggle_hud()
+  line 1752: 	if Input.is_action_just_pressed("flightcheck"):
+  line 1753: 		print("[VERBATIM] POLL: flightcheck pressed - calling _fli
+  line 1754: 		_flight_control_check()
+  line 1756: 	if Input.is_action_just_pressed("cutaway"):
+  line 1757: 		print("[VERBATIM] POLL: cutaway pressed - calling _do_cuta
+  line 1758: 		_do_cutaway()
+  line 1760: 	if Input.is_action_just_pressed("reserve"):
+  line 1761: 		print("[VERBATIM] POLL: reserve pressed - calling _do_rese
+  line 1762: 		_do_reserve()
+  line 1764: 	if Input.is_action_just_pressed("flare"):
+  line 1765: 		print("[VERBATIM] POLL: flare pressed - calling _do_flare"
+  line 1766: 		_do_flare()
+  line 1768: 	_process_controller_input()
+  line 1770: 	var cam_move = Vector3.ZERO
+  line 1771: 	if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY
+  line 1772: 		cam_move.z -= 1.0
+  line 1773: 	if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(K
+  line 1774: 		cam_move.z += 1.0
+  line 1775: 	if Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(K
+  line 1776: 		cam_move.x -= 1.0
+  line 1777: 	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(
+  line 1778: 		cam_move.x += 1.0
+  line 1779: 	if cam_move.length() > 0:
+  line 1780: 		cam_move = cam_move.normalized() * 100.0
+  line 1781: 		_camera.position += cam_move
+  line 1782: 		_camera.position.x = clamp(_camera.position.x, -2000.0, 20
+  line 1783: 		_camera.position.z = clamp(_camera.position.z, -2000.0, 20
+  line 1785: 	_last_frame_keys["Q"] = Input.is_key_pressed(KEY_Q)
+  line 1786: 	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+  line 1789: 	if Input.is_action_just_pressed("j") and _game_state != Gam
+  line 1790: 		if camera_target == "plane":
+  line 1791: 			camera_target = "character"
+  line 1792: 			if is_instance_valid(_character) and is_instance_valid(_c
+  line 1793: 				var target = _character.global_position
+  line 1794: 				var offset = Vector3(0, 0, -_cam_distance)
+  line 1795: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  line 1796: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  line 1797: 				_camera.global_position = target + offset
+  line 1798: 				_camera.look_at(target, Vector3.UP)
+  line 1799: 				print("[CAMERA] Switched to character (J)")
+  line 1800: 		else:
+  line 1801: 			camera_target = "plane"
+  line 1802: 			if is_instance_valid(_plane_node) and is_instance_valid(_
+  line 1803: 				var target = _plane_node.global_position
+  line 1804: 				var offset = Vector3(0, 0, -_cam_distance)
+  line 1805: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  line 1806: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  line 1807: 				_camera.global_position = target + offset
+  line 1808: 				_camera.look_at(target, Vector3.UP)
+  line 1809: 				print("[CAMERA] Switched to plane (J)")
+  line 2005: 	if event is InputEventKey and event.pressed and not event.e
+  line 2006: 		var action := ""
+  line 2007: 		if event.keycode == KEY_Q:
+  line 2008: 			action = "turn_left (Q)"
+  line 2009: 		elif event.keycode == KEY_E:
+  line 2010: 			action = "turn_right (E)"
+  line 2011: 		elif event.keycode == KEY_SPACE:
+  line 2012: 			action = "deploy (SPACE)"
+  line 2013: 		elif event.keycode == KEY_C:
+  line 2014: 			action = "cycle_camera (C)"
+  line 2015: 		elif event.keycode == KEY_H:
+  line 2016: 			action = "toggle_hud (H)"
+  line 2017: 		elif event.keycode == KEY_X:
+  line 2018: 			action = "cutaway (X)"
+  line 2019: 		elif event.keycode == KEY_V:
+  line 2020: 			action = "reserve (V)"
+  line 2021: 		elif event.keycode == KEY_F:
+  line 2022: 			action = "flare (F)"
+  line 2023: 		elif event.keycode == KEY_R:
+  line 2024: 			action = "restart (R)"
+  line 2025: 		if action != "":
+  line 2026: 			print("[VERBATIM] INPUT: action=", action)
+  line 2027: 	if event.is_action_pressed("pause"):
+  line 2028: 		toggle_pause()
+  line 2031: 	if event is InputEventKey and event.pressed and event.keyco
+  line 2032: 		_save_camera_settings()
+  line 2033: 		print("[CAMERA] Settings saved manually")
+  line 2061: 	print("[DIAG] _physics_process: ENTER, state=", _game_state
+  line 2062: 	if _game_state == GameState.IN_PLANE:
+  line 2063: 		print("[DIAG] _physics_process: IN_PLANE branch entered")
+  line 2064: 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+  line 2065: 		if _plane_node:
+  line 2066: 			_plane_node.position = Vector3(
+  line 2067: 				cos(_plane_angle) * _PLANE_ORBIT_RADIUS,
+  line 2068: 				_PLANE_ALTITUDE,
+  line 2069: 				sin(_plane_angle) * _PLANE_ORBIT_RADIUS
+  line 2070: 			)
+  line 2071: 			_plane_node.rotation.y = _plane_angle + PI / 2.0
+  line 2075: 			if OS.get_environment("GODOT_HEADLESS") == "1" or "--head
+  line 2076: 				if not ProjectSettings.has_setting("_headless_space_fire
+  line 2077: 					ProjectSettings.set_setting("_headless_space_fired", tr
+  line 2078: 					Input.action_press("deploy")
+  line 2079: 					Input.action_release("deploy")
+  line 2080: 					_headless_auto_deploy = true
+  line 2081: 					print("[VERBATIM] Headless auto-start triggered (IN_PLA
+  line 2082: 			print("[DIAG] _physics_process: plane position updated to
+  line 2083: 		else:
+  line 2084: 			print("[DIAG] _physics_process: plane_node is NULL")
+  line 2085: 		if _hud_labels.size() > 0:
+  line 2086: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+  line 2087: 		if _hud_labels.size() > 7:
+  line 2088: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircr
+  line 2090: 		print("[DIAG] _physics_process: checking camera follow")
+  line 2091: 		if is_instance_valid(_plane_node) and is_instance_valid(_c
+  line 2092: 			print("[DIAG] _physics_process: plane and camera valid, u
+  line 2093: 			var old_pos = _camera.global_position
+  line 2094: 			var target = _plane_node.global_position
+  line 2095: 			var offset = Vector3(0, 0, -_cam_distance)
+  line 2096: 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  line 2097: 			offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  line 2098: 			_camera.global_position = target + offset
+  line 2099: 			_camera.look_at(target, Vector3.UP)
+  line 2100: 			print(
+  line 2101: 				"[DIAG] _physics_process: camera moved from ",
+  line 2102: 				old_pos,
+  line 2103: 				" to ",
+  line 2104: 				_camera.global_position
+  line 2105: 			)
+  line 2106: 		else:
+  line 2107: 			print(
+  line 2108: 				"[DIAG] _physics_process: camera follow skipped – plane=
+  line 2109: 				_plane_node,
+  line 2110: 				" camera=",
+  line 2111: 				_camera
+  line 2112: 			)
+  line 2113: 		print("[DIAG] _physics_process: IN_PLANE returning")
+  line 2114: 		return
+  line 2117: 	if _character and _camera:
+  line 2118: 		var target = _character.global_position
+  line 2119: 		var offset = Vector3(0, 0, -_cam_distance)
+  line 2120: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  line 2121: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  line 2122: 		_camera.global_position = target + offset
+  line 2123: 		_camera.look_at(target, Vector3.UP)
+  line 2124: 		print("[DIAG] _physics_process: camera target set to chara
+  line 2125: 	_prev_descent_rate = _descent_rate
+  line 2131: 	_descent_rate = _get_current_descent_rate()
+  line 2132: 	_apply_malfunction_effects(delta)
+  line 2133: 	var descent = _descent_rate * 60.0 * delta
+  line 2134: 	_character.position.y -= descent
+  line 2137: 	_update_canopy_glide(delta, descent)
+  line 2138: 	if _character.position.y < 25.0:
+  line 2139: 		_character.position.y = 25.0
+  line 2140: 		if not _safe_landing:
+  line 2141: 			ScreenshotLibrary.save_flight_screenshot()
+  line 2142: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (phys
+  line 2143: 			_game_state = GameState.GAME_OVER
+  line 2144: 			print("[VERBATIM] Ground impact – fatal")
+  line 2145: 	_current_altitude = _character.position.y - 25.0
+  line 2148: 	var _p3_y: float = _character.global_position.y
+  line 2149: 	var _p3_xz: Vector2 = Vector2(_character.global_position.x,
+  line 2150: 			_character.global_position.z)
+  line 2151: 	if _p3_prev_y > -99998.0 and delta > 0.0:
+  line 2152: 		_vario_mps = (_p3_y - _p3_prev_y) / delta
+  line 2153: 		_p3_ground_speed_ms = (_p3_xz - _p3_prev_xz).length() / de
+  line 2154: 	_p3_prev_y = _p3_y
+  line 2155: 	_p3_prev_xz = _p3_xz
+  line 2157: 	_update_hud_readouts()
+  line 2159: 	_update_cfd_wind(delta)
+  line 2160: 	_update_canopy_tilt()
+  line 2162: 	if _game_state == GameState.FREEFALL:
+  line 2164: 		if abs(_turn_input) > 0.001:
+  line 2165: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+  line 2170: 		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.g
+  line 2171: 		if absf(ff_diff) > 0.002:
+  line 2172: 			_character.rotate_y(-ff_diff * 1.5 * delta)
+  line 2173: 		var target_dir = -_character.global_position.normalized()
+  line 2174: 		_forward_speed = move_toward(_forward_speed, _max_speed, _
+  line 2175: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+  line 2176: 		_velocity_vec += turn_dir * delta
+  line 2177: 		var forward_vec = target_dir * _forward_speed
+  line 2178: 		_velocity_vec = _velocity_vec.move_toward(forward_vec, _ac
+  line 2179: 		_character.position += _velocity_vec * delta
+  line 2180: 		if _velocity_vec.length() > 0.5:
+  line 2181: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+  line 2189: 		_check_decision_altitude()
+  line 2191: 		if _screenshot_save_timer > 0:
+  line 2192: 			_screenshot_save_timer -= delta
+  line 2193: 		if _screenshot_save_timer <= 0.0:
+  line 2194: 			ScreenshotLibrary.save_flight_screenshot()
+  line 2195: 			_screenshot_save_timer = 5.0
+  line 2196: 	if _game_state == GameState.OPENING_ANIM or _game_state == 
+  line 2197: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+  line 2198: 		print("[DIAG] _turn_input = ", _turn_input)
+  line 2199: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+  line 2200: 		_velocity_vec += turn_dir * delta
+  line 2201: 		if _velocity_vec.length() > 0.5:
+  line 2202: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+  line 2226: 	var dist = _character.global_position.length()
+  line 2227: 	_update_pattern(_current_altitude, dist)
+  line 2229: 	var current_heading = _initial_heading
+  line 2230: 	var diff := fmod(_turn_target_heading - current_heading + 3
+  line 2231: 	if diff > 180.0:
+  line 2232: 		diff -= 360.0
+  line 2233: 	var step = 5.0 * delta
+  line 2234: 	current_heading += clamp(diff, -step, step)
+  line 2235: 	current_heading = fmod(current_heading + 360.0, 360.0)
+  line 2236: 	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+  line 2238: 	var target_dir = -_character.global_position.normalized()
+  line 2239: 	var bearing := rad_to_deg(atan2(target_dir.x, target_dir.z)
+  line 2240: 	_hud_labels[3].text = "BRG: %.0f°" % bearing
+  line 2242: 	_check_mission_completion()
+  line 2243: 	if _frame_count % 1800 == 0:
+  line 2244: 		_update_weather()
+  line 2245: 	call_deferred("_apply_arm_bone_overrides")
+  line 2319: 	_pip_layer = CanvasLayer.new()
+  line 2320: 	_pip_layer.name = "PiPLayer"
+  line 2321: 	_pip_layer.layer = 2  # R104: PiP on layer 2 (above HUD lay
+  line 2322: 	add_child(_pip_layer)
+  line 2323: 	var container := SubViewportContainer.new()
+  line 2324: 	container.size = Vector2(320, 240)
+  line 2326: 	var config = ConfigFile.new()
+  line 2327: 	if config.load("user://pip_settings.cfg") == OK:
+  line 2328: 		var pos_x = config.get_value("pip", "position_x", 20.0)
+  line 2329: 		var pos_y = config.get_value("pip", "position_y", 20.0)
+  line 2330: 		container.position = Vector2(pos_x, pos_y)
+  line 2331: 	else:
+  line 2332: 		container.position = Vector2(20, 20)
+  line 2333: 	container.mouse_filter = Control.MOUSE_FILTER_STOP
+  line 2335: 	container.set_script(load("res://scripts/pip_draggable.gd")
+  line 2338: 	_pip_layer.add_child(container)
+  line 2339: 	container.add_to_group("pip_container")
+  line 2340: 	container.add_to_group("pip_container")
+  line 2341: 	container.add_to_group("pip_container")
+  line 2342: 	container.visible = true
+  line 2343: 	_pip_viewport = SubViewport.new()
+  line 2344: 	_pip_viewport.size = Vector2i(320, 240)
+  line 2345: 	_pip_viewport.render_target_update_mode = SubViewport.UPDAT
+  line 2346: 	container.add_child(_pip_viewport)
+  line 2348: 	var canopy_path = "res://assets/canopy/parachute_sanitized.
+  line 2349: 	if not ResourceLoader.exists(canopy_path):
+  line 2350: 		canopy_path = "res://assets/canopy/parachute_clean.glb"
+  line 2351: 	if not ResourceLoader.exists(canopy_path):
+  line 2352: 		canopy_path = "res://assets/canopy/parachute.glb"
+  line 2353: 	print("[VERBATIM] PiP canopy path=", canopy_path)
+  line 2354: 	var canopy_scene = load(canopy_path)
+  line 2355: 	if not canopy_scene:
+  line 2356: 		print("[VERBATIM] ERROR: canopy load null – no .import sid
+  line 2358: 		var sphere := MeshInstance3D.new()
+  line 2359: 		sphere.mesh = SphereMesh.new()
+  line 2360: 		sphere.position = Vector3(0.0, 5.0, 0.0)
+  line 2361: 		_pip_viewport.add_child(sphere)
+  line 2362: 		container.visible = true
+  line 2363: 		print("[VERBATIM] PiP fallback: sphere created")
+  line 2364: 		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_loa
+  line 2365: 		return
+  line 2367: 	_pip_canopy_node = canopy_scene.instantiate()
+  line 2368: 	_pip_viewport.add_child(_pip_canopy_node)
+  line 2369: 	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+  line 2371: 	_pip_camera = Camera3D.new()
+  line 2372: 	var pip_env := WorldEnvironment.new()
+  line 2373: 	var env := Environment.new()
+  line 2374: 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+  line 2375: 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+  line 2376: 	env.ambient_light_energy = 0.8
+  line 2377: 	pip_env.environment = env
+  line 2378: 	_pip_viewport.add_child(pip_env)
+  line 2379: 	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+  line 2380: 	_pip_camera.look_at_from_position(
+  line 2381: 		Vector3(0.0, 1.8, 0.0), Vector3(0.0, 5.0, 0.0), Vector3.FO
+  line 2382: 	)
+  line 2383: 	_pip_camera.fov = 110.0
+  line 2384: 	_pip_viewport.add_child(_pip_camera)
+  line 2385: 	_pip_camera.current = true
+  line 2387: 	var light := DirectionalLight3D.new()
+  line 2388: 	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0
+  line 2389: 	_pip_viewport.add_child(light)
+  line 2391: 	_wind_label = Label.new()
+  line 2392: 	_wind_label.name = "WindLabel"
+  line 2393: 	_wind_label.position = Vector2(20, 260)
+  line 2394: 	_wind_label.add_theme_color_override("font_color", Color(1,
+  line 2395: 	_pip_layer.add_child(_wind_label)
+  line 2396: 	var timer := Timer.new()
+  line 2397: 	timer.wait_time = 1.0
+  line 2398: 	timer.autostart = true
+  line 2399: 	timer.timeout.connect(_update_wind_display)
+  line 2400: 	_pip_layer.add_child(timer)
+  line 2402: 	var main_canopy_scene2 = load(canopy_path)
+  line 2403: 	if main_canopy_scene2:
+  line 2404: 		_main_canopy_node = main_canopy_scene2.instantiate()
+  line 2405: 		_main_canopy_node.position = Vector3(0.0, 3.2, 0.0)
+  line 2406: 		_main_canopy_node.scale = Vector3(0.18, 0.12, 0.18)
+  line 2407: 		_character.add_child(_main_canopy_node)
+  line 2411: 		_main_canopy_node.visible = false
+  line 2412: 		print("[VERBATIM] main canopy attached offset=(0,2.5,0) pa
+  line 2413: 		print("[CANOPYSYNC] main canopy attached HIDDEN, awaiting 
+  line 2414: 	else:
+  line 2415: 		print("[VERBATIM] WARN main canopy load null — character w
+  line 2416: 	print("[VERBATIM] EXIT _setup_pip_overlay ok=true")
+  line 2676: 	var plane_scene = load("res://assets/aircraft/cesna_airplan
+  line 2677: 	if plane_scene and plane_scene is PackedScene:
+  line 2678: 		var aircraft = plane_scene.instantiate()
+  line 2679: 		plane.add_child(aircraft)
+  line 2681: 		aircraft.visible = true
+  line 2682: 		aircraft.scale = Vector3(15.0, 15.0, 15.0)  # Increased fr
+  line 2683: 		aircraft.position = Vector3(0, 0, 0)
+  line 2684: 		print(
+  line 2685: 			"[VERBATIM] Cessna model loaded. visible=", aircraft.visi
+  line 2686: 		)
+  line 2687: 	else:
+  line 2688: 		print("[VERBATIM] Failed to load Cessna model")
+  line 2690: 	var plane_collision := CollisionShape3D.new()
+  line 2691: 	plane_collision.shape = BoxShape3D.new()
+  line 2692: 	plane_collision.shape.size = Vector3(3, 1, 10)
+  line 2693: 	plane.add_child(plane_collision)
+  line 2695: 	var exit_trigger := Area3D.new()
+  line 2696: 	exit_trigger.name = "ExitTrigger"
+  line 2697: 	plane.add_child(exit_trigger)
+  line 2698: 	var trigger_collision := CollisionShape3D.new()
+  line 2699: 	trigger_collision.shape = BoxShape3D.new()
+  line 2700: 	trigger_collision.shape.size = Vector3(2, 2, 2)
+  line 2701: 	trigger_collision.position = Vector3(1.5, 0, -2)
+  line 2702: 	exit_trigger.add_child(trigger_collision)
+  line 2704: 	plane.global_position = Vector3(0, 1828.8, 0)
+  line 2705: 	_log("[VERBATIM] Plane created at altitude 6000")
+  line 2761: 	static func save_flight_screenshot():
+  line 2762: 		pass
+  line 3114: 	_arm_tel_t += delta
+  line 3115: 	if not _arm_tel_header:
+  line 3116: 		print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,a
+  line 3117: 		_arm_tel_header = true
+  line 3119: 	var anim_pos := _arm_anim_pos()
+  line 3121: 	for side in ["L", "R"]:
+  line 3122: 		var held: bool = held_left if side == "L" else held_right
+  line 3123: 		var idx: int = _left_arm_idx if side == "L" else _right_ar
+  line 3124: 		if idx == -1:
+  line 3125: 			continue
+  line 3127: 		var pull: float = _arm_pull[side]
+  line 3128: 		var vel: float = _arm_vel[side]
+  line 3131: 		if held:
+  line 3132: 			_arm_hold_t[side] = _arm_hold_t[side] + delta
+  line 3133: 		else:
+  line 3134: 			_arm_hold_t[side] = 0.0
+  line 3135: 		var ramp: float = clampf(_arm_hold_t[side] / ARM_FORCE_RAM
+  line 3136: 		var force: float = 0.0
+  line 3137: 		if held:
+  line 3138: 			force = ARM_FORCE_MIN + (ARM_FORCE_MAX - ARM_FORCE_MIN) *
+  line 3139: 		var tension: float = ARM_K_LINE * pull
+  line 3140: 		var damping: float = ARM_C_DAMP * vel
+  line 3141: 		var accel: float = (force - tension - damping) / ARM_INERT
+  line 3143: 		vel += accel * delta
+  line 3144: 		pull += vel * delta
+  line 3146: 		if pull <= 0.0:
+  line 3147: 			pull = 0.0
+  line 3148: 			if vel < 0.0:
+  line 3149: 				vel = 0.0
+  line 3150: 		elif pull >= 1.0:
+  line 3151: 			pull = 1.0
+  line 3152: 			if vel > 0.0:
+  line 3153: 				vel = 0.0
+  line 3155: 		_arm_pull[side] = pull
+  line 3156: 		_arm_vel[side] = vel
+  line 3163: 		var axis: Vector3 = _arm_axis_use(side)
+  line 3164: 		var angle: float = pull * ARM_MAX_ANGLE
+  line 3165: 		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, a
+  line 3166: 		_arm_q_stored[side] = q
+  line 3170: 		var elbow_deg := 0.0
+  line 3171: 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+  line 3172: 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+  line 3173: 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 
+  line 3177: 			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MA
+  line 3178: 			var e_ax: Vector3 = -_arm_elbow_axis[side]
+  line 3179: 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(
+  line 3180: 			_arm_elbow_q_stored[side] = eq
+  line 3181: 			elbow_deg = rad_to_deg(e_ang)
+  line 3185: 		if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+  line 3186: 			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",",
+  line 3187: 				",", force, ",", tension, ",", damping, ",", accel,
+  line 3188: 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_p
+  line 3189: 				",", elbow_deg, ",", _arm_hold_t[side])
+  line 3195: 	_apply_arm_bone_overrides()
+  line 3200: 	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull
+  line 3201: 	if _the_anim_player != null and is_instance_valid(_the_anim
+  line 3202: 		if any_pull and _the_anim_player.is_playing():
+  line 3203: 			_the_anim_player.stop()
+  line 3204: 		elif not any_pull and not _the_anim_player.is_playing():
+  line 3205: 			_the_anim_player.play("mixamo_com")
+  line 3274: 	var b_hips := _arm_find_bone("Hips")
+  line 3275: 	var b_head := _arm_find_bone("Head")
+  line 3276: 	var b_foot := _arm_find_bone("LeftFoot")
+  line 3277: 	var b_toe  := _arm_find_bone("LeftToe_End")
+  line 3278: 	var b_hl   := _arm_find_bone("LeftHand")
+  line 3279: 	var b_hr   := _arm_find_bone("RightHand")
+  line 3280: 	if b_hips == -1 or b_head == -1 or b_foot == -1 or b_toe ==
+  line 3281: 			or b_hl == -1 or b_hr == -1:
+  line 3282: 		if _arm_solve_tries == 1:
+  line 3283: 			print("[AXISSOLVE] bones not ready: hips=", b_hips, " hea
+  line 3284: 				" foot=", b_foot, " toe=", b_toe, " hl=", b_hl, " hr=", 
+  line 3285: 		return
+  line 3287: 	_arm_probe_done = true
+  line 3288: 	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+  line 3289: 		"  hips=", b_hips, " head=", b_head, " foot=", b_foot,
+  line 3290: 		" toe=", b_toe, " handL=", b_hl, " handR=", b_hr)
+  line 3294: 	var ap = null
+  line 3295: 	if _character and is_instance_valid(_character):
+  line 3296: 		ap = _character.find_child("AnimationPlayer", true, false)
+  line 3297: 	if ap == null:
+  line 3298: 		print("[ANIMDIAG] no AnimationPlayer found")
+  line 3299: 	else:
+  line 3300: 		var cur: String = ap.current_animation
+  line 3301: 		print("[ANIMDIAG] current='", cur, "' is_playing=", ap.is_
+  line 3302: 			" speed_scale=", ap.speed_scale, " active=", ap.active,
+  line 3303: 			" process_mode=", ap.callback_mode_process,
+  line 3304: 			" list=", ap.get_animation_list())
+  line 3305: 		if cur != "":
+  line 3306: 			var a = ap.get_animation(cur)
+  line 3307: 			if a != null:
+  line 3308: 				print("[ANIMDIAG] length=", a.length, " loop_mode=", a.l
+  line 3309: 					" tracks=", a.get_track_count())
+  line 3312: 	var saved_l: Quaternion = _skeleton.get_bone_pose_rotation(
+  line 3313: 	var saved_r: Quaternion = _skeleton.get_bone_pose_rotation(
+  line 3314: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, _arm_rest_q
+  line 3315: 	_skeleton.set_bone_pose_rotation(_right_arm_idx, _arm_rest_
+  line 3316: 	_skeleton.force_update_all_bone_transforms()
+  line 3319: 	var p_hips: Vector3 = _skeleton.get_bone_global_pose(b_hips
+  line 3320: 	var p_head: Vector3 = _skeleton.get_bone_global_pose(b_head
+  line 3321: 	var p_foot: Vector3 = _skeleton.get_bone_global_pose(b_foot
+  line 3322: 	var p_toe:  Vector3 = _skeleton.get_bone_global_pose(b_toe)
+  line 3324: 	var up: Vector3 = (p_head - p_hips).normalized()
+  line 3325: 	var fwd_raw: Vector3 = p_toe - p_foot
+  line 3326: 	var fwd: Vector3 = (fwd_raw - up * fwd_raw.dot(up)).normali
+  line 3327: 	var right: Vector3 = fwd.cross(up).normalized()
+  line 3328: 	var d_want: Vector3 = (fwd - up).normalized()
+  line 3332: 	_arm_d_want = d_want
+  line 3333: 	_arm_body_up = up
+  line 3335: 	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", r
+  line 3336: 	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd)
+  line 3337: 		" (want ~0); desired hand dir (fwd+down)=", d_want)
+  line 3339: 	print("[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,
+  line 3341: 	for side in ["L", "R"]:
+  line 3342: 		var arm_idx: int = _left_arm_idx if side == "L" else _righ
+  line 3343: 		var hand_idx: int = b_hl if side == "L" else b_hr
+  line 3344: 		var rest: Quaternion = _arm_rest_q[side]
+  line 3346: 		var arm_pose: Transform3D = _skeleton.get_bone_global_pose
+  line 3347: 		var p_hand0: Vector3 = _skeleton.get_bone_global_pose(hand
+  line 3348: 		var r_lever: Vector3 = p_hand0 - arm_pose.origin
+  line 3350: 		var w_global: Vector3 = r_lever.cross(d_want)
+  line 3351: 		if w_global.length() < 0.000001:
+  line 3352: 			print("[AXISSOLVE] ", side, " DEGENERATE lever - keeping 
+  line 3353: 			continue
+  line 3354: 		w_global = w_global.normalized()
+  line 3355: 		var w_local: Vector3 = (arm_pose.basis.inverse() * w_globa
+  line 3356: 		_arm_axis_solved[side] = w_local
+  line 3357: 		_arm_axis_ok[side] = true
+  line 3359: 		print("[AXISSOLVE] ", side, " lever=", r_lever, " len=", r
+  line 3360: 			" axis_global=", w_global, " AXIS_LOCAL_APPLIED=", w_loca
+  line 3363: 		var tests := [
+  line 3364: 			["SOLVED", w_local],
+  line 3365: 			["+X", Vector3(1, 0, 0)], ["-X", Vector3(-1, 0, 0)],
+  line 3366: 			["+Y", Vector3(0, 1, 0)], ["-Y", Vector3(0, -1, 0)],
+  line 3367: 			["+Z", Vector3(0, 0, 1)], ["-Z", Vector3(0, 0, -1)],
+  line 3368: 		]
+  line 3369: 		for ang_deg in [15.0, 60.0]:
+  line 3370: 			var ang := deg_to_rad(ang_deg)
+  line 3371: 			for t in tests:
+  line 3372: 				var label: String = t[0]
+  line 3373: 				var ax: Vector3 = t[1]
+  line 3374: 				_skeleton.set_bone_pose_rotation(arm_idx, rest * Quatern
+  line 3375: 				_skeleton.force_update_all_bone_transforms()
+  line 3376: 				var d: Vector3 = _skeleton.get_bone_global_pose(hand_idx
+  line 3377: 				print("[AXISSOLVE],", side, ",", label, ",", ang_deg,
+  line 3378: 					",", d.dot(fwd), ",", d.dot(up), ",", d.dot(right))
+  line 3379: 				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+  line 3380: 				_skeleton.force_update_all_bone_transforms()
+  line 3382: 	_arm_solve_elbow()
+  line 3384: 	_skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+  line 3385: 	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+  line 3386: 	_skeleton.force_update_all_bone_transforms()
+  line 3387: 	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _a
+  line 3388: 		" - axes now APPLIED live, pose restored")
+  line 3428: 		_arm_fore_idx[side] = f_idx
+  line 3429: 		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).ba
+  line 3431: 		var p_f: Vector3 = _skeleton.get_bone_global_pose(f_idx).o
+  line 3432: 		var p_h: Vector3 = _skeleton.get_bone_global_pose(h_idx).o
+  line 3433: 		var p_a: Vector3 = _skeleton.get_bone_global_pose(a_idx).o
+  line 3435: 		var r_lever: Vector3 = p_h - p_f
+  line 3436: 		if r_lever.length() < 0.000001:
+  line 3437: 			print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm l
+  line 3438: 			continue
+  line 3445: 		var d_want := Vector3.ZERO
+  line 3446: 		var src := ""
+  line 3447: 		var cands := [
+  line 3448: 			["pull_dir", _arm_d_want],
+  line 3449: 			["shoulderward", p_a - p_h],
+  line 3450: 			["body_up", -_arm_body_up],
+  line 3451: 		]
+  line 3452: 		for c in cands:
+  line 3453: 			var v: Vector3 = c[1]
+  line 3454: 			if v.length() < 0.000001:
+  line 3455: 				continue
+  line 3456: 			var rej: Vector3 = v - r_lever * (v.dot(r_lever) / r_leve
+  line 3457: 			if rej.length() > 0.001:
+  line 3458: 				d_want = rej.normalized()
+  line 3459: 				src = c[0]
+  line 3460: 				break
+  line 3461: 		if d_want == Vector3.ZERO:
+  line 3462: 			print("[ELBOWSOLVE] ", side,
+  line 3463: 				" DEGENERATE: no usable reference. lever=", r_lever,
+  line 3464: 				" pull_dir=", _arm_d_want, " up=", _arm_body_up)
+  line 3465: 			continue
+  line 3466: 		print("[ELBOWSOLVE] ", side, " reference=", src)
+  line 3468: 		var w_global: Vector3 = r_lever.cross(d_want).normalized()
+  line 3469: 		var f_basis: Basis = _skeleton.get_bone_global_pose(f_idx)
+  line 3470: 		var w_local: Vector3 = (f_basis.inverse() * w_global).norm
+  line 3471: 		_arm_elbow_axis[side] = w_local
+  line 3472: 		_arm_elbow_ok[side] = true
+  line 3474: 		print("[ELBOWSOLVE] ", side, " fore_idx=", f_idx,
+  line 3475: 			" lever=", r_lever, " len=", r_lever.length(),
+  line 3476: 			" d_want=", d_want, " ELBOW_AXIS_LOCAL=", w_local)
+  line 3479: 		var rest_f: Quaternion = _arm_fore_rest_q[side]
+  line 3480: 		var d0: float = (p_h - p_a).length()
+  line 3481: 		print("[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_af
+  line 3482: 		for ang_deg in [30.0, 75.0]:
+  line 3483: 			_skeleton.set_bone_pose_rotation(f_idx,
+  line 3484: 				rest_f * Quaternion(w_local, deg_to_rad(ang_deg)))
+  line 3485: 			_skeleton.force_update_all_bone_transforms()
+  line 3486: 			var p1: Vector3 = _skeleton.get_bone_global_pose(h_idx).o
+  line 3487: 			var d1: float = (p1 - p_a).length()
+  line 3488: 			var along: float = (p1 - p_h).dot(_arm_d_want)
+  line 3489: 			print("[ELBOWSOLVE],", side, ",", ang_deg, ",", d0, ",", 
+  line 3490: 				",", d1 - d0, ",", along)
+  line 3491: 			_skeleton.set_bone_pose_rotation(f_idx, rest_f)
+  line 3492: 			_skeleton.force_update_all_bone_transforms()
+  line 3589: 	var bl: float = _arm_pull["L"]
+  line 3590: 	var br: float = _arm_pull["R"]
+  line 3591: 	var sym: float = (bl + br) * 0.5
+  line 3592: 	var diff: float = br - bl
+  line 3595: 	var fwd_speed: float = GLIDE_FULL_SPEED * (1.0 - GLIDE_BRAK
+  line 3596: 	fwd_speed = maxf(fwd_speed, GLIDE_MIN_SPEED)
+  line 3599: 	var turn_rate: float = GLIDE_TURN_RATE * GLIDE_TURN_SIGN * 
+  line 3600: 		* (1.0 - 0.35 * sym)
+  line 3601: 	_canopy_heading += turn_rate * delta
+  line 3602: 	_canopy_heading = wrapf(_canopy_heading, -PI, PI)
+  line 3605: 	var fwd := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_h
+  line 3606: 	var before := _character.position
+  line 3607: 	_character.position += fwd * fwd_speed * delta
+  line 3608: 	_character.rotation.y = _canopy_heading
+  line 3615: 	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOS
+  line 3616: 	ratio = maxf(ratio, 0.6)
+  line 3617: 	var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sy
+  line 3618: 	_character.position.y += descent_this_frame - sink * delta
+  line 3621: 	_glide_tel_t += delta
+  line 3622: 	if not _glide_tel_hdr:
+  line 3623: 		print("[GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,tu
+  line 3624: 			+ "heading_deg,descent_m_s,glide_ratio,x,z,raw_descent")
+  line 3625: 		_glide_tel_hdr = true
+  line 3628: 	var moving: bool = absf(diff) > 0.002 or sym > 0.002
+  line 3629: 	if moving or _glide_tel_t - _glide_last_log > 0.5:
+  line 3630: 		_glide_last_log = _glide_tel_t
+  line 3631: 		var desc_rate: float = sink
+  line 3632: 		var raw_rate: float = descent_this_frame / delta
+  line 3633: 		var log_ratio: float = 0.0
+  line 3634: 		if absf(desc_rate) > 0.0001:
+  line 3635: 			log_ratio = fwd_speed / desc_rate
+  line 3636: 		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym
+  line 3637: 			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+  line 3638: 			rad_to_deg(_canopy_heading), ",", desc_rate, ",", log_rat
+  line 3639: 			",", _character.position.x, ",", _character.position.z,
+  line 3640: 			",", raw_rate)
+  line 3641: 		if before.distance_to(_character.position) < 0.0001 and fw
+  line 3642: 			print("[GLIDE] WARNING: position did not change despite f
+  line 3643: 				fwd_speed, " - something downstream is overwriting posit
+  line 3683: 	if not _pip_ready:
+  line 3684: 		_pip_ready = true
+  line 3685: 		var main_world = get_viewport().world_3d
+  line 3686: 		if main_world != null:
+  line 3687: 			_pip_viewport.world_3d = main_world
+  line 3688: 			print("[PIPLIVE] SubViewport now shares the main World3D"
+  line 3689: 		else:
+  line 3690: 			print("[PIPLIVE] WARNING: main world_3d is null, PiP stay
+  line 3693: 		var hidden := 0
+  line 3694: 		for child in _pip_viewport.get_children():
+  line 3695: 			if child == _pip_camera:
+  line 3696: 				continue
+  line 3697: 			if child is Node3D:
+  line 3698: 				child.visible = false
+  line 3699: 				hidden += 1
+  line 3700: 		print("[PIPLIVE] hid ", hidden, " standalone PiP prop(s); 
+  line 3701: 		_pip_camera.current = true
+  line 3702: 		_pip_camera.fov = 95.0
+  line 3703: 		_pip_camera.near = 0.05
+  line 3705: 	if _character == null or not is_instance_valid(_character):
+  line 3706: 		return
+  line 3709: 	var eye: Vector3 = _character.global_position + Vector3(0.0
+  line 3710: 	_pip_camera.global_position = eye
+  line 3713: 	var up_hint := Vector3(sin(_canopy_heading), 0.0, cos(_cano
+  line 3714: 	if up_hint.length() < 0.001:
+  line 3715: 		up_hint = Vector3.FORWARD
+  line 3716: 	_pip_camera.look_at(eye + Vector3(0.0, 30.0, 0.0), up_hint)
+  line 3718: 	_pip_log_t += delta
+  line 3719: 	if _pip_log_t > 2.0:
+  line 3720: 		_pip_log_t = 0.0
+  line 3721: 		var what := "canopy" if _canopy_deployed else "aircraft/sk
+  line 3722: 		print("[PIPLIVE] eye=", eye, " state=", _game_state,
+  line 3723: 			" deployed=", _canopy_deployed, " framing=", what)
+  line 3749: 	"deploy":       KEY_SPACE,
+  line 3750: 	"turnleft":     KEY_Q,
+  line 3751: 	"turnright":    KEY_E,
+  line 3752: 	"camera_cycle": KEY_C,
+  line 3753: 	"cutaway":      KEY_X,
+  line 3754: 	"reserve":      KEY_V,
+  line 3755: 	"flare":        KEY_F,
+  line 3756: 	"togglehud":    KEY_H,
+  line 3757: 	"flightcheck":  KEY_G,
+  line 3758: 	"restart":      KEY_R,
+  line 3759: 	"j":            KEY_J,
+  line 3760: 	"pause":        KEY_ESCAPE,
+written: 153624 bytes, verified
+indentation check: PASS (tabs only)
+fix exit: 0
+
+=== AFTER: lines 280-300 ===
+ 280: 			print("[VERBATIM] BAKE FALLBACK")
+ 281: 
+ 282: 		# 1024 vertex-colour mesh with NED 4096 elevation.
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: const W = 512
+ 286: const H = 512
+ 287: 		const HM_SRC = 4096
+ 288: 		const MAX_ELEV = 20.0
+ 289: 		const SCALE_XZ = 4000.0
+ 290: 		var verts := []
+ 291: 		var uvs := []
+ 292: 		for z in range(H):
+ 293: 			for x in range(W):
+ 294: 				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+ 295: 				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+ 296: 				var hm_x := int(float(x) / float(W - 1) * float(HM_SRC - 1))
+ 297: 				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC - 1))
+ 298: 				var hidx := (hm_z * HM_SRC + hm_x) * 2
+ 299: 				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
+ 300: 				var py = (float(raw) / 65535.0) * MAX_ELEV
+
+=== AUTOSTALL RUN ===
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Unrecognized output string "misc2" in mapping:
+030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+SDL: Init OK!
+Xshape 1.1 detected.
+Xinerama 1.1 detected.
+Xrandr 1.6 detected.
+Xrender 0.11 detected.
+Xinput 2.2 detected.
+XInput: Refreshing devices.
+XInput: No touch devices found.
+Detecting GPUs, set DRI_PRIME in the environment to override GPU detection logic.
+Only one GPU found, using default.
+Failed loading custom cursor: crossed_circle
+DBus 1.16.2 detected.
+Using "default" pen tablet driver...
+Shader 'CanvasSdfShaderGLES3' SHA256: 4178a370fca21ad6216db6f7823dc24d65f8d4ad71442bbaa5d6f9a230a081ea
+Shader 'SkeletonShaderGLES3' SHA256: 8bc0ec35c83978cd6d65ef8fc16df8e916ba1e2a9d5a98423fd53815bae40b65
+Shader 'ParticlesShaderGLES3' SHA256: 6afaaf25f8938f1e43e69699472011afc51b674c0df4cd381d188953d85ec5a3
+Shader 'ParticlesCopyShaderGLES3' SHA256: 39392086598b90ead64d3323c81c8ade94c690b12d308ef31d5b9690c172fb22
+Shader 'CopyShaderGLES3' SHA256: 997ec09347cd52d2f6dc09d2a1ab366d3ba8485a46f43f593451013172c4c0ad
+Shader 'CubemapFilterShaderGLES3' SHA256: 32dcf4d8e16f18e32b807a2d1406cca20c37a1e6fcccf8420addb836c4d08aa5
+Shader 'GlowShaderGLES3' SHA256: a6700f3ac665fc4867995c9fcc2052c36df9c7d4909f0d5b8d1092726671dbd0
+Shader 'PostShaderGLES3' SHA256: 6eedbef0b87035bc14ebaf4f413c9e32fa64d5e88a36f1d51dbd0c2be5e54df3
+Shader 'FeedShaderGLES3' SHA256: bddb9e1271cb1ff96bb0f53b92f2724c49e525ede46d8de0d776819eca048a2d
+Shader 'CanvasShaderGLES3' SHA256: f4ec43ced4296bc56a0508da1fd428b360690cb08bcc44b1135a42a01b3844af
+Shader 'CanvasOcclusionShaderGLES3' SHA256: 578a45ce760a0ed6361559f46e9aedf93aa4cc3580d835d6dbc5ae8e4265557c
+Shader 'SceneShaderGLES3' SHA256: 23ab6aea89cc6db38dee15711362af8e7ad9c08bbe99cb758445c4ca6f910f83
+Shader 'SkyShaderGLES3' SHA256: 5d5d48528e786bc9445620d0ef25bddc8d0c7ce6aa74df01c30eb96e7c51f67e
+OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+PulseAudio 17.0.0 detected.
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context ready
+PulseAudio: Detecting channels for device: alsa_output.pci-0000_00_1b.0.analog-stereo
+PulseAudio: detected 2 output channels
+PulseAudio: audio buffer frames: 512 calculated output latency: 11ms
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2475187701
+EDITOR API HASH: 3867286884
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://TelemetryLogger.gd
+Loading resource: res://scripts/SqliteDb.gd
+Loading resource: res://autoloads/HealthChecker.gd
+Loading resource: res://scripts/HubManager.gd
+Loading resource: res://scripts/DatabaseGuard.gd
+Loading resource: res://scripts/ResourceThrottle.gd
+Loading resource: res://scripts/PerformanceMonitor.gd
+Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+Loading resource: res://scripts/SqliteWatchdog.gd
+Loading resource: res://scripts/StructuredLogger.gd
+Loading resource: res://scripts/InputManager.gd
+Loading resource: res://scripts/GameIntegrity.gd
+Loading resource: res://scripts/altimeter_hud.gd
+Loading resource: res://scripts/forensic_hud.gd
+Loading resource: res://scripts/audit.gd
+Loading resource: res://scripts/wind_field.gd
+Loading resource: res://autoloads/CursorManager.gd
+Loading resource: res://autoloads/Gamification.gd
+Loading resource: res://autoloads/forensic_panel.gd
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn
+Loading resource: res://scripts/build_terrain.gd
+SCRIPT ERROR: Parse Error: Unexpected "Indent" in class body.
+          at: GDScript::reload (res://scripts/build_terrain.gd:287)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+Loading resource: res://assets/terrain/black_env.tres
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-02T17:21:32 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-02T17:21:32 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[HubManager] Hub already running – skipping startup
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_cite_completed: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+2026-08-02T17:29:58 [INFO] InputManager ready
+2026-08-02T17:29:58 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+2026-08-02T17:29:59 [INFO] InputManager ready
+2026-08-02T17:29:59 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _panel_rect: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _panel_rect: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+2026-08-02T17:30:01 [INFO] InputManager ready
+2026-08-02T17:30:01 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _exit_tree: ENTER
+[AUDIT] _save_position: ENTER
+[VERBATIM] DatabaseGuard: _exit_tree called
+[VERBATIM] DB CLOSED
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+PulseAudio: context terminated
+
+=== AUTOSTALL FINISHED ===
+Game completed: False
+Fix attempted:  False
+Runtime:        512.0s
+Detailed log:   autostall_summary.json
+===========================
+
+=== MARKER VERIFICATION ===
+VERBATIM count: 23
+LABELDUMP count: 0
+PAUSETEL count: 0
+VARIO values:
+Game completed: Game completed: False
+Parse errors: SCRIPT ERROR: Parse Error: Unexpected "Indent" in class body.
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+Headless deploy: (none)
+
+=== END DIAGNOSTIC ===

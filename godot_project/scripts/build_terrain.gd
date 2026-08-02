@@ -613,9 +613,7 @@ const H = 512
 # ------------------------------------------------------------------
 
 # Gate: Verify arms are not extended (R099)
-
-		print("[VERBATIM] Self-test timer started.")
-	# SELF-TEST TIMER INJECTED (v6.5.151)
+# (orphaned indented lines removed — caused parse error at line 287)
 
 
 func _check_arm_pose() -> void:
