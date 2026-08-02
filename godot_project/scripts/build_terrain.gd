@@ -2824,8 +2824,9 @@ const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
 const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
 
 # v8: elbow stays straight on a shallow pull, flexes on a deep one.
-const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+const ARM_ELBOW_START  := 0.35              # pull below this -> only neutral bend
 const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
 
 var _arm_pull      := {"L": 0.0, "R": 0.0}
 var _arm_vel       := {"L": 0.0, "R": 0.0}
@@ -2943,8 +2944,11 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
-			var e_ang: float = e_t * ARM_ELBOW_MAX
-			var e_ax: Vector3 = _arm_elbow_axis[side]
+			# ARM_ELBOW_NEUTRAL: 20deg resting bend ("let it fly" posture).
+			# Negated axis: solved axis bends forward; negated bends elbow
+			# downward/rearward (USPA SIM toggle grip toward hip).
+			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
+			var e_ax: Vector3 = -_arm_elbow_axis[side]
 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
 			_arm_elbow_q_stored[side] = eq
 			elbow_deg = rad_to_deg(e_ang)
