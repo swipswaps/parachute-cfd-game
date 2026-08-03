@@ -1,0 +1,96 @@
+=== TIMER AND _auto_deploy DIAGNOSTIC — 20260803151810 UTC ===
+
+1. Lines 590-620 of build_terrain.gd:
+     1		# PAUSETEL lines are emitted and the tree is never LEFT paused --
+     2		# autostall's 30 s stall detector cannot trip on it.
+     3		# Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+     4		# (general knowledge - not retrieved this session)
+     5		if OS.get_environment("GODOT_HEADLESS") == "1" \
+     6				or "--headless" in OS.get_cmdline_args():
+     7			var _pause_timer := Timer.new()
+     8			_pause_timer.wait_time = 8.0
+     9			_pause_timer.one_shot = true
+    10			_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+    11			add_child(_pause_timer)
+    12			_pause_timer.timeout.connect(_p3_pause_selftest)
+    13			_pause_timer.start()
+    14	
+    15		func _auto_deploy():
+    16			Input.action_press("deploy")
+    17			Input.action_release("deploy")
+    18			print("[VERBATIM] Auto‑deploy triggered after 5s")
+    19			get_tree().quit()  # optional: exit after deploy for CI
+    20		# Auto‑deploy timer: deploy after 5 seconds
+    21		var timer = get_tree().create_timer(5.0)
+    22		timer.timeout.connect(Callable(self, "_auto_deploy"))
+    23		print("[VERBATIM] ... EXIT _ready ok=true")
+    24		print("[DIAG] _ready: EXIT")
+    25	
+    26		# Self-test if --run-tests is passed (timer-based, robust in headless)
+    27		var args = OS.get_cmdline_args()
+    28		if "--run-tests" in args:
+    29			print("[VERBATIM] Running self-tests (timer-based)...")
+    30			var timer := Timer.new()
+    31			timer.wait_time = 1.5
+
+2. Lines containing "timer.timeout":
+584:	_lbl_timer.timeout.connect(_dump_all_labels)
+601:		_pause_timer.timeout.connect(_p3_pause_selftest)
+611:	timer.timeout.connect(Callable(self, "_auto_deploy"))
+623:		timer.timeout.connect(_run_self_tests)
+1480:	timer.timeout.connect(func(): _notification_label.text = "")
+2429:	timer.timeout.connect(_update_wind_display)
+
+3. Lines containing "_auto_deploy":
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+604:	func _auto_deploy():
+611:	timer.timeout.connect(Callable(self, "_auto_deploy"))
+1674:	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1679:	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+1680:		_headless_auto_deploy = false
+2098:					_headless_auto_deploy = true
+
+4. _auto_deploy method (with ±3 context):
+601-		_pause_timer.timeout.connect(_p3_pause_selftest)
+602-		_pause_timer.start()
+603-
+604:	func _auto_deploy():
+605-		Input.action_press("deploy")
+606-		Input.action_release("deploy")
+607-		print("[VERBATIM] Auto‑deploy triggered after 5s")
+608-		get_tree().quit()  # optional: exit after deploy for CI
+609-	# Auto‑deploy timer: deploy after 5 seconds
+
+5. Timer block in _ready (search for "Auto‑deploy timer"):
+607-		print("[VERBATIM] Auto‑deploy triggered after 5s")
+608-		get_tree().quit()  # optional: exit after deploy for CI
+609:	# Auto‑deploy timer: deploy after 5 seconds
+610-	var timer = get_tree().create_timer(5.0)
+611-	timer.timeout.connect(Callable(self, "_auto_deploy"))
+612-	print("[VERBATIM] ... EXIT _ready ok=true")
+613-	print("[DIAG] _ready: EXIT")
+614-
+
+6. Check for mismatched parentheses/brackets near timer lines:
+	# (general knowledge - not retrieved this session)
+	if OS.get_environment("GODOT_HEADLESS") == "1" \
+			or "--headless" in OS.get_cmdline_args():
+		var _pause_timer := Timer.new()
+		add_child(_pause_timer)
+		_pause_timer.timeout.connect(_p3_pause_selftest)
+		_pause_timer.start()
+	func _auto_deploy():
+		Input.action_press("deploy")
+		Input.action_release("deploy")
+		print("[VERBATIM] Auto‑deploy triggered after 5s")
+		get_tree().quit()  # optional: exit after deploy for CI
+	var timer = get_tree().create_timer(5.0)
+	timer.timeout.connect(Callable(self, "_auto_deploy"))
+	print("[VERBATIM] ... EXIT _ready ok=true")
+	print("[DIAG] _ready: EXIT")
+	# Self-test if --run-tests is passed (timer-based, robust in headless)
+	var args = OS.get_cmdline_args()
+		print("[VERBATIM] Running self-tests (timer-based)...")
+		var timer := Timer.new()
+
+=== END DIAGNOSTIC ===
