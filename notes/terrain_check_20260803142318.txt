@@ -1,0 +1,76 @@
+=== TERRAIN TEXTURE CHECK ===
+
+1. Listing terrain/ folder contents:
+total 609372
+drwxr-xr-x. 1 owner owner     2170 Aug  3 06:13 .
+drwxr-xr-x. 1 owner owner      174 Jul 16 13:34 ..
+-rwxr-xr-x. 1 owner owner  3145728 Jul 31 08:54 baked_colours_1024.bin
+-rwxr-xr-x. 1 owner owner  3145728 Jun 26 11:15 baked_colours_1024.bin.bak.20260731125422
+-rw-r--r--. 1 owner owner  3145728 Jul 30 20:37 baked_colours_1024_hd.bin
+-rw-r--r--. 1 owner owner 50331648 Aug  2 09:10 baked_colours_4096.bin
+-rw-r--r--. 1 owner owner 50331648 Jul 30 20:14 baked_colours_4096.bin.bak.20260802123500
+-rw-r--r--. 1 owner owner 50331648 Aug  2 08:35 baked_colours_4096.bin.bak.20260802124739
+-rw-r--r--. 1 owner owner 50331648 Aug  2 08:47 baked_colours_4096.bin.bak.20260802125429
+-rw-r--r--. 1 owner owner 50331648 Aug  2 08:54 baked_colours_4096.bin.bak.20260802125625
+-rw-r--r--. 1 owner owner 50331648 Aug  2 08:56 baked_colours_4096.bin.bak.20260802130146
+-rw-r--r--. 1 owner owner 50331648 Aug  2 09:01 baked_colours_4096.bin.bak.20260802131035
+-rw-r--r--. 1 owner owner 50331648 Aug  2 08:47 baked_colours_4096.bin.bak.sigma2
+-rwxr-xr-x. 1 owner owner  3145728 Jun 26 11:15 baked_colours.bin
+-rwxr-xr-x. 1 owner owner      188 Jul  6 15:13 black_env.tres
+-rwxr-xr-x. 1 owner owner      111 Jul  6 14:11 black_env.tres.bak_20260706-141134
+-rwxr-xr-x. 1 owner owner      392 Jul  6 15:13 black_env.tres.bak_20260706-151325
+-rwxr-xr-x. 1 owner owner      133 Jun 26 11:15 default_material.tres
+-rwxr-xr-x. 1 owner owner   129340 Jun 26 11:15 earth_mesh.glb
+-rwxr-xr-x. 1 owner owner     1050 Jul 16 13:47 earth_mesh.glb.import
+-rwxr-xr-x. 1 owner owner     1050 Jun 26 11:15 earth_mesh.glb.import.backup.20260608_202449
+-rwxr-xr-x. 1 owner owner   351421 Jun 26 11:15 earth_mesh.obj
+-rwxr-xr-x. 1 owner owner      724 Jul 16 13:46 earth_mesh.obj.import
+-rwxr-xr-x. 1 owner owner      141 Jun 26 11:15 green_mat.tres
+-rw-r--r--. 1 owner owner  2097152 Jul 30 20:37 heightmap_1024_hd.raw
+-rw-r--r--. 1 owner owner 33554432 Jul 30 20:14 heightmap_4096.raw
+-rwxr-xr-x. 1 owner owner   524288 Jun 26 11:15 heightmap_512.raw
+-rwxr-xr-x. 1 owner owner   131072 Jun 26 11:15 heightmap_enhanced.raw
+-rwxr-xr-x. 1 owner owner      957 Jun 26 11:15 heightmap.png
+-rwxr-xr-x. 1 owner owner      946 Jul 16 13:34 heightmap.png.import
+-rwxr-xr-x. 1 owner owner     5402 Jun 26 11:15 heightmap.raw
+-rwxr-xr-x. 1 owner owner    30596 Jun 26 11:15 lowres_terrain.obj
+-rwxr-xr-x. 1 owner owner      744 Jul 16 13:46 lowres_terrain.obj.import
+-rwxr-xr-x. 1 owner owner 18019146 Aug  3 06:13 naip_texture.png
+-rwxr-xr-x. 1 owner owner  7532405 Jun 26 11:15 naip_texture.png.bak.20260803101329
+-rwxr-xr-x. 1 owner owner  7532405 Jun 26 11:15 naip_texture.png.bak_P
+-rwxr-xr-x. 1 owner owner      955 Jul 16 13:34 naip_texture.png.import
+-rwxr-xr-x. 1 owner owner   788070 Jun 26 11:15 satellite.png
+-rwxr-xr-x. 1 owner owner      946 Jul 16 13:34 satellite.png.import
+-rw-r--r--. 1 owner owner 66695327 Jul  7 16:37 skydive_deland.obj
+-rw-r--r--. 1 owner owner      744 Jul 16 13:46 skydive_deland.obj.import
+-rw-r--r--. 1 owner owner 71145534 Jul  7 16:37 skydive_deland.stl
+-rwxr-xr-x. 1 owner owner      119 Jun 26 11:15 sphere_mat.tres
+drwxr-xr-x. 1 owner owner        0 Jun 17 14:16 terrain_data
+-rwxr-xr-x. 1 owner owner   128806 Jun 26 11:15 terrain_data.npz
+-rwxr-xr-x. 1 owner owner      303 Jun 26 11:15 test_plane.obj
+-rwxr-xr-x. 1 owner owner      723 Jul 16 13:34 test_plane.obj.import
+-rwxr-xr-x. 1 owner owner      142 Jun 26 11:15 topo_mat.tres
+
+2. Checking each texture file:
+  ✅ heightmap.png                  size:        957 bytes  dims: 73x37
+  ✅ naip_texture.png               size:   18019146 bytes  dims: 3840x2160
+  ✅ satellite.png                  size:     788070 bytes  dims: 512x512
+  ❌ *.jpg – NOT FOUND
+  ❌ *.tga – NOT FOUND
+
+3. Searching for material files referencing textures:
+
+4. Terrain-related scripts:
+./scripts/generate_terrain_kml.py
+./scripts/download_terrain_tiles.py
+./scripts/create_terrain_dae.sh
+./scripts/build_terrain.gd
+./audit_logs/build_terrain.gd
+./generate_deland_terrain.py
+./patch_terrain.py
+./patch_terrain_final.py
+./patch_build_terrain.py
+./deploy_final_terrain.py
+
+5. Terrain scene files:
+godot_project/scenes/terrain.tscn

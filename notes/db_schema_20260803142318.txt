@@ -1,0 +1,637 @@
+=== DATABASE INSPECTION ===
+
+Database exists: parachute_mutations.db
+
+--- Schema ---
+CREATE TABLE source_snapshots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE source_mutations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            mutation_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE parse_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            parser TEXT NOT NULL,
+            return_code INTEGER NOT NULL,
+            output TEXT,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL);
+CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending');
+CREATE TABLE game_state_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id INTEGER,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            game_state INTEGER,
+            altitude REAL,
+            is_deployed BOOLEAN,
+            error TEXT
+        );
+CREATE TABLE omissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            omission_id TEXT NOT NULL UNIQUE,
+            file TEXT NOT NULL,
+            symptom TEXT NOT NULL,
+            root_cause TEXT NOT NULL,
+            fix_applied TEXT NOT NULL,
+            fix_status TEXT NOT NULL DEFAULT 'pending',
+            verified INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE resource_contention_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            godot_pid INTEGER,
+            ts INTEGER,
+            vm_rss_kb INTEGER,
+            vol_cs INTEGER,
+            nonvol_cs INTEGER,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        , vol_ctxt_sw INTEGER, nonvol_ctxt_sw INTEGER, cpu_pct REAL, io_wait_pct REAL, sched_policy TEXT);
+CREATE TABLE runtime_failures (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    run_id INTEGER NOT NULL,
+    failure_type TEXT NOT NULL,
+    symptom TEXT NOT NULL,
+    root_cause TEXT NOT NULL,
+    fix_applied TEXT,
+    verified INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE asset_validation (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    asset_path TEXT NOT NULL,
+    file_exists INTEGER NOT NULL DEFAULT 0,
+    run_id INTEGER NOT NULL
+);
+CREATE TABLE verbatim_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    run_id INTEGER,
+                    command TEXT NOT NULL,
+                    output TEXT NOT NULL,
+                    exit_code INTEGER,
+                    created_ts TEXT NOT NULL,
+                    FOREIGN KEY (run_id) REFERENCES pipeline_runs(run_id)
+                );
+CREATE TABLE throttle_log (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    operation TEXT NOT NULL UNIQUE,
+                    attempt_count INTEGER DEFAULT 0,
+                    last_attempt TEXT,
+                    backoff_seconds INTEGER DEFAULT 30,
+                    success_count INTEGER DEFAULT 0,
+                    failure_count INTEGER DEFAULT 0,
+                    locked INTEGER DEFAULT 0
+                );
+CREATE TABLE file_splits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                original_file TEXT NOT NULL,
+                split_file TEXT NOT NULL,
+                split_index INTEGER NOT NULL,
+                line_start INTEGER NOT NULL,
+                line_end INTEGER NOT NULL,
+                created_ts TEXT NOT NULL
+            );
+CREATE TABLE syntax_errors (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_path TEXT NOT NULL,
+                line_number INTEGER NOT NULL,
+                error_pattern TEXT NOT NULL,
+                fix_applied TEXT,
+                fixed_ts TEXT NOT NULL
+            , error_text TEXT, code_line TEXT, context TEXT);
+CREATE TABLE syntax_fixes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_path TEXT NOT NULL,
+                line_number INTEGER,
+                pattern TEXT NOT NULL,
+                fix_applied TEXT NOT NULL,
+                fixed_ts TEXT NOT NULL
+            );
+CREATE TABLE error_patterns (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                pattern TEXT NOT NULL UNIQUE,
+                replacement TEXT NOT NULL,
+                description TEXT NOT NULL,
+                priority INTEGER DEFAULT 1,
+                file_filter TEXT DEFAULT '*.gd',
+                enabled INTEGER DEFAULT 1,
+                created_ts TEXT NOT NULL
+            );
+CREATE TABLE files_to_fix (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_path TEXT NOT NULL UNIQUE,
+                line_number INTEGER,
+                error_text TEXT,
+                error_pattern_id INTEGER,
+                before_content TEXT,
+                after_content TEXT,
+                status TEXT DEFAULT 'pending',
+                attempt_count INTEGER DEFAULT 0,
+                max_attempts INTEGER DEFAULT 3,
+                last_attempt TEXT,
+                fixed_ts TEXT,
+                FOREIGN KEY (error_pattern_id) REFERENCES error_patterns(id)
+            );
+CREATE TABLE pipelineruns (
+            run_id TEXT PRIMARY KEY,
+            started_at TEXT NOT NULL,
+            ended_at TEXT,
+            status TEXT NOT NULL,
+            total_processed INTEGER DEFAULT 0,
+            total_fixes INTEGER DEFAULT 0
+        );
+CREATE TABLE autohealactions (
+            id TEXT PRIMARY KEY,
+            run_id TEXT NOT NULL,
+            iteration INTEGER NOT NULL,
+            file_path TEXT NOT NULL,
+            tool_used TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            timestamp TEXT NOT NULL, raw_output TEXT,
+            FOREIGN KEY (run_id) REFERENCES pipelineruns(run_id) ON DELETE CASCADE
+        );
+CREATE TABLE gd_patch_registry (
+            id TEXT PRIMARY KEY,
+            file TEXT NOT NULL,
+            content_hash_before TEXT NOT NULL,
+            content_hash_after TEXT NOT NULL,
+            applied_at TEXT NOT NULL,
+            UNIQUE(file, content_hash_after)
+        );
+CREATE TABLE verificationresults (
+            id TEXT PRIMARY KEY,
+            run_id TEXT NOT NULL,
+            component TEXT NOT NULL,
+            passed INTEGER NOT NULL,
+            verified_at TEXT NOT NULL, evidence TEXT,
+            FOREIGN KEY (run_id) REFERENCES pipelineruns(run_id) ON DELETE CASCADE
+        );
+CREATE TABLE applied_fixes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            fix_id TEXT NOT NULL UNIQUE,
+            file_path TEXT NOT NULL,
+            fix_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            applied_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            run_id INTEGER,
+            status TEXT DEFAULT 'applied',
+            error_pattern TEXT,
+            FOREIGN KEY (run_id) REFERENCES pipelineruns(run_id)
+        );
+CREATE TABLE repair_metrics (
+
+    repair_rule_id INTEGER PRIMARY KEY,
+
+    attempts INTEGER DEFAULT 0,
+
+    successes INTEGER DEFAULT 0,
+
+    failures INTEGER DEFAULT 0,
+
+    success_rate REAL DEFAULT 0,
+
+    FOREIGN KEY(repair_rule_id)
+
+        REFERENCES repair_rules(id)
+
+);
+CREATE TABLE repair_evidence (
+
+    id INTEGER PRIMARY KEY,
+
+    repair_attempt_id INTEGER,
+
+    stdout TEXT,
+
+    stderr TEXT,
+
+    exit_code INTEGER,
+
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(repair_attempt_id)
+
+        REFERENCES repair_attempts(id)
+
+);
+CREATE TABLE schema_migrations (
+            version INTEGER PRIMARY KEY,
+            filename TEXT NOT NULL,
+            applied_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            checksum TEXT DEFAULT 'bootstrap'
+        );
+CREATE TABLE auto_heal_actions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT,
+                tool TEXT,
+                action TEXT,
+                file_path TEXT,
+                line_number INTEGER,
+                before_line TEXT,
+                after_line TEXT,
+                success INTEGER DEFAULT 0,
+                error_message TEXT,
+                iteration INTEGER DEFAULT 0
+            , action_name TEXT, status TEXT, old_sha256 TEXT, new_sha256 TEXT, error_msg TEXT, exit_code INTEGER, stdout TEXT, stderr TEXT, fix_applied TEXT, attempt_count INTEGER DEFAULT 0);
+CREATE TABLE pipeline_runs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id TEXT NOT NULL UNIQUE,
+                start_time TEXT NOT NULL,
+                end_time TEXT,
+                status TEXT DEFAULT 'running',
+                iteration_count INTEGER DEFAULT 0,
+                errors_found INTEGER DEFAULT 0,
+                errors_fixed INTEGER DEFAULT 0
+            , project_root TEXT, total_files TEXT, files_fixed TEXT, files_failed TEXT, outcome TEXT);
+CREATE TABLE error_fingerprints (
+        id            INTEGER PRIMARY KEY AUTOINCREMENT,
+        error_class   TEXT    NOT NULL,
+        pattern       TEXT    NOT NULL UNIQUE,
+        description   TEXT    NOT NULL DEFAULT '',
+        created_at    INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000)
+    );
+CREATE TABLE parse_error_log (
+        id              INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp       INTEGER NOT NULL,
+        file_path       TEXT    NOT NULL,
+        error_class     TEXT    NOT NULL DEFAULT 'UNKNOWN',
+        error_line      INTEGER NOT NULL DEFAULT 0,
+        error_col       INTEGER NOT NULL DEFAULT 0,
+        raw_stderr      TEXT    NOT NULL DEFAULT '',
+        strategy_tried  TEXT    NOT NULL DEFAULT '',
+        resolved        INTEGER NOT NULL DEFAULT 0
+    );
+CREATE TABLE pipeline_metadata (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        );
+CREATE TABLE known_repairs (id INTEGER PRIMARY KEY AUTOINCREMENT, error_class TEXT NOT NULL, strategy_name TEXT NOT NULL, pattern_old TEXT NOT NULL DEFAULT '', pattern_new TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000), UNIQUE(error_class, strategy_name));
+CREATE TABLE strategy_rewards (id INTEGER PRIMARY KEY AUTOINCREMENT, error_class TEXT NOT NULL, strategy_name TEXT NOT NULL, wins INTEGER NOT NULL DEFAULT 0, total_trials INTEGER NOT NULL DEFAULT 0, last_updated INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000), UNIQUE(error_class, strategy_name));
+CREATE TABLE replay_api_tests (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                test_name TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                passed BOOLEAN NOT NULL,
+                expected TEXT,
+                actual TEXT,
+                citation TEXT
+            );
+CREATE TABLE repair_attempts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                rule_id INTEGER,
+                file_path TEXT,
+                error_class TEXT,
+                success BOOLEAN,
+                timestamp INTEGER DEFAULT (strftime('%s','now')),
+                FOREIGN KEY (rule_id) REFERENCES repair_rules(id)
+            );
+CREATE TABLE tool_audit (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp INTEGER NOT NULL,
+                file_path TEXT NOT NULL,
+                tool TEXT NOT NULL,
+                exit_code INTEGER NOT NULL DEFAULT -1,
+                stdout TEXT NOT NULL DEFAULT '',
+                stderr TEXT NOT NULL DEFAULT '',
+                duration_ms INTEGER NOT NULL DEFAULT 0
+            , sha_before TEXT, sha_after TEXT, mutated INTEGER);
+CREATE TABLE repair_rules (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    error_class TEXT,
+    strategy_name TEXT,
+    pattern_old TEXT,
+    pattern_new TEXT,
+    trials INTEGER DEFAULT 0,
+    wins INTEGER DEFAULT 0,
+    last_used INTEGER
+);
+CREATE TABLE component_registry (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_repo TEXT NOT NULL,
+            source_commit TEXT,
+            relative_path TEXT NOT NULL,
+            class_name TEXT,
+            extends_class TEXT,
+            sha256 TEXT NOT NULL,
+            file_size INTEGER,
+            ingested_at TEXT NOT NULL, is_live_path INTEGER,
+            UNIQUE(source_repo, relative_path)
+        );
+CREATE TABLE component_relationships (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            parent_class TEXT NOT NULL,
+            child_class TEXT NOT NULL,
+            relationship_type TEXT NOT NULL,
+            source_repo TEXT NOT NULL,
+            evidence TEXT,
+            ingested_at TEXT NOT NULL,
+            UNIQUE(parent_class, child_class, relationship_type, source_repo)
+        );
+CREATE TABLE flight_controller_recon (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_utc TEXT NOT NULL, file_path TEXT NOT NULL,
+        line_no INTEGER NOT NULL, api_line TEXT NOT NULL);
+CREATE TABLE flight_controller_recon_v2 (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_utc TEXT NOT NULL, file_path TEXT NOT NULL,
+        provenance TEXT NOT NULL, sha256 TEXT NOT NULL,
+        line_no INTEGER NOT NULL, api_line TEXT NOT NULL);
+CREATE TABLE blocking_errors_v1 (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_utc TEXT NOT NULL,
+    phase TEXT NOT NULL,
+    error_line TEXT NOT NULL,
+    engine_exit INTEGER,
+    f4_spam_count INTEGER);
+CREATE TABLE fixes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            line_number INTEGER,
+            issue TEXT,
+            fix_applied TEXT,
+            status TEXT DEFAULT 'applied',
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE diagnostic_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            file_path TEXT NOT NULL,
+            line_number INTEGER,
+            issue TEXT,
+            fix_applied TEXT,
+            result TEXT,
+            context_before TEXT,
+            context_after TEXT
+        , event_type TEXT, status TEXT, detail TEXT);
+CREATE TABLE restore_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            file_path TEXT NOT NULL,
+            backup_used TEXT,
+            fix_applied TEXT,
+            result TEXT,
+            context_before TEXT,
+            context_after TEXT
+        );
+CREATE TABLE environment_fixes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    file_path TEXT,
+    fix_applied TEXT,
+    result TEXT,
+    exit_code INTEGER,
+    log_preview TEXT
+);
+CREATE INDEX idx_file_path ON files_to_fix(file_path)
+    ;
+CREATE TABLE patch_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_utc TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                file_path TEXT,
+                action TEXT,
+                success INTEGER,
+                details TEXT
+            );
+CREATE TABLE test_runs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_utc TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                iteration INTEGER,
+                outcome TEXT,
+                message TEXT
+            );
+CREATE TABLE user_preferences (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        );
+CREATE TABLE diagnostic_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            level TEXT,
+            source TEXT,
+            message TEXT,
+            count INTEGER DEFAULT 1
+        );
+CREATE TABLE project_config (key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE gamification (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            error_type TEXT,
+            first_seen DATETIME,
+            count INTEGER DEFAULT 1,
+            sources TEXT
+        );
+CREATE TABLE pilot_career (
+    pilot_id        INTEGER PRIMARY KEY,
+    name            TEXT UNIQUE NOT NULL,
+    total_flight_minutes INTEGER DEFAULT 0,
+    total_flights   INTEGER DEFAULT 0,
+    total_landings  INTEGER DEFAULT 0,   -- successful game completions
+    total_fixes     INTEGER DEFAULT 0,
+    rank            TEXT DEFAULT 'Student Pilot',
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE ratings (
+    rating_id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    code            TEXT UNIQUE NOT NULL,
+    name            TEXT NOT NULL,
+    description     TEXT,
+    required_fixes  INTEGER DEFAULT 10,
+    category        TEXT NOT NULL
+);
+CREATE TABLE pilot_ratings (
+    pilot_id        INTEGER,
+    rating_id       INTEGER,
+    earned_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (pilot_id, rating_id),
+    FOREIGN KEY (pilot_id) REFERENCES pilot_career(pilot_id),
+    FOREIGN KEY (rating_id) REFERENCES ratings(rating_id)
+);
+CREATE TABLE pilot_category_fixes (
+    pilot_id INTEGER,
+    category TEXT,
+    count INTEGER DEFAULT 0,
+    PRIMARY KEY (pilot_id, category),
+    FOREIGN KEY (pilot_id) REFERENCES pilot_career(pilot_id)
+);
+CREATE TABLE IF NOT EXISTS "flights" (
+        flight_id       INTEGER PRIMARY KEY AUTOINCREMENT,
+        pilot_id        INTEGER NOT NULL,
+        start_time      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        end_time        TIMESTAMP,
+        duration_minutes INTEGER,
+        outcome         TEXT CHECK(outcome IN ('landed','crashed','aborted')),
+        bugs_encountered INTEGER DEFAULT 0,
+        bugs_fixed      INTEGER DEFAULT 0,
+        notes           TEXT,
+        FOREIGN KEY (pilot_id) REFERENCES pilot_career(pilot_id)
+    );
+CREATE TABLE code_patterns (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pattern_type TEXT NOT NULL,
+            path_pattern TEXT NOT NULL,
+            style_value TEXT NOT NULL,
+            confidence REAL DEFAULT 1.0,
+            last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(pattern_type, path_pattern)
+        );
+CREATE TABLE missing_function_fixes (
+    file_path TEXT,
+    missing_function TEXT,
+    source_file TEXT,
+    fixed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (file_path, missing_function)
+);
+CREATE TABLE function_index (
+    function_name TEXT,
+    file_path     TEXT,
+    line_number   INTEGER,
+    PRIMARY KEY (function_name, file_path)
+);
+CREATE TABLE gdeye_diag (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        file TEXT,
+        line INTEGER,
+        column INTEGER,
+        end_line INTEGER,
+        end_column INTEGER,
+        message TEXT,
+        rule TEXT,
+        severity TEXT,
+        captured_at TEXT
+    );
+CREATE TABLE hud_state (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+CREATE TABLE component_health_tests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            component TEXT NOT NULL,
+            passed BOOLEAN NOT NULL,
+            details TEXT,
+            tested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE events_hardened (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+                run_id TEXT, source_db TEXT, source_table TEXT,
+                kind TEXT, file_path TEXT, detail TEXT, content_hash TEXT
+            );
+CREATE TABLE remediation_queue (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_ts TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+                file_path TEXT, line_number INTEGER, error_text TEXT,
+                status TEXT DEFAULT 'pending', attempt_count INTEGER DEFAULT 0,
+                fix_script TEXT, priority INTEGER DEFAULT 5
+            );
+CREATE TABLE IF NOT EXISTS "control_info" (
+    id INTEGER PRIMARY KEY,
+    node_path TEXT,
+    class_name TEXT,
+    position_x REAL,
+    position_y REAL,
+    size_x REAL,
+    size_y REAL,
+    global_position_x REAL,
+    global_position_y REAL,
+    mouse_filter INTEGER,
+    visible INTEGER,
+    z_index INTEGER,
+    modulate_r REAL,
+    modulate_g REAL,
+    modulate_b REAL,
+    timestamp TEXT,
+    key TEXT,
+    value TEXT,
+    updated_at DATETIME
+);
+CREATE TABLE component_audit_log
+            (id INTEGER PRIMARY KEY AUTOINCREMENT, run_ts TEXT,
+             component TEXT, source TEXT, status TEXT, detail TEXT);
+CREATE TABLE fix_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            script TEXT,
+            file_path TEXT,
+            action TEXT,
+            status TEXT,
+            detail TEXT,
+            run_ts TEXT
+        );
+CREATE TABLE diag_findings (
+			id          INTEGER PRIMARY KEY AUTOINCREMENT,
+			script      TEXT,
+			finding_key TEXT,
+			line_number INTEGER,
+			content     TEXT,
+			notes       TEXT,
+			recorded_ts TEXT
+		);
+CREATE TABLE steering_telemetry (
+			id                      INTEGER PRIMARY KEY AUTOINCREMENT,
+			session_id              TEXT,
+			event_ts                TEXT,
+			unix_ts                 REAL,
+			event_type              TEXT,
+			game_state              INTEGER,
+			turn_input              REAL,
+			canopy_deployed         INTEGER,
+			has_parachute_ctrl      INTEGER,
+			steering_applied        INTEGER,
+			source                  TEXT,
+			raw_json                TEXT,
+			ingested_ts             TEXT
+		);
+CREATE TABLE arm_rig_audit (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			run_ts TEXT NOT NULL,
+			finding_key TEXT NOT NULL,
+			bone_name TEXT,
+			bone_index INTEGER,
+			rotation_x REAL, rotation_y REAL, rotation_z REAL,
+			notes TEXT
+		);
+CREATE TABLE control_baseline(
+        action TEXT PRIMARY KEY,required_states TEXT,required_flags TEXT,
+        sequence_after TEXT,description TEXT,status TEXT DEFAULT 'UNVERIFIED',
+        last_checked_ts TEXT);
+CREATE TABLE control_events(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,ts TEXT,action TEXT,key TEXT,
+        state_num INTEGER,result TEXT,reason TEXT,pull_l REAL DEFAULT 0.0,pull_r REAL DEFAULT 0.0);
+CREATE TABLE arm_physics_baseline(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,ts TEXT,session_id TEXT,side TEXT,
+        pull REAL,deg_actual REAL,elbow_deg_actual REAL,deg_expected REAL,
+        elbow_expected REAL,override_applied INTEGER DEFAULT 0,anim_pos REAL);
+CREATE TABLE terrain_upgrades(id INTEGER PRIMARY KEY AUTOINCREMENT,ts TEXT,dataset TEXT,resolution_m REAL,out_size INTEGER,status TEXT,detail TEXT);
+
+--- Recent diagnostic log entries (last 10) ---
+2026-07-30T23:37:55.706990+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T20:49:52.316101+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T19:54:54.686865+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T19:52:29.146222+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T19:46:08.545810+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T19:37:42.176693+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T19:35:41.843588+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T13:02:12.805009+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-30T12:57:10.254080+00:00|hub_preflight|success|Hub healthy before launch
+2026-07-29T21:18:01.030782+00:00|hub_preflight|success|Hub healthy before launch
+
+--- Files_to_fix table (last 5) ---
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd|FIXED|1|2026-08-02 13:01:42
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/assets/terrain/baked_colours_4096.bin|FIXED|1|2026-08-02 12:54:42
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_patched.py|FIXED|1|2026-08-02 12:47:46
+godot_project/scripts/build_terrain.gd|PENDING_DRYRUN|1|2026-08-01 22:57:46
+godot_project/scripts/flight_controller.gd|PENDING_DRYRUN|1|2026-08-01 22:52:18
