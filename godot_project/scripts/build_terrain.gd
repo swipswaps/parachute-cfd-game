@@ -282,8 +282,8 @@ func _ready() -> void:
 		# 1024 vertex-colour mesh with NED 4096 elevation.
 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
-		const W = 1024
-		const H = 1024
+		const W = 512
+		const H = 512
 		const HM_SRC = 4096
 		const MAX_ELEV = 20.0
 		const SCALE_XZ = 4000.0
@@ -3147,7 +3147,7 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 		if any_pull and _the_anim_player.is_playing():
 			_the_anim_player.stop()
 		elif not any_pull and not _the_anim_player.is_playing():
-			_the_anim_player.play("mixamo_com")
+			if false: _the_anim_player.play("mixamo_com")
 
 func _apply_arm_bone_overrides() -> void:
 	if not _skeleton:
