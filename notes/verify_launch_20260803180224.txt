@@ -1,0 +1,59 @@
+=== verify_and_launch.sh — 20260803180224 UTC ===
+
+=== 1. All get_tree().quit() calls (must only be in _run_tests) ===
+  line 2824: 'get_tree().quit()'
+    enclosing: func _run_self_tests() -> void:
+    WARNING: quit() outside _run_tests — live play will exit!
+
+=== 2. All create_timer() calls (must be gated or benign) ===
+1471:	var timer = get_tree().create_timer(3.0)
+2734:		await get_tree().create_timer(0.1).timeout
+2790:	await get_tree().create_timer(0.5).timeout
+
+=== 3. IN_PLANE _poll_controls branch ===
+  1628: '\t\t# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html'
+  1629: '\t\tvar _exit_pressed = ('
+  1630: '\t\t\tInput.is_action_just_pressed("deploy")'
+  1631: '\t\t\tor Input.is_key_pressed(KEY_J)'
+  1632: '\t\t\tor _headless_auto_jump'
+  1633: '\t\t)'
+  1634: '\t\t_headless_auto_jump = false  # consume the flag'
+  1635: '\t\tif _exit_pressed:'
+  1636: '\t\t\tprint("[DIAG] _poll_controls: exit aircraft triggered")'
+  1637: '\t\t\tprint("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")'
+  1638: '\t\t\t_game_state = GameState.FREEFALL'
+
+=== 4. Headless gates on all auto-start / auto-jump paths ===
+128:var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+130:var _headless_warp_done: bool = false    # one-shot flag: headless altitude warp
+555:# 	if OS.get_environment("GODOT_HEADLESS") == "1":
+563:	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():
+569:	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+570:		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+594:	if OS.get_environment("GODOT_HEADLESS") == "1" \
+595:			or "--headless" in OS.get_cmdline_args():
+1632:			or _headless_auto_jump
+1634:		_headless_auto_jump = false  # consume the flag
+1666:	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1671:	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+1672:		_headless_auto_deploy = false
+2085:			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+2090:					_headless_auto_deploy = true
+2204:		if not _headless_warp_done and (
+2205:				OS.get_environment("GODOT_HEADLESS") == "1" or
+2206:				"--headless" in OS.get_cmdline_args()):
+2209:			_headless_warp_done = true
+
+=== 5. Camera distance in DB ===
+camera_distance|11.0
+camera_distance_plane|80.0
+camera_distance_freefall|5.0
+
+=== 6. GODOT_HEADLESS in current shell ===
+GODOT_HEADLESS=[] (must be empty for live play)
+
+=== VERIFICATION COMPLETE ===
+To launch in live play mode:
+  cd /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project && godot .
+Expected: airplane visible at 80m, HUD shows J-to-jump prompt, no auto-exit.
