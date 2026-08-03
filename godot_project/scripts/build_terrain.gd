@@ -557,8 +557,8 @@ func _ready() -> void:
 # 		Input.action_release("deploy")
 # print("[VERBATIM] Headless auto‑start triggered (deploy)")
 		# Fallback: some builds use ui_accept
-		Input.action_press("ui_accept")
-		Input.action_release("ui_accept")
+# Input.action_press("ui_accept")
+# Input.action_release("ui_accept")
 		print("[VERBATIM] Headless auto‑start triggered (ui_accept)")
 	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():
 		Input.action_press("ui_accept")

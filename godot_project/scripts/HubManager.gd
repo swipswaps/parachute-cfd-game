@@ -16,8 +16,8 @@ func _ensure_hub():
 
 	# Added by autostall_patched.py – skip if hub already running
 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
+		return
 		print("[HubManager] Hub already running – skipping startup")
-	# Original startup block follows
 	if OS.get_environment("GODOT_HEADLESS") == "1":
 	print("[HubManager] Headless mode – skipping hub startup.")
 	return
