@@ -1,0 +1,7 @@
+=== fix_landing_terrain.sh — 20260803141424 UTC ===
+
+1. Removed _safe_landing guard from clamp block (now always triggers GAME_OVER).
+2. Added backup altitude check: if altitude <=0 for >2s, forces GAME_OVER.
+3. Logged terrain texture paths for debugging.
+
+Terrain texture file: notes/terrain_textures_20260803150000.txt

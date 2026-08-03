@@ -2137,7 +2137,7 @@ func _physics_process(delta) -> void:
 	_update_canopy_glide(delta, descent)
 	if _character.position.y <= 25.0 + 0.01:
 		_character.position.y = 25.0
-		if not _safe_landing and _game_state != GameState.GAME_OVER:
+		if _game_state != GameState.GAME_OVER:
 			_game_state = GameState.GAME_OVER
 			print("[VERBATIM] Ground impact – fatal (no flare)")
 		if not _safe_landing:
