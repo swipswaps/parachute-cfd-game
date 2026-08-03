@@ -1,0 +1,32 @@
+=== KILL HUB STALL SUMMARY — 20260803153657 UTC ===
+
+1. Patched all HubManager.gd files.
+2. Godot exit code: 130
+3. GLIDE telemetry count: 13
+4. Key markers:
+   Loading resource: res://scripts/HubManager.gd
+   SCRIPT ERROR: Parse Error: Used space character for indentation instead of tab as used before in the file.
+             at: GDScript::reload (res://scripts/HubManager.gd:22)
+   ERROR: Failed to load script "res://scripts/HubManager.gd" with error "Parse error".
+   ERROR: Failed to instantiate an autoload, script 'res://scripts/HubManager.gd' does not inherit from 'Node'.
+   [VERBATIM] Headless auto‑start triggered (deploy)
+   [VERBATIM] Headless auto‑start triggered (ui_accept)
+   [VERBATIM] Headless auto‑start triggered.
+   [VERBATIM] Headless auto‑start triggered.
+   [VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).
+   [VERBATIM] Headless altitude warp: 200m AGL
+   [VERBATIM] Headless auto-deploy triggered (FREEFALL).
+   [GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,heading_deg,descent_m_s,glide_ratio,x,z,raw_descent
+   [GLIDE],0.51666666666667,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,25.5748958587646,23.0
+   [GLIDE],1.01666666666667,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,33.7437133789062,23.0
+   [GLIDE],1.53333333333333,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,42.1826858520508,23.0
+   [GLIDE],2.05,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,50.6194152832031,23.0
+   [GLIDE],2.56666666666666,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,59.053882598877,23.0
+   [GLIDE],3.08333333333333,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,67.4860610961914,23.0
+   [GLIDE],3.59999999999999,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,75.9159240722656,23.0
+   [GLIDE],4.11666666666666,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,84.3434524536133,23.0
+   [GLIDE],4.63333333333332,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,92.7686233520508,23.0
+   [GLIDE],5.14999999999999,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,101.191421508789,23.0
+   [GLIDE],5.66666666666665,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,109.242195129395,23.0
+   [GLIDE],6.18333333333332,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,117.201820373535,23.0
+   [GLIDE],6.69999999999998,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.873352050781,125.158996582031,23.0
