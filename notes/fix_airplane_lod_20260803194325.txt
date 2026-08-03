@@ -1,0 +1,174 @@
+=== fix_airplane_lod.sh — 20260803194325 UTC ===
+
+--- TARGET FILE: godot_project/scripts/build_terrain.gd ---
+
+--- REAL BYTES (cat -A, lines 2000-2020) ---
+2000: ^I^Iif camera_target == "plane" and is_instance_valid(_plane_node):$
+2001: ^I^I^Itarget = _plane_node.global_position$
+2002: ^I^Ielif camera_target == "character" and is_instance_valid(_character):$
+2003: ^I^I^Itarget = _character.global_position$
+2004: ^I^Ielse:$
+2005: ^I^I^Ireturn$
+2006: ^I^Ivar offset = Vector3(0, 0, -_cam_distance)$
+2007: ^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+2008: ^I^Ioffset = offset.rotated(Vector3.RIGHT, _cam_elevation)$
+2009: ^I^I_camera.global_position = target + offset$
+2010: ^I^I_camera.look_at(target, Vector3.UP)$
+2011: ^I^Iprint($
+2012: ^I^I^I"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)$
+2013: ^I^I)$
+2014: $
+2015: ^Iif event is InputEventKey and event.pressed and not event.echo:$
+2016: ^I^Ivar action := ""$
+2017: ^I^Iif event.keycode == KEY_Q:$
+2018: ^I^I^Iaction = "turn_left (Q)"$
+2019: ^I^Ielif event.keycode == KEY_E:$
+2020: ^I^I^Iaction = "turn_right (E)"$
+
+--- GREP: InputEventMouseButton ---
+1877:	if event is InputEventMouseButton and event.pressed:
+1959:	# CITATION [3]: Godot Engine 4.x Documentation, Class: InputEventMouseButton
+1962:	#   InputEventMouseButton.pressed distinguishes the down-edge (true) from
+1980:	if event is InputEventMouseButton:
+
+--- GREP: InputEventKey ---
+1892:		and event is InputEventKey
+1956:	if event is InputEventKey and event.keycode == KEY_F3:
+2015:	if event is InputEventKey and event.pressed and not event.echo:
+2041:	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+3809:			if ev is InputEventKey:
+3826:func _key_event(keycode: int) -> InputEventKey:
+3827:	var ev := InputEventKey.new()
+
+--- GREP: toggle_pause ---
+1905:func toggle_pause() -> void:
+
+--- GREP: LOD constants in _ready ---
+286:		const W = 512
+287:		const H = 512
+
+--- EXTRACTING CORRECT ANCHOR (InputEventKey after _camera.look_at) ---
+ANCHOR_NOT_FOUND
+
+--- END EXTRACTION ---
+
+--- GODOT STATIC CHECK (timeout 10s) ---
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+Godot check timed out or failed (non‑critical)
+
+--- GIT STATE BEFORE FIX ---
+ M .gitignore
+ M autostall_patched.py
+ M forensic_hub_server.py
+ M gate_log.txt
+ M godot_project/assets/terrain/baked_colours_4096.bin
+ M godot_project/scripts/SqliteDb.gd
+ D notes/.push_v2_work_20260802203638
+ M notes/godot_check_final.txt
+ M run_and_push.sh
+ M run_summary.json
+?? .quarantine/
+?? 02.gd
+?? 1
+?? 1.
+?? =
+?? GameIntegrity_0002.gd
+?? GameIntegrity_2606201818.gd
+?? InputManager_0003.gd
+?? PerformanceMonitor_0002.gd
+?? SqliteDb_0002.gd
+?? SqliteWatchdog_0002.gd
+?? StructuredLogger.gd
+?? TelemetryLogger.gd
+?? [owner@192.168.1.152-20260616-173650parachute-cfd-game]$
+?? alembic.ini
+?? altimeter_hud_0002.gd
+?? apply_v5_repairs.sh.bad
+?? argparse
+?? autostall_post_revert.txtclear
+?? autostall_summary.json
+?? blosm/
+?? build_terrain_0123.gd
+?? build_terrain_patch.gd
+?? check_inputmap.gd
+?? combined_edits.json
+?? context_20260619T143131.zip
+?? debug_components_0002.gd
+?? difflib
+?? eof
+?? fu
+?? game_manager_0002.gd
+?? godot_aerodynamic_physics.zip
+?? godot_project/TelemetryLogger.gd
+?? godot_project/add_input_actions.gd
+?? godot_project/assets/aircraft/Cessna.glb
+?? godot_project/assets/aircraft/cesna_airplane_0.png
+?? godot_project/assets/aircraft/cesna_airplane_1.png
+?? godot_project/assets/aircraft/cesna_airplane_2.png
+?? godot_project/assets/aircraft/cessna172.glb
+?? godot_project/assets/aircraft/cessna172_Image.png
+?? godot_project/assets/canopy/clean.glb
+?? godot_project/assets/canopy/parachute.glb
+?? godot_project/assets/canopy/parachute_clean.glb
+?? godot_project/assets/canopy/parachute_cleaned.glb
+?? godot_project/assets/canopy/parachute_fixed.fbx
+?? godot_project/assets/canopy/parachute_fixed.glb
+?? godot_project/assets/canopy/parachute_fixed_0001.glb
+?? godot_project/assets/canopy/parachute_sanitized.glb
+?? godot_project/assets/canopy/temp.bin
+?? "godot_project/assets/characters/Hanging under canopy.fbx"
+?? godot_project/assets/characters/parachutist.fbx
+?? godot_project/assets/characters/parachutist.glb
+?? godot_project/assets/terrain/baked_colours.bin
+?? godot_project/assets/terrain/earth_mesh.glb
+?? godot_project/assets/terrain/heightmap.png
+?? godot_project/assets/terrain/satellite.png
+?? godot_project/assets/terrain/terrain_data.npz
+?? godot_project/capture.gd
+?? godot_project/final_screenshot.png
+?? godot_project/scripts/HubManager.gd.broken.20260801185950
+?? godot_project/scripts/build_terrain.gd.broken.20260801185950
+?? godot_project/scripts/build_terrain_0011.gd
+?? godot_project/scripts/build_terrain_0100.gd
+?? godot_project/scripts/chunked_lod_terrain.gd
+?? godot_project/scripts/forensic_hud.gd.broken.20260801185950
+?? godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734
+?? godot_project/scripts/forensic_hud.gd.broken_v3c.20260801192217
+?? godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558
+?? godot_project/scripts/forensic_hud.gd.pre_v2.20260801194217
+?? godot_project/scripts/forensic_hud.gd.pre_v3.20260801194432
+?? godot_project/simulate_input.gd
+?? godot_project/test_hud.gd
+?? godot_project/test_minimal.gd
+?? godot_project/test_minimal.png
+?? godot_project/tools/setup_input_map.gd
+?? minimal_0002.gd
+?? observability/
+?? parachute_cfd_handoff_20260802.docx
+?? parachute_cfd_handoff_20260802B.md
+?? parachute_controller_0002.gd
+?? pip_draggable_0002.gd
+?? pip_draggable_v2_0002.gd
+?? plane_0002.gd
+?? rotor_visualizer_0002.gd
+?? scratch_aeropropeller_fix/
+?? scratch_formatting_test/
+?? scratch_inline_tab_diag/
+?? scratch_iterative_test/
+?? scratch_reconstruct_test/
+?? scratch_upstream_compare/
+?? screenshot.png
+?? screenshot_20260607T140645.png
+?? screenshot_20260607T141131.png
+?? screenshot_20260607T142005.png
+?? scripts/
+?? splash_0002.gd
+?? temp_check.gd
+?? test_extract_20260711_002400/
+?? tmp_candidate.gd
+?? toggle_arm_animator_0002.gd
+?? validate_scene_0002.gd
+Staged count: 0
+
+=== END DIAGNOSTIC ===
