@@ -325,11 +325,6 @@ func _ready() -> void:
 		st.generate_normals()
 		st.generate_tangents()
 		var terrain_mesh = st.commit()
-		# Generate automatic LOD levels — Godot 4 transitions mesh detail
-		# by screen coverage. Eliminates coarse far-range appearance.
-		# Ref: ArrayMesh.generate_lods()
-		# https://docs.godotengine.org/en/stable/classes/class_arraymesh.html
-		terrain_mesh.generate_lods(0.25, 0.05, [])
 		var terrain_inst := MeshInstance3D.new()
 		terrain_inst.mesh = terrain_mesh
 		var terrain_mat := StandardMaterial3D.new()
