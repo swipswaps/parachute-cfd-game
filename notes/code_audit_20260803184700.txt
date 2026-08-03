@@ -1,0 +1,189 @@
+=== code_audit.sh — 20260803184700 UTC ===
+
+=== A. user_preferences table contents ===
+camera_distance|11.0
+camera_distance_freefall|10.0
+camera_distance_plane|80.0
+
+=== B. build_terrain.gd line count ===
+3844 godot_project/scripts/build_terrain.gd
+
+=== C. _save_camera_settings — lines 2825-2848 ===
+2825: 
+2826: 
+2827: func _save_camera_settings() -> void:
+2828: 	var db = SqliteDb  # autoload singleton
+2829: 	if not db:
+2830: 		return
+2831: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2832: 	var key = (
+2833: 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+2834: 	)
+2835: 	db._query(
+2836: 		(
+2837: 			"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"
+2838: 			+ key
+2839: 			+ "', '"
+2840: 			+ str(_cam_distance)
+2841: 			+ "')"
+2842: 		)
+2843: 	)
+2844: 	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
+2845: 
+2846: 
+2847: func _load_camera_settings() -> void:
+2848: 	var db = SqliteDb  # autoload singleton
+
+=== D. _update_camera_position — lines 2868-2888 ===
+2868: 	elif camera_target == "character" and is_instance_valid(_character):
+2869: 		target = _character.global_position
+2870: 	else:
+2871: 		if is_instance_valid(_plane_node):
+2872: 			target = _plane_node.global_position
+2873: 		else:
+2874: 			return
+2875: 	var offset := Vector3(0, 0, _cam_distance)
+2876: 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
+2877: 	_camera.global_position = target + rot * offset
+2878: 	_camera.look_at(target, Vector3.UP)
+2879: 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
+2880: 	_save_camera_settings()
+2881: 
+2882: 
+2883: # Added to fix deferred call and log warning via ErrorLogger
+2884: func _recreate_hud_if_needed() -> void:
+2885: 	ErrorLogger.log_warning("Deferred method '_recreate_hud_if_needed' called but not implemented.")
+2886: 
+2887: 
+2888: func build_chunk(chunk_coords: Vector2) -> void:
+
+=== E. _input camera orbit block — lines 1988-2005 ===
+1988: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+1989: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+1990: 		var rel = (event as InputEventMouseMotion).relative
+1991: 		# Adjust azimuth and elevation based on mouse drag
+1992: 		_cam_azimuth -= rel.x * 0.005
+1993: 		_cam_elevation -= rel.y * 0.005
+1994: 		# _character.rotation.y = _cam_azimuth  # removed to match plane behaviour
+1995: 		# Clamp elevation to avoid flipping
+1996: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+1997: 		_update_camera_position()
+1998: 		# Immediately update camera position if we have a target
+1999: 		var target: Vector3
+2000: 		if camera_target == "plane" and is_instance_valid(_plane_node):
+2001: 			target = _plane_node.global_position
+2002: 		elif camera_target == "character" and is_instance_valid(_character):
+2003: 			target = _character.global_position
+2004: 		else:
+2005: 			return
+
+=== F. SqliteDb.gd _query — lines 226-242 ===
+ 226: 		_db.close_db()
+ 227: 	print("[VERBATIM] DB CLOSED")
+ 228: 
+ 229: 
+ 230: func _query(sql: String, args: Array = []) -> Array:
+ 231: 	if not _db_ok or not _db:
+ 232: 		print("[VERBATIM] DB NOT AVAILABLE – skipping: ", sql.left(60))
+ 233: 		return []
+ 234: 	if not _db.query_with_bindings(sql, args):
+ 235: 		print("[VERBATIM] DB QUERY FAIL: " + sql.left(80))
+ 236: 		return []
+ 237: 	return _db.query_result
+ 238: 
+ 239: 
+ 240: func _create_tables() -> void:
+ 241: 	_query(
+ 242: 		"CREATE TABLE IF NOT EXISTS issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0)"
+
+=== G. LOD / terrain constants grep ===
+286:		const W = 512
+287:		const H = 512
+328:		var terrain_inst := MeshInstance3D.new()
+344:		var flat_inst := MeshInstance3D.new()
+416:	var dz := MeshInstance3D.new()
+621:# Helper: create runway (returns MeshInstance3D)
+651:) -> MeshInstance3D:
+652:	var mi := MeshInstance3D.new()
+674:		var capsule := MeshInstance3D.new()
+830:		var mesh_inst: MeshInstance3D = MeshInstance3D.new()
+859:# Helper: find first MeshInstance3D child recursively
+860:# WHY: GLB root is Node3D; material_override lives on MeshInstance3D child
+862:func _find_first_mesh(node: Node) -> MeshInstance3D:
+863:	if node is MeshInstance3D:
+896:	_canopy_instance = MeshInstance3D.new()
+2380:		var sphere := MeshInstance3D.new()
+
+=== H. Terrain mesh generation — grep for vertex/mesh creation ===
+291:		var verts := []
+302:				verts.push_back(Vector3(px, py, pz))
+312:		var st := SurfaceTool.new()
+315:		for i in range(verts.size()):
+322:			st.add_vertex(verts[i])
+327:		var terrain_mesh = st.commit()
+329:		terrain_inst.mesh = terrain_mesh
+336:		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+340:		var flat_mesh := PlaneMesh.new()
+342:		flat_mesh.subdivide_width = 64
+343:		flat_mesh.subdivide_depth = 64
+345:		flat_inst.mesh = flat_mesh
+421:	dz.mesh = cyl
+658:	mi.mesh = box
+675:		capsule.mesh = CapsuleMesh.new()
+843:		mesh_inst.mesh = cyl
+902:	_canopy_instance.mesh = sphere_mesh
+2381:		sphere.mesh = SphereMesh.new()
+
+=== I. gamification/logbook.py — lines 1-30 ===
+   1: """MSFS‑style pilot logbook and career tracking for autostall.py."""
+   2: import sqlite3
+   3: import os
+   4: from datetime import datetime
+   5: 
+   6: DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "parachute_mutations.db")
+   7: 
+   8: def _connect():
+   9:     conn = sqlite3.connect(DB_PATH)
+  10:     conn.execute("PRAGMA journal_mode=WAL")
+  11:     return conn
+  12: 
+  13: def init_db():
+  14:     schema_path = os.path.join(os.path.dirname(__file__), "schema.sql")
+  15:     with open(schema_path) as f:
+  16:         schema = f.read()
+  17:     conn = _connect()
+  18:     conn.executescript(schema)
+  19:     conn.commit()
+  20:     conn.close()
+  21: 
+  22: def get_or_create_pilot(name="default"):
+  23:     conn = _connect()
+  24:     cur = conn.execute("SELECT pilot_id FROM pilot_career WHERE name=?", (name,))
+  25:     row = cur.fetchone()
+  26:     if row:
+  27:         pid = row[0]
+  28:     else:
+  29:         cur.execute("INSERT INTO pilot_career (name) VALUES (?)", (name,))
+  30:         pid = cur.lastrowid
+
+=== J. autostall_fixed.py — init_db call and main() tail ===
+652:def main():
+727:    game_completed = False
+768:                if "Ground impact – fatal" in line:
+769:                    game_completed = True
+783:            if game_completed:
+965:        "game_completed": game_completed,
+975:    if game_completed:
+984:    init_db()
+989:        outcome = "landed" if game_completed else ("aborted" if proc.returncode == 0 else "crashed")
+
+=== K. Rule #31 indentation check (leading spaces in build_terrain.gd) ===
+Lines with leading spaces: 0
+0
+
+=== L. terrain_upgrades table contents ===
+1|2026-07-31 00:14:11|National Elevation Dataset (NED) 1/3 arc-second|10.0|4096|FIXED|0.98m/px output from National Elevation Dataset (NED) 1/3 arc-second
+2|2026-07-31 12:50:04|NAIP|0.6|1024|FAILED|no data
+3|2026-07-31 12:54:22|USGS WMS NAIP|0.6|1024|FIXED|WMS tile, TNM API was down
+
+=== END ===
