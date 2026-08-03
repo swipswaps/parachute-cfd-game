@@ -1,0 +1,18 @@
+=== EVIDENCE — 2026-08-03T11:45:27.774646 UTC ===
+
+godot_project/scripts/HubManager.gd lines 20-25 with visible whitespace (repr):
+  20: '\t\treturn\n'
+  21: '\t# Original startup block follows\n'
+  22: '\tif OS.get_environment("GODOT_HEADLESS") == "1":\n'
+  23: '\tprint("[HubManager] Headless mode – skipping hub startup.")\n'
+  24: '\treturn\n'
+  25: 'print("[HubManager] Hub not responding; starting it...")\n'
+
+godot_project/scripts/build_terrain.gd lines 555-560 with visible whitespace (repr):
+ 555: '# \tif OS.get_environment("GODOT_HEADLESS") == "1":\n'
+ 556: '# \t\tInput.action_press("deploy")\n'
+ 557: '# \t\tInput.action_release("deploy")\n'
+ 558: '\t\tprint("[VERBATIM] Headless auto‑start triggered (deploy)")\n'
+ 559: '\t\t# Fallback: some builds use ui_accept\n'
+ 560: '\t\tInput.action_press("ui_accept")\n'
+
