@@ -70,8 +70,8 @@ def pre_delivery_gate(script_path: str) -> None:
         stripped = line.lstrip()
         if not stripped.startswith("#") and "sed" in line.split():
             violations.append(f"sed at line {i}")
-        BANNED = "utcnow" + "()"
-        if BANNED in line and not stripped.startswith("#") and not any(q in line for q in ['f"utcnow', '"utcnow()'', "'utcnow()'"]):
+        _banned = "utc" + "now" + "()"
+        if _banned in line and not stripped.startswith("#") and '"' + _banned not in line:
             violations.append(f"utcnow() at line {i}")
     if violations:
         log_result("pre_delivery_gate", False, str(violations))
