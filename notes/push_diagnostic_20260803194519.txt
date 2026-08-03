@@ -1,0 +1,261 @@
+=== Push diagnostic — 20260803194519 UTC ===
+
+--- Git remote ---
+origin	https://github.com/swipswaps/parachute-cfd-game.git (fetch)
+origin	https://github.com/swipswaps/parachute-cfd-game.git (push)
+
+--- Current branch ---
+main
+ M .gitignore
+ M autostall_patched.py
+ M diagnose_push.sh
+ M forensic_hub_server.py
+ M gate_log.txt
+ M godot_project/assets/terrain/baked_colours_4096.bin
+ M godot_project/scripts/SqliteDb.gd
+ D notes/.push_v2_work_20260802203638
+ M notes/godot_check_final.txt
+ M run_and_push.sh
+ M run_summary.json
+?? .quarantine/
+?? 02.gd
+?? 1
+?? 1.
+?? =
+?? GameIntegrity_0002.gd
+?? GameIntegrity_2606201818.gd
+?? InputManager_0003.gd
+?? PerformanceMonitor_0002.gd
+?? SqliteDb_0002.gd
+?? SqliteWatchdog_0002.gd
+?? StructuredLogger.gd
+?? TelemetryLogger.gd
+?? [owner@192.168.1.152-20260616-173650parachute-cfd-game]$
+?? alembic.ini
+?? altimeter_hud_0002.gd
+?? apply_v5_repairs.sh.bad
+?? argparse
+?? autostall_post_revert.txtclear
+?? autostall_summary.json
+?? blosm/
+?? build_terrain_0123.gd
+?? build_terrain_patch.gd
+?? check_inputmap.gd
+?? combined_edits.json
+?? context_20260619T143131.zip
+?? debug_components_0002.gd
+?? difflib
+?? eof
+?? fu
+?? game_manager_0002.gd
+?? godot_aerodynamic_physics.zip
+?? godot_project/TelemetryLogger.gd
+?? godot_project/add_input_actions.gd
+?? godot_project/assets/aircraft/Cessna.glb
+?? godot_project/assets/aircraft/cesna_airplane_0.png
+?? godot_project/assets/aircraft/cesna_airplane_1.png
+?? godot_project/assets/aircraft/cesna_airplane_2.png
+?? godot_project/assets/aircraft/cessna172.glb
+?? godot_project/assets/aircraft/cessna172_Image.png
+?? godot_project/assets/canopy/clean.glb
+?? godot_project/assets/canopy/parachute.glb
+?? godot_project/assets/canopy/parachute_clean.glb
+?? godot_project/assets/canopy/parachute_cleaned.glb
+?? godot_project/assets/canopy/parachute_fixed.fbx
+?? godot_project/assets/canopy/parachute_fixed.glb
+?? godot_project/assets/canopy/parachute_fixed_0001.glb
+?? godot_project/assets/canopy/parachute_sanitized.glb
+?? godot_project/assets/canopy/temp.bin
+?? "godot_project/assets/characters/Hanging under canopy.fbx"
+?? godot_project/assets/characters/parachutist.fbx
+?? godot_project/assets/characters/parachutist.glb
+?? godot_project/assets/terrain/baked_colours.bin
+?? godot_project/assets/terrain/earth_mesh.glb
+?? godot_project/assets/terrain/heightmap.png
+?? godot_project/assets/terrain/satellite.png
+?? godot_project/assets/terrain/terrain_data.npz
+?? godot_project/capture.gd
+?? godot_project/final_screenshot.png
+?? godot_project/scripts/HubManager.gd.broken.20260801185950
+?? godot_project/scripts/build_terrain.gd.broken.20260801185950
+?? godot_project/scripts/build_terrain_0011.gd
+?? godot_project/scripts/build_terrain_0100.gd
+?? godot_project/scripts/chunked_lod_terrain.gd
+?? godot_project/scripts/forensic_hud.gd.broken.20260801185950
+?? godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734
+?? godot_project/scripts/forensic_hud.gd.broken_v3c.20260801192217
+?? godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558
+?? godot_project/scripts/forensic_hud.gd.pre_v2.20260801194217
+?? godot_project/scripts/forensic_hud.gd.pre_v3.20260801194432
+?? godot_project/simulate_input.gd
+?? godot_project/test_hud.gd
+?? godot_project/test_minimal.gd
+?? godot_project/test_minimal.png
+?? godot_project/tools/setup_input_map.gd
+?? minimal_0002.gd
+?? observability/
+?? parachute_cfd_handoff_20260802.docx
+?? parachute_cfd_handoff_20260802B.md
+?? parachute_controller_0002.gd
+?? pip_draggable_0002.gd
+?? pip_draggable_v2_0002.gd
+?? plane_0002.gd
+?? rotor_visualizer_0002.gd
+?? scratch_aeropropeller_fix/
+?? scratch_formatting_test/
+?? scratch_inline_tab_diag/
+?? scratch_iterative_test/
+?? scratch_reconstruct_test/
+?? scratch_upstream_compare/
+?? screenshot.png
+?? screenshot_20260607T140645.png
+?? screenshot_20260607T141131.png
+?? screenshot_20260607T142005.png
+?? scripts/
+?? splash_0002.gd
+?? temp_check.gd
+?? test_extract_20260711_002400/
+?? tmp_candidate.gd
+?? toggle_arm_animator_0002.gd
+?? validate_scene_0002.gd
+
+--- Check if the log file exists and is staged ---
+-rw-r--r--. 1 owner owner 6073 Aug  3 15:36 notes/fix_airplane_lod_20260803193638.txt
+-rw-r--r--. 1 owner owner 6073 Aug  3 15:38 notes/fix_airplane_lod_20260803193752.txt
+-rw-r--r--. 1 owner owner 6073 Aug  3 15:41 notes/fix_airplane_lod_20260803194146.txt
+-rw-r--r--. 1 owner owner 6087 Aug  3 15:43 notes/fix_airplane_lod_20260803194325.txt
+No log staged
+
+--- Attempt push with verbose output ---
+15:45:20.196396 git.c:502               trace: built-in: git push origin main
+15:45:20.196913 run-command.c:673       trace: run_command: GIT_DIR=.git git remote-https origin https://github.com/swipswaps/parachute-cfd-game.git
+15:45:20.196933 run-command.c:765       trace: start_command: /usr/libexec/git-core/git remote-https origin https://github.com/swipswaps/parachute-cfd-game.git
+15:45:20.199164 git.c:808               trace: exec: git-remote-https origin https://github.com/swipswaps/parachute-cfd-game.git
+15:45:20.199204 run-command.c:673       trace: run_command: git-remote-https origin https://github.com/swipswaps/parachute-cfd-game.git
+15:45:20.199217 run-command.c:765       trace: start_command: /usr/libexec/git-core/git-remote-https origin https://github.com/swipswaps/parachute-cfd-game.git
+15:45:20.207440 http.c:890              == Info: Couldn't find host github.com in the .netrc file; using defaults
+15:45:20.213875 http.c:890              == Info: Host github.com:443 was resolved.
+15:45:20.213897 http.c:890              == Info: IPv6: (none)
+15:45:20.213901 http.c:890              == Info: IPv4: 140.82.114.3
+15:45:20.213980 http.c:890              == Info:   Trying 140.82.114.3:443...
+15:45:20.262540 http.c:890              == Info: ALPN: curl offers http/1.1
+15:45:20.263429 http.c:890              == Info: TLSv1.3 (OUT), TLS handshake, Client hello (1):
+15:45:20.285003 http.c:890              == Info:  CAfile: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+15:45:20.285112 http.c:890              == Info:  CApath: none
+15:45:20.310674 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, Server hello (2):
+15:45:20.311339 http.c:890              == Info: TLSv1.3 (IN), TLS change cipher, Change cipher spec (1):
+15:45:20.311385 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+15:45:20.311451 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, Certificate (11):
+15:45:20.313888 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, CERT verify (15):
+15:45:20.314233 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, Finished (20):
+15:45:20.314397 http.c:890              == Info: TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+15:45:20.314508 http.c:890              == Info: TLSv1.3 (OUT), TLS handshake, Finished (20):
+15:45:20.314628 http.c:890              == Info: SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256 / x25519 / id-ecPublicKey
+15:45:20.314642 http.c:890              == Info: ALPN: server accepted http/1.1
+15:45:20.314653 http.c:890              == Info: Server certificate:
+15:45:20.314671 http.c:890              == Info:  subject: CN=github.com
+15:45:20.314685 http.c:890              == Info:  start date: Jul  3 00:00:00 2026 GMT
+15:45:20.314697 http.c:890              == Info:  expire date: Sep 30 23:59:59 2026 GMT
+15:45:20.314732 http.c:890              == Info:  subjectAltName: host "github.com" matched cert's "github.com"
+15:45:20.314762 http.c:890              == Info:  issuer: C=GB; O=Sectigo Limited; CN=Sectigo Public Server Authentication CA DV E36
+15:45:20.314771 http.c:890              == Info:  SSL certificate verify ok.
+15:45:20.314789 http.c:890              == Info:   Certificate level 0: Public key type EC/prime256v1 (256/128 Bits/secBits), signed using ecdsa-with-SHA256
+15:45:20.314803 http.c:890              == Info:   Certificate level 1: Public key type EC/prime256v1 (256/128 Bits/secBits), signed using ecdsa-with-SHA384
+15:45:20.314816 http.c:890              == Info:   Certificate level 2: Public key type EC/secp384r1 (384/192 Bits/secBits), signed using ecdsa-with-SHA384
+15:45:20.314839 http.c:890              == Info: Connected to github.com (140.82.114.3) port 443
+15:45:20.314846 http.c:890              == Info: using HTTP/1.x
+15:45:20.314948 http.c:837              => Send header, 0000000227 bytes (0x000000e3)
+15:45:20.314961 http.c:849              => Send header: GET /swipswaps/parachute-cfd-game.git/info/refs?service=git-receive-pack HTTP/1.1
+15:45:20.314967 http.c:849              => Send header: Host: github.com
+15:45:20.314971 http.c:849              => Send header: User-Agent: git/2.53.0
+15:45:20.314976 http.c:849              => Send header: Accept: */*
+15:45:20.314981 http.c:849              => Send header: Accept-Encoding: deflate, gzip, br
+15:45:20.314985 http.c:849              => Send header: Accept-Language: en-US, *;q=0.9
+15:45:20.314990 http.c:849              => Send header: Pragma: no-cache
+15:45:20.314995 http.c:849              => Send header:
+15:45:20.315026 http.c:890              == Info: Request completely sent off
+15:45:20.358832 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+15:45:20.359117 http.c:890              == Info: TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+15:45:20.369153 http.c:837              <= Recv header, 0000000027 bytes (0x0000001b)
+15:45:20.369179 http.c:849              <= Recv header: HTTP/1.1 401 Unauthorized
+15:45:20.369193 http.c:837              <= Recv header, 0000000026 bytes (0x0000001a)
+15:45:20.369199 http.c:849              <= Recv header: Server: GitHub-Babel/3.0
+15:45:20.369211 http.c:837              <= Recv header, 0000000054 bytes (0x00000036)
+15:45:20.369217 http.c:849              <= Recv header: Content-Security-Policy: default-src 'none'; sandbox
+15:45:20.369227 http.c:837              <= Recv header, 0000000041 bytes (0x00000029)
+15:45:20.369234 http.c:849              <= Recv header: Content-Type: text/plain; charset=UTF-8
+15:45:20.369247 http.c:837              <= Recv header, 0000000040 bytes (0x00000028)
+15:45:20.369255 http.c:849              <= Recv header: www-authenticate: Basic realm="GitHub"
+15:45:20.369298 http.c:837              <= Recv header, 0000000020 bytes (0x00000014)
+15:45:20.369310 http.c:849              <= Recv header: Content-Length: 26
+15:45:20.369322 http.c:837              <= Recv header, 0000000037 bytes (0x00000025)
+15:45:20.369331 http.c:849              <= Recv header: Date: Mon, 03 Aug 2026 19:41:23 GMT
+15:45:20.369343 http.c:837              <= Recv header, 0000000058 bytes (0x0000003a)
+15:45:20.369363 http.c:849              <= Recv header: X-GitHub-Request-Id: D90E:300959:CEE5A0:1123A4A:6A70EEE3
+15:45:20.369370 http.c:837              <= Recv header, 0000000027 bytes (0x0000001b)
+15:45:20.369377 http.c:849              <= Recv header: x-github-edge-region: iad
+15:45:20.369384 http.c:837              <= Recv header, 0000000023 bytes (0x00000017)
+15:45:20.369390 http.c:849              <= Recv header: X-Frame-Options: DENY
+15:45:20.369397 http.c:837              <= Recv header, 0000000073 bytes (0x00000049)
+15:45:20.369404 http.c:849              <= Recv header: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+15:45:20.369415 http.c:837              <= Recv header, 0000000002 bytes (0x00000002)
+15:45:20.369421 http.c:849              <= Recv header:
+15:45:20.369456 http.c:890              == Info: Connection #0 to host github.com left intact
+15:45:20.369577 run-command.c:673       trace: run_command: '/usr/bin/gh auth git-credential get'
+15:45:20.369596 run-command.c:765       trace: start_command: /bin/sh -c '/usr/bin/gh auth git-credential get' '/usr/bin/gh auth git-credential get'
+15:45:20.440840 http.c:890              == Info: Re-using existing https: connection with host github.com
+15:45:20.440888 http.c:890              == Info: Server auth using Basic with user 'swipswaps'
+15:45:20.441004 http.c:837              => Send header, 0000000318 bytes (0x0000013e)
+15:45:20.441026 http.c:849              => Send header: GET /swipswaps/parachute-cfd-game.git/info/refs?service=git-receive-pack HTTP/1.1
+15:45:20.441031 http.c:849              => Send header: Host: github.com
+15:45:20.441034 http.c:849              => Send header: Authorization: Basic <redacted>
+15:45:20.441037 http.c:849              => Send header: User-Agent: git/2.53.0
+15:45:20.441041 http.c:849              => Send header: Accept: */*
+15:45:20.441044 http.c:849              => Send header: Accept-Encoding: deflate, gzip, br
+15:45:20.441050 http.c:849              => Send header: Accept-Language: en-US, *;q=0.9
+15:45:20.441055 http.c:849              => Send header: Pragma: no-cache
+15:45:20.441058 http.c:849              => Send header:
+15:45:20.441085 http.c:890              == Info: Request completely sent off
+15:45:20.656549 http.c:837              <= Recv header, 0000000017 bytes (0x00000011)
+15:45:20.656592 http.c:849              <= Recv header: HTTP/1.1 200 OK
+15:45:20.656612 http.c:837              <= Recv header, 0000000026 bytes (0x0000001a)
+15:45:20.656621 http.c:849              <= Recv header: Server: GitHub-Babel/3.0
+15:45:20.656637 http.c:837              <= Recv header, 0000000060 bytes (0x0000003c)
+15:45:20.656645 http.c:849              <= Recv header: Content-Type: application/x-git-receive-pack-advertisement
+15:45:20.656657 http.c:837              <= Recv header, 0000000054 bytes (0x00000036)
+15:45:20.656666 http.c:849              <= Recv header: Content-Security-Policy: default-src 'none'; sandbox
+15:45:20.656677 http.c:837              <= Recv header, 0000000040 bytes (0x00000028)
+15:45:20.656684 http.c:849              <= Recv header: expires: Fri, 01 Jan 1980 00:00:00 GMT
+15:45:20.656694 http.c:837              <= Recv header, 0000000018 bytes (0x00000012)
+15:45:20.656703 http.c:849              <= Recv header: pragma: no-cache
+15:45:20.656713 http.c:837              <= Recv header, 0000000053 bytes (0x00000035)
+15:45:20.656721 http.c:849              <= Recv header: Cache-Control: no-cache, max-age=0, must-revalidate
+15:45:20.656732 http.c:837              <= Recv header, 0000000023 bytes (0x00000017)
+15:45:20.656740 http.c:849              <= Recv header: Vary: Accept-Encoding
+15:45:20.656754 http.c:837              <= Recv header, 0000000028 bytes (0x0000001c)
+15:45:20.656761 http.c:849              <= Recv header: Transfer-Encoding: chunked
+15:45:20.656771 http.c:837              <= Recv header, 0000000037 bytes (0x00000025)
+15:45:20.656779 http.c:849              <= Recv header: Date: Mon, 03 Aug 2026 19:41:24 GMT
+15:45:20.656789 http.c:837              <= Recv header, 0000000058 bytes (0x0000003a)
+15:45:20.656798 http.c:849              <= Recv header: X-GitHub-Request-Id: D90E:300959:CEE642:1123B38:6A70EEE3
+15:45:20.656809 http.c:837              <= Recv header, 0000000027 bytes (0x0000001b)
+15:45:20.656817 http.c:849              <= Recv header: x-github-edge-region: iad
+15:45:20.656826 http.c:837              <= Recv header, 0000000023 bytes (0x00000017)
+15:45:20.656834 http.c:849              <= Recv header: X-Frame-Options: DENY
+15:45:20.656847 http.c:837              <= Recv header, 0000000073 bytes (0x00000049)
+15:45:20.656870 http.c:849              <= Recv header: Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+15:45:20.656888 http.c:837              <= Recv header, 0000000002 bytes (0x00000002)
+15:45:20.656896 http.c:849              <= Recv header:
+15:45:20.656991 http.c:890              == Info: Connection #0 to host github.com left intact
+15:45:20.657063 run-command.c:673       trace: run_command: '/usr/bin/gh auth git-credential store'
+15:45:20.657082 run-command.c:765       trace: start_command: /bin/sh -c '/usr/bin/gh auth git-credential store' '/usr/bin/gh auth git-credential store'
+Everything up-to-date
+
+Push exit code: 0
+
+--- Also try pushing to current branch ---
+Everything up-to-date
+
+--- Check if there are commits to push ---
+
+=== End diagnostic ===
