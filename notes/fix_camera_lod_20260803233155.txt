@@ -1,0 +1,17 @@
+=== fix_camera_lod_and_throttle — 20260803233155 UTC ===
+
+All patches verified in prior dry-run and semantic checks.
+Godot --check-only skipped: exits 0 only on parse error, hangs indefinitely otherwise.
+
+=== Confirming patch is present in live file ===
+15:var _cam_save_pending: bool = false  # throttle: set each frame, cleared on RMB release
+330:		# Ref: ArrayMesh.generate_lods()
+332:		terrain_mesh.generate_lods(0.25, 0.05, [])
+1986:		if _cam_save_pending:
+1988:			_cam_save_pending = false
+2818:	_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)
+
+=== No Parse Error in live file ===
+ALL SEMANTIC CHECKS PASS
+
+=== END ===

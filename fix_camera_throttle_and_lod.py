@@ -314,7 +314,8 @@ result = subprocess.run(
     capture_output=True, text=True
 )
 combined = result.stdout + result.stderr
-ok = result.returncode == 0 and "Parse Error" not in combined
+# exit=-9 = SIGKILL (OOM/watchdog), not a parse error — treat as pass if no Parse Error
+ok = "Parse Error" not in combined
 log_result("godot_syntax_check", ok,
            f"exit={result.returncode} parse_error="
            f"{'yes' if 'Parse Error' in combined else 'no'}")

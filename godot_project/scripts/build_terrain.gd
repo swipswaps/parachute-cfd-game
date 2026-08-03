@@ -12,6 +12,7 @@ var camera_target: String = "plane"  # "plane" or "character"
 # Orbit camera parameters
 # ------------------------------------------------------------------
 var _cam_distance: float = 55.0  # distance from target
+var _cam_save_pending: bool = false  # throttle: set each frame, cleared on RMB release
 var _cam_azimuth: float = 0.0  # radians, 0 = behind
 var _cam_elevation: float = 0.3  # radians, positive = above
 
@@ -324,6 +325,11 @@ func _ready() -> void:
 		st.generate_normals()
 		st.generate_tangents()
 		var terrain_mesh = st.commit()
+		# Generate automatic LOD levels — Godot 4 transitions mesh detail
+		# by screen coverage. Eliminates coarse far-range appearance.
+		# Ref: ArrayMesh.generate_lods()
+		# https://docs.godotengine.org/en/stable/classes/class_arraymesh.html
+		terrain_mesh.generate_lods(0.25, 0.05, [])
 		var terrain_inst := MeshInstance3D.new()
 		terrain_inst.mesh = terrain_mesh
 		var terrain_mat := StandardMaterial3D.new()
@@ -1972,6 +1978,15 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		toggle_pause()
 
+	# Flush pending camera DB write on RMB release (throttle — Rule #46)
+	# Ref: InputEventMouseButton
+	# https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
+	if event is InputEventMouseButton and not event.pressed \
+			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT:
+		if _cam_save_pending:
+			_save_camera_settings()
+			_cam_save_pending = false
+
 	# Manual save key (S)
 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
 		_save_camera_settings()
@@ -2800,7 +2815,7 @@ func _update_camera_position() -> void:
 	_camera.global_position = target + rot * offset
 	_camera.look_at(target, Vector3.UP)
 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
-	_save_camera_settings()
+	_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)
 
 
 # Added to fix deferred call and log warning via ErrorLogger
