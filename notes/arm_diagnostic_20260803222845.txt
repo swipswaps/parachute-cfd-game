@@ -1,0 +1,22 @@
+=== ARM DIAGNOSTIC — 20260803222845 UTC ===
+
+./diagnose_and_fix_arms.sh: line 17: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+3150:			_the_anim_player.play("mixamo_com")
+
+--- Applying patch to disable mixamo_com animation ---
+[2026-08-03T22:28:45.900137+00:00] [SUCCESS] backup: backups/build_terrain.gd.bak.20260803222845
+[2026-08-03T22:28:45.904368+00:00] [SUCCESS] read_after_write: bytes match
+[2026-08-03T22:28:45.905595+00:00] [SUCCESS] whitespace_check: leading whitespace preserved
+[2026-08-03T22:28:45.905716+00:00] [SUCCESS] semantic_check: mixamo_com call is commented out
+PATCH SUCCESSFUL. Backup: backups/build_terrain.gd.bak.20260803222845
+You can restore with: cp {backup_path} {target}
+
+=== NEXT STEPS ===
+1. Launch the game in the Godot editor.
+2. Press SPACE to deploy parachute and Q/E to turn.
+3. Observe if arms now bend.
+4. If they do, the mixamo_com animation was the cause.
+5. Capture the console output (telemetry) if the issue persists.
+
+=== STAGING AND PUSHING EVIDENCE ===

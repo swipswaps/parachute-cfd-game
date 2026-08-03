@@ -1,0 +1,19 @@
+
+🔍 AUDIT REPORT
+============================================================
+1. Autoload 'DatabaseGuard' points to missing file: res://scripts/DatabaseGuard.gd
+2. Autoload 'ResourceThrottle' points to missing file: res://scripts/ResourceThrottle.gd
+3. Autoload 'PerformanceMonitor' points to missing file: res://scripts/PerformanceMonitor.gd
+4. Autoload 'aero_units' points to missing file: res://addons/old_copies/godot_aerodynamic_physics.pre_reconcile/core/singletons/aero_units.gd
+5. Autoload 'SqliteDb' points to missing file: res://scripts/SqliteDb.gd
+6. Autoload 'SqliteWatchdog' points to missing file: res://scripts/SqliteWatchdog.gd
+7. Autoload 'InputManager' points to missing file: res://scripts/InputManager.gd
+8. Autoload 'GameIntegrity' points to missing file: res://scripts/GameIntegrity.gd
+9. Autoload 'ForensicHUD' points to missing file: res://scripts/forensic_hud.gd
+10. Autoload 'Audit' points to missing file: res://scripts/audit.gd
+11. Autoload 'AeroUnits' points to missing file: uid://5vah4ayrdxci
+12. Missing input actions: move_right, action, move_left, move_up, jump, c, move_down (may cause controls to fail)
+13. No world scene found; cannot verify lighting.
+14. SQL references to missing tables: does, character, AeroBody3D, glide, every, canopy, the, 4, XDG_DATA_HOME, game, labels, previous, parachute, maneuvers, first, self, fractional, throttle_log, https, earlier, resources, verbatim, aerosurface, that, HUD, child, its, godot, negative, player, resource_contention_log, pip_draggable, is, ConfigFile, exceeding, invisible, OS, altitude, assets, JSON, velocities, README, file, regular, their, wind, it, of, losing, linear, PIDs, logarithmic, target, conversions, atmosphere (check database schema)
+============================================================
+Total issues: 14
