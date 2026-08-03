@@ -1,0 +1,109 @@
+[2026-08-03T23:23:19.631533+00:00] [SUCCESS] pre_delivery_gate: no forbidden patterns in fix script
+[2026-08-03T23:23:19.633659+00:00] [SUCCESS] read_live_file: godot_project/scripts/build_terrain.gd: 150266 bytes, 3766 lines
+[2026-08-03T23:23:19.634719+00:00] [SUCCESS] locate_A1: live: 'var _cam_distance: float = 55.0  # distance from target'
+[2026-08-03T23:23:19.635029+00:00] [SUCCESS] precondition:A1_cam_save_pending_decl: 1 match confirmed
+[2026-08-03T23:23:19.635237+00:00] [SUCCESS] precondition:A2_remove_save_from_update: 1 match confirmed
+[2026-08-03T23:23:19.635459+00:00] [SUCCESS] precondition:A3_rmbrelease_handler: 1 match confirmed
+[2026-08-03T23:23:19.635643+00:00] [SUCCESS] precondition:B_generate_lods: 1 match confirmed
+[2026-08-03T23:23:19.638784+00:00] [SUCCESS] whitespace_check: leading whitespace preserved
+[2026-08-03T23:23:19.639429+00:00] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260803232319
+[2026-08-03T23:23:19.644076+00:00] [SUCCESS] read_after_write: bytes match
+[2026-08-03T23:23:19.645726+00:00] [SUCCESS] indentation_check: no leading spaces
+[2026-08-03T23:23:19.645885+00:00] [SUCCESS] semantic:_save_camera_settings removed from _update_camera_position: PASS
+[2026-08-03T23:23:19.645976+00:00] [SUCCESS] semantic:_cam_save_pending = true in _update_camera_position: PASS
+[2026-08-03T23:23:19.646005+00:00] [SUCCESS] semantic:generate_lods present: PASS
+[2026-08-03T23:23:19.646026+00:00] [SUCCESS] semantic:_cam_save_pending declared: PASS
+[2026-08-03T23:23:19.646087+00:00] [SUCCESS] semantic:RMB release handler present: PASS
+[2026-08-03T23:23:28.610336+00:00] [FAILURE] godot_syntax_check: exit=-9 parse_error=no
+GODOT OUTPUT: Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-03T19:23:21 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-03T19:23:21 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[A
+
+======================================================================
+AFFECTED FILE: godot_project/scripts/build_terrain.gd
+======================================================================
+
+  [CONTEXT] A1: _cam_distance declaration — insert _cam_save_pending after
+  File: godot_project/scripts/build_terrain.gd:14
+        11: # ------------------------------------------------------------------
+        12: # Orbit camera parameters
+        13: # ------------------------------------------------------------------
+  >>>   14: var _cam_distance: float = 55.0  # distance from target
+        15: var _cam_azimuth: float = 0.0  # radians, 0 = behind
+        16: var _cam_elevation: float = 0.3  # radians, positive = above
+        17: 
+
+
+  [CONTEXT] A2: _save_camera_settings() in _update_camera_position — throttle target
+  File: godot_project/scripts/build_terrain.gd:1743
+      1740: 	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+      1741: 	# Save camera settings (S)
+      1742: 	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
+  >>> 1743: 		_save_camera_settings()
+      1744: 		print("[CAMERA] Settings saved manually (from _poll_controls)")
+      1745: 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
+      1746: 	if Input.is_action_just_pressed("camera_cycle"):
+
+
+  [CONTEXT] A3: Manual S-key save block — insert RMB-release handler before
+  File: godot_project/scripts/build_terrain.gd:1975
+      1972: 	if event.is_action_pressed("pause"):
+      1973: 		toggle_pause()
+      1974: 
+  >>> 1975: 	# Manual save key (S)
+      1976: 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+      1977: 		_save_camera_settings()
+      1978: 		print("[CAMERA] Settings saved manually")
+
+
+  [CONTEXT] B: st.commit() — insert generate_lods() after
+  File: godot_project/scripts/build_terrain.gd:326
+       323: 			st.add_index(idx)
+       324: 		st.generate_normals()
+       325: 		st.generate_tangents()
+  >>>  326: 		var terrain_mesh = st.commit()
+       327: 		var terrain_inst := MeshInstance3D.new()
+       328: 		terrain_inst.mesh = terrain_mesh
+       329: 		var terrain_mat := StandardMaterial3D.new()
+
+======================================================================
+
+GODOT SYNTAX CHECK FAILED — restored
