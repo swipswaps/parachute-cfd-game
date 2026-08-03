@@ -1,0 +1,56 @@
+=== fix_terrain_camera.sh — 20260803101329 UTC ===
+
+=== FIX 1: terrain texture mode=P → RGB ===
+backup: godot_project/assets/terrain/naip_texture.png.bak.20260803101329
+before: mode=P size=(3840, 2160) palette=<PIL.ImagePalette.ImagePalette object at 0x7fc8b1b54ec0>
+after convert: mode=RGB
+verify: mode=RGB size=(3840, 2160)
+SUCCESS: palette removed, true-colour PNG written
+file size: 17.18 MB
+terrain fix exit: 0
+
+=== FIX 2: camera_distance_plane 300→80 in DB ===
+BEFORE:
+camera_distance|11.0
+camera_distance_plane|300.0
+camera_distance_freefall|5.0
+AFTER:
+camera_distance|11.0
+camera_distance_plane|80.0
+camera_distance_freefall|80.0
+camera DB fix: done
+
+=== DIAG 3: autostall timeout / --no-timeout parsing ===
+3:autostall_patched.py – Deduplicated, JSON‑logging, timeout‑controllable autostall.
+7:import subprocess, sys, time, os, select, shutil, sqlite3, json, fcntl, re, argparse
+22:TOOL_TIMEOUT = 2.0
+56:           "--connect-timeout", "2", "--max-time", "3",
+61:        out, _ = proc.communicate(timeout=5)
+76:            subprocess.run([sys.executable, HUB_GUARDIAN], check=True, timeout=30)
+129:def run_cmd(cmd: List[str], timeout: float = TOOL_TIMEOUT) -> str:
+133:        out, err = proc.communicate(timeout=timeout)
+136:        proc.terminate(); proc.wait()
+137:        return f"TIMEOUT after {timeout}s"
+270:        f'{if_indent}_db.query("PRAGMA busy_timeout = 5000;")\n',
+463:                run_cmd(["perf", "record", "-g", "-p", str(pid), "-o", "/tmp/perf.data", "--", "sleep", str(TOOL_TIMEOUT)], timeout=TOOL_TIMEOUT+1)
+464:                results[tool] = run_cmd(["perf", "report", "-i", "/tmp/perf.data", "--stdio", "--max-stack", "10", "-n"], timeout=3)
+466:                results[tool] = run_cmd([tool, "-p", str(pid)] if tool in ("strace","ltrace","lsof") else [tool, "-p", str(pid), "-b", "-n", "1"] if tool=="iotop" else [tool, "-b", "-n", "1", "-p", str(pid)] if tool=="top" else [tool, "1", "2"] if tool in ("vmstat","iostat") else [tool, "-tunap"] if tool in ("netstat","ss") else [tool, "-L", "2", PROJECT_DIR] if tool=="tree" else [tool, "-batch", "-p", str(pid), "-ex", "thread apply all bt"] if tool=="gdb" else ["timeout", str(TOOL_TIMEOUT), tool, "-p", str(pid), "-s", "256"])
+470:# Main (modified for dedup, JSON output, timeout control)
+473:    parser = argparse.ArgumentParser(description="Autostall with reduced spam and JSON output")
+474:    parser.add_argument("--timeout", type=int, default=120, help="Overall timeout in seconds (0 to disable)")
+475:    parser.add_argument("--no-timeout", action="store_true", help="Disable overall timeout (same as --timeout 0)")
+478:    timeout_val = 0 if args.no_timeout else args.timeout
+479:    _record_event("startup", "info", f"Starting autostall, timeout={timeout_val if timeout_val>0 else 'disabled'}")
+483:        db_conn = sqlite3.connect(DB_PATH, timeout=2.0)
+539:        if timeout_val > 0 and elapsed > timeout_val:
+540:            _record_event("timeout", "critical", f"Reached {timeout_val}s, terminating")
+541:            proc.terminate()
+592:                    proc.terminate()
+645:                                    proc.terminate()
+681:        proc.terminate()
+685:        xvfb_proc.terminate()
+
+=== DIAG 3b: autostall_patched.py line count ===
+711 autostall_patched.py
+
+=== END ===
