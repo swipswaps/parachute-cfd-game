@@ -1,0 +1,195 @@
+=== clear_cache_and_launch.sh — 20260803210540 UTC ===
+
+--- Checking model files ---
+godot_project/assets/aircraft/cesna_airplane.glb: glTF binary model, version 2, length 4681916 bytes
+godot_project/assets/characters/parachutist.fbx: Kaydara FBX model, version 7700
+-rwxr-xr-x. 1 owner owner 4681916 Aug  3 17:03 godot_project/assets/aircraft/cesna_airplane.glb
+-rwxr-xr-x. 1 owner owner 2388064 Aug  3 17:03 godot_project/assets/characters/parachutist.fbx
+
+--- Removing .godot cache (will force full re-import) ---
+Cache removed.
+
+--- Running headless import (20s) ---
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Identifier "SQLite" not declared in the current scope.
+          at: GDScript::reload (res://scripts/SqliteDb.gd:45)
+ERROR: Failed to load script "res://scripts/SqliteDb.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+ERROR: Failed to instantiate an autoload, script 'res://scripts/SqliteDb.gd' does not inherit from 'Node'.
+   at: start (main/main.cpp:4440)
+ERROR: Node not found: "/root/SqliteDb" (absolute path attempted from "/root/HealthChecker").
+   at: get_node (scene/main/node.cpp:1960)
+   GDScript backtrace (most recent call first):
+       [0] dump_control_hierarchy (res://autoloads/HealthChecker.gd:135)
+       [1] _ready (res://autoloads/HealthChecker.gd:18)
+SCRIPT ERROR: Attempt to call function '_query' in base 'null instance' on a null instance.
+          at: dump_control_hierarchy (res://autoloads/HealthChecker.gd:159)
+          GDScript backtrace (most recent call first):
+              [0] dump_control_hierarchy (res://autoloads/HealthChecker.gd:159)
+              [1] _ready (res://autoloads/HealthChecker.gd:18)
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: SqliteDb not found, will retry
+[VERBATIM] DatabaseGuard: retry scheduled in 1000 ms
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: SqliteDb not available
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: SqliteDb not available; skipping scan.
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-03T17:05:44 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-03T17:05:44 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[INIT] Press SPACE to start
+[DIAG] _ready: ENTER
+[VERBATIM] 2026-08-03T17:05:44 ENTER _ready gate=none
+[VERBATIM] Baked colours loaded: 50331648
+[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: 1048576
+[VERBATIM] Runways: placeholder positions disabled pending georef
+[DEBUG] _character position after set: (100.0, 1828.8, -100.0)
+[DEBUG] _character global_position: (100.0, 1828.8, -100.0)
+[VERBATIM] ENTER _load_character gate=none
+ERROR: No loader found for resource: res://assets/characters/parachutist.fbx (expected type: unknown)
+   at: _load (core/io/resource_loader.cpp:358)
+   GDScript backtrace (most recent call first):
+       [0] _load_character (res://scripts/build_terrain.gd:670)
+       [1] _ready (res://scripts/build_terrain.gd:370)
+[VERBATIM] Failed to load FBX
+[DIAG] _ready: character loaded
+[VERBATIM] [VERBATIM] Creating plane node...
+[VERBATIM] [VERBATIM] Plane script attached
+ERROR: No loader found for resource: res://assets/aircraft/cesna_airplane.glb (expected type: unknown)
+   at: _load (core/io/resource_loader.cpp:358)
+   GDScript backtrace (most recent call first):
+       [0] _create_plane (res://scripts/build_terrain.gd:2621)
+       [1] _ready (res://scripts/build_terrain.gd:376)
+[VERBATIM] Failed to load Cessna model
+[VERBATIM] [VERBATIM] Plane created at altitude 6000
+[DIAG] _ready: plane created, _plane_node=FlyingPlane:<CharacterBody3D#38235276890>
+[DEBUG] Plane position: (0.0, 1828.8, 0.0)
+[DEBUG] Camera position: (0.0, 1845.054, -52.54351)
+[DIAG] _ready: camera positioned
+[VERBATIM] Camera attached to root, following plane
+[VERBATIM] Drop zone created
+[VERBATIM] ENTER _load_faa_obstacles gate=none
+[VERBATIM] _load_faa_obstacles read_bytes=9568
+[VERBATIM] _load_faa_obstacles obstacle_count=41
+[VERBATIM] FAA obstacles loaded: 41
+[VERBATIM] EXIT _load_faa_obstacles ok=true placed=41
+[VERBATIM] HUD created
+[DIAG] _ready: HUD created, _hud_labels size=8
+[VERBATIM] Initial heading set to 0.0
+[VERBATIM] ENTER _setup_pip_overlay gate=none
+[PIP] _ready: size=(320.0, 240.0) position=(10.0, 10.0)
+[VERBATIM] PiP canopy path=res://assets/canopy/parachute_sanitized.glb
+ERROR: Cannot open file 'res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1220)
+   GDScript backtrace (most recent call first):
+       [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2299)
+       [1] _ready (res://scripts/build_terrain.gd:508)
+ERROR: Failed loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn.
+   at: _load (core/io/resource_loader.cpp:343)
+   GDScript backtrace (most recent call first):
+       [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2299)
+       [1] _ready (res://scripts/build_terrain.gd:508)
+ERROR: Failed loading resource: res://assets/canopy/parachute_sanitized.glb.
+   at: _load (core/io/resource_loader.cpp:343)
+   GDScript backtrace (most recent call first):
+       [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2299)
+       [1] _ready (res://scripts/build_terrain.gd:508)
+[VERBATIM] ERROR: canopy load null – no .import sidecar
+[VERBATIM] PiP fallback: sphere created
+[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null
+[VERBATIM] ENTER _init_achievements gate=none
+[VERBATIM] Unlocked achievements: ["first_jump", "malfunction_ace"]
+[VERBATIM] EXIT _init_achievements ok=true
+[VERBATIM] ENTER _init_mission gate=none
+[VERBATIM] Mission updated: Training
+[VERBATIM] EXIT _init_mission ok=true
+[VERBATIM] ENTER _init_leaderboard gate=none
+[VERBATIM] EXIT _init_leaderboard ok=true
+[VERBATIM] ENTER _init_controller gate=none
+[VERBATIM] EXIT _init_controller ok=true
+[VERBATIM] ENTER _init_sentry gate=none
+[VERBATIM] Sentry not configured
+[VERBATIM] EXIT _init_sentry ok=true
+ERROR: Cannot open file 'res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn'.
+   at: load (core/io/resource_format_binary.cpp:1220)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/build_terrain.gd:525)
+ERROR: Failed loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn.
+   at: _load (core/io/resource_loader.cpp:343)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/build_terrain.gd:525)
+ERROR: Failed loading resource: res://assets/canopy/parachute_sanitized.glb.
+   at: _load (core/io/resource_loader.cpp:343)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/build_terrain.gd:525)
+[VERBATIM] ENTER _create_procedural_canopy gate=none
+[VERBATIM] Procedural dome canopy created
+[VERBATIM] EXIT _create_procedural_canopy ok=true
+[VERBATIM] ENTER _randomize_malfunction gate=none
+[VERBATIM] Canopy visuals updated for LINE TWISTS
+[VERBATIM] EXIT _randomize_malfunction ok=true
+[VERBATIM] Initial malfunction: LINE TWISTS
+[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy
+[VERBATIM] ARM GATE: No skeleton found
+[VERBATIM] ... EXIT _ready ok=true
+[DIAG] _ready: EXIT
+[AUDIT] poll_forensic_hud: ENTER
+[FPANEL] _process() alive, frame=0
+[ALTIMETER] update_altitude FIRST CALL: alt_ft=6000.00035219727
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CONTROLS] turnleft  action_existed=true  keys_before=[]  wanted=Q  added=true
+[CONTROLS] turnright  action_existed=true  keys_before=[]  wanted=E  added=true
+[CONTROLS] camera_cycle  action_existed=true  keys_before=[]  wanted=C  added=true
+[CONTROLS] cutaway  action_existed=true  keys_before=[]  wanted=X  added=true
+[CONTROLS] reserve  action_existed=true  keys_before=[]  wanted=V  added=true
+[CONTROLS] flare  action_existed=true  keys_before=[]  wanted=F  added=true
+[CONTROLS] togglehud  action_existed=true  keys_before=[]  wanted=H  added=true
+[CONTROLS] flightcheck  action_existed=true  keys_before=[]  wanted=G  added=true
+[CONTROLS] restart  action_existed=true  keys_before=[]  wanted=R  added=true
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=[]  wanted=Escape  added=true
+[CONTROLS] ---- 11 binding(s) added ----
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (0.0, 1845.054, -52.54351) to (799.9964, 1870.054, -50.14351)
+[DIAG] _physics_process: IN_PLANE returning
+
+=== END ===
+from (0.0, 1845.054, -52.54351) to (799.9964, 1870.054, -50.14351)
+[DIAG] _physics_process: IN_PLANE returning
