@@ -581,7 +581,7 @@ func _ready() -> void:
 	_lbl_timer.one_shot = true
 	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_lbl_timer)
-	_lbl__auto_deploy_timer.timeout.connect(_dump_all_labels)
+_lbl_timer.timeout.connect(_dump_all_labels)
 	_lbl_timer.start()
 
 	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
@@ -3844,16 +3844,3 @@ func _log_control_presses() -> void:
 			var _cdb = get_node_or_null('/root/SqliteDb')
 			if _cdb != null:
 				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
-func _auto_deploy():
-	Input.action_press("deploy")
-	Input.action_release("deploy")
-	print("[VERBATIM] Auto‑deploy triggered after 5s")
-	get_tree().quit()  # optional: exit after deploy for CI
-# Auto‑deploy timer: deploy after 5 seconds
-				if _cdb.has_method('execute'): _cdb.execute(_sql)
-				elif _cdb.has_method('_query'): _cdb._query(_sql)
-			print("[CTRL] pressed=", action,
-				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
-				"  state=", _game_state,
-				"  deployed=", _canopy_deployed,
-				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
