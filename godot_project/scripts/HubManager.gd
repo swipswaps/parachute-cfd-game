@@ -19,7 +19,10 @@ func _ensure_hub():
 		print("[HubManager] Hub already running – skipping startup")
 		return
 	# Original startup block follows
-	print("[HubManager] Hub not responding; starting it...")
+	if OS.get_environment("GODOT_HEADLESS") == "1":
+	print("[HubManager] Headless mode – skipping hub startup.")
+	return
+print("[HubManager] Hub not responding; starting it...")
 	var project_dir = ProjectSettings.globalize_path("res://")
 	# FIX (this session): project_dir = res:// resolves to godot_project/,
 	# but forensic_hub_server.py lives one directory up, at the outer

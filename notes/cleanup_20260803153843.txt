@@ -1,0 +1,18 @@
+=== FINAL CLEANUP SUMMARY — 20260803153843 UTC ===
+
+1. Restored build_terrain.gd from: godot_project/scripts/build_terrain.gd.bak.20260803112043
+2. Applied clamp patch (<= 25.0 + 0.01).
+3. Removed auto-start/deploy patches.
+4. Patched HubManager to skip hub startup in headless mode.
+5. Godot exit code: 130
+6. GLIDE telemetry count: 0
+0
+7. Key markers:
+   Loading resource: res://scripts/HubManager.gd
+   SCRIPT ERROR: Parse Error: Expected indented block after "if" block.
+             at: GDScript::reload (res://scripts/HubManager.gd:22)
+   ERROR: Failed to load script "res://scripts/HubManager.gd" with error "Parse error".
+   ERROR: Failed to instantiate an autoload, script 'res://scripts/HubManager.gd' does not inherit from 'Node'.
+   SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+   ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   [VERBATIM] 2026-08-03T11:38:45 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HubManager_2026-08-03_11-38-45.gd.backup

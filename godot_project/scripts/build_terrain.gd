@@ -552,8 +552,8 @@ func _ready() -> void:
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
 	# Headless auto‑start: simulate SPACE press
 	# Headless auto‑start: simulate SPACE press
-	if OS.get_environment("GODOT_HEADLESS") == "1":
-		Input.action_press("deploy")
+# 	if OS.get_environment("GODOT_HEADLESS") == "1":
+# 		Input.action_press("deploy")
 		Input.action_release("deploy")
 		print("[VERBATIM] Headless auto‑start triggered (deploy)")
 		# Fallback: some builds use ui_accept
@@ -577,11 +577,11 @@ func _ready() -> void:
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
 	# (general knowledge - not retrieved this session)
 	var _lbl_timer := Timer.new()
-	_lbl_timer.timeout.connect(_dump_all_labels)
 	_lbl_timer.wait_time = 2.0
 	_lbl_timer.one_shot = true
 	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_lbl_timer)
+	_lbl_timer.timeout.connect(_dump_all_labels)
 	_lbl_timer.start()
 
 	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
@@ -601,8 +601,8 @@ func _ready() -> void:
 		_pause_timer.timeout.connect(_p3_pause_selftest)
 		_pause_timer.start()
 
-	var _auto_deploy_timer = get_tree().create_timer(5.0)
-	_auto_deploy_timer.timeout.connect(Callable(self, "_auto_deploy"))
+	var timer = get_tree().create_timer(5.0)
+	timer.timeout.connect(Callable(self, "_auto_deploy"))
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
 
@@ -3844,3 +3844,16 @@ func _log_control_presses() -> void:
 			var _cdb = get_node_or_null('/root/SqliteDb')
 			if _cdb != null:
 				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+func _auto_deploy():
+	Input.action_press("deploy")
+	Input.action_release("deploy")
+	print("[VERBATIM] Auto‑deploy triggered after 5s")
+	get_tree().quit()  # optional: exit after deploy for CI
+# Auto‑deploy timer: deploy after 5 seconds
+				if _cdb.has_method('execute'): _cdb.execute(_sql)
+				elif _cdb.has_method('_query'): _cdb._query(_sql)
+			print("[CTRL] pressed=", action,
+				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+				"  state=", _game_state,
+				"  deployed=", _canopy_deployed,
+				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
