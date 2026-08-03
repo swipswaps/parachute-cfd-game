@@ -1,0 +1,79 @@
+=== tscn_backup_audit — 20260803233810 UTC ===
+
+
+--- godot_project/scenes/main.tscn.backup_auto ---
+[node name="Main" type="Node3D" unique_id=541042450]
+[node name="Builder" type="Node" parent="." unique_id=273490231]
+
+--- godot_project/scenes/main.tscn.backup_before_cesna ---
+[node name="Main" type="Node3D"]
+[node name="FlyingPlane" type="Node3D" parent="."]
+[node name="CessnaModel" parent="FlyingPlane" instance=ExtResource("2_cesna")]
+[node name="ExitTrigger" type="Area3D" parent="FlyingPlane"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FlyingPlane/ExitTrigger"]
+
+--- godot_project/scenes/main.tscn.backup_before_patch ---
+[node name="Main" type="Node3D"]
+[node name="FlyingPlane" type="Node3D" parent="."]
+[node name="CessnaModel" parent="FlyingPlane" instance=ExtResource("2_cesna")]
+[node name="ExitTrigger" type="Area3D" parent="FlyingPlane"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FlyingPlane/ExitTrigger"]
+
+--- godot_project/scenes/main.tscn.backup_embedded ---
+[node name="Main" type="Node3D"]
+[node name="Camera3D" type="Camera3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="Builder" type="Node" parent="."]
+[node name="FlyingPlane" type="Node3D" parent="."]
+[node name="PlaneMesh" type="MeshInstance3D" parent="FlyingPlane"]
+[node name="ExitTrigger" type="Area3D" parent="FlyingPlane"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FlyingPlane/ExitTrigger"]
+[node name="FlyingPlane" type="Node3D" parent="."]
+[node name="PlaneMesh" type="MeshInstance3D" parent="FlyingPlane"]
+[node name="ExitTrigger" type="Area3D" parent="FlyingPlane"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FlyingPlane/ExitTrigger"]
+
+--- godot_project/scenes/main.tscn.backup_pre_plane ---
+[node name="Main" type="Node3D"]
+[node name="Camera3D" type="Camera3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="Builder" type="Node" parent="."]
+[node name="FlyingPlane" type="Node3D" parent="."]
+[node name="PlaneMesh" type="MeshInstance3D" parent="FlyingPlane"]
+[node name="ExitTrigger" type="Area3D" parent="FlyingPlane"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FlyingPlane/ExitTrigger"]
+
+--- godot_project/scenes/main.tscn.backup_v179 ---
+[node name="Main" type="Node3D"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="."]
+[node name="TerrainInstance" type="Node3D" parent="."]
+[node name="Terrain" parent="TerrainInstance" instance=ExtResource("1_terrain")]
+[node name="ParachutePad" type="Node3D" parent="."]
+[node name="Parachute" parent="ParachutePad" instance=ExtResource("2_parachute")]
+
+=== current main.tscn full content ===
+[gd_scene load_steps=2 format=3 uid="uid://rnfag5lj5tvy"]
+
+[ext_resource type="Script" path="res://scripts/build_terrain.gd" id="1_build_terrain"]
+[ext_resource type="Environment" path="res://assets/terrain/black_env.tres" id="1_env"]
+
+[node name="Main" type="Node3D" unique_id=846803683]
+script = ExtResource("1_build_terrain")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_env")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866, 0.5, 0, -0.5, 0.866, 0, 100, 50)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1677647251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1200, 3048, 0)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+
+=== END ===
