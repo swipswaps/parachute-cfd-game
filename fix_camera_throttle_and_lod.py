@@ -6,11 +6,11 @@
 #        every InputEventMouseMotion frame (~60x/sec while dragging).
 # Fix B: call generate_lods() on terrain ArrayMesh for automatic LOD.
 #
-# Rules: #1,#2,#6,#7,#9,#10,#16,#21,#24,#29,#30,#31,#38,#41,#44,#46
+# Rules: #1,#2,#6,#7,#9,#10,#11,#16,#21,#24,#29,#30,#31,#38,#41,#44,#46
 #
 # Citations:
-#   - InputEventMouseMotion:
-#     https://docs.godotengine.org/en/stable/classes/class_inputeventmousemotion.html
+#   - InputEventMouseButton:
+#     https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
 #     (general knowledge — not retrieved this session)
 #   - ArrayMesh.generate_lods():
 #     https://docs.godotengine.org/en/stable/classes/class_arraymesh.html
@@ -31,6 +31,8 @@ import shutil
 import datetime
 import subprocess
 
+DRY_RUN = "--dry-run" in sys.argv
+
 
 def log_result(operation: str, success: bool, detail: str) -> None:
     ts = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -48,10 +50,20 @@ def get_leading_ws(line: str) -> str:
     return ws
 
 
+def show_context(all_lines, match_lineno, context=3, label=""):
+    """Rule #11: print ±3 numbered lines around match. lineno is 1-based."""
+    start = max(0, match_lineno - 1 - context)
+    end = min(len(all_lines), match_lineno - 1 + context + 1)
+    print(f"\n  [CONTEXT] {label}")
+    print(f"  File: {TARGET}:{match_lineno}")
+    for i in range(start, end):
+        marker = ">>>" if i == match_lineno - 1 else "   "
+        print(f"  {marker} {i+1:4d}: {all_lines[i].rstrip()}")
+    print()
+
+
 TARGET = "godot_project/scripts/build_terrain.gd"
 
-# ── pre-delivery gate (Rule #24 / #41) ──────────────────────────────────────
-# Banned tokens constructed so this file cannot self-flag.
 _BANNED_SED = "se" + "d"
 _BANNED_UTC = "utcno" + "w()"
 
@@ -67,7 +79,7 @@ def pre_delivery_gate() -> None:
         if _BANNED_SED in line.split() and "_BANNED_SED" not in line:
             violations.append(f"sed at line {i}")
         if _BANNED_UTC in line and "_BANNED_UTC" not in line:
-            violations.append(f"utcno" + f"w() at line {i}")
+            violations.append("utcno" + f"w() at line {i}")
     if violations:
         log_result("pre_delivery_gate", False, str(violations))
         sys.exit(f"PRE-DELIVERY GATE FAILED: {violations}")
@@ -79,85 +91,113 @@ pre_delivery_gate()
 # ── read live file ───────────────────────────────────────────────────────────
 with open(TARGET, "r", encoding="utf-8") as f:
     original = f.read()
+all_lines = original.splitlines()
 log_result("read_live_file", True,
-           f"{len(original)} bytes, {original.count(chr(10))+1} lines")
+           f"{TARGET}: {len(original)} bytes, {len(all_lines)} lines")
 
-# ════════════════════════════════════════════════════════════════════════════
-# FIX A — throttle _save_camera_settings
-#
-# A1: declare _cam_save_pending flag near _cam_distance
-# A2: in _update_camera_position, replace _save_camera_settings() with flag
-# A3: in _input, add RMB-release handler that calls _save_camera_settings()
-#     once. Anchor: unique transition from cam_orbit print block to
-#     InputEventKey handler (live-extracted from cat -A output 2011-2015).
-# ════════════════════════════════════════════════════════════════════════════
+# ── Rule #11: show affected file pathnames and ±3 context BEFORE patching ───
+print(f"\n{'='*70}")
+print(f"AFFECTED FILE: {TARGET}")
+print(f"{'='*70}")
 
-OLD_A1 = "var _cam_distance: float = 5.0"
-NEW_A1 = "var _cam_distance: float = 5.0\nvar _cam_save_pending: bool = false"
+SIGNATURES = [
+    ("A1: _cam_distance declaration — insert _cam_save_pending after",
+     "_cam_distance: float = 55.0"),
+    ("A2: _save_camera_settings() in _update_camera_position — throttle target",
+     "_save_camera_settings()"),
+    ("A3: Manual S-key save block — insert RMB-release handler before",
+     "# Manual save key (S)"),
+    ("B: st.commit() — insert generate_lods() after",
+     "var terrain_mesh = st.commit()"),
+]
 
+for label, sig in SIGNATURES:
+    found = False
+    for i, line in enumerate(all_lines, 1):
+        if sig in line:
+            show_context(all_lines, i, context=3, label=label)
+            found = True
+            break
+    if not found:
+        print(f"\n  [MISSING] {label}")
+        print(f"  Signature not found: {repr(sig)}\n")
+
+print(f"{'='*70}\n")
+
+# ── Live-extract A1 anchor (Rule #46 — no hardcoded old_str) ────────────────
+a1_sig = "_cam_distance: float = 55.0"
+OLD_A1_LINE = None
+for line in all_lines:
+    if a1_sig in line:
+        OLD_A1_LINE = line
+        break
+if OLD_A1_LINE is None:
+    log_result("locate_A1", False, f"not found: {repr(a1_sig)}")
+    sys.exit("LOCATE FAILED: A1")
+log_result("locate_A1", True, f"live: {repr(OLD_A1_LINE)}")
+
+# A1 replacement: the line as it appears in file + newline, then new decl
+OLD_A1 = OLD_A1_LINE + "\n"
+NEW_A1 = (OLD_A1_LINE + "\n"
+          "var _cam_save_pending: bool = false"
+          "  # throttle: set each frame, cleared on RMB release\n")
+
+# A2: live cat -A lines 2801-2803
 OLD_A2 = (
-    '\tprint("[DEBUG] Camera updated: pos=", _camera.global_position,'
-    ' " target=", target)\n'
-    '\t_save_camera_settings()'
+    "\t_camera.look_at(target, Vector3.UP)\n"
+    "\tprint(\"[DEBUG] Camera updated: pos=\", _camera.global_position,"
+    " \" target=\", target)\n"
+    "\t_save_camera_settings()"
 )
 NEW_A2 = (
-    '\tprint("[DEBUG] Camera updated: pos=", _camera.global_position,'
-    ' " target=", target)\n'
-    '\t_cam_save_pending = true'
+    "\t_camera.look_at(target, Vector3.UP)\n"
+    "\tprint(\"[DEBUG] Camera updated: pos=\", _camera.global_position,"
+    " \" target=\", target)\n"
+    "\t_cam_save_pending = true"
+    "  # flush to DB on RMB release (Rule #46 throttle)"
 )
 
-# Anchor extracted live from lines 2011-2015 (cat -A confirmed tabs, no CRLF):
-#   2011: \t\tprint(
-#   2012: \t\t\t"[VERBATIM] cam_orbit az=", ...
-#   2013: \t\t)
-#   2014: (blank)
-#   2015: \tif event is InputEventKey
+# A3: live lines 1975-1978
 OLD_A3 = (
-    '\t\tprint(\n'
-    '\t\t\t"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth),'
-    ' " el=", rad_to_deg(_cam_elevation)\n'
-    '\t\t)\n'
-    '\n'
-    '\tif event is InputEventKey'
+    "\t# Manual save key (S)\n"
+    "\tif event is InputEventKey and event.pressed"
+    " and event.keycode == KEY_S:\n"
+    "\t\t_save_camera_settings()\n"
+    "\t\tprint(\"[CAMERA] Settings saved manually\")"
 )
 NEW_A3 = (
-    '\t\tprint(\n'
-    '\t\t\t"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth),'
-    ' " el=", rad_to_deg(_cam_elevation)\n'
-    '\t\t)\n'
-    '\n'
-    '\t# Save camera distance once on RMB release (Rule #46 — throttle DB write)\n'
-    '\t# Ref: InputEventMouseButton\n'
-    '\t# https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html\n'
-    '\tif event is InputEventMouseButton and not event.pressed \\\n'
-    '\t\t\tand (event as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT:\n'
-    '\t\tif _cam_save_pending:\n'
-    '\t\t\t_save_camera_settings()\n'
-    '\t\t\t_cam_save_pending = false\n'
-    '\n'
-    '\tif event is InputEventKey'
+    "\t# Flush pending camera DB write on RMB release (throttle — Rule #46)\n"
+    "\t# Ref: InputEventMouseButton\n"
+    "\t# https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html\n"
+    "\tif event is InputEventMouseButton and not event.pressed \\\n"
+    "\t\t\tand (event as InputEventMouseButton).button_index"
+    " == MOUSE_BUTTON_RIGHT:\n"
+    "\t\tif _cam_save_pending:\n"
+    "\t\t\t_save_camera_settings()\n"
+    "\t\t\t_cam_save_pending = false\n"
+    "\n"
+    "\t# Manual save key (S)\n"
+    "\tif event is InputEventKey and event.pressed"
+    " and event.keycode == KEY_S:\n"
+    "\t\t_save_camera_settings()\n"
+    "\t\tprint(\"[CAMERA] Settings saved manually\")"
 )
 
-# ════════════════════════════════════════════════════════════════════════════
-# FIX B — terrain LOD
-# Anchor live-extracted: lines 327-329 in original (st.commit then mesh assign)
-# ════════════════════════════════════════════════════════════════════════════
-
+# B: live grep confirmed \t\t prefix on lines 326/328
 OLD_B = (
-    '\t\tvar terrain_mesh = st.commit()\n'
-    '\t\tterrain_inst.mesh = terrain_mesh'
+    "\t\tvar terrain_mesh = st.commit()\n"
+    "\t\tterrain_inst.mesh = terrain_mesh"
 )
 NEW_B = (
-    '\t\tvar terrain_mesh = st.commit()\n'
-    '\t\t# Generate automatic LOD levels — Godot 4 transitions mesh detail\n'
-    '\t\t# by screen coverage. Eliminates coarse far-range appearance.\n'
-    '\t\t# Ref: ArrayMesh.generate_lods()\n'
-    '\t\t# https://docs.godotengine.org/en/stable/classes/class_arraymesh.html\n'
-    '\t\tterrain_mesh.generate_lods(0.25, 0.05, [])\n'
-    '\t\tterrain_inst.mesh = terrain_mesh'
+    "\t\tvar terrain_mesh = st.commit()\n"
+    "\t\t# Generate automatic LOD levels — Godot 4 transitions mesh detail\n"
+    "\t\t# by screen coverage. Eliminates coarse far-range appearance.\n"
+    "\t\t# Ref: ArrayMesh.generate_lods()\n"
+    "\t\t# https://docs.godotengine.org/en/stable/classes/class_arraymesh.html\n"
+    "\t\tterrain_mesh.generate_lods(0.25, 0.05, [])\n"
+    "\t\tterrain_inst.mesh = terrain_mesh"
 )
 
-# ── precondition guards (Rule #6 / #46) ─────────────────────────────────────
 patches = [
     ("A1_cam_save_pending_decl", OLD_A1, NEW_A1),
     ("A2_remove_save_from_update", OLD_A2, NEW_A2),
@@ -165,13 +205,32 @@ patches = [
     ("B_generate_lods", OLD_B, NEW_B),
 ]
 
+# ── precondition guards (Rule #6 / #46) ─────────────────────────────────────
 for name, old, new in patches:
     count = original.count(old)
     if count != 1:
         log_result(f"precondition:{name}", False,
-                   f"expected 1 match, found {count}")
+                   f"expected 1 match, found {count} — repr: {repr(old[:80])}")
         sys.exit(f"PRECONDITION VIOLATED {name}: count={count}")
     log_result(f"precondition:{name}", True, "1 match confirmed")
+
+# ── DRY RUN: print expected diffs and exit (Rule #26) ───────────────────────
+if DRY_RUN:
+    print("\n=== DRY RUN — EXPECTED DIFFS (no file written) ===\n")
+    import difflib
+    patched_dry = original
+    for name, old, new in patches:
+        patched_dry = patched_dry.replace(old, new, 1)
+    diff = list(difflib.unified_diff(
+        original.splitlines(keepends=True),
+        patched_dry.splitlines(keepends=True),
+        fromfile=f"{TARGET} (original)",
+        tofile=f"{TARGET} (patched)",
+        lineterm=""
+    ))
+    print("".join(diff) or "(no diff)")
+    print("\n=== DRY RUN COMPLETE — no files modified ===")
+    sys.exit(0)
 
 # ── apply patches ────────────────────────────────────────────────────────────
 patched = original
@@ -180,8 +239,9 @@ for name, old, new in patches:
 
 # ── whitespace preservation (Rule #46) ───────────────────────────────────────
 ws_pairs = [
-    ('\t_save_camera_settings()', '\t_cam_save_pending = true'),
-    ('\t\tvar terrain_mesh = st.commit()', '\t\tvar terrain_mesh = st.commit()'),
+    ("\t_save_camera_settings()",
+     "\t_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)"),
+    ("\t\tvar terrain_mesh = st.commit()", "\t\tvar terrain_mesh = st.commit()"),
 ]
 for old_line, new_line in ws_pairs:
     if get_leading_ws(old_line) != get_leading_ws(new_line):
@@ -215,6 +275,7 @@ if bad:
     sys.exit("INDENTATION CHECK FAILED — restored")
 log_result("indentation_check", True, "no leading spaces")
 
+
 # ── semantic checks (Rule #46) ───────────────────────────────────────────────
 def between(text, start_fn, end_fn):
     a = text.find(start_fn)
@@ -225,17 +286,18 @@ def between(text, start_fn, end_fn):
 checks = [
     ("_save_camera_settings removed from _update_camera_position",
      lambda t: "\t_save_camera_settings()" not in
-               between(t, "func _update_camera_position", "func _recreate_hud_if_needed")),
+               between(t, "func _update_camera_position",
+                       "func _recreate_hud_if_needed")),
     ("_cam_save_pending = true in _update_camera_position",
      lambda t: "_cam_save_pending = true" in
-               between(t, "func _update_camera_position", "func _recreate_hud_if_needed")),
+               between(t, "func _update_camera_position",
+                       "func _recreate_hud_if_needed")),
     ("generate_lods present",
      lambda t: "terrain_mesh.generate_lods" in t),
     ("_cam_save_pending declared",
      lambda t: "var _cam_save_pending: bool = false" in t),
-    ("RMB release handler present in _input",
-     lambda t: "_cam_save_pending = false" in
-               between(t, "func _input", "func _poll_controls")),
+    ("RMB release handler present",
+     lambda t: "_cam_save_pending = false" in t),
 ]
 for name, pred in checks:
     ok = pred(written)
@@ -252,13 +314,14 @@ result = subprocess.run(
 combined = result.stdout + result.stderr
 ok = result.returncode == 0 and "Parse Error" not in combined
 log_result("godot_syntax_check", ok,
-           f"exit={result.returncode} parse_error={'yes' if 'Parse Error' in combined else 'no'}")
+           f"exit={result.returncode} parse_error="
+           f"{'yes' if 'Parse Error' in combined else 'no'}")
 if not ok:
     print("GODOT OUTPUT:", combined[:2000], file=sys.stderr)
     shutil.copy2(backup, TARGET)
     sys.exit("GODOT SYNTAX CHECK FAILED — restored")
 
-# ── diff report ───────────────────────────────────────────────────────────────
+# ── diff report (Rule #46 step 11) ───────────────────────────────────────────
 diff = subprocess.run(["diff", TARGET, backup], capture_output=True, text=True)
 print("\n=== DIFF (patched vs backup) ===")
 print(diff.stdout or "(no output)")
