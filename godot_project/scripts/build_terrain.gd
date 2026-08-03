@@ -550,7 +550,6 @@ func _ready() -> void:
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
-	# Headless auto‑start: simulate SPACE press
 	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():
 		Input.action_press("ui_accept")
 		Input.action_release("ui_accept")

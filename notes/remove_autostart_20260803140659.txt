@@ -1,0 +1,10 @@
+=== remove_autostart_keep_clamp.sh — 20260803140659 UTC ===
+
+1. Auto-start block removed from build_terrain.gd.
+2. Auto-start patch call commented out in autostall_patched.py.
+3. Clamp patch remains (line 2139: <= 25.0 + 0.01).
+
+Next steps:
+  - Manually deploy the parachute by pressing Space after jump.
+  - Observe if the canopy descends and triggers GAME_OVER.
+  - If terrain looks bad, check texture paths and shader settings.

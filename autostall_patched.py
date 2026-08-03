@@ -179,7 +179,7 @@ def make_timestamped_backup(p):
     shutil.copy2(p, backup_path)
     return backup_path
 
-def apply_auto_start_patch() -> Tuple[bool, str]:
+def # apply_auto_start_patch() -> Tuple[bool, str]:
     file_path = Path(PROJECT_DIR) / "scripts" / "build_terrain.gd"
     if not file_path.exists():
         return False, "File not found"
@@ -504,7 +504,7 @@ def main():
     for patch_func, name in [(patch_hub_manager, "HubManager"),
                              (patch_sqlite_db, "SqliteDb"),
                              (apply_auto_start_patch, "AutoStart")]:
-        ok, msg = patch_func(db_conn) if patch_func != apply_auto_start_patch else apply_auto_start_patch()
+        ok, msg = patch_func(db_conn) if patch_func != apply_auto_start_patch else # apply_auto_start_patch()
         _record_event(f"patch_{name}", "success" if ok else "error", msg)
 
     # Display
