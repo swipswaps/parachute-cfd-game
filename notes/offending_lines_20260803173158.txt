@@ -1,0 +1,96 @@
+=== OFFENDING LINES (with visible whitespace) — 20260803173158 UTC ===
+
+  25: '\n'
+  26: '\t\treturn\n'
+  27: '\n'
+  28: '\tprint("[HubManager] Headless mode – skipping hub startup.")\n'
+  29: '\treturn\n'
+  30: 'print("[HubManager] Hub not responding; starting it...")\n'
+  31: '\tvar project_dir = ProjectSettings.globalize_path("res://")\n'
+  32: '\t# FIX (this session): project_dir = res:// resolves to godot_project/,\n'
+  33: '\t# but forensic_hub_server.py lives one directory up, at the outer\n'
+  34: "\t# project root — confirmed via find: only one copy exists, and it's\n"
+  35: '\t# not inside godot_project/. The cd+exec was silently failing every\n'
+
+--- build_terrain.gd lines 3848-3860 ---
+3848: '\tInput.action_press("deploy")\n'
+3849: '\tInput.action_release("deploy")\n'
+3850: '\tprint("[VERBATIM] Auto‑deploy triggered after 5s")\n'
+3851: '\tget_tree().quit()  # optional: exit after deploy for CI\n'
+3852: '# Auto‑deploy timer: deploy after 5 seconds\n'
+3853: "\t\t\t\t# if _cdb.has_method('execute'): _cdb.execute(_sql)\n"
+3854: "\t\t\t\telif _cdb.has_method('_query'): _cdb._query(_sql)\n"
+3855: '\t\t\tprint("[CTRL] pressed=", action,\n'
+3856: '\t\t\t\t"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),\n'
+3857: '\t\t\t\t"  state=", _game_state,\n'
+3858: '\t\t\t\t"  deployed=", _canopy_deployed,\n'
+3859: '\t\t\t\t"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")\n'
+
+--- Full HubManager.gd first 35 lines ---
+     1	extends Node
+     2	
+     3	func _ready():
+     4		# Defer to avoid blocking startup
+     5		call_deferred("_ensure_hub")
+     6	
+     7	func _ensure_hub():
+     8		var port = 8765
+     9		var endpoint = "/api/gamification"
+    10		var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+    11		var output = []
+    12		var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
+    13		if exit_code == 0 and output.size() > 0 and output[0] == "200":
+    14			print("[HubManager] Hub already running.")
+    15			return
+    16	
+    17		# Added by autostall_patched.py – skip if hub already running
+    18		if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
+    19			return
+    20			print("[HubManager] Hub already running – skipping startup")
+    21		if OS.get_environment("GODOT_HEADLESS") == "1":
+    22			return
+    23	
+    24			return
+    25	
+    26			return
+    27	
+    28		print("[HubManager] Headless mode – skipping hub startup.")
+    29		return
+    30	print("[HubManager] Hub not responding; starting it...")
+    31		var project_dir = ProjectSettings.globalize_path("res://")
+    32		# FIX (this session): project_dir = res:// resolves to godot_project/,
+    33		# but forensic_hub_server.py lives one directory up, at the outer
+    34		# project root — confirmed via find: only one copy exists, and it's
+    35		# not inside godot_project/. The cd+exec was silently failing every
+
+--- Full build_terrain.gd last 30 lines ---
+     1		ev.physical_keycode = keycode
+     2		ev.keycode = keycode
+     3		return ev
+     4	
+     5	
+     6	func _log_control_presses() -> void:
+     7		# One line per press: which control, in which state, canopy or not.
+     8		# This is what the autostall log needs so an attempted control is
+     9		# visible even when its handler does nothing.
+    10		for action in CONTROL_KEYS:
+    11			if not InputMap.has_action(action):
+    12				continue
+    13			if Input.is_action_just_pressed(action):
+    14				# DB: persist confirmed keypress to control_events
+    15				var _cdb = get_node_or_null('/root/SqliteDb')
+    16				if _cdb != null:
+    17					var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+    18	func _auto_deploy():
+    19		Input.action_press("deploy")
+    20		Input.action_release("deploy")
+    21		print("[VERBATIM] Auto‑deploy triggered after 5s")
+    22		get_tree().quit()  # optional: exit after deploy for CI
+    23	# Auto‑deploy timer: deploy after 5 seconds
+    24					# if _cdb.has_method('execute'): _cdb.execute(_sql)
+    25					elif _cdb.has_method('_query'): _cdb._query(_sql)
+    26				print("[CTRL] pressed=", action,
+    27					"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    28					"  state=", _game_state,
+    29					"  deployed=", _canopy_deployed,
+    30					"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
