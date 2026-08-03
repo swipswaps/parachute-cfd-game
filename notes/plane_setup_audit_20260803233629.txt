@@ -1,0 +1,84 @@
+=== plane_setup_audit — 20260803233629 UTC ===
+
+=== _setup_plane_node full body (lines 2675-2710) ===
+2675: # --- Injected missing function: _setup_plane_node ---
+2676: func _setup_plane_node() -> void:
+2677: 	if not _plane_node:
+2678: 		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+2679: 	if not _plane_node:
+2680: 		_log("[VERBATIM] WARNING: plane node not found")
+2681: 
+2682: 
+2683: # Helper to find node with a specific method
+2684: 
+2685: 
+2686: # --- Injected missing function: _log ---
+2687: func _log(msg: String) -> void:
+2688: 	print("[VERBATIM] " + msg)
+2689: 	if _notification_label:
+2690: 		_notification_label.text = msg
+2691: 		_notification_label.add_theme_color_override(
+2692: 			"font_color", Color(1, 0, 0) if "ERROR" in msg or "FATAL" in msg else Color(1, 0.8, 0)
+2693: 		)
+2694: 
+2695: 
+2696: # ------------------------------------------------------------------
+2697: # EXIT TREE - Clean up database connections
+2698: # ------------------------------------------------------------------
+2699: 
+2700: 
+2701: # --- Injected missing function: _find_node_with_method ---
+2702: func _find_node_with_method(node, method_name):
+2703: 	if node.has_method(method_name):
+2704: 		return node
+2705: 	for child in node.get_children():
+2706: 		var result = _find_node_with_method(child, method_name)
+2707: 		if result:
+2708: 			return result
+2709: 	return null
+2710: 
+
+=== _find_node_with_method (grep for definition) ===
+2678:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+2701:# --- Injected missing function: _find_node_with_method ---
+2702:func _find_node_with_method(node, method_name):
+2706:		var result = _find_node_with_method(child, method_name)
+
+=== line 2620-2635 (_plane_node = plane assignment context) ===
+2620: 			plane.test_plane_process()
+2621: 		else:
+2622: 			print("[VERBATIM] plane: test_plane_process method not found")
+2623: 		_log("[VERBATIM] Plane script attached")
+2624: 	else:
+2625: 		_log("[VERBATIM] WARNING: plane.gd not found")
+2626: 	add_child(plane)
+2627: 	_plane_node = plane
+2628: 	plane.add_to_group("plane")
+2629: 
+2630: 	# Load aircraft model
+2631: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+2632: 	if plane_scene and plane_scene is PackedScene:
+2633: 		var aircraft = plane_scene.instantiate()
+2634: 		plane.add_child(aircraft)
+2635: 		# Make it visible and large enough to see
+
+=== main.tscn node list (all [node] entries) ===
+[node name="Main" type="Node3D" unique_id=846803683]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1677647251]
+[node name="HUD" type="CanvasLayer" parent="."]
+
+=== _on_exit_trigger_body_entered in tscn or scripts ===
+godot_project/scenes/main.tscn.backup_before_cesna:23:[connection signal="body_entered" from="FlyingPlane/ExitTrigger" to="FlyingPlane" method="_on_exit_trigger_body_entered"]
+godot_project/scenes/main.tscn.backup_before_patch:23:[connection signal="body_entered" from="FlyingPlane/ExitTrigger" to="FlyingPlane" method="_on_exit_trigger_body_entered"]
+godot_project/scenes/main.tscn.backup_embedded:56:[connection signal="body_entered" from="FlyingPlane/ExitTrigger" to="FlyingPlane" method="_on_exit_trigger_body_entered"]
+godot_project/scenes/main.tscn.backup_embedded:71:[connection signal="body_entered" from="FlyingPlane/ExitTrigger" to="FlyingPlane" method="_on_exit_trigger_body_entered"]
+godot_project/scenes/main.tscn.backup_pre_plane:43:[connection signal="body_entered" from="FlyingPlane/ExitTrigger" to="FlyingPlane" method="_on_exit_trigger_body_entered"]
+godot_project/scripts/build_terrain.backup_20260707-205552.gd:2520:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+godot_project/scripts/build_terrain.backup_20260707-210153.gd:2520:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+godot_project/scripts/build_terrain.backup_20260707-210819.gd:2499:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+godot_project/scripts/build_terrain.backup_20260707-215820.gd:2520:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+godot_project/scripts/build_terrain.backup_20260707-222344.gd:2528:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+
+=== END ===
