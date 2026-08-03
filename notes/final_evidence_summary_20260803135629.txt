@@ -1,0 +1,36 @@
+=== FINAL EVIDENCE SUMMARY — 20260803135629 UTC ===
+
+1. Clamp patch is already applied (line 2139: <= 25.0 + 0.01).
+2. Autostall runs but never deploys — no GLIDE telemetry.
+3. Auto-start block in build_terrain.gd:
+	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
+	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+	# Headless auto‑start: simulate SPACE press
+	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] Headless auto‑start triggered.")
+	# Headless auto-start: simulate SPACE/deploy press
+	# Ref: OS.get_environment (general knowledge, not retrieved this session)
+	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+		# Input.action_release("deploy") removed — flag-based now
+		print("[VERBATIM] Headless auto‑start triggered.")
+	_check_arm_pose_safe()
+
+	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
+	# Deferred ~2 s so every autoload and CanvasLayer has finished building.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
+
+4. Auto-start patch in autostall_patched.py:
+Auto-start patch not found
+
+5. Relevant evidence files pushed:
+notes/auto_start_block_20260803135629.txt
+notes/autostall_82fix_v8_20260803133559.txt
+notes/autostall_patch_20260803135629.txt
+notes/autostall_warp3_20260803115432.txt
+notes/patch_82ft_clamp_v8_20260803133559.diff
+notes/push_audit_logs_v2_20260802203638.txt
+
+6. Next steps: manually trigger deploy or fix the action name.
