@@ -1,0 +1,4 @@
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/fix_camera_throttle_and_lod.py", line 74
+    if BANNED in line and not stripped.startswith("#") and not any(q in line for q in ['f"utcnow', '"utcnow()'', "'utcnow()'"]):
+                                                                                                                           ^
+SyntaxError: unterminated string literal (detected at line 74)
