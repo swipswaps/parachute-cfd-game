@@ -1,0 +1,423 @@
+=== reimport_assets.sh — 20260803200533 UTC ===
+
+--- TARGET FILE: godot_project/scripts/build_terrain.gd ---
+
+=== ±5 LINES AROUND SPAWN CODE ===
+330-		var terrain_mat := StandardMaterial3D.new()
+331-		terrain_mat.vertex_color_use_as_albedo = true
+332-		terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+333-		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+334-		terrain_inst.material_override = terrain_mat
+335:		add_child(terrain_inst)
+336-		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+337-	else:
+338-		# --- Heightmap missing: flat terrain fallback ---
+339-		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
+340-		var flat_mesh := PlaneMesh.new()
+--
+345-		flat_inst.mesh = flat_mesh
+346-		var flat_mat := StandardMaterial3D.new()
+347-		flat_mat.albedo_color = Color(0.2, 0.5, 0.15)
+348-		flat_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+349-		flat_inst.material_override = flat_mat
+350:		add_child(flat_inst)
+351-		print("[VERBATIM] Flat terrain fallback created")
+352-
+353-	# --------------------------------------------------------------
+354-	# Runways: placeholder positions removed (did not match KDED layout).
+355-	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+--
+362-	# --------------------------------------------------------------
+363-	# Character (skydiver) – loads FBX with skeleton
+364-	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+365-	# --------------------------------------------------------------
+366-	_character = Node3D.new()
+367:	add_child(_character)
+368-	_character.position = Vector3(100.0, 1828.8, -100.0)
+369-	print("[DEBUG] _character position after set: ", _character.position)
+370-	print("[DEBUG] _character global_position: ", _character.global_position)
+371-	_load_character()
+372-	print("[DIAG] _ready: character loaded")
+--
+385-	_camera = Camera3D.new()
+386-	_camera.position = Vector3(0.0, 2.0, 3.0)
+387-	_camera.fov = 75.0
+388-	_camera.near = 0.1
+389-	_camera.far = 10000.0
+390:	add_child(_camera)
+391-
+392-	# Ensure plane exists before positioning camera
+393-	if _plane_node:
+394-		# Position camera using orbit angles
+395-		var plane_pos = _plane_node.global_position
+--
+423-	var dz_mat := StandardMaterial3D.new()
+424-	dz_mat.albedo_color = Color(1.0, 0.8, 0.0, 0.85)
+425-	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+426-	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+427-	dz.material_override = dz_mat
+428:	add_child(dz)
+429-	print("[VERBATIM] Drop zone created")
+430-	_load_faa_obstacles()
+431-
+432-	# --------------------------------------------------------------
+433-	# HUD (8 lines + score + notification)
+--
+441-	var bg_panel := Panel.new()
+442-	bg_panel.anchor_right = 1.0
+443-	bg_panel.anchor_bottom = 1.0
+444-	var style := StyleBoxEmpty.new()
+445-	bg_panel.add_theme_stylebox_override("panel", style)
+446:	_hud_layer.add_child(bg_panel)
+447:	add_child(_hud_layer)
+448-	var font = ThemeDB.fallback_font
+449-	var label_names := ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+450-	for i in range(8):
+451-		var lbl := Label.new()
+452-		lbl.add_theme_font_override("font", font)
+453-		lbl.add_theme_font_size_override("font_size", 14)
+454-		lbl.add_theme_color_override("font_color", Color(0, 1, 0))
+455-		lbl.position = Vector2(50, 10 + i * 22)
+456-		lbl.custom_minimum_size = Vector2(220, 20)
+457-		lbl.text = label_names[i] + ": --"
+458:		_hud_layer.add_child(lbl)
+459-		_hud_labels.append(lbl)
+460-
+461-	var _hud_bg_panel := ColorRect.new()
+462-	_hud_bg_panel.color = Color(0, 0, 0, 0.35)
+463-	_hud_bg_panel.size = Vector2(280, 210)
+464-	_hud_bg_panel.position = Vector2(5, 5)
+465:	_hud_layer.add_child(_hud_bg_panel)
+466-
+467-	_score_label = Label.new()
+468-	_score_label.add_theme_font_override("font", font)
+469-	_score_label.add_theme_font_size_override("font_size", 16)
+470-	_score_label.add_theme_color_override("font_color", Color(1, 1, 0))
+471-	_score_label.position = Vector2(10, 200)
+472:	_hud_layer.add_child(_score_label)
+473-
+474-	_notification_label = Label.new()
+475-	_notification_label.add_theme_font_override("font", font)
+476-	_notification_label.add_theme_font_size_override("font_size", 16)
+477-	_notification_label.add_theme_color_override("font_color", Color(1, 0.8, 0))
+478-	_notification_label.position = Vector2(400, 20)
+479:	_hud_layer.add_child(_notification_label)
+480-
+481-	_focus_label = Label.new()
+482-	_focus_label.text = ">>> CLICK WINDOW THEN PRESS KEYS: Q/E turn, C FC check, X cutaway, V reserve, F flare, R restart, C cycle views, H toggle HUD <<<"
+483-	_focus_label.add_theme_font_override("font", font)
+484-	_focus_label.add_theme_font_size_override("font_size", 16)
+485-	_focus_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.0, 1.0))
+486-	_focus_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+487-	_focus_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+488-	_focus_label.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+489:	_hud_layer.add_child(_focus_label)
+490-	print("[VERBATIM] HUD created")
+491-	print("[DIAG] _ready: HUD created, _hud_labels size=", _hud_labels.size())
+492-
+493-	# --------------------------------------------------------------
+494-	# Initial heading (parse from HUD, fallback 120)
+--
+525-	if ResourceLoader.exists(canopy_path):
+526-		var scene = load(canopy_path)
+527-		if scene:
+528-			_canopy_instance = scene.instantiate()
+529-			if _canopy_instance:
+530:				_character.add_child(_canopy_instance)
+531-				_canopy_instance.position = Vector3(0, 3.2, 0)
+532-				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+533-				_canopy_material = StandardMaterial3D.new()
+534-				var _mesh_child := _find_first_mesh(_canopy_instance)
+535-				if _mesh_child:
+--
+578-	# (general knowledge - not retrieved this session)
+579-	var _lbl_timer := Timer.new()
+580-	_lbl_timer.wait_time = 2.0
+581-	_lbl_timer.one_shot = true
+582-	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+583:	add_child(_lbl_timer)
+584-	_lbl_timer.timeout.connect(_dump_all_labels)
+585-	_lbl_timer.start()
+586-
+587-	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
+588-	# pressed Escape, so the run produced no PAUSETEL line and P5 stayed
+--
+595-			or "--headless" in OS.get_cmdline_args():
+596-		var _pause_timer := Timer.new()
+597-		_pause_timer.wait_time = 8.0
+598-		_pause_timer.one_shot = true
+599-		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+600:		add_child(_pause_timer)
+601-		_pause_timer.timeout.connect(_p3_pause_selftest)
+602-		_pause_timer.start()
+603-
+604-	print("[VERBATIM] ... EXIT _ready ok=true")
+605-	print("[DIAG] _ready: EXIT")
+--
+609-	if "--run-tests" in args:
+610-		print("[VERBATIM] Running self-tests (timer-based)...")
+611-		var timer := Timer.new()
+612-		timer.wait_time = 1.5
+613-		timer.one_shot = true
+614:		add_child(timer)
+615-		timer.timeout.connect(_run_self_tests)
+616-		timer.start()
+617-		print("[VERBATIM] Self-test timer started.")
+618-		# SELF-TEST TIMER INJECTED (v6.5.154)
+619-
+--
+671-	var fbx_path = "res://assets/characters/parachutist.fbx"
+672-	if not FileAccess.file_exists(fbx_path):
+673-		print("[VERBATIM] FBX not found, using capsule")
+674-		var capsule := MeshInstance3D.new()
+675-		capsule.mesh = CapsuleMesh.new()
+676:		_character.add_child(capsule)
+677-		return
+678-	var fbx_scene = load(fbx_path)
+679-	if not fbx_scene:
+680-		print("[VERBATIM] Failed to load FBX")
+681-		return
+682-	var inst = fbx_scene.instantiate()
+683:	_character.add_child(inst)
+684-	print("[VERBATIM] FBX loaded")
+685-	print("[DEBUG] FBX instance visible: ", inst.visible)
+686-	print("[DEBUG] FBX instance added. Node: ", inst)
+687-	print("[DEBUG] Instance position: ", inst.position)
+688-	print("[DEBUG] Instance scale: ", inst.scale)
+--
+848-			mat.albedo_color = Color(0.8, 0.8, 0.8)
+849-		else:
+850-			mat.albedo_color = Color(0.6, 0.5, 0.3)
+851-		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+852-		mesh_inst.material_override = mat
+853:		add_child(mesh_inst)
+854-		placed += 1
+855-	print("[VERBATIM] FAA obstacles loaded: ", placed)
+856-	print("[VERBATIM] EXIT _load_faa_obstacles ok=true placed=", placed)
+857-
+858-
+--
+899-	sphere_mesh.height = 1.0
+900-	sphere_mesh.radial_segments = 16
+901-	sphere_mesh.rings = 8
+902-	_canopy_instance.mesh = sphere_mesh
+903-	_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+904:	_character.add_child(_canopy_instance)
+905-	_canopy_instance.position = Vector3(0, 3.2, 0)
+906-	_canopy_material = StandardMaterial3D.new()
+907-	_canopy_material.albedo_color = Color(0.0, 0.6, 1.0)
+908-	_canopy_instance.material_override = _canopy_material
+909-	_canopy_instance.visible = false
+--
+2339-		print("[VERBATIM] WARN FBX not found — PiP will use canopy GLB only")
+2340-
+2341-	_pip_layer = CanvasLayer.new()
+2342-	_pip_layer.name = "PiPLayer"
+2343-	_pip_layer.layer = 2  # R104: PiP on layer 2 (above HUD layer 1)
+2344:	add_child(_pip_layer)
+2345-	var container := SubViewportContainer.new()
+2346-	container.size = Vector2(320, 240)
+2347-	# Load saved position from ConfigFile (R105)
+2348-	var config = ConfigFile.new()
+2349-	if config.load("user://pip_settings.cfg") == OK:
+--
+2355-	container.mouse_filter = Control.MOUSE_FILTER_STOP
+2356-	# Make draggable and save position on drag end
+2357-	container.set_script(load("res://scripts/pip_draggable.gd"))
+2358-	# Connect to a signal that saves position when drag ends (implemented in pip_draggable.gd)
+2359-	# We'll also add a direct save function here that can be called from that script.
+2360:	_pip_layer.add_child(container)
+2361-	container.add_to_group("pip_container")
+2362-	container.add_to_group("pip_container")
+2363-	container.add_to_group("pip_container")
+2364-	container.visible = true
+2365-	_pip_viewport = SubViewport.new()
+2366-	_pip_viewport.size = Vector2i(320, 240)
+2367-	_pip_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+2368:	container.add_child(_pip_viewport)
+2369-
+2370-	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+2371-	if not ResourceLoader.exists(canopy_path):
+2372-		canopy_path = "res://assets/canopy/parachute_clean.glb"
+2373-	if not ResourceLoader.exists(canopy_path):
+--
+2378-		print("[VERBATIM] ERROR: canopy load null – no .import sidecar")
+2379-		# Fallback: create a simple sphere
+2380-		var sphere := MeshInstance3D.new()
+2381-		sphere.mesh = SphereMesh.new()
+2382-		sphere.position = Vector3(0.0, 5.0, 0.0)
+2383:		_pip_viewport.add_child(sphere)
+2384-		container.visible = true
+2385-		print("[VERBATIM] PiP fallback: sphere created")
+2386-		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
+2387-		return
+2388-
+2389-	_pip_canopy_node = canopy_scene.instantiate()
+2390:	_pip_viewport.add_child(_pip_canopy_node)
+2391-	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+2392-
+2393-	_pip_camera = Camera3D.new()
+2394-	var pip_env := WorldEnvironment.new()
+2395-	var env := Environment.new()
+2396-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+2397-	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+2398-	env.ambient_light_energy = 0.8
+2399-	pip_env.environment = env
+2400:	_pip_viewport.add_child(pip_env)
+2401-	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+2402-	_pip_camera.look_at_from_position(
+2403-		Vector3(0.0, 1.8, 0.0), Vector3(0.0, 5.0, 0.0), Vector3.FORWARD
+2404-	)
+2405-	_pip_camera.fov = 110.0
+2406:	_pip_viewport.add_child(_pip_camera)
+2407-	_pip_camera.current = true
+2408-
+2409-	var light := DirectionalLight3D.new()
+2410-	light.rotation = Vector3(deg_to_rad(-45), deg_to_rad(30), 0)
+2411:	_pip_viewport.add_child(light)
+2412-
+2413-	_wind_label = Label.new()
+2414-	_wind_label.name = "WindLabel"
+2415-	_wind_label.position = Vector2(20, 260)
+2416-	_wind_label.add_theme_color_override("font_color", Color(1, 1, 0))
+2417:	_pip_layer.add_child(_wind_label)
+2418-	var timer := Timer.new()
+2419-	timer.wait_time = 1.0
+2420-	timer.autostart = true
+2421-	timer.timeout.connect(_update_wind_display)
+2422:	_pip_layer.add_child(timer)
+2423-
+2424-	var main_canopy_scene2 = load(canopy_path)
+2425-	if main_canopy_scene2:
+2426-		_main_canopy_node = main_canopy_scene2.instantiate()
+2427-		_main_canopy_node.position = Vector3(0.0, 3.2, 0.0)
+2428-		_main_canopy_node.scale = Vector3(0.18, 0.12, 0.18)
+2429:		_character.add_child(_main_canopy_node)
+2430-		# v10: this node had ZERO .visible writes anywhere in the project, so
+2431-		# it stayed on the jumper from startup through freefall. The managed
+2432-		# node (_canopy_instance) is hidden at line 522; this one never was.
+2433-		_main_canopy_node.visible = false
+2434-		print("[VERBATIM] main canopy attached offset=(0,2.5,0) path=", canopy_path)
+--
+2454-	print("[VERBATIM] Wind updated: ", speed, " kts @ ", direction, "°")
+2455-
+2456-
+2457-func _fetch_real_wind() -> void:
+2458-	var http := HTTPRequest.new()
+2459:	add_child(http)
+2460-	http.request_completed.connect(_on_wind_received)
+2461-	http.request("https://api.weather.gov/points/29.067,-81.284")
+2462-
+2463-
+2464-func _on_wind_received(
+--
+2472-		return
+2473-	var grid_url = json.get("properties", {}).get("forecast", "")
+2474-	if grid_url.is_empty():
+2475-		return
+2476-	var http2 := HTTPRequest.new()
+2477:	add_child(http2)
+2478-	http2.request_completed.connect(_on_forecast_received)
+2479-	http2.request(grid_url)
+2480-
+2481-
+2482-func _on_forecast_received(
+--
+2650-			var img_err = img.load(_ss_abs)
+2651-			if img_err == OK:
+2652-				var tex = ImageTexture.create_from_image(img)
+2653-				if tex:
+2654-					_loading_texture_rect.texture = tex
+2655:					_loading_layer.add_child(_loading_texture_rect)
+2656-					screenshot_displayed = true
+2657-					print("[VERBATIM] Loading latest screenshot: ", _ss_path)
+2658-				else:
+2659-					print("[VERBATIM] WARNING: ImageTexture creation failed: ", _ss_path)
+2660-			else:
+--
+2666-		label.text = "📸 No screenshots yet\nFly and screenshots will appear here as previews"
+2667-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+2668-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+2669-		label.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+2670-		label.add_theme_font_size_override("font_size", 20)
+2671:		placeholder.add_child(label)
+2672:		_loading_layer.add_child(placeholder)
+2673-		print("[VERBATIM] No screenshots – showing placeholder message")
+2674:	add_child(_loading_layer)
+2675-	print("[VERBATIM] EXIT _show_loading_screen")
+2676-
+2677-
+2678-func _create_plane() -> void:
+2679-	_log("[VERBATIM] Creating plane node...")
+--
+2688-		else:
+2689-			print("[VERBATIM] plane: test_plane_process method not found")
+2690-		_log("[VERBATIM] Plane script attached")
+2691-	else:
+2692-		_log("[VERBATIM] WARNING: plane.gd not found")
+2693:	add_child(plane)
+2694-	_plane_node = plane
+2695-	plane.add_to_group("plane")
+2696-
+2697-	# Load aircraft model
+2698-	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+2699-	if plane_scene and plane_scene is PackedScene:
+2700-		var aircraft = plane_scene.instantiate()
+2701:		plane.add_child(aircraft)
+2702-		# Make it visible and large enough to see
+2703-		aircraft.visible = true
+2704-		aircraft.scale = Vector3(15.0, 15.0, 15.0)  # Increased from 1 to 5
+2705-		aircraft.position = Vector3(0, 0, 0)
+2706-		print(
+--
+2710-		print("[VERBATIM] Failed to load Cessna model")
+2711-
+2712-	var plane_collision := CollisionShape3D.new()
+2713-	plane_collision.shape = BoxShape3D.new()
+2714-	plane_collision.shape.size = Vector3(3, 1, 10)
+2715:	plane.add_child(plane_collision)
+2716-
+2717-	var exit_trigger := Area3D.new()
+2718-	exit_trigger.name = "ExitTrigger"
+2719:	plane.add_child(exit_trigger)
+2720-	var trigger_collision := CollisionShape3D.new()
+2721-	trigger_collision.shape = BoxShape3D.new()
+2722-	trigger_collision.shape.size = Vector3(2, 2, 2)
+2723-	trigger_collision.position = Vector3(1.5, 0, -2)
+2724:	exit_trigger.add_child(trigger_collision)
+2725-
+2726-	plane.global_position = Vector3(0, 1828.8, 0)
+2727-	_log("[VERBATIM] Plane created at altitude 6000")
+2728-
+2729-
+
+=== CURRENT .godot/imported FILES ===
+total 100156
+drwxr-xr-x. 1 owner owner    16868 Jul 16 13:47 .
+drwxr-xr-x. 1 owner owner      234 Jul 28 14:47 ..
+-rw-r--r--. 1 owner owner      276 Jul 16 13:34 AeroBody3D.svg-c8fbf4a6b3a6da6bd3847c46a2ed7b71.ctex
+-rw-r--r--. 1 owner owner       91 Jul 16 13:34 AeroBody3D.svg-c8fbf4a6b3a6da6bd3847c46a2ed7b71.md5
+-rw-r--r--. 1 owner owner      420 Jul 16 13:34 AeroInfluencer3D.svg-eb204b96a1b8ff91f317f42215eb67dc.ctex
+-rw-r--r--. 1 owner owner       91 Jul 16 13:34 AeroInfluencer3D.svg-eb204b96a1b8ff91f317f42215eb67dc.md5
+-rw-r--r--. 1 owner owner      330 Jul 16 13:34 AeroPropeller3D.svg-975bf9b1b19013332a01e635cf92986e.ctex
+-rw-r--r--. 1 owner owner       91 Jul 16 13:34 AeroPropeller3D.svg-975bf9b1b19013332a01e635cf92986e.md5
+-rw-r--r--. 1 owner owner      364 Jul 16 13:34 AeroSurface3D.svg-02a1e4747a7cef0314016e8ababf4e07.ctex
+-rw-r--r--. 1 owner owner       91 Jul 16 13:34 AeroSurface3D.svg-02a1e4747a7cef0314016e8ababf4e07.md5
+-rw-r--r--. 1 owner owner     8192 Jul 16 13:47 aim-9-07dbbcbdebc7b0e2699c4e58848a016b.bin
+-rw-r--r--. 1 owner owner     9876 Jul 16 13:47 aim-9-07dbbcbdebc7b0e2699c4e58848a016b.gltf
+-rw-r--r--. 1 owner owner       91 Jul 16 13:47 aim-9.blend-07dbbcbdebc7b0e2699c4e58848a016b.md5
+-rw-r--r--. 1 owner owner     6938 Jul 16 13:47 aim-9.blend-07dbbcbdebc7b0e2699c4e58848a016b.scn
+-rw-r--r--. 1 owner owner       91 Jul 16 13:47 aim-9.glb-3a11c348cb26b789e04ebf3e2fe265ee.md5
+-rw-r--r--. 1 owner owner     4996 Jul 16 13:47 aim-9.glb-3a11c348cb26b789e04ebf3e2fe265ee.scn
+-rw-r--r--. 1 owner owner    25320 Jul 16 13:47 b2-07e9291851d95964e0be147a5dea6eb4.bin
+-rw-r--r--. 1 owner owner     4075 Jul 16 13:47 b2-07e9291851d95964e0be147a5dea6eb4.gltf
+-rw-r--r--. 1 owner owner       91 Jul 16 13:47 b2.blend-07e9291851d95964e0be147a5dea6eb4.md5
+
+=== CURRENT SOURCE FILES ===
+-rwxr-xr-x. 1 owner owner 4681916 Jun 26 11:22 godot_project/assets/aircraft/cesna_airplane.glb
+-rwxr-xr-x. 1 owner owner   72660 Jun 26 11:22 godot_project/assets/aircraft/cessna172.glb
+-rwxr-xr-x. 1 owner owner      51 Jun 26 11:22 godot_project/assets/aircraft/Cessna.glb
+-rwxr-xr-x. 1 owner owner 2388064 Jun 26 11:22 godot_project/assets/characters/Hanging under canopy.fbx
+-rwxr-xr-x. 1 owner owner 2388064 Jun 26 11:22 godot_project/assets/characters/parachutist.fbx
+
+=== END DIAGNOSTIC ===
