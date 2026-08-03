@@ -1,0 +1,13 @@
+=== AGGRESSIVE FIX SUMMARY — 20260803154221 UTC ===
+
+1. HubManager.gd: inserted return after un-indented if.
+2. build_terrain.gd: fixed line 557.
+3. Godot exit code: 0
+4. GLIDE telemetry count: 0
+0
+5. Key markers:
+   SCRIPT ERROR: Parse Error: Expected indented block after "if" block.
+   ERROR: Failed to load script "res://scripts/HubManager.gd" with error "Parse error".
+   ERROR: Failed to instantiate an autoload, script 'res://scripts/HubManager.gd' does not inherit from 'Node'.
+   SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+   ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".

@@ -1,0 +1,17 @@
+=== PARSE ERROR DIAGNOSTIC — 20260803154221 UTC ===
+
+HubManager.gd lines 20-25:
+     1			return
+     2		# Original startup block follows
+     3		if OS.get_environment("GODOT_HEADLESS") == "1":
+     4		print("[HubManager] Headless mode – skipping hub startup.")
+     5		return
+     6	print("[HubManager] Hub not responding; starting it...")
+
+build_terrain.gd lines 555-560:
+     1	# 	if OS.get_environment("GODOT_HEADLESS") == "1":
+     2	# 		Input.action_press("deploy")
+     3			Input.action_release("deploy")
+     4			print("[VERBATIM] Headless auto‑start triggered (deploy)")
+     5			# Fallback: some builds use ui_accept
+     6			Input.action_press("ui_accept")
