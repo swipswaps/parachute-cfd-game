@@ -1,0 +1,132 @@
+=== diag_state.sh — 20260803174910 UTC ===
+
+=== 1. build_terrain.gd current state ===
+3859 godot_project/scripts/build_terrain.gd
+bytes: 155626
+  _headless_warp_done: True
+  Ground impact fatal: True
+  GAME_OVER block: True
+  225.0 warp alt: True
+  class-scope if: False
+  GLIDE print: True
+  toggle_pause def: True
+  _headless_auto_deploy def: True
+
+Lines 1470-1476:
+  1470: '# ------------------------------------------------------------------'
+  1471: 'func _show_notification(text: String) -> void:'
+  1472: '\t_notification_label.text = text'
+  1473: '\tvar timer = get_tree().create_timer(3.0)'
+  1474: '\ttimer.timeout.connect(func(): _notification_label.text = "")'
+  1475: ''
+  1476: ''
+
+No class-scope 'if' found — file is structurally clean at top level
+
+=== 2. All build_terrain.gd backups (newest first) ===
+  godot_project/scripts/build_terrain.gd.bak.20260803133303     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803131833     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803131622     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803130437     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803122454     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803115420     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803115026     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803114921     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803114742     lines=3859   warp  parse-ok
+  godot_project/scripts/build_terrain.gd.bak.20260803114615     lines=3859   warp  parse-ok
+
+=== 3. autostall_patched.py current state ===
+711 autostall_patched.py
+182:def apply_auto_start_patch() -> Tuple[bool, str]:
+475:    parser.add_argument("--no-timeout", action="store_true", help="Disable overall timeout (same as --timeout 0)")
+478:    timeout_val = 0 if args.no_timeout else args.timeout
+479:    _record_event("startup", "info", f"Starting autostall, timeout={timeout_val if timeout_val>0 else 'disabled'}")
+530:    game_completed = False
+539:        if timeout_val > 0 and elapsed > timeout_val:
+540:            _record_event("timeout", "critical", f"Reached {timeout_val}s, terminating")
+570:                # _do_flare() -> _game_state=LANDED -> Ground impact fires.
+586:                                print("[VERBATIM] Ground impact – fatal "
+588:                                game_completed = True
+589:                if "Ground impact – fatal" in line:
+590:                    game_completed = True
+591:                    _record_event("game_completed", "success", "Ground impact detected")
+601:            if game_completed:
+692:        "game_completed": game_completed,
+704:    print(f"Game completed: {game_completed}")
+
+=== 4. y-clamp zone in current build_terrain.gd ===
+33:	GAME_OVER,
+114:var _safe_landing: bool = false
+1108:	_safe_landing = true
+1171:	_safe_landing = true
+1490:			_game_state = GameState.GAME_OVER
+1493:	elif _current_altitude <= 0.0 and not _safe_landing:
+1496:		_game_state = GameState.GAME_OVER
+1659:	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+1662:			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+1664:		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
+1847:	_safe_landing = false
+2150:	if _character.position.y <= 25.0 + 0.01:
+2151:		_character.position.y = 25.0
+2152:		if not _safe_landing and _game_state != GameState.GAME_OVER:
+2153:			_game_state = GameState.GAME_OVER
+2155:		if not _safe_landing:
+2158:			_game_state = GameState.GAME_OVER
+2237:	if _game_state == GameState.GAME_OVER:
+3611:	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+
+=== 5. What the other LLM scripts targeted (recent script names) ===
+Aug 3 13:33 surgical_fix.py
+Aug 3 13:18 final_fix_all_v2.py
+Aug 3 13:16 final_fix_all.py
+Aug 3 13:04 final_fix_exact.py
+Aug 3 12:59 fix_parse_errors_rules.py
+Aug 3 12:57 apply_clamp_patch_rules.py
+Aug 3 12:24 final_fix_v2.py
+Aug 3 11:49 final_fix.py
+Aug 3 11:31 final_fix_all.sh
+Aug 3 10:34 final_fix_all_v2.sh
+Aug 3 10:06 remove_autostart_keep_clamp.sh
+Aug 3 09:35 fix_82ft_clamp_v8.sh
+Aug 3 09:29 fix_82ft_clamp_v7.sh
+Aug 3 09:26 fix_82ft_clamp_v6.sh
+Aug 3 09:23 fix_82ft_clamp_v5.sh
+Jul 24 13:17 final_fix_godot4.py
+Jul 24 12:58 final_fix_v4.py
+Jul 24 12:48 final_fix_v3.py
+Jul 16 11:12 final_fix_with_input_search.sh
+Jul 16 11:06 final_fix_with_diagnostics.sh
+
+=== 6. Quick autostall (60s max — just to confirm parse) ===
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[VERBATIM] Auto‑deploy triggered after 5s
+[AUDIT] _exit_tree: ENTER
+[AUDIT] _save_position: ENTER
+[VERBATIM] DatabaseGuard: _exit_tree called
+[VERBATIM] DB CLOSED
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+PulseAudio: context terminated
+
+=== AUTOSTALL FINISHED ===
+Game completed: False
+Fix attempted:  False
+Runtime:        10.6s
+Detailed log:   autostall_summary.json
+===========================
+
+=== END ===
