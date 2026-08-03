@@ -1,0 +1,136 @@
+=== restore_airplane_and_models.sh — 20260803204941 UTC ===
+
+--- Diagnostic: model files ---
+-rwxr-xr-x. 1 owner owner 4681916 Aug  3 16:06 godot_project/assets/aircraft/cesna_airplane.glb
+-rwxr-xr-x. 1 owner owner 2388064 Aug  3 16:06 godot_project/assets/characters/parachutist.fbx
+
+--- Check for auto-start patch in build_terrain.gd ---
+534:	# Headless auto‑start: simulate SPACE press
+538:		print("[VERBATIM] Headless auto‑start triggered.")
+
+--- Check InputMap actions ---
+cycle_camera={
+toggle_hud={
+flight_check={
+
+--- Git status ---
+ M autostall_patched.py
+ M diagnose_push.sh
+ M forensic_hub_server.py
+ M gate_log.txt
+ D godot_project/addons/godot_aerodynamic_physics/demo/aircraft_examples/cessna172/cessna172.glb.import
+ D godot_project/assets/aircraft/cesna_airplane.glb.import
+ D godot_project/assets/aircraft/cessna172.glb.import
+ D godot_project/assets/characters/parachutist.fbx.import
+ M godot_project/assets/terrain/baked_colours_4096.bin
+ M godot_project/project.godot
+ M godot_project/scripts/SqliteDb.gd
+ M godot_project/scripts/build_terrain.gd
+ D notes/.push_v2_work_20260802203638
+ M notes/godot_check_final.txt
+ M run_and_push.sh
+ M run_summary.json
+?? .quarantine/
+?? 02.gd
+?? 1
+?? 1.
+?? =
+?? GameIntegrity_0002.gd
+?? GameIntegrity_2606201818.gd
+?? InputManager_0003.gd
+?? PerformanceMonitor_0002.gd
+?? SqliteDb_0002.gd
+?? SqliteWatchdog_0002.gd
+?? StructuredLogger.gd
+?? TelemetryLogger.gd
+?? [owner@192.168.1.152-20260616-173650parachute-cfd-game]$
+?? alembic.ini
+?? altimeter_hud_0002.gd
+?? apply_v5_repairs.sh.bad
+?? argparse
+?? autostall_dryrun_summary.json
+?? autostall_post_revert.txtclear
+?? autostall_summary.json
+?? blosm/
+?? build_terrain_0123.gd
+?? build_terrain_patch.gd
+?? check_inputmap.gd
+?? combined_edits.json
+?? context_20260619T143131.zip
+?? debug_components_0002.gd
+?? difflib
+?? eof
+?? fu
+?? game_manager_0002.gd
+?? godot_aerodynamic_physics.zip
+?? godot_project/TelemetryLogger.gd
+?? godot_project/add_input_actions.gd
+?? godot_project/assets/aircraft/Cessna.glb
+?? godot_project/assets/aircraft/cesna_airplane_0.png
+?? godot_project/assets/aircraft/cesna_airplane_1.png
+?? godot_project/assets/aircraft/cesna_airplane_2.png
+?? godot_project/assets/aircraft/cessna172.glb
+?? godot_project/assets/aircraft/cessna172_Image.png
+?? godot_project/assets/canopy/clean.glb
+?? godot_project/assets/canopy/parachute.glb
+?? godot_project/assets/canopy/parachute_clean.glb
+?? godot_project/assets/canopy/parachute_cleaned.glb
+?? godot_project/assets/canopy/parachute_fixed.fbx
+?? godot_project/assets/canopy/parachute_fixed.glb
+?? godot_project/assets/canopy/parachute_fixed_0001.glb
+?? godot_project/assets/canopy/parachute_sanitized.glb
+?? godot_project/assets/canopy/temp.bin
+?? "godot_project/assets/characters/Hanging under canopy.fbx"
+?? godot_project/assets/characters/parachutist.fbx
+?? godot_project/assets/characters/parachutist.glb
+?? godot_project/assets/terrain/baked_colours.bin
+?? godot_project/assets/terrain/earth_mesh.glb
+?? godot_project/assets/terrain/heightmap.png
+?? godot_project/assets/terrain/satellite.png
+?? godot_project/assets/terrain/terrain_data.npz
+?? godot_project/capture.gd
+?? godot_project/final_screenshot.png
+?? godot_project/scripts/HubManager.gd.broken.20260801185950
+?? godot_project/scripts/build_terrain.gd.broken.20260801185950
+?? godot_project/scripts/build_terrain_0011.gd
+?? godot_project/scripts/build_terrain_0100.gd
+?? godot_project/scripts/chunked_lod_terrain.gd
+?? godot_project/scripts/forensic_hud.gd.broken.20260801185950
+?? godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734
+?? godot_project/scripts/forensic_hud.gd.broken_v3c.20260801192217
+?? godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558
+?? godot_project/scripts/forensic_hud.gd.pre_v2.20260801194217
+?? godot_project/scripts/forensic_hud.gd.pre_v3.20260801194432
+?? godot_project/simulate_input.gd
+?? godot_project/test_hud.gd
+?? godot_project/test_minimal.gd
+?? godot_project/test_minimal.png
+?? godot_project/tools/setup_input_map.gd
+?? minimal_0002.gd
+?? observability/
+?? parachute_cfd_handoff_20260802.docx
+?? parachute_cfd_handoff_20260802B.md
+?? parachute_controller_0002.gd
+?? pip_draggable_0002.gd
+?? pip_draggable_v2_0002.gd
+?? plane_0002.gd
+?? rotor_visualizer_0002.gd
+?? scratch_aeropropeller_fix/
+?? scratch_formatting_test/
+?? scratch_inline_tab_diag/
+?? scratch_iterative_test/
+?? scratch_reconstruct_test/
+?? scratch_upstream_compare/
+?? screenshot.png
+?? screenshot_20260607T140645.png
+?? screenshot_20260607T141131.png
+?? screenshot_20260607T142005.png
+?? scripts/
+?? splash_0002.gd
+?? temp_check.gd
+?? test_extract_20260711_002400/
+?? tmp_candidate.gd
+?? toggle_arm_animator_0002.gd
+?? validate_scene_0002.gd
+
+=== END DIAGNOSTIC ===
