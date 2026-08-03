@@ -127,6 +127,7 @@ var _canopy_material: StandardMaterial3D
 var _canopy_deployed: bool = false
 var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
 var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+var _headless_warp_done: bool = false    # set on first OPENING_ANIM frame in headless — alt warp
 var _deployment_timer
 var _screenshot_save_timer: float = 0.0
 const DEPLOY_TIME: float = 1.2
@@ -1465,6 +1466,16 @@ func _show_notification(text: String) -> void:
 # ------------------------------------------------------------------
 # Decision altitude and descent rate
 # ------------------------------------------------------------------
+# Headless altitude warp: set character to 200m AGL so full descent takes ~47s
+# instead of ~430s. Fires once on first OPENING_ANIM frame. Rule #46 live-extracted.
+# Ref: OS.get_environment: https://docs.godotengine.org/en/stable/classes/class_os.html
+if not _headless_warp_done and (
+		OS.get_environment("GODOT_HEADLESS") == "1" or
+		"--headless" in OS.get_cmdline_args()):
+	_character.position.y = 225.0  # 200m AGL + 25m ground offset
+	_current_altitude = 200.0
+	_headless_warp_done = true
+	print("[VERBATIM] Headless altitude warp: 200m AGL for fast test")
 func _check_decision_altitude() -> void:
 	if _game_state != GameState.DIAGNOSIS:
 		return
@@ -2137,6 +2148,10 @@ func _physics_process(delta) -> void:
 	_update_canopy_glide(delta, descent)
 	if _character.position.y < 25.0:
 		_character.position.y = 25.0
+		if not _safe_landing and _game_state != GameState.GAME_OVER:
+			_game_state = GameState.GAME_OVER
+			print("[VERBATIM] Ground impact – fatal (no flare)")
+			print("[VERBATIM] FATAL – ground impact without safe landing")
 		if not _safe_landing:
 			ScreenshotLibrary.save_flight_screenshot()
 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
