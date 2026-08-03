@@ -1,0 +1,49 @@
+=== TIMER DIAGNOSTIC — 20260803153033 UTC ===
+
+Lines 570-600 of build_terrain.gd:
+     1			_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+     2			# Input.action_release("deploy") removed — flag-based now
+     3			print("[VERBATIM] Headless auto‑start triggered.")
+     4		_check_arm_pose_safe()
+     5	
+     6		# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
+     7		# Deferred ~2 s so every autoload and CanvasLayer has finished building.
+     8		# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
+     9		# (general knowledge - not retrieved this session)
+    10		var _lbl_timer := Timer.new()
+    11		_lbl_timer.wait_time = 2.0
+    12		_lbl_timer.one_shot = true
+    13		_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+    14		add_child(_lbl_timer)
+    15	_lbl_timer.timeout.connect(_dump_all_labels)
+    16		_lbl_timer.start()
+    17	
+    18		# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
+    19		# pressed Escape, so the run produced no PAUSETEL line and P5 stayed
+    20		# UNVERIFIED. This fires toggle_pause() twice back-to-back, so two
+    21		# PAUSETEL lines are emitted and the tree is never LEFT paused --
+    22		# autostall's 30 s stall detector cannot trip on it.
+    23		# Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+    24		# (general knowledge - not retrieved this session)
+    25		if OS.get_environment("GODOT_HEADLESS") == "1" \
+    26				or "--headless" in OS.get_cmdline_args():
+    27			var _pause_timer := Timer.new()
+    28			_pause_timer.wait_time = 8.0
+    29			_pause_timer.one_shot = true
+    30			_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+    31			add_child(_pause_timer)
+
+Search for "_lbl_timer" occurrences:
+579:	var _lbl_timer := Timer.new()
+580:	_lbl_timer.wait_time = 2.0
+581:	_lbl_timer.one_shot = true
+582:	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+583:	add_child(_lbl_timer)
+584:_lbl_timer.timeout.connect(_dump_all_labels)
+585:	_lbl_timer.start()
+
+Search for "Timer.new()" occurrences:
+579:	var _lbl_timer := Timer.new()
+596:		var _pause_timer := Timer.new()
+613:		var timer := Timer.new()
+2420:	var timer := Timer.new()
