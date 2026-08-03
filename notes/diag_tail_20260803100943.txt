@@ -1,0 +1,129 @@
+=== diag_tail.sh — 20260803100943 UTC ===
+
+=== 1. Game completed context (±5 lines) ===
+15009-XR: Removed interface "Native mobile"
+15010-XR: Removed interface "OpenXR"
+15011-PulseAudio: context terminated
+15012-
+15013-=== AUTOSTALL FINISHED ===
+15014:Game completed: False
+15015-Fix attempted:  False
+15016-Runtime:        43.2s
+15017-Detailed log:   autostall_summary.json
+15018-===========================
+
+=== 2. Last 80 lines of autostall log ===
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] _exit_tree: ENTER
+[AUDIT] _save_position: ENTER
+[VERBATIM] DatabaseGuard: _exit_tree called
+[VERBATIM] DB CLOSED
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+PulseAudio: context terminated
+
+=== AUTOSTALL FINISHED ===
+Game completed: False
+Fix attempted:  False
+Runtime:        43.2s
+Detailed log:   autostall_summary.json
+===========================
+
+=== 3. Does autostall_patched.py set GODOT_HEADLESS? ===
+202:        f"{indent}if OS.get_environment(\"GODOT_HEADLESS\") == \"1\":\n",
+514:    os.environ["GODOT_HEADLESS"] = "1"
+
+=== 4. Landing / Game completed logic in build_terrain.gd ===
+32:	LANDED,
+1113:	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
+1160:	_game_state = GameState.LANDED
+1647:	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+1650:			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+1652:		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
+2876:# LANDED - not just FREEFALL.
+3587:	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+
+=== 5. Terrain texture info ===
+godot_project/assets/terrain/naip_texture.png: PNG image data, 3840 x 2160, 8-bit colormap, non-interlaced
+godot_project/assets/terrain/naip_texture.png PNG 3840x2160 3840x2160+0+0 8-bit sRGB 256c 7.18346MiB 0.000u 0:00.000
+PIL: mode=P size=(3840, 2160)
+-rwxr-xr-x. 1 owner owner 7.2M Jun 26 11:15 godot_project/assets/terrain/naip_texture.png
+
+=== 6. Camera distance constant in build_terrain.gd ===
+8:var camera_distance: float = 60.0  # default distance
+251:	camera_distance = 60.0  # reset to default
+1827:	_current_altitude = 3000.0
+1830:		_current_altitude = 3000.0
+1875:			_cam_distance = min(300.0, _cam_distance + 5.0)
+2811:		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+2822:	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
+2831:	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+2834:		print("[CAMERA] Loaded plane camera distance from DB: ", _cam_distance)
+2836:		_cam_distance = 300.0
+
+=== END ===
