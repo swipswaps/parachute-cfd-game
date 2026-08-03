@@ -186,6 +186,7 @@ NEW_A3 = (
 # B: live grep confirmed \t\t prefix on lines 326/328
 OLD_B = (
     "\t\tvar terrain_mesh = st.commit()\n"
+    "\t\tvar terrain_inst := MeshInstance3D.new()\n"
     "\t\tterrain_inst.mesh = terrain_mesh"
 )
 NEW_B = (
@@ -195,6 +196,7 @@ NEW_B = (
     "\t\t# Ref: ArrayMesh.generate_lods()\n"
     "\t\t# https://docs.godotengine.org/en/stable/classes/class_arraymesh.html\n"
     "\t\tterrain_mesh.generate_lods(0.25, 0.05, [])\n"
+    "\t\tvar terrain_inst := MeshInstance3D.new()\n"
     "\t\tterrain_inst.mesh = terrain_mesh"
 )
 

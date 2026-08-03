@@ -1,0 +1,104 @@
+[2026-08-03T23:22:31.203950+00:00] [SUCCESS] pre_delivery_gate: no forbidden patterns in fix script
+[2026-08-03T23:22:31.205362+00:00] [SUCCESS] read_live_file: godot_project/scripts/build_terrain.gd: 150266 bytes, 3766 lines
+[2026-08-03T23:22:31.206262+00:00] [SUCCESS] locate_A1: live: 'var _cam_distance: float = 55.0  # distance from target'
+[2026-08-03T23:22:31.206461+00:00] [SUCCESS] precondition:A1_cam_save_pending_decl: 1 match confirmed
+[2026-08-03T23:22:31.206571+00:00] [SUCCESS] precondition:A2_remove_save_from_update: 1 match confirmed
+[2026-08-03T23:22:31.206656+00:00] [SUCCESS] precondition:A3_rmbrelease_handler: 1 match confirmed
+[2026-08-03T23:22:31.206727+00:00] [SUCCESS] precondition:B_generate_lods: 1 match confirmed
+
+======================================================================
+AFFECTED FILE: godot_project/scripts/build_terrain.gd
+======================================================================
+
+  [CONTEXT] A1: _cam_distance declaration — insert _cam_save_pending after
+  File: godot_project/scripts/build_terrain.gd:14
+        11: # ------------------------------------------------------------------
+        12: # Orbit camera parameters
+        13: # ------------------------------------------------------------------
+  >>>   14: var _cam_distance: float = 55.0  # distance from target
+        15: var _cam_azimuth: float = 0.0  # radians, 0 = behind
+        16: var _cam_elevation: float = 0.3  # radians, positive = above
+        17: 
+
+
+  [CONTEXT] A2: _save_camera_settings() in _update_camera_position — throttle target
+  File: godot_project/scripts/build_terrain.gd:1743
+      1740: 	_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+      1741: 	# Save camera settings (S)
+      1742: 	if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
+  >>> 1743: 		_save_camera_settings()
+      1744: 		print("[CAMERA] Settings saved manually (from _poll_controls)")
+      1745: 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
+      1746: 	if Input.is_action_just_pressed("camera_cycle"):
+
+
+  [CONTEXT] A3: Manual S-key save block — insert RMB-release handler before
+  File: godot_project/scripts/build_terrain.gd:1975
+      1972: 	if event.is_action_pressed("pause"):
+      1973: 		toggle_pause()
+      1974: 
+  >>> 1975: 	# Manual save key (S)
+      1976: 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+      1977: 		_save_camera_settings()
+      1978: 		print("[CAMERA] Settings saved manually")
+
+
+  [CONTEXT] B: st.commit() — insert generate_lods() after
+  File: godot_project/scripts/build_terrain.gd:326
+       323: 			st.add_index(idx)
+       324: 		st.generate_normals()
+       325: 		st.generate_tangents()
+  >>>  326: 		var terrain_mesh = st.commit()
+       327: 		var terrain_inst := MeshInstance3D.new()
+       328: 		terrain_inst.mesh = terrain_mesh
+       329: 		var terrain_mat := StandardMaterial3D.new()
+
+======================================================================
+
+
+=== DRY RUN — EXPECTED DIFFS (no file written) ===
+
+--- godot_project/scripts/build_terrain.gd (original)+++ godot_project/scripts/build_terrain.gd (patched)@@ -12,6 +12,7 @@ # Orbit camera parameters
+ # ------------------------------------------------------------------
+ var _cam_distance: float = 55.0  # distance from target
++var _cam_save_pending: bool = false  # throttle: set each frame, cleared on RMB release
+ var _cam_azimuth: float = 0.0  # radians, 0 = behind
+ var _cam_elevation: float = 0.3  # radians, positive = above
+ 
+@@ -324,6 +325,11 @@ 		st.generate_normals()
+ 		st.generate_tangents()
+ 		var terrain_mesh = st.commit()
++		# Generate automatic LOD levels — Godot 4 transitions mesh detail
++		# by screen coverage. Eliminates coarse far-range appearance.
++		# Ref: ArrayMesh.generate_lods()
++		# https://docs.godotengine.org/en/stable/classes/class_arraymesh.html
++		terrain_mesh.generate_lods(0.25, 0.05, [])
+ 		var terrain_inst := MeshInstance3D.new()
+ 		terrain_inst.mesh = terrain_mesh
+ 		var terrain_mat := StandardMaterial3D.new()
+@@ -1972,6 +1978,15 @@ 	if event.is_action_pressed("pause"):
+ 		toggle_pause()
+ 
++	# Flush pending camera DB write on RMB release (throttle — Rule #46)
++	# Ref: InputEventMouseButton
++	# https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
++	if event is InputEventMouseButton and not event.pressed \
++			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT:
++		if _cam_save_pending:
++			_save_camera_settings()
++			_cam_save_pending = false
++
+ 	# Manual save key (S)
+ 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+ 		_save_camera_settings()
+@@ -2800,7 +2815,7 @@ 	_camera.global_position = target + rot * offset
+ 	_camera.look_at(target, Vector3.UP)
+ 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
+-	_save_camera_settings()
++	_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)
+ 
+ 
+ # Added to fix deferred call and log warning via ErrorLogger
+
+
+=== DRY RUN COMPLETE — no files modified ===
