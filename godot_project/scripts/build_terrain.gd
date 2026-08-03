@@ -554,8 +554,8 @@ func _ready() -> void:
 	# Headless auto‑start: simulate SPACE press
 # 	if OS.get_environment("GODOT_HEADLESS") == "1":
 # 		Input.action_press("deploy")
-		Input.action_release("deploy")
-		print("[VERBATIM] Headless auto‑start triggered (deploy)")
+# 		Input.action_release("deploy")
+# print("[VERBATIM] Headless auto‑start triggered (deploy)")
 		# Fallback: some builds use ui_accept
 		Input.action_press("ui_accept")
 		Input.action_release("ui_accept")
