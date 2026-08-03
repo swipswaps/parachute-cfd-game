@@ -601,6 +601,14 @@ func _ready() -> void:
 		_pause_timer.timeout.connect(_p3_pause_selftest)
 		_pause_timer.start()
 
+	func _auto_deploy():
+		Input.action_press("deploy")
+		Input.action_release("deploy")
+		print("[VERBATIM] Auto‑deploy triggered after 5s")
+		get_tree().quit()  # optional: exit after deploy for CI
+	# Auto‑deploy timer: deploy after 5 seconds
+	var timer = get_tree().create_timer(5.0)
+	timer.timeout.connect(_auto_deploy)
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
 
@@ -2145,7 +2153,7 @@ func _physics_process(delta) -> void:
 	# v11: only .y was ever written here, so the canopy had no forward
 	# flight at all. Horizontal glide and turning are applied below.
 	_update_canopy_glide(delta, descent)
-	if _character.position.y < 25.0:
+	if _character.position.y <= 25.0 + 0.01:
 		_character.position.y = 25.0
 		if not _safe_landing and _game_state != GameState.GAME_OVER:
 			_game_state = GameState.GAME_OVER

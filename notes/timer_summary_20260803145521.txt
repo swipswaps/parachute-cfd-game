@@ -1,0 +1,14 @@
+=== TIMER TEST SUMMARY — 20260803145521 UTC ===
+
+1. Clamp patch applied.
+2. Timer patch applied.
+3. Godot exit code: 130
+4. GLIDE telemetry count: 0
+0
+5. Key markers:
+   SCRIPT ERROR: Parse Error: Standalone lambdas cannot be accessed. Consider assigning it to a variable.
+   ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== NEXT STEPS ===
+If GLIDE and "Ground impact" appear, the fix works.
+If terrain looks bad, inspect the terrain material.
