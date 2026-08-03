@@ -3850,10 +3850,10 @@ func _auto_deploy():
 	print("[VERBATIM] Auto‑deploy triggered after 5s")
 	get_tree().quit()  # optional: exit after deploy for CI
 # Auto‑deploy timer: deploy after 5 seconds
-				if _cdb.has_method('execute'): _cdb.execute(_sql)
-				elif _cdb.has_method('_query'): _cdb._query(_sql)
-			print("[CTRL] pressed=", action,
-				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
-				"  state=", _game_state,
-				"  deployed=", _canopy_deployed,
-				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+				# if _cdb.has_method('execute'): _cdb.execute(_sql)
+# 				elif _cdb.has_method('_query'): _cdb._query(_sql)
+# 			print("[CTRL] pressed=", action,
+# 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+# 				"  state=", _game_state,
+# 				"  deployed=", _canopy_deployed,
+# 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")

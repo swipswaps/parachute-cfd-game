@@ -1,0 +1,198 @@
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 1ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-03T13:33:03 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-03T13:33:03 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[CAMERA] Loaded plane camera distance from DB: 80.0
+[INIT] Press SPACE to start
+[DIAG] _ready: ENTER
+[VERBATIM] 2026-08-03T13:33:03 ENTER _ready gate=none
+[VERBATIM] Baked colours loaded: 50331648
+[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: 262144
+[VERBATIM] Runways: placeholder positions disabled pending georef
+[DEBUG] _character position after set: (100.0, 1828.8, -100.0)
+[DEBUG] _character global_position: (100.0, 1828.8, -100.0)
+[VERBATIM] ENTER _load_character gate=none
+[VERBATIM] FBX loaded
+[DEBUG] FBX instance visible: true
+[DEBUG] FBX instance added. Node: parachutist:<Node3D#38168168027>
+[DEBUG] Instance position: (0.0, 0.0, 0.0)
+[DEBUG] Instance scale: (1.0, 1.0, 1.0)
+[DEBUG] Instance visible: true
+[DEBUG] _character position: (100.0, 1828.8, -100.0)
+[VERBATIM] Left arm bone found index 8
+[VERBATIM] Right arm bone found index 32
+[VERBATIM] _setup_anim_player: clips=["Take 001", "mixamo_com"]
+[VERBATIM] _setup_anim_player: deferring play of mixamo_com
+[VERBATIM] RESET animation not available – using fallback
+[VERBATIM] EXIT _load_character ok=true
+[DIAG] _ready: character loaded
+[VERBATIM] [VERBATIM] Creating plane node...
+[VERBATIM] [VERBATIM] Plane script attached
+[VERBATIM] Cessna model loaded. visible=true scale=(15.0, 15.0, 15.0)
+[VERBATIM] [VERBATIM] Plane created at altitude 6000
+[DIAG] _ready: plane created, _plane_node=FlyingPlane:<CharacterBody3D#38302385770>
+[DEBUG] Plane position: (0.0, 1828.8, 0.0)
+[DEBUG] Camera position: (0.0, 1852.442, -76.42692)
+[DIAG] _ready: camera positioned
+[VERBATIM] Camera attached to root, following plane
+[VERBATIM] Drop zone created
+[VERBATIM] ENTER _load_faa_obstacles gate=none
+[VERBATIM] _load_faa_obstacles read_bytes=9568
+[VERBATIM] _load_faa_obstacles obstacle_count=41
+[VERBATIM] FAA obstacles loaded: 41
+[VERBATIM] EXIT _load_faa_obstacles ok=true placed=41
+[VERBATIM] HUD created
+[DIAG] _ready: HUD created, _hud_labels size=8
+[VERBATIM] Initial heading set to 0.0
+[VERBATIM] ENTER _setup_pip_overlay gate=none
+[PIP] _ready: size=(320.0, 240.0) position=(10.0, 10.0)
+[VERBATIM] PiP canopy path=res://assets/canopy/parachute_sanitized.glb
+[VERBATIM] main canopy attached offset=(0,2.5,0) path=res://assets/canopy/parachute_sanitized.glb
+[CANOPYSYNC] main canopy attached HIDDEN, awaiting deploy
+[VERBATIM] EXIT _setup_pip_overlay ok=true
+[VERBATIM] ENTER _init_achievements gate=none
+[VERBATIM] Unlocked achievements: ["first_jump", "malfunction_ace"]
+[VERBATIM] EXIT _init_achievements ok=true
+[VERBATIM] ENTER _init_mission gate=none
+[VERBATIM] Mission updated: Training
+[VERBATIM] EXIT _init_mission ok=true
+[VERBATIM] ENTER _init_leaderboard gate=none
+[VERBATIM] EXIT _init_leaderboard ok=true
+[VERBATIM] ENTER _init_controller gate=none
+[VERBATIM] EXIT _init_controller ok=true
+[VERBATIM] ENTER _init_sentry gate=none
+[VERBATIM] Sentry not configured
+[VERBATIM] EXIT _init_sentry ok=true
+[VERBATIM] Clean GLB loaded from: res://assets/canopy/parachute_sanitized.glb
+[VERBATIM] ENTER _randomize_malfunction gate=none
+[VERBATIM] Canopy visuals updated for LINE OVER
+[VERBATIM] EXIT _randomize_malfunction ok=true
+[VERBATIM] Initial malfunction: LINE OVER
+[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy
+[VERBATIM] ARM GATE: Left arm rotation = (1.570796, 1.570796, 0.0)
+[VERBATIM] ARM GATE: Right arm rotation = (1.570796, -1.570796, 0.0)
+[VERBATIM] ARM GATE: Arms are lowered
+[VERBATIM] ... EXIT _ready ok=true
+[DIAG] _ready: EXIT
+[AUDIT] poll_forensic_hud: ENTER
+[FPANEL] _process() alive, frame=0
+[ALTIMETER] update_altitude FIRST CALL: alt_ft=6000.00035219727
+[ARMTEL] rest captured L_idx=8 R_idx=32 restL=(-0.010452, -0.001063, 0.101151, 0.994816) restR=(-0.010455, 0.001063, -0.101149, 0.994816)
+[AXISSOLVE] bones OK on attempt 1  hips=0 head=5 foot=57 toe=59 handL=10 handR=34
+[ANIMDIAG] current='' is_playing=false speed_scale=1.0 active=true process_mode=1 list=["Take 001", "mixamo_com"]
+[AXISSOLVE] up=(-0.000073, 0.999984, -0.005653) forward=(0.009652, 0.005654, 0.999937) right=(-0.999953, -0.000019, 0.009652)
+[AXISSOLVE] orthogonality up.dot(fwd)=-0.000000028871 (want ~0); desired hand dir (fwd+down)=(0.006877, -0.703098, 0.71106)
+[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,d_right
+[AXISSOLVE] L lever=(0.550191, 0.000049, 0.0) len=0.5501914024353 axis_global=(0.000063, -0.711076, -0.703115) AXIS_LOCAL_APPLIED=(0.703115, -0.0, 0.711076)
+[AXISSOLVE],L,SOLVED,15.0,0.10050402581692,-0.10069465637207,0.01971686445177
+[AXISSOLVE],L,+X,15.0,-0.00098592438735,-0.14239792525768,0.01873648166656
+[AXISSOLVE],L,-X,15.0,0.00062396959402,0.14239744842052,0.01875631324947
+[AXISSOLVE],L,+Y,15.0,0.00000001184914,0.0000001191442,0.00000000010565
+[AXISSOLVE],L,-Y,15.0,0.00000000745011,-0.00000000004212,0.00000000007191
+[AXISSOLVE],L,+Z,15.0,0.14221015572548,-0.00080531829735,0.02012093178928
+[AXISSOLVE],L,-Z,15.0,-0.14257210493088,0.00080472708214,0.01737180165946
+[AXISSOLVE],L,SOLVED,60.0,0.33424305915833,-0.336934030056,0.27832999825478
+[AXISSOLVE],L,+X,60.0,-0.00534905865788,-0.47647625207901,0.27504971623421
+[AXISSOLVE],L,-X,60.0,0.00003785827721,0.4764678478241,0.27511608600616
+[AXISSOLVE],L,+Y,60.0,0.00000007145006,0.00000011880724,0.00000000068096
+[AXISSOLVE],L,-Y,60.0,0.00000008500235,-0.00000011969176,0.00000000082924
+[AXISSOLVE],L,+Z,60.0,0.47379446029663,-0.00269782519899,0.27968221902847
+[AXISSOLVE],L,-Z,60.0,-0.47910553216934,0.00268949149176,0.27048355340958
+[AXISSOLVE] R lever=(-0.550191, -0.000048, 0.0) len=0.5501914024353 axis_global=(-0.000061, 0.711076, 0.703115) AXIS_LOCAL_APPLIED=(0.703115, 0.0, -0.711076)
+[AXISSOLVE],R,SOLVED,15.0,0.10086593776941,-0.10069417953491,-0.01777581125498
+[AXISSOLVE],R,+X,15.0,-0.00062398682348,-0.14239744842052,-0.01875607483089
+[AXISSOLVE],R,-X,15.0,0.00098590110429,0.14239792525768,-0.01873677968979
+[AXISSOLVE],R,+Y,15.0,0.00000003352552,-0.00000000018954,0.00000000032362
+[AXISSOLVE],R,-Y,15.0,-0.00000005587586,0.0000000003159,-0.00000000053936
+[AXISSOLVE],R,+Z,15.0,-0.14221015572548,0.00080531829735,-0.02012087218463
+[AXISSOLVE],R,-Z,15.0,0.14257207512856,-0.00080472690752,-0.01737192086875
+[AXISSOLVE],R,SOLVED,60.0,0.33955377340317,-0.33692640066147,-0.27183523774147
+[AXISSOLVE],R,+X,60.0,-0.00003805011875,-0.47646844387054,-0.27511510252953
+[AXISSOLVE],R,-X,60.0,0.00534880580381,0.47647559642792,-0.27505052089691
+[AXISSOLVE],R,+Y,60.0,0.00000007584908,0.00000023799356,0.00000000071469
+[AXISSOLVE],R,-Y,60.0,-0.00000019370299,0.00000000109512,-0.00000000186978
+[AXISSOLVE],R,+Z,60.0,-0.47379460930824,0.00269723008387,-0.27968180179596
+[AXISSOLVE],R,-Z,60.0,0.47910526394844,-0.0026900859084,-0.27048382163048
+[ELBOWSOLVE] L reference=pull_dir
+[ELBOWSOLVE] L fore_idx=9 lever=(0.276145, 0.000024, 0.0) len=0.27614459395409 d_want=(0.000062, -0.703115, 0.711076) ELBOW_AXIS_LOCAL=(0.703115, 0.0, 0.711077)
+[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive
+[ELBOWSOLVE],L,30.0,0.5501914024353,0.53144437074661,-0.01874703168869,0.13781696557999
+[ELBOWSOLVE],L,75.0,0.5501914024353,0.436498016119,-0.1136933863163,0.26533415913582
+[ELBOWSOLVE] R reference=pull_dir
+[ELBOWSOLVE] R fore_idx=33 lever=(-0.276145, -0.000024, 0.0) len=0.27614462375641 d_want=(0.000061, -0.703115, 0.711076) ELBOW_AXIS_LOCAL=(0.703115, 0.0, -0.711076)
+[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive
+[ELBOWSOLVE],R,30.0,0.5501914024353,0.53144431114197,-0.01874709129333,0.13832128047943
+[ELBOWSOLVE],R,75.0,0.5501914024353,0.43649789690971,-0.11369350552559,0.26812392473221
+[AXISSOLVE] solved L=true R=true - axes now APPLIED live, pose restored
+[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CONTROLS] turnleft  action_existed=true  keys_before=[]  wanted=Q  added=true
+[CONTROLS] turnright  action_existed=true  keys_before=[]  wanted=E  added=true
+[CONTROLS] camera_cycle  action_existed=true  keys_before=[]  wanted=C  added=true
+[CONTROLS] cutaway  action_existed=true  keys_before=[]  wanted=X  added=true
+[CONTROLS] reserve  action_existed=true  keys_before=[]  wanted=V  added=true
+[CONTROLS] flare  action_existed=true  keys_before=[]  wanted=F  added=true
+[CONTROLS] togglehud  action_existed=true  keys_before=[]  wanted=H  added=true
+[CONTROLS] flightcheck  action_existed=true  keys_before=[]  wanted=G  added=true
+[CONTROLS] restart  action_existed=true  keys_before=[]  wanted=R  added=true
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=[]  wanted=Escape  added=true
+[CONTROLS] ---- 11 binding(s) added ----
+[CANOPYSYNC] transition at state=0 deployed=false visible=false
+[PIPLIVE] SubViewport now shares the main World3D
+[PIPLIVE] hid 2 standalone PiP prop(s); camera kept
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (0.0, 1852.442, -76.42692) to (799.9964, 1877.442, -74.02692)
+[DIAG] _physics_process: IN_PLANE returning

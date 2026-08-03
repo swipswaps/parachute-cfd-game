@@ -17,11 +17,9 @@ func _ensure_hub():
 	# Added by autostall_patched.py – skip if hub already running
 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
 		return
-		print("[HubManager] Hub already running – skipping startup")
 	if OS.get_environment("GODOT_HEADLESS") == "1":
-	print("[HubManager] Headless mode – skipping hub startup.")
-	return
-print("[HubManager] Hub not responding; starting it...")
+		return
+# print("[HubManager] Hub not responding; starting it...")
 	var project_dir = ProjectSettings.globalize_path("res://")
 	# FIX (this session): project_dir = res:// resolves to godot_project/,
 	# but forensic_hub_server.py lives one directory up, at the outer
