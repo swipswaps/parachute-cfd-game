@@ -1,0 +1,52 @@
+=== fix_autostart_action_v2.sh — 20260803135827 UTC ===
+
+Patches applied:
+  - build_terrain.gd: ui_accept → deploy
+  - autostall_patched.py: ui_accept → deploy
+Autostall exit code: 0
+
+Key markers:
+[CANOPYSYNC] main canopy attached HIDDEN, awaiting deploy
+[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy
+[VERBATIM] Headless auto‑start triggered.
+[VERBATIM] Headless auto‑start triggered.
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CANOPYSYNC] transition at state=0 deployed=false visible=false
+[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).
+[CTRL] pressed=deploy  key=Space  state=0  deployed=false  alt_m=1828.8
+[VERBATIM] Headless altitude warp: 200m AGL
+[VERBATIM] POLL: checking deploy state=1 canopy=false
+[VERBATIM] Headless auto-deploy triggered (FREEFALL).
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] Parachute deployment started — state=OPENING_ANIM
+[VERBATIM] EXIT _deploy_canopy ok=true
+[CANOPYSYNC] main canopy visible -> true  state=2  deployed=true
+[CANOPYSYNC] transition at state=2 deployed=true visible=true
+[GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,heading_deg,descent_m_s,glide_ratio,x,z,raw_descent
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+
+GLIDE count: 88
+
+Last 10 lines:
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] Ground impact – fatal (no flare)
+
+=== AUTOSTALL FINISHED ===
+Game completed: True
+Fix attempted:  False
+Runtime:        52.8s
+Detailed log:   autostall_summary.json
+===========================
