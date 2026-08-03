@@ -1,0 +1,96 @@
+=== diag_pausetel.sh — 20260803095256 UTC ===
+
+=== 1. toggle_pause function (full body) ===
+1895: func toggle_pause() -> void:
+1896: 	# -------------------------------------------------------------------------
+1897: 	# CITATION [1]: Godot Engine 4.x Documentation, Class: Input,
+1898: 	#   Enumerator: MouseMode
+1899: 	#   URL: https://docs.godotengine.org/en/stable/classes/class_input.html#enum-input-mousemode
+1900: 	#   VERIFIED: 2026-08-02.
+1901: 	#   MOUSE_MODE_VISIBLE (value 0): OS cursor is visible, not confined.
+1902: 	#   MOUSE_MODE_CAPTURED (value 2): OS cursor is hidden and warped to the
+1903: 	#     window centre each frame; relative motion is delivered via
+1904: 	#     InputEventMouseMotion.relative.
+1905: 	#
+1906: 	# CITATION [2]: Buxton, W. (1986). "Chunking and Phrasing and the Design
+1907: 	#   of Human-Computer Dialogues." Proceedings of the IEEE, 74(4), 648-658.
+1908: 	#   The "spring-loaded mode" (a mode active only while a physical button
+1909: 	#   is held) is preferable to a "sticky mode" (toggled by a state
+1910: 	#   transition such as pause/unpause) because it eliminates mode errors
+1911: 	#   and preserves the visibility of the cursor when the user is not
+1912: 	#   performing a camera gesture.
+1913: 	#
+1914: 	# ROOT CAUSE: The p2 patch introduced a null-safe PauseMenu guard, but
+1915: 	#   retained the original unconditional MOUSE_MODE_CAPTURED branch on the
+1916: 	#   `else` (unpause) path. Consequently, every call to toggle_pause()
+1917: 	#   that ends with paused==false executes a global cursor hide.
+1918: 	#   The p3 headless self-test (lines ~8 s after _ready) calls
+1919: 	#   toggle_pause() twice in rapid succession; the second call leaves
+1920: 	#   the tree unpaused and the cursor captured, which is why the pointer
+1921: 	#   disappeared even though no human pressed Escape.
+1922: 	# -------------------------------------------------------------------------
+1923: 	var tree := get_tree()
+1924: 	tree.paused = not tree.paused
+1925: 	var _pm = get_node_or_null("PauseMenu")
+1926: 	if _pm != null:
+1927: 		_pm.visible = tree.paused
+1928: 		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=FOUND")
+1929: 	else:
+1930: 		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=MISSING (node absent from main.tscn)")
+1931: 	# -------------------------------------------------------------------------
+1932: 	# Only touch the mouse when entering the paused state. When unpausing we
+1933: 	# deliberately do NOTHING, allowing the cursor to remain visible for HUD
+1934: 	# interaction, forensic panel buttons, etc.
+1935: 	# -------------------------------------------------------------------------
+1936: 	if tree.paused:
+1937: 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+1938: 	# REMOVED 2026-08-02: The else branch that set MOUSE_MODE_CAPTURED
+1939: 	# unconditionally on every unpause. This violated ISO 9241-410:2008
+1940: 	# clause 6.3.2 (pointing-device feedback shall remain visible during
+1941: 	# target acquisition on on-screen controls).
+1942: 
+1943: 
+
+=== 2. PAUSETEL selftest function (full body) ===
+2924: func _p3_pause_selftest() -> void:
+2925: 	print("[PAUSETEL] selftest BEGIN tree.paused=", get_tree().paused)
+2926: 	toggle_pause()
+2927: 	toggle_pause()
+2928: 	print("[PAUSETEL] selftest END tree.paused=", get_tree().paused,
+2929: 			" (must be false)")
+2930: 
+2931: 
+
+=== 3. Line 553 context (±5 lines) ===
+ 548: 	# --------------------------------------------------------------
+ 549: 	_randomize_malfunction()
+ 550: 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
+ 551: 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+ 552: 	# Headless auto‑start: simulate SPACE press
+ 553: 	if OS.get_environment("GODOT_HEADLESS") == "1":
+ 554: 		Input.action_press("ui_accept")
+ 555: 		Input.action_release("ui_accept")
+ 556: 		print("[VERBATIM] Headless auto‑start triggered.")
+ 557: 	# Headless auto-start: simulate SPACE/deploy press
+ 558: 	# Ref: OS.get_environment (general knowledge, not retrieved this session)
+
+=== 4. PauseMenu references in build_terrain.gd ===
+1914:	# ROOT CAUSE: The p2 patch introduced a null-safe PauseMenu guard, but
+1925:	var _pm = get_node_or_null("PauseMenu")
+1928:		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=FOUND")
+1930:		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=MISSING (node absent from main.tscn)")
+2921:# PauseMenu=FOUND   -> the node exists, pause works, P5 closable
+2922:# PauseMenu=MISSING -> node absent from main.tscn; THAT is the P5 cause
+
+=== 5. PauseMenu node in main.tscn ===
+
+=== 6. naip_texture.png actual location ===
+godot_project/.godot.bak_20260630_163530/imported/naip_texture.png-355372dd104ba519c5b0bd035b68e09f.ctex
+godot_project/.godot.bak_20260630_163530/imported/naip_texture.png-355372dd104ba519c5b0bd035b68e09f.md5
+godot_project/.godot/imported/naip_texture.png-355372dd104ba519c5b0bd035b68e09f.ctex
+godot_project/.godot/imported/naip_texture.png-355372dd104ba519c5b0bd035b68e09f.md5
+godot_project/assets/terrain/naip_texture.png
+godot_project/assets/terrain/naip_texture.png.bak_P
+godot_project/assets/terrain/naip_texture.png.import
+
+=== END DIAGNOSTIC ===
