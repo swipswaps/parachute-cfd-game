@@ -92,6 +92,11 @@ func _insert_contention(pid: int, cpu: float, mem: int, cs: Dictionary) -> void:
 
 
 func _tune_background_threads() -> void:
+	# PID tuning blocks live play on slow GPUs (Intel HD 4000).
+	# Gate: only run in headless/autostall context. Rule #46 live-extracted.
+	# Ref: OS.get_environment: https://docs.godotengine.org/en/stable/classes/class_os.html
+	if OS.get_environment("GODOT_HEADLESS") != "1" and "--headless" not in OS.get_cmdline_args():
+		return  # Skip PID tuning in live play — avoids main-thread stall
 	if _pid_tuning_done:
 		return
 	_pid_tuning_done = true
