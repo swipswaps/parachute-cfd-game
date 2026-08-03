@@ -1,0 +1,85 @@
+=== Diagnostic: clamp block in build_terrain.gd ===
+Timestamp: 20260803134356 UTC
+
+./diag_current_clamp.sh: line 13: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+   1: _character.position.y -= descent
+   2: # v11: only .y was ever written here, so the canopy had no forward
+   3: # flight at all. Horizontal glide and turning are applied below.
+   4: _update_canopy_glide(delta, descent)
+   5: if _character.position.y <= 25.0 + 0.01:
+   6: _character.position.y = 25.0
+   7: if not _safe_landing and _game_state != GameState.GAME_OVER:
+   8: _game_state = GameState.GAME_OVER
+   9: print("[VERBATIM] Ground impact – fatal (no flare)")
+  10: if not _safe_landing:
+  11: ScreenshotLibrary.save_flight_screenshot()
+
+./diag_current_clamp.sh: line 17: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+2132-	_descent_rate = _get_current_descent_rate()
+2133-	_apply_malfunction_effects(delta)
+2134-	var descent = _descent_rate * 60.0 * delta
+2135:	_character.position.y -= descent
+2136-	# v11: only .y was ever written here, so the canopy had no forward
+2137-	# flight at all. Horizontal glide and turning are applied below.
+2138-	_update_canopy_glide(delta, descent)
+2139:	if _character.position.y <= 25.0 + 0.01:
+2140:		_character.position.y = 25.0
+2141-		if not _safe_landing and _game_state != GameState.GAME_OVER:
+2142-			_game_state = GameState.GAME_OVER
+2143-			print("[VERBATIM] Ground impact – fatal (no flare)")
+--
+2146-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+2147-			_game_state = GameState.GAME_OVER
+2148-			print("[VERBATIM] Ground impact – fatal")
+2149:	_current_altitude = _character.position.y - 25.0
+2150-
+2151-	# p3: vario and ground speed from REAL motion, not the constant table.
+2152-	var _p3_y: float = _character.global_position.y
+--
+2195-		if not _headless_warp_done and (
+2196-				OS.get_environment("GODOT_HEADLESS") == "1" or
+2197-				"--headless" in OS.get_cmdline_args()):
+2198:			_character.position.y = 225.0
+2199-			_current_altitude = 200.0
+2200-			_headless_warp_done = true
+2201-			print("[VERBATIM] Headless altitude warp: 200m AGL")
+--
+3558-#
+3559-# A ram-air canopy is a wing with no thrust: it trades height for forward
+3560-# speed and is steered by asymmetric brake. Before this, _physics_process
+3561:# wrote only _character.position.y, so there was no forward flight to steer -
+3562-# which is why turning appeared to do nothing after deployment, and why
+3563-# 0778.txt shows the turning block executing every frame against a null
+3564-# controller (has_pc=false).
+--
+3636-	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+3637-	ratio = maxf(ratio, 0.6)
+3638-	var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sym * sym * sym
+3639:	_character.position.y += descent_this_frame - sink * delta
+3640-
+3641-	# ---- telemetry -------------------------------------------------------
+3642-	_glide_tel_t += delta
+--
+3839-				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+3840-				"  state=", _game_state,
+3841-				"  deployed=", _canopy_deployed,
+3842:				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+./diag_current_clamp.sh: line 21: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+✅ Condition already uses "<=" (patch may already be applied).
+
+./diag_current_clamp.sh: line 29: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+33:	GAME_OVER,
+1479:			_game_state = GameState.GAME_OVER
+1485:		_game_state = GameState.GAME_OVER
+1648:	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+1651:			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+
+./diag_current_clamp.sh: line 33: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+1482:	elif _current_altitude <= 0.0 and not _safe_landing:
+1830:	if _current_altitude <= 0.0:
