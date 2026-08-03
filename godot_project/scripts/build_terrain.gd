@@ -601,8 +601,6 @@ func _ready() -> void:
 		_pause_timer.timeout.connect(_p3_pause_selftest)
 		_pause_timer.start()
 
-	var _temp_timer = get_tree().create_timer(5.0)
-	_temp_timer.timeout.connect(Callable(self, "_auto_deploy"))
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
 
@@ -3844,16 +3842,3 @@ func _log_control_presses() -> void:
 			var _cdb = get_node_or_null('/root/SqliteDb')
 			if _cdb != null:
 				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
-func _auto_deploy():
-	Input.action_press("deploy")
-	Input.action_release("deploy")
-	print("[VERBATIM] Auto‑deploy triggered after 5s")
-	get_tree().quit()  # optional: exit after deploy for CI
-# Auto‑deploy timer: deploy after 5 seconds
-				# if _cdb.has_method('execute'): _cdb.execute(_sql)
-# 				elif _cdb.has_method('_query'): _cdb._query(_sql)
-# 			print("[CTRL] pressed=", action,
-# 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
-# 				"  state=", _game_state,
-# 				"  deployed=", _canopy_deployed,
-# 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
