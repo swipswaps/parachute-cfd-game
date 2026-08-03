@@ -1,0 +1,334 @@
+=== diag_landing_hud.sh — 20260803102257 UTC ===
+
+=== 1. LANDED transition (lines 1140-1210) ===
+1140: 		print("[VERBATIM] EXIT _do_flare early=not_in_diagnosis")
+1141: 		return
+1142: 	if _flare_done:
+1143: 		print("[DIAG] _do_flare: already flared")
+1144: 		print("[VERBATIM] EXIT _do_flare early=already_flared")
+1145: 		return
+1146: 	if _malfunction != MalfunctionType.GOOD:
+1147: 		print("[VERBATIM] Cannot flare – malfunction present, use EP (X then V)")
+1148: 		_show_notification("Malfunction – cut away (X) then reserve (V)")
+1149: 		print("[DIAG] _do_flare: malfunction present – skipped")
+1150: 		print("[VERBATIM] EXIT _do_flare early=malfunction_present")
+1151: 		return
+1152: 	if not _flight_control_checked:
+1153: 		print("[VERBATIM] Perform Flight Control Check (C) before flaring")
+1154: 		_show_notification("Perform Flight Control Check (C) first!")
+1155: 		print("[DIAG] _do_flare: FC not checked")
+1156: 		print("[VERBATIM] EXIT _do_flare early=no_fc")
+1157: 		return
+1158: 	_flare_done = true
+1159: 	_safe_landing = true
+1160: 	_game_state = GameState.LANDED
+1161: 	_capture_3d_screenshot()
+1162: 
+1163: 	print("[VERBATIM] FLARE executed – GOOD canopy landing")
+1164: 	_show_notification("Flare – good landing!")
+1165: 	_update_canopy_visuals()
+1166: 	_calculate_score()
+1167: 
+1168: 	if not _achievements["first_jump"]:
+1169: 		_unlock_achievement("first_jump")
+1170: 	if _score >= 900:
+1171: 		if not _achievements["perfect_landing"]:
+1172: 			_unlock_achievement("perfect_landing")
+1173: 
+1174: 	if not _replay_playing:
+1175: 		_replay_recording.append({"action": "flare", "time": Time.get_ticks_msec()})
+1176: 	print("[DIAG] _do_flare: EXIT, flare_done=", _flare_done)
+1177: 	print("[VERBATIM] EXIT _do_flare ok=true")
+1178: 
+1179: 
+1180: # ------------------------------------------------------------------
+1181: # Scoring system
+1182: # ------------------------------------------------------------------
+1183: func _calculate_score() -> void:
+1184: 	print("[VERBATIM] ENTER _calculate_score gate=none")
+1185: 	var distance = _character.global_position.length()
+1186: 	var landing_speed = abs(_forward_speed) + abs(_descent_rate)
+1187: 	var distance_penalty = int(distance * 10)
+1188: 	var speed_penalty = int(landing_speed * 5) if landing_speed > 3.0 else 0
+1189: 	_score = 1000 - distance_penalty - speed_penalty
+1190: 	_score = max(0, _score)
+1191: 	print(
+1192: 		"[VERBATIM] Final score: ",
+1193: 		_score,
+1194: 		" (distance: ",
+1195: 		distance,
+1196: 		"m, landing speed: ",
+1197: 		landing_speed,
+1198: 		" m/s)"
+1199: 	)
+1200: 	_show_notification("Score: " + str(_score))
+1201: 	_score_label.text = "SCORE: " + str(_score)
+1202: 	_update_leaderboard()
+1203: 	print("[VERBATIM] EXIT _calculate_score ok=true")
+1204: 
+1205: 
+1206: # ------------------------------------------------------------------
+1207: # Leaderboard system
+1208: # Ref: https://github.com/isetr/simpleboards_godot
+1209: # ------------------------------------------------------------------
+1210: func _init_leaderboard() -> void:
+
+=== 2. OPENING_ANIM physics branch — position/altitude update ===
+2185: 		# to OPENING_ANIM. Screenshots 11:24:47-11:25:57 showed the altimeter
+2186: 		# panel falling 5142->4175 ft while HUD Label0 stayed at 6044 ft.
+2187: 		# They are now in _update_hud_readouts(), called unconditionally from
+2188: 		# the common path below.
+2189: 		_check_decision_altitude()
+2190: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+2191: 		if _screenshot_save_timer > 0:
+2192: 			_screenshot_save_timer -= delta
+2193: 		if _screenshot_save_timer <= 0.0:
+2194: 			ScreenshotLibrary.save_flight_screenshot()
+2195: 			_screenshot_save_timer = 5.0
+2196: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+2197: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+2198: 		print("[DIAG] _turn_input = ", _turn_input)
+2199: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+2200: 		_velocity_vec += turn_dir * delta
+2201: 		if _velocity_vec.length() > 0.5:
+2202: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+2203: 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
+2204: 
+2205: 
+2206: # ------------------------------------------------------------------
+2207: # Process loop (pattern state, heading, bearing, screenshot, mission check)
+2208: # ------------------------------------------------------------------
+2209: func _process(delta) -> void:
+2210: 	if _hud_labels.size() < 8:
+2211: 		return
+2212: 	_poll_controls()
+2213: 	if _game_state == GameState.GAME_OVER:
+2214: 		return
+2215: 	_frame_count += 1
+2216: 	if _frame_count == 2:
+2217: 		var ts = Time.get_datetime_string_from_system().replace(":", "").replace("-", "")
+2218: 		var spath = (
+2219: 			ProjectSettings.globalize_path("res://")
+2220: 			+ "../audit_logs/screenshots/v314_"
+2221: 			+ ts
+2222: 			+ ".png"
+2223: 		)
+2224: 		print("[VERBATIM] Screenshot saved: ", spath)
+2225: 
+2226: 	var dist = _character.global_position.length()
+2227: 	_update_pattern(_current_altitude, dist)
+2228: 
+2229: 	var current_heading = _initial_heading
+2230: 	var diff := fmod(_turn_target_heading - current_heading + 360.0, 360.0)
+2231: 	if diff > 180.0:
+2232: 		diff -= 360.0
+2233: 	var step = 5.0 * delta
+2234: 	current_heading += clamp(diff, -step, step)
+2235: 	current_heading = fmod(current_heading + 360.0, 360.0)
+2236: 	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+2237: 
+2238: 	var target_dir = -_character.global_position.normalized()
+2239: 	var bearing := rad_to_deg(atan2(target_dir.x, target_dir.z))
+2240: 	_hud_labels[3].text = "BRG: %.0f°" % bearing
+2241: 
+2242: 	_check_mission_completion()
+2243: 	if _frame_count % 1800 == 0:
+2244: 		_update_weather()
+2245: 	call_deferred("_apply_arm_bone_overrides")
+2246: 
+2247: 
+2248: # ------------------------------------------------------------------
+2249: # R064: turn and pattern functions
+2250: # ------------------------------------------------------------------
+2251: func _turn_left() -> void:
+2252: 	_turn_target_heading -= _turn_rate
+2253: 	_turn_target_heading = max(_initial_heading - 90.0, _turn_target_heading)
+2254: 	print("[VERBATIM] Left turn target: ", _turn_target_heading)
+2255: 
+2256: 
+2257: func _turn_right() -> void:
+2258: 	_turn_target_heading += _turn_rate
+2259: 	_turn_target_heading = min(_initial_heading + 90.0, _turn_target_heading)
+2260: 	print("[VERBATIM] Right turn target: ", _turn_target_heading)
+2261: 
+2262: 
+2263: func _update_pattern(altitude: float, distance: float) -> void:  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2264: 	if _hud_labels.size() < 8:
+2265: 		return
+2266: 	var new_state = _pattern_state
+2267: 	if altitude > 1000.0:
+2268: 		new_state = PatternState.DOWNWIND
+2269: 	if altitude > 500.0:
+2270: 		new_state = PatternState.BASE
+2271: 	else:
+2272: 		new_state = PatternState.FINAL
+2273: 	if new_state != _pattern_state:
+2274: 		_pattern_state = new_state
+2275: 		var leg_name = ["DOWNWIND", "BASE", "FINAL"][_pattern_state]
+2276: 		_hud_labels[5].text = "LEG: " + leg_name
+2277: 		print("[VERBATIM] Entering ", leg_name)
+
+=== 3. What stops descent — ground/altitude clamp search ===
+42:const _PLANE_ALTITUDE: float = 1853.8  # 6000 ft AGL in metres + 25 m ground (was 6025 m)
+86:var _current_altitude := 1828.8  # R064
+119:const DESCENT_RATE_BAGLOCK: float = 0.98
+213:# p3: real vario / ground speed, measured from actual motion.
+222:var _p3_ground_speed_ms: float = 0.0
+367:	_character.position = Vector3(100.0, 1828.8, -100.0)
+421:	dz.position = Vector3(0.0, 25.0, 0.0)
+810:		var wy: float = float(obs.get("ground_y", 0.0))
+834:		# Position: centre of cylinder is at wy + agl/2 so base sits on ground
+919:	#   angle += _arm_rotation_step   clamped to [0, PI]
+1471:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1483:		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1485:		print("[VERBATIM] FATAL – ground impact without safe landing")
+1486:		_show_notification("FATAL – ground impact")
+1500:			return DESCENT_RATE_BAGLOCK
+1636:				_character.position = Vector3(100, 1828.8, -100)
+1637:			_show_notification("Jumped! Deploy parachute (SPACE) above 2000 ft AGL")
+1782:		_camera.position.x = clamp(_camera.position.x, -2000.0, 2000.0)
+1783:		_camera.position.z = clamp(_camera.position.z, -2000.0, 2000.0)
+1823:	_character.position = Vector3(100.0, 1828.8, -100.0)
+1986:		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+2044:		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+2073:			# (Rule #1 grounded: this is the first rendered frame, confirmed
+2134:	_character.position.y -= descent
+2138:	if _character.position.y < 25.0:
+2139:		_character.position.y = 25.0
+2142:			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+2145:	_current_altitude = _character.position.y - 25.0
+2147:	# p3: vario and ground speed from REAL motion, not the constant table.
+2148:	var _p3_y: float = _character.global_position.y
+
+=== 4. forensic_hud.gd — HTTP polling / timer / request code ===
+2:var http_request: HTTPRequest = null
+34:const DEFAULT_HUB_URL := "http://127.0.0.1:8765"
+35:const STATS_PATH      := "/api/gamification"
+36:const LEADER_PATH     := "/api/leaderboard"
+37:const CITE_PATH       := "/api/citations"
+38:const INTEG_PATH      := "/api/integrity"
+39:const CTRL_HEALTH_PATH := "/api/control_health"
+46:var _hub_url: String = ""
+53:var _status_label: Label
+59:var _stats_req: HTTPRequest
+60:var _leader_req: HTTPRequest
+61:var _cite_req: HTTPRequest
+62:var _integ_req: HTTPRequest
+63:var _ctrl_health_req: HTTPRequest
+65:var _fast_timer: Timer
+66:var _slow_timer: Timer
+74:func _resolve_hub_url() -> String:
+75:	print("[AUDIT] _resolve_hub_url: ENTER")
+114:# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-process
+115:# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html#class-input-method-is-key-pressed
+190:	_url_label = _mklabel("hub: " + _hub_url, Color(0.65, 0.85, 0.65, 1.0))
+194:	_status_label = _mklabel("status: (starting)")
+195:	_vbox.add_child(_status_label)
+242:	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
+244:	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+250:	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-is-processing-input
+255:	_hub_url = _resolve_hub_url()
+262:	_stats_req = HTTPRequest.new()
+263:	_leader_req = HTTPRequest.new()
+264:	_cite_req = HTTPRequest.new()
+265:	_integ_req = HTTPRequest.new()
+270:	_stats_req.request_completed.connect(_on_stats_completed)
+271:	_leader_req.request_completed.connect(_on_leader_completed)
+272:	_cite_req.request_completed.connect(_on_cite_completed)
+273:	_integ_req.request_completed.connect(_on_integ_completed)
+274:	_ctrl_health_req = HTTPRequest.new()
+276:	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+278:	_fast_timer = Timer.new()
+279:	_fast_timer.wait_time = POLL_FAST_SEC
+280:	_fast_timer.autostart = true
+281:	_fast_timer.timeout.connect(_poll_fast)
+282:	add_child(_fast_timer)
+284:	_slow_timer = Timer.new()
+285:	_slow_timer.wait_time = POLL_SLOW_SEC
+286:	_slow_timer.autostart = true
+287:	_slow_timer.timeout.connect(_poll_slow)
+288:	add_child(_slow_timer)
+290:	_poll_fast()
+291:	_poll_slow()
+298:	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
+
+=== 5. forensic_hub_server.py running? ===
+owner      90554  0.0  0.0 232028  1480 pts/1    S    Aug02   0:00 /bin/sh -c cd /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project//.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &
+owner      90555  0.1  0.7 391816 46600 pts/1    Sl   Aug02   1:33 python3 forensic_hub_server.py .
+{
+  "error": "unknown path: /api/stats"
+}
+=== 6. autostall proc.terminate() context (lines 585-600, 638-650) ===
+ 585:                                 print("[AUTOSTALL] xdotool unavailable:", _xe)
+ 586:                                 print("[VERBATIM] Ground impact – fatal "
+ 587:                                       "(autostall synthetic flare)")
+ 588:                                 game_completed = True
+ 589:                 if "Ground impact – fatal" in line:
+ 590:                     game_completed = True
+ 591:                     _record_event("game_completed", "success", "Ground impact detected")
+ 592:                     proc.terminate()
+ 593:                     break
+ 594: 
+ 595:                 if not godot_pid and ("Godot Engine" in line or "WorkerThreadPool" in line):
+ 596:                     try:
+ 597:                         out = subprocess.check_output(["pgrep", "-f", "godot"], text=True).strip()
+ 598:                         godot_pid = int(out.split()[0])
+ 599:                     except:
+ 600:                         pass
+ 601:             if game_completed:
+ 602:                 break
+ 603:         else:
+ 604:             # No output for STALL_THRESHOLD seconds
+ 605:             now = time.time()
+ 606:             if now < grace_until:
+ 607:                 continue
+ 608: 
+ 609:             if not stall_handled and (now - last_output_time) > STALL_THRESHOLD:
+ 610:                 stall_handled = True
+ 611:                 _record_event("stall_detected", "warning", f"No output for {now - last_output_time:.1f}s")
+ 612:                 if not godot_pid:
+ 613:                     try:
+ 614:                         out = subprocess.check_output(["pgrep", "-f", "godot"], text=True).strip()
+ 615:                         godot_pid = int(out.split()[0])
+ 616:                     except:
+ 617:                         godot_pid = None
+ 618:                 if godot_pid:
+ 619:                     gd_file, gd_line = extract_last_gd_error(output_buffer)
+ 620:                     if gd_file and gd_line:
+ 621:                         error_key = f"{gd_file}:{gd_line}"
+ 622:                         if error_key not in seen_errors:
+ 623:                             seen_errors.add(error_key)
+ 624:                             _record_event("error_detected", "error", f"{gd_file}:{gd_line}")
+ 625:                             # Print source block only once per error
+ 626:                             print(f"\n[ERROR] {gd_file}:{gd_line}")
+ 627:                             print_source_block(gd_file, gd_line)
+ 628: 
+ 629:                             # Attempt fix if not already attempted for this error
+ 630:                             if not fix_attempted:
+ 631:                                 # Determine fix type from context
+ 632:                                 ctx = " ".join(output_buffer[-10:])
+ 633:                                 if "Indent" in ctx:
+ 634:                                     ok, msg = auto_fix_indent_error(gd_file, gd_line)
+ 635:                                 elif "Parameter \"t\" is null" in ctx:
+ 636:                                     ok, msg = auto_fix_null_texture(gd_file, gd_line)
+ 637:                                 elif "Expected identifier after" in ctx:
+ 638:                                     ok, msg = auto_fix_trailing_dot(gd_file, gd_line)
+ 639:                                 else:
+ 640:                                     ok, msg = False, "No applicable fix"
+ 641:                                 if ok:
+ 642:                                     _record_event("fix_attempted", "fix_attempted", msg)
+ 643:                                     fix_attempted = True
+ 644:                                     # Restart Godot to test fix
+ 645:                                     proc.terminate()
+ 646:                                     proc.wait()
+ 647:                                     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+ 648:                                                             text=True, bufsize=1, universal_newlines=True, env=os.environ)
+ 649:                                     fd = proc.stdout.fileno()
+ 650:                                     flags = fcntl.fcntl(fd, fcntl.F_GETFL)
+ 651:                                     fcntl.fcntl(fd, fcntl.F_SETFL, flags | os.O_NONBLOCK)
+ 652:                                     output_buffer = []
+ 653:                                     last_output_time = time.time()
+ 654:                                     stall_handled = False
+ 655:                                     grace_until = time.time() + GRACE_PERIOD
+
+=== END ===
