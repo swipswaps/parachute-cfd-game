@@ -1,0 +1,111 @@
+=== COMPARE MAIN vs WORKING (0062) ===
+MAIN: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+WORKING: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062
+
+--- project.godot ---
+File missing in one of the directories.
+--- scenes/main.tscn ---
+--- scripts/plane.gd ---
+--- scripts/build_terrain.gd ---
+--- Files present in WORKING but not in MAIN (excluding .godot) ---
+./diagnose_and_fix_imports.sh
+./.git/objects/00/08e4185735697dd57358a64b030209e66abc0b
+./.git/objects/00/0d6a89c30b285b9a1ec81ceaa5db28d27fdc13
+./.git/objects/00/3436c7e5999f15121ad2c7ff1d662afcaaa348
+./.git/objects/00/376349e69ad8b9dbf401cddc34055951e4b02e
+./.git/objects/00/398337ec62a5778f90b0d17069c935e9823849
+./.git/objects/00/41e41a187b3f4eee181508bc077e998f89a612
+./.git/objects/00/424f6bd569288c2cc419c042c32e888278f034
+./.git/objects/00/5e0dd37db3230928fcc9559d04e92f3f4bcd1f
+./.git/objects/00/765926c0dd3906f1e65015d4cd9d0b87a2b506
+./.git/objects/00/87d854004fd4ff794d77ce656da66c1f8fbeb8
+./.git/objects/00/8ef14ff0c3c4f61b6f27c4c54b4b536e61b55a
+./.git/objects/00/a0845486e25f4546069782d68b926c76bf8e77
+./.git/objects/00/a16423f448e7773f5e6dc9b365efe80f40a778
+./.git/objects/00/a4a13eded7b9a2cd846e16f05e825a805cc47c
+./.git/objects/00/a65e74c46b667fc818dff667c221163f7ded3e
+./.git/objects/00/a8b3bf089ce849d906ba16116e72f54a95b10a
+./.git/objects/00/c9743ed0a2664039060ef149d30f165bf2f465
+./.git/objects/00/cfa05a61a0cf10ecd74c15ac52edb0af570ce7
+./.git/objects/00/d34bc7d8c85126dbae716ebfa48e35b0833222
+./.git/objects/00/d59aab48fb75521bb67f7f41726ef82fcbfbc0
+./.git/objects/00/edb79752cb0825c6003548f59c63b9e6cec5f5
+./.git/objects/00/f9fdced459510a673eeaba17eece8bfdb792e6
+./.git/objects/01/01c778b80f934145d68326f4f9e4b1155d8742
+./.git/objects/01/1a074a9962e3cd76c082a546c4c3abb32878c0
+./.git/objects/01/1ce94ea290f593752131c7d55512fb3afd16b0
+./.git/objects/01/328592b2dad80f4d16c55cd9db9829b3c650f1
+./.git/objects/01/356d69b97c95a6d41818e5c2c50a299146bef4
+./.git/objects/01/364639dc55329c168fa970b7614226b5bab29e
+./.git/objects/01/3c1d073797a74f7394f59c2fdad90710a1fb99
+./.git/objects/01/472f87a0baa7cff22b36ef9cd1f12fee2f223a
+./.git/objects/01/48f157ff3bf8bd728c82f49cd3d1cd9cb5a43e
+./.git/objects/01/4f2ee8d1536409047152db26e536c91396b0a3
+./.git/objects/01/61cd18219e51a3f3124df5ac15e6fe6a6ee418
+./.git/objects/01/66459b40f13bf0f130dc0230af4cb52ea275f9
+./.git/objects/01/6af3b2e8126c62ae6dd8ea5d3fc33ea09eaff4
+./.git/objects/01/864511b0f52a6bf944f70b5e15b75364791935
+./.git/objects/01/88dcd32398648159c913d90648968e8fe3a0f9
+./.git/objects/01/8e7671de1ec04c4857f1107f0c48034b3e2e83
+./.git/objects/01/8fa80bd2c305b17ae9e51be52331225ec9be71
+./.git/objects/01/a3f3ea439f10b5527cd5bc99be33c958e65116
+./.git/objects/01/aadf9649e825788f26610c45077d347b4a93a6
+./.git/objects/01/b2f5023bb9b904cd2d1ca8ab569ce6df13df32
+./.git/objects/01/b335de1b0202de4b3e4377868da0d47644d3b6
+./.git/objects/01/bf4475b772ccff1ffb4d3678fd1a0dd6009e93
+./.git/objects/01/c6cafbe53f1fcb12f7b382b2b35e2fd2c69933
+./.git/objects/01/daa89c0a8f781d4fd9439ae77033d67f1e113e
+./.git/objects/01/e1c54239db9095b2ef8c50baa0a1bd9dfbbd8d
+./.git/objects/01/f1253629e538b8abe56033a77c34ffbba2931e
+./.git/objects/01/f47172657b4f80579cd8ba94836a1c67ddee88
+--- Files present in MAIN but not in WORKING (excluding .godot) ---
+./27
+./add_auto_deploy_timer.sh
+./aggressive_fix.sh
+./apply_clamp_patch_rules.py
+./audit_backups.sh
+./audit_deduce.sh
+./audit_deduce.sh.bak.20260801140831
+./audit_deduce.sh.bak.20260801142906
+./audit_deploy_canopy.py
+./audit_results.txt
+./autostall_clean.py
+./autostall_dryrun_summary.json
+./autostall_patched_0002.py
+./autostall_patched_0003.py
+./autostall_patched.py.bak.20260802110730
+./autostall_patched.py.bak.20260802124739
+./autostall_patched.py.bak.20260803100659
+./autostall_patched.py.bak.20260803133939
+./autostall_patched.py.bak.20260803134117
+./autostall_robust.py
+./backups/autostall_patched.bak.20260803223521
+./backups/build_terrain.gd.bak.20260803222845
+./backups/build_terrain.gd.bak.20260803223145
+./bake_naip_and_restore.py
+./capture_evidence.sh
+./capture_parse_error.sh
+./cleanup_and_autostall.sh
+./clear_cache_and_launch.sh
+./code_audit.sh
+./compare_and_fix.sh
+./db_audit_20260720_140829/pipeline_audit.db.snapshot.20260720_140829.db-shm
+./db_audit_20260720_140829/pipeline_audit.db.snapshot.20260720_140829.db-wal
+./deep_dive_arm_investigation.py
+./diag_82ft.sh
+./diag_82ft_stall.sh
+./diag_and_fix_airplane.sh
+./diag_autostall_files.sh
+./diag_current_clamp.sh
+./diag_fixed_vs_patched.sh
+./diag_landing_hud.sh
+./diagnose_airplane_db.sh
+./diagnose_airplane_error.sh
+./diagnose_and_fix_arms.sh
+./diagnose_and_fix_hub.sh
+./diagnose_auto_deploy.sh
+./diagnose_end_of_file.sh
+./diagnose_physics_stall.sh
+./diagnose_push.sh
+./diagnose_timer_lines.sh
+./diagnostic_only.sh
