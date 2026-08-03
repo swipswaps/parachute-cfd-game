@@ -1,0 +1,18 @@
+=== PATCH DIFF for godot_project/scripts/build_terrain.gd ===
+Timestamp: 20260803132954
+
+--- godot_project/scripts/build_terrain.gd (original, lines 2136-2146)
++++ godot_project/scripts/build_terrain.gd (patched)
+@@ -1,7 +1,7 @@
+ 	# v11: only .y was ever written here, so the canopy had no forward
+ 	# flight at all. Horizontal glide and turning are applied below.
+ 	_update_canopy_glide(delta, descent)
+-	if _character.position.y < 25.0:
++	if _character.position.y <= 25.0 + 0.01:
+ 		_character.position.y = 25.0
+ 		if not _safe_landing and _game_state != GameState.GAME_OVER:
+ 			_game_state = GameState.GAME_OVER
+
+=== AFFECTED LINE NUMBERS ===
+Patch: lines 2139-2143 (original) → same lines (patched)
+Changed: line 2139 condition from '< 25.0' to '<= 25.0 + 0.01'
