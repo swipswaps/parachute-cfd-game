@@ -601,8 +601,8 @@ func _ready() -> void:
 		_pause_timer.timeout.connect(_p3_pause_selftest)
 		_pause_timer.start()
 
-	var timer = get_tree().create_timer(5.0)
-	timer.timeout.connect(Callable(self, "_auto_deploy"))
+	var _temp_timer = get_tree().create_timer(5.0)
+	_temp_timer.timeout.connect(Callable(self, "_auto_deploy"))
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
 
