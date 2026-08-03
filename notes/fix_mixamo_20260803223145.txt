@@ -1,0 +1,66 @@
+=== FIX MIXAMO ANIMATION — 20260803223145 UTC ===
+
+[2026-08-03T22:31:45.829904+00:00] [SUCCESS] backup: backups/build_terrain.gd.bak.20260803223145
+[2026-08-03T22:31:45.833103+00:00] [SUCCESS] read_after_write: bytes match
+[2026-08-03T22:31:45.834630+00:00] [SUCCESS] whitespace_check: leading whitespace preserved
+[2026-08-03T22:31:45.834759+00:00] [SUCCESS] semantic_check: animation call wrapped in if false:
+PATCH SUCCESSFUL. Backup: backups/build_terrain.gd.bak.20260803223145
+
+=== SYNTAX CHECK (godot --headless --check-only) ===
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-03T18:31:46 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-03T18:31:46 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+
+=== NEXT STEPS ===
+1. Launch the game in the editor (or run autostall_patched.py).
+2. Deploy parachute and press Q/E – arms should now bend.
+3. If they still don’t, the log file below contains the patch details.
+
+=== STAGING AND PUSHING EVIDENCE ===
