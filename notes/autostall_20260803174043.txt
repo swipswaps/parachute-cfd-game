@@ -1,0 +1,4 @@
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_patched.py", line 507
+    ok, msg = patch_func(db_conn) if patch_func != apply_auto_start_patch else # apply_auto_start_patch()
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: expected expression after 'else', but statement is given
