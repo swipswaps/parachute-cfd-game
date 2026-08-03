@@ -550,6 +550,16 @@ func _ready() -> void:
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+	# Headless auto‑start: simulate SPACE press
+	# Headless auto‑start: simulate SPACE press
+	if OS.get_environment("GODOT_HEADLESS") == "1":
+		Input.action_press("deploy")
+		Input.action_release("deploy")
+		print("[VERBATIM] Headless auto‑start triggered (deploy)")
+		# Fallback: some builds use ui_accept
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] Headless auto‑start triggered (ui_accept)")
 	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():
 		Input.action_press("ui_accept")
 		Input.action_release("ui_accept")
@@ -2135,9 +2145,9 @@ func _physics_process(delta) -> void:
 	# v11: only .y was ever written here, so the canopy had no forward
 	# flight at all. Horizontal glide and turning are applied below.
 	_update_canopy_glide(delta, descent)
-	if _character.position.y <= 25.0 + 0.01:
+	if _character.position.y < 25.0:
 		_character.position.y = 25.0
-		if _game_state != GameState.GAME_OVER:
+		if not _safe_landing and _game_state != GameState.GAME_OVER:
 			_game_state = GameState.GAME_OVER
 			print("[VERBATIM] Ground impact – fatal (no flare)")
 		if not _safe_landing:
