@@ -1,0 +1,64 @@
+=== cleanup_and_autostall.sh — 20260803201047 UTC ===
+
+--- TARGET FILE: godot_project/scripts/build_terrain.gd ---
+
+=== CHECK FOR AUTO-START PATCH ===
+553:	# Headless auto‑start: simulate SPACE press
+554:	# Headless auto‑start: simulate SPACE press
+558:# print("[VERBATIM] Headless auto‑start triggered (deploy)")
+562:# print("[VERBATIM] Headless auto‑start triggered (ui_accept)")
+566:		print("[VERBATIM] Headless auto‑start triggered.")
+572:		print("[VERBATIM] Headless auto‑start triggered.")
+
+=== CHECK SPAWN CODE (add_child) ===
+335:		add_child(terrain_inst)
+350:		add_child(flat_inst)
+367:	add_child(_character)
+390:	add_child(_camera)
+428:	add_child(dz)
+446:	_hud_layer.add_child(bg_panel)
+447:	add_child(_hud_layer)
+458:		_hud_layer.add_child(lbl)
+465:	_hud_layer.add_child(_hud_bg_panel)
+472:	_hud_layer.add_child(_score_label)
+479:	_hud_layer.add_child(_notification_label)
+489:	_hud_layer.add_child(_focus_label)
+530:				_character.add_child(_canopy_instance)
+583:	add_child(_lbl_timer)
+600:		add_child(_pause_timer)
+614:		add_child(timer)
+676:		_character.add_child(capsule)
+683:	_character.add_child(inst)
+853:		add_child(mesh_inst)
+904:	_character.add_child(_canopy_instance)
+2344:	add_child(_pip_layer)
+2360:	_pip_layer.add_child(container)
+2368:	container.add_child(_pip_viewport)
+2383:		_pip_viewport.add_child(sphere)
+2390:	_pip_viewport.add_child(_pip_canopy_node)
+2400:	_pip_viewport.add_child(pip_env)
+2406:	_pip_viewport.add_child(_pip_camera)
+2411:	_pip_viewport.add_child(light)
+2417:	_pip_layer.add_child(_wind_label)
+2422:	_pip_layer.add_child(timer)
+2429:		_character.add_child(_main_canopy_node)
+2459:	add_child(http)
+2477:	add_child(http2)
+2655:					_loading_layer.add_child(_loading_texture_rect)
+2671:		placeholder.add_child(label)
+2672:		_loading_layer.add_child(placeholder)
+2674:	add_child(_loading_layer)
+2693:	add_child(plane)
+2701:		plane.add_child(aircraft)
+2715:	plane.add_child(plane_collision)
+2719:	plane.add_child(exit_trigger)
+2724:	exit_trigger.add_child(trigger_collision)
+
+=== CHECK MODELS ===
+-rwxr-xr-x. 1 owner owner 4681916 Aug  3 16:06 godot_project/assets/aircraft/cesna_airplane.glb
+-rwxr-xr-x. 1 owner owner   72660 Aug  3 16:06 godot_project/assets/aircraft/cessna172.glb
+-rwxr-xr-x. 1 owner owner      51 Jun 26 11:22 godot_project/assets/aircraft/Cessna.glb
+-rwxr-xr-x. 1 owner owner 2388064 Jun 26 11:22 godot_project/assets/characters/Hanging under canopy.fbx
+-rwxr-xr-x. 1 owner owner 2388064 Aug  3 16:06 godot_project/assets/characters/parachutist.fbx
+
+=== END DIAGNOSTIC ===
