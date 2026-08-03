@@ -1,0 +1,121 @@
+=== END-OF-FILE DIAGNOSTIC — 20260803152337 UTC ===
+
+1. Lines 3840-3860 of build_terrain.gd (with line numbers):
+3840: if not InputMap.has_action(action):
+3841: continue
+3842: if Input.is_action_just_pressed(action):
+3843: # DB: persist confirmed keypress to control_events
+3844: var _cdb = get_node_or_null('/root/SqliteDb')
+3845: if _cdb != null:
+3846: var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+3847: func _auto_deploy():
+3848: Input.action_press("deploy")
+3849: Input.action_release("deploy")
+3850: print("[VERBATIM] Auto‑deploy triggered after 5s")
+3851: get_tree().quit()  # optional: exit after deploy for CI
+3852: # Auto‑deploy timer: deploy after 5 seconds
+3853: if _cdb.has_method('execute'): _cdb.execute(_sql)
+3854: elif _cdb.has_method('_query'): _cdb._query(_sql)
+3855: print("[CTRL] pressed=", action,
+3856: "  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+3857: "  state=", _game_state,
+3858: "  deployed=", _canopy_deployed,
+3859: "  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+2. Last 20 lines of build_terrain.gd:
+     1			if not InputMap.has_action(action):
+     2				continue
+     3			if Input.is_action_just_pressed(action):
+     4				# DB: persist confirmed keypress to control_events
+     5				var _cdb = get_node_or_null('/root/SqliteDb')
+     6				if _cdb != null:
+     7					var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+     8	func _auto_deploy():
+     9		Input.action_press("deploy")
+    10		Input.action_release("deploy")
+    11		print("[VERBATIM] Auto‑deploy triggered after 5s")
+    12		get_tree().quit()  # optional: exit after deploy for CI
+    13	# Auto‑deploy timer: deploy after 5 seconds
+    14					if _cdb.has_method('execute'): _cdb.execute(_sql)
+    15					elif _cdb.has_method('_query'): _cdb._query(_sql)
+    16				print("[CTRL] pressed=", action,
+    17					"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    18					"  state=", _game_state,
+    19					"  deployed=", _canopy_deployed,
+    20					"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+3. Lines with trailing spaces or tabs (last 50):
+		for ev in InputMap.action_get_events(action):$
+			if ev is InputEventKey:$
+				var kc: int = ev.physical_keycode$
+				if kc == 0:$
+					kc = ev.keycode$
+				had.append(OS.get_keycode_string(kc))$
+		var need: bool = not InputMap.action_has_event(action, _key_event(want))$
+		if need:$
+			InputMap.action_add_event(action, _key_event(want))$
+			added += 1$
+		print("[CONTROLS] ", action,$
+			"  action_existed=", existed,$
+			"  keys_before=", had,$
+			"  wanted=", OS.get_keycode_string(want),$
+			"  added=", need)$
+	print("[CONTROLS] ---- ", added, " binding(s) added ----")$
+$
+$
+func _key_event(keycode: int) -> InputEventKey:$
+	var ev := InputEventKey.new()$
+	ev.physical_keycode = keycode$
+	ev.keycode = keycode$
+	return ev$
+$
+$
+func _log_control_presses() -> void:$
+	# One line per press: which control, in which state, canopy or not.$
+	# This is what the autostall log needs so an attempted control is$
+	# visible even when its handler does nothing.$
+	for action in CONTROL_KEYS:$
+		if not InputMap.has_action(action):$
+			continue$
+		if Input.is_action_just_pressed(action):$
+			# DB: persist confirmed keypress to control_events$
+			var _cdb = get_node_or_null('/root/SqliteDb')$
+			if _cdb != null:$
+				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")$
+func _auto_deploy():$
+	Input.action_press("deploy")$
+	Input.action_release("deploy")$
+	print("[VERBATIM] AutoM-bM-^@M-^Qdeploy triggered after 5s")$
+	get_tree().quit()  # optional: exit after deploy for CI$
+# AutoM-bM-^@M-^Qdeploy timer: deploy after 5 seconds$
+				if _cdb.has_method('execute'): _cdb.execute(_sql)$
+				elif _cdb.has_method('_query'): _cdb._query(_sql)$
+			print("[CTRL] pressed=", action,$
+				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),$
+				"  state=", _game_state,$
+				"  deployed=", _canopy_deployed,$
+				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")$
+
+4. Timer block (lines containing "_auto_deploy_timer"):
+582-	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+583-	add_child(_lbl_timer)
+584:	_lbl__auto_deploy_timer.timeout.connect(_dump_all_labels)
+585-	_lbl_timer.start()
+586-
+--
+602-		_pause_timer.start()
+603-
+604:	var _auto_deploy_timer = get_tree().create_timer(5.0)
+605:	_auto_deploy_timer.timeout.connect(Callable(self, "_auto_deploy"))
+606-	print("[VERBATIM] ... EXIT _ready ok=true")
+607-	print("[DIAG] _ready: EXIT")
+
+5. _auto_deploy method:
+3845-			if _cdb != null:
+3846-				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+3847:func _auto_deploy():
+3848-	Input.action_press("deploy")
+3849-	Input.action_release("deploy")
+3850-	print("[VERBATIM] Auto‑deploy triggered after 5s")
+3851-	get_tree().quit()  # optional: exit after deploy for CI
+3852-# Auto‑deploy timer: deploy after 5 seconds
