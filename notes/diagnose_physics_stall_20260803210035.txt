@@ -1,0 +1,59 @@
+=== diagnose_physics_stall.sh — 20260803210035 UTC ===
+
+--- ±10 lines around func _physics_process ---
+1878-			print("[VERBATIM] INPUT: action=", action)
+1879-	if event.is_action_pressed("pause"):
+1880-		toggle_pause()
+1881-
+1882-	# Manual save key (S)
+1883-	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+1884-		_save_camera_settings()
+1885-		print("[CAMERA] Settings saved manually")
+1886-
+1887-
+1888:func _physics_process(delta):
+1889-	print("[DIAG] _physics_process: ENTER, state=", _game_state)
+1890-	if _game_state == GameState.IN_PLANE:
+1891-		print("[DIAG] _physics_process: IN_PLANE branch entered")
+1892-		_plane_angle += _PLANE_ORBIT_SPEED * delta
+1893-		if _plane_node:
+1894-			_plane_node.position = Vector3(
+1895-				cos(_plane_angle) * _PLANE_ORBIT_RADIUS,
+1896-				_PLANE_ALTITUDE,
+1897-				sin(_plane_angle) * _PLANE_ORBIT_RADIUS
+1898-			)
+
+--- ±10 lines around func _input ---
+1820-func toggle_pause() -> void:
+1821-	var tree := get_tree()
+1822-	tree.paused = not tree.paused
+1823-	$PauseMenu.visible = tree.paused
+1824-	if tree.paused:
+1825-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+1826-	else:
+1827-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+1828-
+1829-
+1830:func _input(event: InputEvent) -> void:
+1831-	print("[DEBUG] _input (build_terrain) called, event=", event)
+1832-	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+1833-		var rel = (event as InputEventMouseMotion).relative
+1834-		# Adjust azimuth and elevation based on mouse drag
+1835-		_cam_azimuth -= rel.x * 0.005
+1836-		_cam_elevation -= rel.y * 0.005
+1837-		# Clamp elevation to avoid flipping
+1838-		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+1839-		_update_camera_position()
+1840-		# Immediately update camera position if we have a target
+
+--- Checking for infinite loops (while, yield, await) ---
+676:		await get_tree().process_frame
+2310:	while file != "":
+2516:	while elapsed < timeout_sec:
+2517:		await get_tree().create_timer(0.1).timeout
+2573:	await get_tree().create_timer(0.5).timeout
+
+--- Checking for Input.set_mouse_mode calls ---
+  (none found)
+
+=== END ===
