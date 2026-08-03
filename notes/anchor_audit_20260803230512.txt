@@ -1,0 +1,36 @@
+=== anchor_audit.sh — 20260803230512 UTC ===
+
+=== line 14 repr ===
+'var _cam_distance: float = 55.0  # distance from target\n'
+
+=== lines 13-16 cat -A ===
+  13: # ------------------------------------------------------------------$
+  14: var _cam_distance: float = 55.0  # distance from target$
+  15: var _cam_azimuth: float = 0.0  # radians, 0 = behind$
+  16: var _cam_elevation: float = 0.3  # radians, positive = above$
+
+=== lines 2799-2806 cat -A ===
+2799: ^Ivar rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)$
+2800: ^I_camera.global_position = target + rot * offset$
+2801: ^I_camera.look_at(target, Vector3.UP)$
+2802: ^Iprint("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)$
+2803: ^I_save_camera_settings()$
+2804: $
+2805: $
+2806: # Added to fix deferred call and log warning via ErrorLogger$
+
+=== lines 2009-2018 cat -A ===
+2009: ^I^I_plane_angle += _PLANE_ORBIT_SPEED * delta$
+2010: ^I^Iif _plane_node:$
+2011: ^I^I^I_plane_node.position = Vector3($
+2012: ^I^I^I^Icos(_plane_angle) * _PLANE_ORBIT_RADIUS,$
+2013: ^I^I^I^I_PLANE_ALTITUDE,$
+2014: ^I^I^I^Isin(_plane_angle) * _PLANE_ORBIT_RADIUS$
+2015: ^I^I^I)$
+2016: ^I^I^I_plane_node.rotation.y = _plane_angle + PI / 2.0$
+2017: ^I^I^I# Headless auto-start: fire SPACE on first IN_PLANE frame$
+2018: ^I^I^I# (Rule #1 grounded: this is the first rendered frame, confirmed$
+
+=== st.commit lines ===
+326:		var terrain_mesh = st.commit()
+328:		terrain_inst.mesh = terrain_mesh
