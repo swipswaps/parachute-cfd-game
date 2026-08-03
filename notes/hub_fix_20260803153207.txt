@@ -1,0 +1,40 @@
+=== HUB MANAGER DIAGNOSTIC — 20260803153207 UTC ===
+
+File: godot_project/scripts/HubManager.gd
+
+Lines containing "Hub not responding":
+20-		return
+21-	# Original startup block follows
+22:	print("[HubManager] Hub not responding; starting it...")
+23-	var project_dir = ProjectSettings.globalize_path("res://")
+24-	# FIX (this session): project_dir = res:// resolves to godot_project/,
+25-	# but forensic_hub_server.py lives one directory up, at the outer
+26-	# project root — confirmed via find: only one copy exists, and it's
+27-	# not inside godot_project/. The cd+exec was silently failing every
+
+Lines containing "starting it":
+20-		return
+21-	# Original startup block follows
+22:	print("[HubManager] Hub not responding; starting it...")
+23-	var project_dir = ProjectSettings.globalize_path("res://")
+24-	# FIX (this session): project_dir = res:// resolves to godot_project/,
+25-	# but forensic_hub_server.py lives one directory up, at the outer
+26-	# project root — confirmed via find: only one copy exists, and it's
+27-	# not inside godot_project/. The cd+exec was silently failing every
+
+=== HUB FIX SUMMARY — 20260803153207 UTC ===
+
+1. HubManager file: godot_project/scripts/HubManager.gd
+2. Hub patch applied: ✅
+3. Timer connection fixed.
+4. Godot exit code: 130
+5. GLIDE telemetry count: 0
+0
+6. Key markers:
+   Loading resource: res://scripts/HubManager.gd
+   [VERBATIM] Headless auto‑start triggered (deploy)
+   [VERBATIM] Headless auto‑start triggered (ui_accept)
+   [VERBATIM] Headless auto‑start triggered.
+   [VERBATIM] Headless auto‑start triggered.
+   [VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).
+   [HubManager] Hub not responding; starting it...

@@ -577,11 +577,11 @@ func _ready() -> void:
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
 	# (general knowledge - not retrieved this session)
 	var _lbl_timer := Timer.new()
+	_lbl_timer.timeout.connect(_dump_all_labels)
 	_lbl_timer.wait_time = 2.0
 	_lbl_timer.one_shot = true
 	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_lbl_timer)
-_lbl_timer.timeout.connect(_dump_all_labels)
 	_lbl_timer.start()
 
 	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
