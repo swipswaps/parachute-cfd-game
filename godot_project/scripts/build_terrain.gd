@@ -550,7 +550,7 @@ func _ready() -> void:
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
 	# Headless auto‑start: simulate SPACE press
-	if OS.get_environment("GODOT_HEADLESS") == "1":
+	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():
 		Input.action_press("ui_accept")
 		Input.action_release("ui_accept")
 		print("[VERBATIM] Headless auto‑start triggered.")
@@ -2922,11 +2922,19 @@ var _label_dump_done: bool = false
 # PauseMenu=MISSING -> node absent from main.tscn; THAT is the P5 cause
 # ---------------------------------------------------------------------------
 func _p3_pause_selftest() -> void:
+	# Drive to a known state before testing. The prior version called
+	# the toggle function twice, netting zero change from tree.paused=true,
+	# leaving the game frozen (PAUSETEL FAIL). Fix: one toggle, explicit restore.
+	# Ref: SceneTree.paused (general knowledge — not retrieved this session):
+	# https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+	get_tree().paused = true
 	print("[PAUSETEL] selftest BEGIN tree.paused=", get_tree().paused)
 	toggle_pause()
-	toggle_pause()
-	print("[PAUSETEL] selftest END tree.paused=", get_tree().paused,
-			" (must be false)")
+	var _ok := not get_tree().paused
+	print("[PAUSETEL] selftest ", "PASS" if _ok else "FAIL",
+			" tree.paused=", get_tree().paused, " (must be false)")
+	get_tree().paused = false
+	print("[PAUSETEL] selftest END tree.paused=", get_tree().paused)
 
 
 func _dump_all_labels() -> void:

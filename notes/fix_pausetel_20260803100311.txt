@@ -1,0 +1,15 @@
+=== fix_pausetel.sh report — 20260803100311 UTC ===
+
+=== PAUSETEL markers ===
+[PAUSETEL] selftest BEGIN tree.paused=true
+[PAUSETEL] toggle_pause paused=false PauseMenu=MISSING (node absent from main.tscn)
+[PAUSETEL] selftest PASS tree.paused=false (must be false)
+[PAUSETEL] selftest END tree.paused=false
+
+=== Game completed ===
+Game completed: False
+
+=== Parse errors ===
+
+=== GLIDE count ===
+415
