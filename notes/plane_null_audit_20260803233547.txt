@@ -1,0 +1,57 @@
+=== plane_null_audit — 20260803233547 UTC ===
+
+=== _plane_node assignments and references ===
+39:var _plane_node: Node3D = null
+378:	_setup_plane_node()
+379:	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
+393:	if _plane_node:
+395:		var plane_pos = _plane_node.global_position
+1633:			if _plane_node:
+1634:				_plane_node.visible = false
+1636:			if _plane_node:
+1637:				_character.position = _plane_node.position + Vector3(0, -2.0, 0)
+1805:			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+1806:				var target = _plane_node.global_position
+1822:	if _plane_node:
+1823:		_plane_node.visible = true
+1936:		if camera_target == "plane" and is_instance_valid(_plane_node):
+1937:			target = _plane_node.global_position
+2020:		if _plane_node:
+2021:			_plane_node.position = Vector3(
+2026:			_plane_node.rotation.y = _plane_angle + PI / 2.0
+2037:			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+2046:		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+2049:			var target = _plane_node.global_position
+2064:				_plane_node,
+2627:	_plane_node = plane
+2664:	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2669:		var new_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2675:# --- Injected missing function: _setup_plane_node ---
+2676:func _setup_plane_node() -> void:
+2677:	if not _plane_node:
+2678:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+2679:	if not _plane_node:
+
+=== main.tscn — plane node name ===
+
+=== _spawn_plane or equivalent ===
+126:var _canopy_instance: Node3D
+335:		add_child(terrain_inst)
+350:		add_child(flat_inst)
+367:	add_child(_character)
+390:	add_child(_camera)
+428:	add_child(dz)
+446:	_hud_layer.add_child(bg_panel)
+447:	add_child(_hud_layer)
+458:		_hud_layer.add_child(lbl)
+465:	_hud_layer.add_child(_hud_bg_panel)
+472:	_hud_layer.add_child(_score_label)
+479:	_hud_layer.add_child(_notification_label)
+489:	_hud_layer.add_child(_focus_label)
+528:			_canopy_instance = scene.instantiate()
+529:			if _canopy_instance:
+530:				_character.add_child(_canopy_instance)
+531:				_canopy_instance.position = Vector3(0, 3.2, 0)
+532:				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+534:				var _mesh_child := _find_first_mesh(_canopy_instance)
+537:				_canopy_instance.visible = false
