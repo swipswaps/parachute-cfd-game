@@ -1,0 +1,98 @@
+=== diag_82ft_stall.sh — 20260803131927 UTC ===
+
+=== 1. CLAMP BLOCK (lines 2136‑2143) ===
+   1: # v11: only .y was ever written here, so the canopy had no forward
+   2: # flight at all. Horizontal glide and turning are applied below.
+   3: _update_canopy_glide(delta, descent)
+   4: if _character.position.y < 25.0:
+   5: _character.position.y = 25.0
+   6: if not _safe_landing and _game_state != GameState.GAME_OVER:
+   7: _game_state = GameState.GAME_OVER
+   8: print("[VERBATIM] Ground impact – fatal (no flare)")
+
+=== 2. GLIDE STATE BRANCH (±3 context) ===
+GLIDE state branch NOT FOUND
+
+=== 3. ALTITUDE CALCULATION (±3 context) ===
+2146: print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+2147: _game_state = GameState.GAME_OVER
+2148: print("[VERBATIM] Ground impact – fatal")
+2149: _current_altitude = _character.position.y - 25.0
+2150: 5	
+2151: # p3: vario and ground speed from REAL motion, not the constant table.
+2152: var _p3_y: float = _character.global_position.y
+
+=== 4. _safe_landing USAGE (±3 context) ===
+114:var _safe_landing: bool = false
+1097:	_safe_landing = true
+1160:	_safe_landing = true
+1482:	elif _current_altitude <= 0.0 and not _safe_landing:
+1836:	_safe_landing = false
+ 111: var _cutaway_done: bool = false
+ 112: var _reserve_done: bool = false
+ 113: var _flare_done: bool = false
+ 114: var _safe_landing: bool = false
+ 115: var _decision_altitude_warning_shown: bool = false
+ 116: 6	
+ 117: # Descent rates (ft per frame, ~60 fps)
+
+=== 5. GAME_OVER TRANSITIONS (±3 context) ===
+1479:			_game_state = GameState.GAME_OVER
+1485:		_game_state = GameState.GAME_OVER
+1648:	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+2141:		if not _safe_landing and _game_state != GameState.GAME_OVER:
+2142:			_game_state = GameState.GAME_OVER
+1476: if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+1477: ScreenshotLibrary.save_flight_screenshot()
+1478: print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1479: _game_state = GameState.GAME_OVER
+1480: print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1481: _show_notification("FATAL – reserve not deployed by 2500 ft")
+1482: elif _current_altitude <= 0.0 and not _safe_landing:
+
+=== 6. _headless_warp_done (patch applied?) ===
+130:var _headless_warp_done: bool = false    # one-shot flag: headless altitude warp
+2195:		if not _headless_warp_done and (
+2200:			_headless_warp_done = true
+
+=== 7. Recent autostall logs (GAME_OVER / Ground impact) ===
+
+--- autostall_warp3_20260803115432.txt (latest) ---
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+
+--- autostall_landing_20260803110322.txt (latest) ---
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+
+--- autostall_pausetel_20260803100311.txt (latest) ---
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+
+=== 8. godot --check-only (current file) ===
+
+=== END DIAGNOSTIC ===
