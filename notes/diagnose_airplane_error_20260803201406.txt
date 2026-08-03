@@ -1,0 +1,276 @@
+=== diagnose_airplane_error.sh — 20260803201406 UTC ===
+
+--- Target: build_terrain.gd (±3 lines around spawn and camera) ---
+30-}
+31-var _game_state: GameState = GameState.IN_PLANE
+32-# Plane orbit (IN_PLANE state)
+33:var _plane_node: Node3D = null
+34-var _plane_angle: float = 0.0
+35-const _PLANE_ORBIT_RADIUS: float = 800.0
+36-const _PLANE_ORBIT_SPEED: float = 0.18
+--
+304-		terrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+305-		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+306-		terrain_inst.material_override = terrain_mat
+307:		add_child(terrain_inst)
+308-		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+309-	else:
+310-		# --- Heightmap missing: flat terrain fallback ---
+--
+319-		flat_mat.albedo_color = Color(0.2, 0.5, 0.15)
+320-		flat_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+321-		flat_inst.material_override = flat_mat
+322:		add_child(flat_inst)
+323-		print("[VERBATIM] Flat terrain fallback created")
+324-	# --------------------------------------------------------------
+325-	# Runways: placeholder positions removed (did not match KDED layout).
+--
+334-	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+335-	# --------------------------------------------------------------
+336-	_character = Node3D.new()
+337:	add_child(_character)
+338-	_character.position = Vector3(100.0, 1828.8, -100.0)
+339-	print("[DEBUG] _character position after set: ", _character.position)
+340-	print("[DEBUG] _character global_position: ", _character.global_position)
+--
+344-	# Plane – must be created before camera look_at
+345-	# --------------------------------------------------------------
+346-	_create_plane()
+347:	_setup_plane_node()
+348:	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
+349-	# --------------------------------------------------------------
+350-	# Third‑person camera – child of root, initially follows plane
+351-	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+--
+355-	_camera.fov = 75.0
+356-	_camera.near = 0.1
+357-	_camera.far = 10000.0
+358:	add_child(_camera)
+359-	# Ensure plane exists before positioning camera
+360:	if _plane_node:
+361-		# Position camera using orbit angles
+362:		var plane_pos = _plane_node.global_position
+363-		var offset = Vector3(0, 0, -_cam_distance)
+364-		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+365-		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+366-		_camera.global_position = plane_pos + offset
+367:		_camera.look_at(plane_pos, Vector3.UP)
+368-		_camera.current = true
+369-		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+370-		print("[DEBUG] Plane position: ", plane_pos)
+--
+390-	dz_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+391-	dz_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+392-	dz.material_override = dz_mat
+393:	add_child(dz)
+394-	print("[VERBATIM] Drop zone created")
+395-	_load_faa_obstacles()
+396-	# --------------------------------------------------------------
+--
+407-	bg_panel.anchor_bottom = 1.0
+408-	var style := StyleBoxEmpty.new()
+409-	bg_panel.add_theme_stylebox_override("panel", style)
+410:	_hud_layer.add_child(bg_panel)
+411:	add_child(_hud_layer)
+412-	var font = ThemeDB.fallback_font
+413-	var label_names := ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+414-	for i in range(8):
+--
+419-		lbl.position = Vector2(50, 10 + i * 22)
+420-		lbl.custom_minimum_size = Vector2(220, 20)
+421-		lbl.text = label_names[i] + ": --"
+422:		_hud_layer.add_child(lbl)
+423-		_hud_labels.append(lbl)
+
+--- Starting Godot headless (no auto-start) for 30s ---
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Unrecognized output string "misc2" in mapping:
+030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+SDL: Init OK!
+Xshape 1.1 detected.
+Xinerama 1.1 detected.
+Xrandr 1.6 detected.
+Xrender 0.11 detected.
+Xinput 2.2 detected.
+XInput: Refreshing devices.
+XInput: No touch devices found.
+Detecting GPUs, set DRI_PRIME in the environment to override GPU detection logic.
+Only one GPU found, using default.
+Failed loading custom cursor: crossed_circle
+DBus 1.16.2 detected.
+Using "default" pen tablet driver...
+Shader 'CanvasSdfShaderGLES3' SHA256: 4178a370fca21ad6216db6f7823dc24d65f8d4ad71442bbaa5d6f9a230a081ea
+Shader 'SkeletonShaderGLES3' SHA256: 8bc0ec35c83978cd6d65ef8fc16df8e916ba1e2a9d5a98423fd53815bae40b65
+Shader 'ParticlesShaderGLES3' SHA256: 6afaaf25f8938f1e43e69699472011afc51b674c0df4cd381d188953d85ec5a3
+Shader 'ParticlesCopyShaderGLES3' SHA256: 39392086598b90ead64d3323c81c8ade94c690b12d308ef31d5b9690c172fb22
+Shader 'CopyShaderGLES3' SHA256: 997ec09347cd52d2f6dc09d2a1ab366d3ba8485a46f43f593451013172c4c0ad
+Shader 'CubemapFilterShaderGLES3' SHA256: 32dcf4d8e16f18e32b807a2d1406cca20c37a1e6fcccf8420addb836c4d08aa5
+Shader 'GlowShaderGLES3' SHA256: a6700f3ac665fc4867995c9fcc2052c36df9c7d4909f0d5b8d1092726671dbd0
+Shader 'PostShaderGLES3' SHA256: 6eedbef0b87035bc14ebaf4f413c9e32fa64d5e88a36f1d51dbd0c2be5e54df3
+Shader 'FeedShaderGLES3' SHA256: bddb9e1271cb1ff96bb0f53b92f2724c49e525ede46d8de0d776819eca048a2d
+Shader 'CanvasShaderGLES3' SHA256: f4ec43ced4296bc56a0508da1fd428b360690cb08bcc44b1135a42a01b3844af
+Shader 'CanvasOcclusionShaderGLES3' SHA256: 578a45ce760a0ed6361559f46e9aedf93aa4cc3580d835d6dbc5ae8e4265557c
+Shader 'SceneShaderGLES3' SHA256: 23ab6aea89cc6db38dee15711362af8e7ad9c08bbe99cb758445c4ca6f910f83
+Shader 'SkyShaderGLES3' SHA256: 5d5d48528e786bc9445620d0ef25bddc8d0c7ce6aa74df01c30eb96e7c51f67e
+OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+PulseAudio 17.0.0 detected.
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context ready
+PulseAudio: Detecting channels for device: alsa_output.pci-0000_00_1b.0.analog-stereo
+PulseAudio: detected 2 output channels
+PulseAudio: audio buffer frames: 512 calculated output latency: 11ms
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2475187701
+EDITOR API HASH: 3867286884
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://TelemetryLogger.gd
+Loading resource: res://scripts/SqliteDb.gd
+Loading resource: res://autoloads/HealthChecker.gd
+Loading resource: res://scripts/HubManager.gd
+Loading resource: res://scripts/DatabaseGuard.gd
+Loading resource: res://scripts/ResourceThrottle.gd
+Loading resource: res://scripts/PerformanceMonitor.gd
+Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+Loading resource: res://scripts/SqliteWatchdog.gd
+Loading resource: res://scripts/StructuredLogger.gd
+Loading resource: res://scripts/InputManager.gd
+Loading resource: res://scripts/GameIntegrity.gd
+Loading resource: res://scripts/altimeter_hud.gd
+Loading resource: res://scripts/forensic_hud.gd
+Loading resource: res://scripts/audit.gd
+Loading resource: res://scripts/wind_field.gd
+Loading resource: res://autoloads/CursorManager.gd
+Loading resource: res://autoloads/Gamification.gd
+Loading resource: res://autoloads/forensic_panel.gd
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn
+Loading resource: res://scripts/build_terrain.gd
+SCRIPT ERROR: Parse Error: Function "_load_camera_settings()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:229)
+SCRIPT ERROR: Parse Error: Function "_load_character()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:341)
+SCRIPT ERROR: Parse Error: Function "_create_plane()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:346)
+SCRIPT ERROR: Parse Error: Function "_setup_plane_node()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:347)
+SCRIPT ERROR: Parse Error: Function "_load_faa_obstacles()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:395)
+SCRIPT ERROR: Parse Error: Function "_fetch_real_wind()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:466)
+SCRIPT ERROR: Parse Error: Function "_setup_pip_overlay()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:467)
+SCRIPT ERROR: Parse Error: Function "_init_achievements()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:471)
+SCRIPT ERROR: Parse Error: Function "_init_mission()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:472)
+SCRIPT ERROR: Parse Error: Function "_init_leaderboard()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:473)
+SCRIPT ERROR: Parse Error: Function "_init_controller()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:474)
+SCRIPT ERROR: Parse Error: Function "_init_sentry()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:475)
+SCRIPT ERROR: Parse Error: Function "_find_first_mesh()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:490)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "_mesh_child" variable because the value doesn't have a set type.
+          at: GDScript::reload (res://scripts/build_terrain.gd:490)
+SCRIPT ERROR: Parse Error: Function "_create_procedural_canopy()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:496)
+SCRIPT ERROR: Parse Error: Function "_create_procedural_canopy()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:498)
+SCRIPT ERROR: Parse Error: Function "_create_procedural_canopy()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:501)
+SCRIPT ERROR: Parse Error: Function "_randomize_malfunction()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:505)
+SCRIPT ERROR: Parse Error: Function "_malfunction_name()" not found in base self.
+          at: GDScript::reload (res://scripts/build_terrain.gd:506)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+Loading resource: res://assets/terrain/black_env.tres
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-03T16:14:07 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-03T16:14:07 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+
+--- Godot errors (if any) ---
+Failed loading custom cursor: crossed_circle
+SCRIPT ERROR: Parse Error: Function "_load_camera_settings()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_load_character()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_create_plane()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_setup_plane_node()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_load_faa_obstacles()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_fetch_real_wind()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_setup_pip_overlay()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_init_achievements()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_init_mission()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_init_leaderboard()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_init_controller()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_init_sentry()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_find_first_mesh()" not found in base self.
+SCRIPT ERROR: Parse Error: Cannot infer the type of "_mesh_child" variable because the value doesn't have a set type.
+SCRIPT ERROR: Parse Error: Function "_create_procedural_canopy()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_create_procedural_canopy()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_create_procedural_canopy()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_randomize_malfunction()" not found in base self.
+SCRIPT ERROR: Parse Error: Function "_malfunction_name()" not found in base self.
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== END DIAGNOSTIC ===
