@@ -1,0 +1,46 @@
+=== diag_post_handoff.sh — 20260803094715 UTC ===
+
+=== 1. PUSH STATUS ===
+5e37c71 fix: const W/H indent at L285-286 — parse error at L287 (20260802215741)
+208779b fix: parse error at L287 orphaned indent + p3b autostall (20260802212130)
+4838564 diag: p3 autostall failure analysis (20260802211007)
+7a1761f p3: orphan labels, real vario/speed, pause selftest (20260802205900)
+b698ed4 audit: complete push report 20260802203638
+
+=== 2. UNVERIFIED MARKERS (tail of truncated autostall log) ===
+PAUSETEL lines:
+[PAUSETEL] selftest BEGIN tree.paused=true
+[PAUSETEL] toggle_pause paused=false PauseMenu=MISSING (node absent from main.tscn)
+[PAUSETEL] toggle_pause paused=true PauseMenu=MISSING (node absent from main.tscn)
+[PAUSETEL] selftest END tree.paused=true (must be false)
+Game completed lines:
+Game completed: False
+Total lines in log: 11716
+
+=== 3. BUG A — AUTO-JUMP GATE AUDIT ===
+GODOT_HEADLESS env var in this shell: []
+
+auto-jump gate in build_terrain.gd:
+grep: warning: stray \ before -
+grep: warning: stray \ before -
+128:var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+553:	if OS.get_environment("GODOT_HEADLESS") == "1":
+559:	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+560:		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+584:	if OS.get_environment("GODOT_HEADLESS") == "1" \
+585:			or "--headless" in OS.get_cmdline_args():
+1622:			or _headless_auto_jump
+1624:		_headless_auto_jump = false  # consume the flag
+1656:	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1661:	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+1662:		_headless_auto_deploy = false
+2075:			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+2080:					_headless_auto_deploy = true
+
+auto-jump gate in InputManager.gd (if present):
+
+=== 4. TERRAIN TEXTURE STATUS ===
+naip_texture.png not found at expected path
+
+=== END DIAGNOSTIC ===
