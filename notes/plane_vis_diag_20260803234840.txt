@@ -1,0 +1,217 @@
+=== plane visibility diag 20260803234840 UTC ===
+
+
+--- DB: camera_distance_plane ---
+Error: in prepare, no such table: game_settings
+
+--- DB: all camera-related settings ---
+(query failed -- show table list)
+applied_fixes               omissions                 
+arm_physics_baseline        parse_checks              
+arm_rig_audit               parse_error_log           
+asset_validation            parse_errors              
+auto_heal_actions           patch_history             
+autohealactions             pilot_career              
+blocking_errors_v1          pilot_category_fixes      
+code_patterns               pilot_ratings             
+component_audit_log         pipeline_metadata         
+component_health_tests      pipeline_runs             
+component_registry          pipelineruns              
+component_relationships     project_config            
+control_baseline            ratings                   
+control_events              remediation_queue         
+control_info                repair_attempts           
+diag_findings               repair_evidence           
+diagnostic_log              repair_metrics            
+diagnostic_logs             repair_rules              
+environment_fixes           replay_api_tests          
+error_fingerprints          resource_contention_log   
+error_patterns              restore_log               
+events_hardened             runtime_failures          
+file_splits                 schema_migrations         
+files_to_fix                screenshots               
+fix_log                     source_mutations          
+fixes                       source_snapshots          
+flight_controller_recon     steering_telemetry        
+flight_controller_recon_v2  strategy_rewards          
+flights                     syntax_errors             
+function_index              syntax_fixes              
+game_state_log              terrain_upgrades          
+gamification                test_runs                 
+gd_patch_registry           throttle_log              
+gdeye_diag                  tool_audit                
+hud_state                   user_preferences          
+issues                      verbatim_logs             
+known_repairs               verificationresults       
+missing_function_fixes    
+
+--- grep: camera_distance in build_terrain.gd (lines around IN_PLANE camera setup) ---
+8:var camera_distance: float = 60.0  # default distance
+10:var camera_target: String = "plane"  # "plane" or "character"
+14:var _cam_distance: float = 55.0  # distance from target
+252:	camera_distance = 60.0  # reset to default
+382:	# Third‑person camera – child of root, initially follows plane
+392:	# Ensure plane exists before positioning camera
+396:		var offset = Vector3(0, 0, -_cam_distance)
+399:		_camera.global_position = plane_pos + offset
+400:		_camera.look_at(plane_pos, Vector3.UP)
+1632:			_cam_distance = 5.0
+1793:		if camera_target == "plane":
+1797:				var offset = Vector3(0, 0, -_cam_distance)
+1804:			camera_target = "plane"
+1805:			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+1807:				var offset = Vector3(0, 0, -_cam_distance)
+1859:	camera_target = "plane"
+1874:			_cam_distance = max(1.0, _cam_distance - 5.0)
+1876:			print("[VERBATIM] Zoom in, distance=", _cam_distance)
+1878:			_cam_distance = min(300.0, _cam_distance + 5.0)
+1880:			print("[VERBATIM] Zoom out, distance=", _cam_distance)
+1936:		if camera_target == "plane" and is_instance_valid(_plane_node):
+1942:		var offset = Vector3(0, 0, -_cam_distance)
+2045:		print("[DIAG] _physics_process: checking camera follow")
+2046:		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+2047:			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+2050:			var offset = Vector3(0, 0, -_cam_distance)
+2063:				"[DIAG] _physics_process: camera follow skipped – plane=",
+2074:		var offset = Vector3(0, 0, -_cam_distance)
+2766:		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+2773:			+ str(_cam_distance)
+2777:	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
+2786:	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+2788:		_cam_distance = float(result[0]["value"])
+2789:		print("[CAMERA] Loaded plane camera distance from DB: ", _cam_distance)
+2791:		_cam_distance = 300.0
+2799:	if camera_target == "plane" and is_instance_valid(_plane_node):
+2808:	var offset := Vector3(0, 0, _cam_distance)
+
+--- grep: plane visibility writes in build_terrain.gd ---
+39:var _plane_node: Node3D = null
+378:	_setup_plane_node()
+379:	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
+393:	if _plane_node:
+395:		var plane_pos = _plane_node.global_position
+1633:			if _plane_node:
+1634:				_plane_node.visible = false
+1636:			if _plane_node:
+1637:				_character.position = _plane_node.position + Vector3(0, -2.0, 0)
+1805:			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+1806:				var target = _plane_node.global_position
+1822:	if _plane_node:
+1823:		_plane_node.visible = true
+1936:		if camera_target == "plane" and is_instance_valid(_plane_node):
+1937:			target = _plane_node.global_position
+2020:		if _plane_node:
+2021:			_plane_node.position = Vector3(
+2026:			_plane_node.rotation.y = _plane_angle + PI / 2.0
+2037:			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+2039:			print("[DIAG] _physics_process: plane_node is NULL")
+2046:		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+2049:			var target = _plane_node.global_position
+2064:				_plane_node,
+2627:	_plane_node = plane
+2664:	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2669:		var new_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2675:# --- Injected missing function: _setup_plane_node ---
+2676:func _setup_plane_node() -> void:
+2677:	if not _plane_node:
+2678:		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+
+--- grep: plane.gd (full if small) ---
+26 godot_project/scripts/plane.gd
+extends CharacterBody3D
+signal jumped_from_plane(player_pos: Vector3, plane_vel: Vector3)
+
+func _ready() -> void:
+	pass
+
+func _process(_delta) -> void:
+	# Heartbeat to confirm this script is active
+	if Engine.get_process_frames() % 300 == 0:
+		pass
+	if Input.is_action_just_pressed("deploy"):
+		emit_signal("jumped_from_plane", global_position, velocity)
+
+# IMPLEMENTATION COMPLETE
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("deploy"):
+		emit_signal("jumped_from_plane", global_position, velocity)
+
+func test_plane_process() -> void:
+	pass
+
+# IMPLEMENTATION COMPLETE
+
+func jump_from_plane() -> void:
+	emit_signal("jumped_from_plane", global_position, velocity)
+
+--- diff _0062 vs current build_terrain.gd (IN_PLANE section, first 60 diff lines) ---
+14a15
+> var _cam_save_pending: bool = false  # throttle: set each frame, cleared on RMB release
+128a130
+> var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+211a214,223
+> # p3: real vario / ground speed, measured from actual motion.
+> # _get_current_descent_rate() returns a hardcoded constant per state, so
+> # the old _vario_mps = _prev_descent_rate - _descent_rate was 0.3 - 0.3
+> # every frame. Proven by autostall_p2_20260802160520.txt: descent_m_s
+> # read 4.23076923076923 identically on every [GLIDE] row of the run.
+> # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+> # (general knowledge - not retrieved this session)
+> var _p3_prev_y: float = -99999.0
+> var _p3_prev_xz: Vector2 = Vector2.ZERO
+> var _p3_ground_speed_ms: float = 0.0
+256c268
+< 	var file = FileAccess.open("res://assets/terrain/heightmap_1024_hd.raw", FileAccess.READ)
+---
+> 	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+263c275
+< 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+---
+> 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+270a283,290
+> 		# 1024 vertex-colour mesh with NED 4096 elevation.
+> 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+> 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+> 		const W = 512
+> 		const H = 512
+> 		const HM_SRC = 4096
+> 		const MAX_ELEV = 20.0
+> 		const SCALE_XZ = 4000.0
+273,276d292
+< 		const W = 1024
+< 		const H = 1024
+< 		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
+< 		const SCALE_XZ = 4000.0
+281,288c297,300
+< 								# heightmap_512.raw is 512x512; mesh is 1024x1024.
+< 				# Direct index (z*W + x) overflows 512-wide rows for x/z > 511
+< 				# -> returns raw=0 -> flat y=0 for 75% of the mesh.
+< 				# Fix: map vertex UV to heightmap pixel coords (nearest-neighbour).
+< 				var hm_x := int(float(x) / float(W - 1) * 511.0)
+< 				var hm_z := int(float(z) / float(H - 1) * 511.0)
+< 				var idx := (hm_z * 512 + hm_x) * 2
+< 				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+---
+> 				var hm_x := int(float(x) / float(W - 1) * float(HM_SRC - 1))
+> 				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC - 1))
+> 				var hidx := (hm_z * HM_SRC + hm_x) * 2
+> 				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
+324c336
+< 		print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+---
+> 		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+342c354
+< 	# Runways (three predefined) – always added
+---
+> 	# Runways: placeholder positions removed (did not match KDED layout).
+343a356,358
+
+--- grep: _setup_plane_node / _create_plane_node ---
+378:	_setup_plane_node()
+2613:	var plane := CharacterBody3D.new()
+2614:	plane.name = "FlyingPlane"
+2675:# --- Injected missing function: _setup_plane_node ---
+2676:func _setup_plane_node() -> void:
+
+=== END DIAG ===
