@@ -1,0 +1,144 @@
+=== AUTO_DEPLOY DIAGNOSTIC — 20260803152629 UTC ===
+
+1. All lines containing "_auto_deploy":
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+584:	_lbl__auto_deploy_timer.timeout.connect(_dump_all_labels)
+604:	var _auto_deploy_timer = get_tree().create_timer(5.0)
+605:	_auto_deploy_timer.timeout.connect(Callable(self, "_auto_deploy"))
+1668:	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1673:	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+1674:		_headless_auto_deploy = false
+2092:					_headless_auto_deploy = true
+3847:func _auto_deploy():
+
+2. Context for each occurrence (±3):
+126-var _canopy_material: StandardMaterial3D
+127-var _canopy_deployed: bool = false
+128-var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+130-var _headless_warp_done: bool = false    # one-shot flag: headless altitude warp
+131-var _deployment_timer
+132-var _screenshot_save_timer: float = 0.0
+--
+581-	_lbl_timer.one_shot = true
+582-	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+583-	add_child(_lbl_timer)
+584:	_lbl__auto_deploy_timer.timeout.connect(_dump_all_labels)
+585-	_lbl_timer.start()
+586-
+587-	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
+--
+601-		_pause_timer.timeout.connect(_p3_pause_selftest)
+602-		_pause_timer.start()
+603-
+604:	var _auto_deploy_timer = get_tree().create_timer(5.0)
+605:	_auto_deploy_timer.timeout.connect(Callable(self, "_auto_deploy"))
+606-	print("[VERBATIM] ... EXIT _ready ok=true")
+607-	print("[DIAG] _ready: EXIT")
+608-
+--
+1665-		return
+1666-
+1667-	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+1668:	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1669-	# _deploy_canopy() requires state==FREEFALL; this flag is consumed only here,
+1670-	# so it fires on the first FREEFALL _poll_controls() call.
+1671-	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1672-	# (general knowledge — not retrieved this session)
+1673:	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+1674:		_headless_auto_deploy = false
+1675-		print("[VERBATIM] Headless auto-deploy triggered (FREEFALL).")
+1676-		_deploy_canopy()
+1677-	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+--
+2089-					ProjectSettings.set_setting("_headless_space_fired", true)
+2090-					Input.action_press("deploy")
+2091-					Input.action_release("deploy")
+2092:					_headless_auto_deploy = true
+2093-					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+2094-			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+2095-		else:
+--
+3844-			var _cdb = get_node_or_null('/root/SqliteDb')
+3845-			if _cdb != null:
+3846-				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+
+3. Function definition (grep for "func _auto_deploy"):
+3847:func _auto_deploy():
+
+4. Timer block (contains "_auto_deploy_timer" or "create_timer"):
+582-	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+583-	add_child(_lbl_timer)
+584:	_lbl__auto_deploy_timer.timeout.connect(_dump_all_labels)
+585-	_lbl_timer.start()
+586-
+587-	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
+588-	# pressed Escape, so the run produced no PAUSETEL line and P5 stayed
+589-	# UNVERIFIED. This fires toggle_pause() twice back-to-back, so two
+--
+602-		_pause_timer.start()
+603-
+604:	var _auto_deploy_timer = get_tree().create_timer(5.0)
+605:	_auto_deploy_timer.timeout.connect(Callable(self, "_auto_deploy"))
+606-	print("[VERBATIM] ... EXIT _ready ok=true")
+607-	print("[DIAG] _ready: EXIT")
+608-
+609-	# Self-test if --run-tests is passed (timer-based, robust in headless)
+610-	var args = OS.get_cmdline_args()
+--
+1471-func _show_notification(text: String) -> void:
+1472-	_notification_label.text = text
+1473:	var timer = get_tree().create_timer(3.0)
+1474-	timer.timeout.connect(func(): _notification_label.text = "")
+1475-
+1476-
+1477-# ------------------------------------------------------------------
+1478-# Decision altitude and descent rate
+--
+2734-	var elapsed := 0.0
+2735-	while elapsed < timeout_sec:
+2736:		await get_tree().create_timer(0.1).timeout
+2737-		elapsed += 0.1
+2738-		var new_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2739-		if (new_pos - start_pos).length() > 1.0:
+2740-			return true
+2741-	return false
+--
+2790-	print("[VERBATIM] Self-test function started.")
+2791-	var initial_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2792:	await get_tree().create_timer(0.5).timeout
+
+5. Last 30 lines of build_terrain.gd:
+     1		ev.physical_keycode = keycode
+     2		ev.keycode = keycode
+     3		return ev
+     4	
+     5	
+     6	func _log_control_presses() -> void:
+     7		# One line per press: which control, in which state, canopy or not.
+     8		# This is what the autostall log needs so an attempted control is
+     9		# visible even when its handler does nothing.
+    10		for action in CONTROL_KEYS:
+    11			if not InputMap.has_action(action):
+    12				continue
+    13			if Input.is_action_just_pressed(action):
+    14				# DB: persist confirmed keypress to control_events
+    15				var _cdb = get_node_or_null('/root/SqliteDb')
+    16				if _cdb != null:
+    17					var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+    18	func _auto_deploy():
+    19		Input.action_press("deploy")
+    20		Input.action_release("deploy")
+    21		print("[VERBATIM] Auto‑deploy triggered after 5s")
+    22		get_tree().quit()  # optional: exit after deploy for CI
+    23	# Auto‑deploy timer: deploy after 5 seconds
+    24					if _cdb.has_method('execute'): _cdb.execute(_sql)
+    25					elif _cdb.has_method('_query'): _cdb._query(_sql)
+    26				print("[CTRL] pressed=", action,
+    27					"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    28					"  state=", _game_state,
+    29					"  deployed=", _canopy_deployed,
+    30					"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+6. Check for "Parse Error" in recent godot output (optional):
+(Skipping godot --check-only to avoid hang.)
