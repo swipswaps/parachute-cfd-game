@@ -2179,17 +2179,17 @@ func _physics_process(delta) -> void:
 	# in this same function at lines 2166-2170.
 	# Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
 	if _game_state == GameState.OPENING_ANIM:
-	    # --- Timer-based transition (replaces manual decrement) ---
-	    if not has_node("OpeningAnimTimer"):
-	        var t = Timer.new()
-	        t.name = "OpeningAnimTimer"
-	        t.wait_time = 2.0
-	        t.one_shot = true
-	        t.timeout.connect(_on_opening_anim_timeout)
-	        add_child(t)
-	        t.start()
-	        print("[TIMER] OpeningAnimTimer started (2.0s)")
-	    # End of replacement
+		# --- Timer-based transition (replaces manual decrement) ---
+		if not has_node("OpeningAnimTimer"):
+			var t = Timer.new()
+			t.name = "OpeningAnimTimer"
+			t.wait_time = 2.0
+			t.one_shot = true
+			t.timeout.connect(_on_opening_anim_timeout)
+			add_child(t)
+			t.start()
+			print("[TIMER] OpeningAnimTimer started (2.0s)")
+		# End of replacement
 
 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
 		print("[VERBATIM] DIAGNOSIS turning block executed")

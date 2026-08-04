@@ -1,0 +1,35 @@
+=== FIX ALL MIXED INDENTATION LOG ===
+Applied: Tue Aug  4 07:48:57 PM UTC 2026
+
+--- Diff (patched vs backup) ---
+--- godot_project/scripts/build_terrain.gd	2026-08-04 15:48:30.639841251 -0400
++++ godot_project/scripts/build_terrain.gd.bak.20260804194643	2026-08-04 15:38:45.583746738 -0400
+@@ -2179,17 +2179,17 @@
+ 	# in this same function at lines 2166-2170.
+ 	# Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+ 	if _game_state == GameState.OPENING_ANIM:
+-		# --- Timer-based transition (replaces manual decrement) ---
+-		if not has_node("OpeningAnimTimer"):
+-			var t = Timer.new()
+-			t.name = "OpeningAnimTimer"
+-			t.wait_time = 2.0
+-			t.one_shot = true
+-			t.timeout.connect(_on_opening_anim_timeout)
+-			add_child(t)
+-			t.start()
+-			print("[TIMER] OpeningAnimTimer started (2.0s)")
+-		# End of replacement
++	    # --- Timer-based transition (replaces manual decrement) ---
++	    if not has_node("OpeningAnimTimer"):
++	        var t = Timer.new()
++	        t.name = "OpeningAnimTimer"
++	        t.wait_time = 2.0
++	        t.one_shot = true
++	        t.timeout.connect(_on_opening_anim_timeout)
++	        add_child(t)
++	        t.start()
++	        print("[TIMER] OpeningAnimTimer started (2.0s)")
++	    # End of replacement
+ 
+ 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+ 		print("[VERBATIM] DIAGNOSIS turning block executed")
