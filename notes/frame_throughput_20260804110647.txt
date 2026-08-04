@@ -1,0 +1,105 @@
+=== frame throughput diagnostic 20260804110647 UTC ===
+godot: godot   duration each: 20s
+
+--- launching MAIN (20 s, line-buffered, windowed, no auto-jump) ---
+MAIN exit=124 loglines=203
+--- launching _0062 (20 s, line-buffered, windowed, no auto-jump) ---
+_0062 exit=124 loglines=182
+
+===== MAIN frame throughput =====
+physics_process ENTER count in 20s: 1
+plane-position-updated count: 1
+total log lines: 203
+--- last 30 lines (where it stopped, if it stopped) ---
+[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive
+[ELBOWSOLVE],R,30.0,0.5501914024353,0.53144431114197,-0.01874709129333,0.13832128047943
+[ELBOWSOLVE],R,75.0,0.5501914024353,0.43649789690971,-0.11369350552559,0.26812392473221
+[AXISSOLVE] solved L=true R=true - axes now APPLIED live, pose restored
+[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CONTROLS] turnleft  action_existed=true  keys_before=[]  wanted=Q  added=true
+[CONTROLS] turnright  action_existed=true  keys_before=[]  wanted=E  added=true
+[CONTROLS] camera_cycle  action_existed=true  keys_before=[]  wanted=C  added=true
+[CONTROLS] cutaway  action_existed=true  keys_before=[]  wanted=X  added=true
+[CONTROLS] reserve  action_existed=true  keys_before=[]  wanted=V  added=true
+[CONTROLS] flare  action_existed=true  keys_before=[]  wanted=F  added=true
+[CONTROLS] togglehud  action_existed=true  keys_before=[]  wanted=H  added=true
+[CONTROLS] flightcheck  action_existed=true  keys_before=[]  wanted=G  added=true
+[CONTROLS] restart  action_existed=true  keys_before=[]  wanted=R  added=true
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=[]  wanted=Escape  added=true
+[CONTROLS] ---- 11 binding(s) added ----
+[CANOPYSYNC] transition at state=0 deployed=false visible=false
+[PIPLIVE] SubViewport now shares the main World3D
+[PIPLIVE] hid 2 standalone PiP prop(s); camera kept
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (0.0, 1880.516, -167.1839) to (799.9964, 1905.516, -164.7839)
+[DIAG] _physics_process: IN_PLANE returning
+[HubManager] Hub not responding; starting it...
+--- per-subsystem per-frame call presence (main-only funcs) ---
+  ARMTEL                 2
+  PIPLIVE                2
+  CANOPYSYNC             2
+  GLIDE                  0
+  PAUSETEL               0
+  DB CLOSED              0
+  database is locked     0
+  SCRIPT ERROR           0
+  Nonexistent            0
+
+===== _0062 frame throughput =====
+physics_process ENTER count in 20s: 1
+plane-position-updated count: 1
+total log lines: 182
+--- last 30 lines (where it stopped, if it stopped) ---
+[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive
+[ELBOWSOLVE],R,30.0,0.5501914024353,0.53144431114197,-0.01874709129333,0.13832128047943
+[ELBOWSOLVE],R,75.0,0.5501914024353,0.43649789690971,-0.11369350552559,0.26812392473221
+[AXISSOLVE] solved L=true R=true - axes now APPLIED live, pose restored
+[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CONTROLS] turnleft  action_existed=true  keys_before=[]  wanted=Q  added=true
+[CONTROLS] turnright  action_existed=true  keys_before=[]  wanted=E  added=true
+[CONTROLS] camera_cycle  action_existed=true  keys_before=[]  wanted=C  added=true
+[CONTROLS] cutaway  action_existed=true  keys_before=[]  wanted=X  added=true
+[CONTROLS] reserve  action_existed=true  keys_before=[]  wanted=V  added=true
+[CONTROLS] flare  action_existed=true  keys_before=[]  wanted=F  added=true
+[CONTROLS] togglehud  action_existed=true  keys_before=[]  wanted=H  added=true
+[CONTROLS] flightcheck  action_existed=true  keys_before=[]  wanted=G  added=true
+[CONTROLS] restart  action_existed=true  keys_before=[]  wanted=R  added=true
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=[]  wanted=Escape  added=true
+[CONTROLS] ---- 11 binding(s) added ----
+[CANOPYSYNC] transition at state=0 deployed=false visible=false
+[PIPLIVE] SubViewport now shares the main World3D
+[PIPLIVE] hid 2 standalone PiP prop(s); camera kept
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (0.0, 1880.516, -167.1839) to (799.9964, 1905.516, -164.7839)
+[DIAG] _physics_process: IN_PLANE returning
+[HubManager] Hub not responding; starting it...
+--- per-subsystem per-frame call presence (main-only funcs) ---
+  ARMTEL                 2
+  PIPLIVE                2
+  CANOPYSYNC             2
+  GLIDE                  0
+  PAUSETEL               0
+  DB CLOSED              0
+  database is locked     0
+  SCRIPT ERROR           0
+  Nonexistent            0
+
+=== INTERPRETATION ===
+main frames=1   _0062 frames=1
+VERDICT: inconclusive — see counts and tails above.
+
+=== END ===
