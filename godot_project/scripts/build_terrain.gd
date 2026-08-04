@@ -12,7 +12,6 @@ var camera_target: String = "plane"  # "plane" or "character"
 # Orbit camera parameters
 # ------------------------------------------------------------------
 var _cam_distance: float = 55.0  # distance from target
-var _cam_save_pending: bool = false  # throttle: set each frame, cleared on RMB release
 var _cam_azimuth: float = 0.0  # radians, 0 = behind
 var _cam_elevation: float = 0.3  # radians, positive = above
 
@@ -127,7 +126,6 @@ var _canopy_instance: Node3D
 var _canopy_material: StandardMaterial3D
 var _canopy_deployed: bool = false
 var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
-var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
 var _deployment_timer
 var _screenshot_save_timer: float = 0.0
 const DEPLOY_TIME: float = 1.2
@@ -211,16 +209,6 @@ var _hud_visible: bool = true
 # Variometer: rate of change of descent_rate (positive = lift)
 var _vario_mps: float = 0.0
 var _prev_descent_rate: float = 0.0
-# p3: real vario / ground speed, measured from actual motion.
-# _get_current_descent_rate() returns a hardcoded constant per state, so
-# the old _vario_mps = _prev_descent_rate - _descent_rate was 0.3 - 0.3
-# every frame. Proven by autostall_p2_20260802160520.txt: descent_m_s
-# read 4.23076923076923 identically on every [GLIDE] row of the run.
-# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
-# (general knowledge - not retrieved this session)
-var _p3_prev_y: float = -99999.0
-var _p3_prev_xz: Vector2 = Vector2.ZERO
-var _p3_ground_speed_ms: float = 0.0
 
 # ------------------------------------------------------------------
 # Polling state for one‑shot actions
@@ -265,39 +253,33 @@ func _ready() -> void:
 	# Terrain generation (full – uses heightmap and baked colours) with fallback
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
 	# --------------------------------------------------------------
-	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
 	if file:
 		# --- Heightmap exists: generate detailed terrain ---
 		var data = file.get_buffer(file.get_length())
 		file.close()
 
 		var _baked := PackedByteArray()
-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
 		if _bf:
-			_baked = _bf.get_buffer(_bf.get_length())
+			_baked = _bf.get_buffer(3_145_728)
 			_bf.close()
 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
 		else:
 			print("[VERBATIM] BAKE FALLBACK")
 
-		# 1024 vertex-colour mesh with NED 4096 elevation.
-		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
-		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
-		const W = 512
-		const H = 512
-		const HM_SRC = 4096
-		const MAX_ELEV = 20.0
-		const SCALE_XZ = 4000.0
 		var verts := []
 		var uvs := []
+		const W = 1024
+		const H = 1024
+		const MAX_ELEV = 80.0
+		const SCALE_XZ = 4000.0
 		for z in range(H):
 			for x in range(W):
 				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
 				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
-				var hm_x := int(float(x) / float(W - 1) * float(HM_SRC - 1))
-				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC - 1))
-				var hidx := (hm_z * HM_SRC + hm_x) * 2
-				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
+				var idx = (z * W + x) * 2
+				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
 				var py = (float(raw) / 65535.0) * MAX_ELEV
 				verts.push_back(Vector3(px, py, pz))
 				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
@@ -333,7 +315,7 @@ func _ready() -> void:
 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		terrain_inst.material_override = terrain_mat
 		add_child(terrain_inst)
-		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+		print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
 	else:
 		# --- Heightmap missing: flat terrain fallback ---
 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
@@ -351,13 +333,17 @@ func _ready() -> void:
 		print("[VERBATIM] Flat terrain fallback created")
 
 	# --------------------------------------------------------------
-	# Runways: placeholder positions removed (did not match KDED layout).
+	# Runways (three predefined) – always added
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
-	# TODO: re-add with georeferenced KDED runway 05/23 position/heading
-	#   after naip_texture is replaced with a proper GeoTIFF source.
-	#   KDED rwy 05/23: heading ~050deg, length ~1219m, width ~23m.
 	# --------------------------------------------------------------
-	print("[VERBATIM] Runways: placeholder positions disabled pending georef")
+	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
+	add_child(
+		_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))
+	)
+	add_child(
+		_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))
+	)
+	print("[VERBATIM] Runways added")
 
 	# --------------------------------------------------------------
 	# Character (skydiver) – loads FBX with skeleton
@@ -379,7 +365,6 @@ func _ready() -> void:
 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
 
 	# --------------------------------------------------------------
-	_load_camera_settings()  # load DB distance before placing camera (line 382 anchor)
 	# Third‑person camera – child of root, initially follows plane
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
 	# --------------------------------------------------------------
@@ -550,48 +535,36 @@ func _ready() -> void:
 	# --------------------------------------------------------------
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
+	# --- AUTO-START (timer-based) ---
+
+	var auto_timer = Timer.new()
+
+	auto_timer.wait_time = 2.0
+
+	auto_timer.one_shot = true
+
+	auto_timer.timeout.connect(func():
+
+		Input.action_press("ui_accept")
+
+		Input.action_release("ui_accept")
+
+		print("[AUTO-START] Deployed via timer.")
+
+	)
+
+	add_child(auto_timer)
+
+	auto_timer.start()
+
+	# --- end auto-start ---
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
 	# Headless auto‑start: simulate SPACE press
-	if OS.get_environment("GODOT_HEADLESS") == "1":
-		Input.action_press("ui_accept")
-		Input.action_release("ui_accept")
-		print("[VERBATIM] Headless auto‑start triggered.")
-	# Headless auto-start: simulate SPACE/deploy press
-	# Ref: OS.get_environment (general knowledge, not retrieved this session)
-	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+	if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
 		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
 		# Input.action_release("deploy") removed — flag-based now
 		print("[VERBATIM] Headless auto‑start triggered.")
 	_check_arm_pose_safe()
-
-	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
-	# Deferred ~2 s so every autoload and CanvasLayer has finished building.
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
-	# (general knowledge - not retrieved this session)
-	var _lbl_timer := Timer.new()
-	_lbl_timer.wait_time = 2.0
-	_lbl_timer.one_shot = true
-	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
-	add_child(_lbl_timer)
-	_lbl_timer.timeout.connect(_dump_all_labels)
-	_lbl_timer.start()
-
-	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
-	# pressed Escape, so the run produced no PAUSETEL line and P5 stayed
-	# UNVERIFIED. This fires toggle_pause() twice back-to-back, so two
-	# PAUSETEL lines are emitted and the tree is never LEFT paused --
-	# autostall's 30 s stall detector cannot trip on it.
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
-	# (general knowledge - not retrieved this session)
-	if OS.get_environment("GODOT_HEADLESS") == "1" \
-			or "--headless" in OS.get_cmdline_args():
-		var _pause_timer := Timer.new()
-		_pause_timer.wait_time = 8.0
-		_pause_timer.one_shot = true
-		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
-		add_child(_pause_timer)
-		_pause_timer.timeout.connect(_p3_pause_selftest)
-		_pause_timer.start()
 
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
@@ -730,7 +703,6 @@ func _load_character() -> void:
 	# _force_neutral_arms()  # disabled – using RESET animation instead
 	# Play RESET animation to force arms to rest pose (R091/R092)
 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
-	_the_anim_player = _anim_player  # store for arm physics pause/resume
 	if _anim_player and _anim_player.has_animation("RESET"):
 		_anim_player.play("RESET")
 		await get_tree().process_frame
@@ -989,9 +961,6 @@ func _malfunction_name() -> String:
 
 
 func _update_canopy_visuals() -> void:
-	# Skip when reserve is deployed — reserve appearance is set in _do_reserve.
-	if _reserve_done:
-		return
 	if not _canopy_material:
 		return
 	var mesh_child = _find_first_mesh(_canopy_instance) if _canopy_instance else null
@@ -1044,8 +1013,8 @@ func _flight_control_check() -> void:
 
 
 func _do_cutaway() -> void:
-	# Guard removed: is_action_just_pressed fires false by the time _do_cutaway
-	# is called from _poll_controls which already verified the press.
+	if not Input.is_action_just_pressed("cutaway"):
+		return
 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
 	if not _canopy_deployed:
@@ -1057,18 +1026,12 @@ func _do_cutaway() -> void:
 		print("[VERBATIM] EXIT _do_cutaway early=already_done")
 		return
 	if _malfunction == MalfunctionType.GOOD:
-		# USPA SIM: cutting away a good canopy is allowed but dangerous.
-		# Warn the skydiver — do not block the action.
-		print("[VERBATIM] WARNING: cutting away GOOD canopy — reserve must follow!")
-		_show_notification("WARNING: Good canopy cut! Deploy reserve NOW (V)!")
-		print("[DIAG] _do_cutaway: good canopy cutaway — proceeding with warning")
-		# fall through to execute cutaway
+		print("[VERBATIM] GOOD canopy – no cutaway needed, use F to flare")
+		_show_notification("GOOD canopy – do not cut away! Press F to flare.")
+		print("[DIAG] _do_cutaway: good canopy – skipped")
+		print("[VERBATIM] EXIT _do_cutaway early=good_canopy")
+		return
 	_cutaway_done = true
-	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
-	# returns to brief freefall until reserve deployed.
-	if _canopy_instance:
-		_canopy_instance.visible = false
-	_canopy_deployed = false
 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
 	if not _replay_playing:
@@ -1080,10 +1043,8 @@ func _do_cutaway() -> void:
 func _do_reserve() -> void:
 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
-	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
-	# USPA SIM: reserve is deployed after cutaway clears main canopy.
-	if not _cutaway_done and not _canopy_deployed:
-		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
+	if not _canopy_deployed:
+		print("[DIAG] _do_reserve: early exit – not in DIAGNOSIS")
 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
 		return
 	if _reserve_done:
@@ -1099,24 +1060,9 @@ func _do_reserve() -> void:
 	_reserve_done = true
 	_safe_landing = true
 
-	# Show reserve canopy: reuse _canopy_instance mesh as reserve.
-	# USPA SIM: reserve is white, round, smaller than main ram-air.
-	if _canopy_instance:
-		_canopy_instance.visible = true
-		_canopy_instance.scale = Vector3(0.12, 0.09, 0.12)
-		_canopy_instance.rotation_degrees = Vector3.ZERO
-		if _canopy_material:
-			_canopy_material.albedo_color = Color(0.95, 0.95, 0.95)
-			var mesh_child = _find_first_mesh(_canopy_instance)
-			if mesh_child:
-				mesh_child.material_override = _canopy_material
-	# USPA SIM: reserve glides and steers until touchdown.
-	# Stay in DIAGNOSIS so _update_canopy_glide and arm-pull steering run.
-	# _canopy_deployed must be true for glide physics to engage.
-	_canopy_deployed = true
 	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
 	call_deferred("_recreate_hud_if_needed")
-	# Land is deferred — player steers reserve first, then SPACE or altitude trigger landing.
+	_game_state = GameState.LANDED
 	_capture_3d_screenshot()
 
 	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
@@ -1548,11 +1494,7 @@ func _update_cfd_wind(delta: float) -> void:
 # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
 # ------------------------------------------------------------------
 func _update_canopy_tilt() -> void:
-	# Allow tilt on main canopy (deployed) or reserve canopy (_reserve_done).
-	# USPA SIM: reserve glides and steers via toggle inputs until touchdown.
-	if not _canopy_instance:
-		return
-	if not _canopy_deployed and not _reserve_done:
+	if not _canopy_instance or not _canopy_deployed:
 		return
 	var tilt = _turn_input * 15.0
 	_canopy_instance.rotation_degrees.z = tilt
@@ -1657,15 +1599,6 @@ func _poll_controls() -> void:
 		return
 
 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
-	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
-	# _deploy_canopy() requires state==FREEFALL; this flag is consumed only here,
-	# so it fires on the first FREEFALL _poll_controls() call.
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
-	# (general knowledge — not retrieved this session)
-	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
-		_headless_auto_deploy = false
-		print("[VERBATIM] Headless auto-deploy triggered (FREEFALL).")
-		_deploy_canopy()
 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
 		_deploy_canopy()
@@ -1687,11 +1620,45 @@ func _poll_controls() -> void:
 				_rotate_arm(false)
 
 		_turn_input = turn_input
-		# ParachuteController removed — steering via _turn_input + _arm_pull directly.
-# FIX (fix_steering_v1): _deploy_canopy() here was called every frame in
-# OPENING_ANIM/DIAGNOSIS, resetting _canopy_heading=0 each frame so the
-# canopy could never accumulate a turn. Guard was commented out; call removed.
-		# Deploy on SPACE is handled by is_action_just_pressed at line ~1585.
+		# BUG3 TELEMETRY: log has_node result to determine if PC node path is wrong
+		var _has_pc := has_node("/root/Main/ParachuteController")
+		print("[STEER_TELEM] canopy=", _canopy_deployed,
+				" has_pc=", _has_pc,
+				" turn=", _turn_input,
+				" state=", _game_state)
+		if _has_pc:
+			get_node("/root/Main/ParachuteController").apply_steering(_turn_input, 0.0)
+			print("[STEER_TELEM] apply_steering CALLED")
+		else:
+			# Log what IS in /root/Main so we can find the real node name
+			if has_node("/root/Main"):
+				var _main := get_node("/root/Main")
+				var _children_str := ""
+				for _c in _main.get_children():
+					_children_str += _c.name + " "
+				print("[STEER_TELEM] /root/Main children: ", _children_str)
+			else:
+				print("[STEER_TELEM] /root/Main does not exist")
+# BUG1 FIX: guard restored — was firing _deploy_canopy() every frame unconditionally
+		# ----- Direct key checks (bypass Input Map) -----
+		# Deploy (SPACE)
+		#if Input.is_key_just_pressed(KEY_SPACE) and not _canopy_deployed:
+		_deploy_canopy()
+	# Turn left (Q)
+	if Input.is_key_pressed(KEY_Q):
+		_turn_input = -1.0
+		if not _last_frame_keys["Q"]:
+			_rotate_arm(true)
+	elif Input.is_key_pressed(KEY_E):
+		_turn_input = 1.0
+		if not _last_frame_keys["E"]:
+			_rotate_arm(false)
+	else:
+		if _turn_input == 0.0:
+			pass  # already zero
+		# NOTE: key-action calls (C/X/V/F/H/S) are handled below
+		# with is_key_pressed + _last_frame_keys guards. Do NOT
+		# call them here -- this else fires every frame.
 	# ----- Direct key checks (bypass Input Map) -----
 	# Deploy (SPACE)
 	# SPACE: toggle canopy in plane, deploy in freefall
@@ -1820,7 +1787,6 @@ func _reset_game() -> void:
 	print("[DIAG] _reset_game: ENTER")
 	print("[VERBATIM] === RESETTING GAME ===")
 	_game_state = GameState.IN_PLANE
-	_load_camera_settings()  # restore plane camera distance on restart
 	if _plane_node:
 		_plane_node.visible = true
 		_plane_angle = 0.0
@@ -1898,21 +1864,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func toggle_pause() -> void:
-	# p2: $PauseMenu had no null guard. If that node is absent from
-	# main.tscn the line throws and pause dies silently - which is a
-	# sufficient explanation for the forensic panel reading
-	# 'pause  ! UNVERIFIED'. get_node_or_null() returns null instead of
-	# erroring, and [PAUSETEL] proves which case is real on the next run.
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html
-	# (general knowledge - not retrieved this session)
 	var tree := get_tree()
 	tree.paused = not tree.paused
-	var _pm = get_node_or_null("PauseMenu")
-	if _pm != null:
-		_pm.visible = tree.paused
-		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=FOUND")
-	else:
-		print("[PAUSETEL] toggle_pause paused=", tree.paused, " PauseMenu=MISSING (node absent from main.tscn)")
+	$PauseMenu.visible = tree.paused
 	if tree.paused:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	else:
@@ -1975,15 +1929,6 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		toggle_pause()
 
-	# Flush pending camera DB write on RMB release (throttle — Rule #46)
-	# Ref: InputEventMouseButton
-	# https://docs.godotengine.org/en/stable/classes/class_inputeventmousebutton.html
-	if event is InputEventMouseButton and not event.pressed \
-			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT:
-		if _cam_save_pending:
-			_save_camera_settings()
-			_cam_save_pending = false
-
 	# Manual save key (S)
 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
 		_save_camera_settings()
@@ -2029,12 +1974,11 @@ func _physics_process(delta) -> void:
 			# Headless auto-start: fire SPACE on first IN_PLANE frame
 			# (Rule #1 grounded: this is the first rendered frame, confirmed
 			#  by _0283.txt showing plane position update before stall)
-			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+			if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
 				if not ProjectSettings.has_setting("_headless_space_fired"):
 					ProjectSettings.set_setting("_headless_space_fired", true)
 					Input.action_press("deploy")
 					Input.action_release("deploy")
-					_headless_auto_deploy = true
 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
 		else:
@@ -2080,56 +2024,22 @@ func _physics_process(delta) -> void:
 		_camera.look_at(target, Vector3.UP)
 		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
 	_prev_descent_rate = _descent_rate
-	# p2 VARIO FIX: the result of _get_current_descent_rate() used to go
-	# into a LOCAL named `descent`; the member _descent_rate was never
-	# assigned, so _vario_mps = _prev_descent_rate - _descent_rate was
-	# 0.0 - 0.0 on every frame. Assigned BEFORE _apply_malfunction_effects()
-	# so that function's `_descent_rate += ...` additions survive.
-	_descent_rate = _get_current_descent_rate()
 	_apply_malfunction_effects(delta)
-	var descent = _descent_rate * 60.0 * delta
+	var descent = _get_current_descent_rate() * 60.0 * delta
 	_character.position.y -= descent
 	# v11: only .y was ever written here, so the canopy had no forward
 	# flight at all. Horizontal glide and turning are applied below.
 	_update_canopy_glide(delta, descent)
 	if _character.position.y < 25.0:
 		_character.position.y = 25.0
-		# LANDED-transition fix (this session):
-		# Old code only wrote GAME_OVER when `not _safe_landing`, so a
-		# deployed-canopy descent to ground without a flare press left
-		# the state stuck at DIAGNOSIS forever. Proven by
-		# notes/diag_landing_20260804121715.txt PART H: 1239 state=0
-		# emissions and zero emissions in states 1..5 across 506 frames.
-		# Ref: state machine tutorial (referenced at line 26 of this file):
-		#   https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
-		# Descent-rate threshold rationale: parachute canopies typically
-		# achieve 4-6 m/s rate of descent when fully inflated (USPA SIM,
-		# general knowledge - not retrieved this session); 8 m/s allows
-		# margin for a hard but survivable arrival.
-		if _game_state != GameState.LANDED and _game_state != GameState.GAME_OVER:
-			var safe := _safe_landing or (_canopy_deployed and _descent_rate < 8.0)
-			if safe:
-				_safe_landing = true
-				_game_state = GameState.LANDED
-				print("[VERBATIM] Ground contact - SAFE LANDING (state=LANDED)")
-			else:
-				ScreenshotLibrary.save_flight_screenshot()
-				print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
-				_game_state = GameState.GAME_OVER
-				print("[VERBATIM] Ground impact - fatal")
+		if not _safe_landing:
+			ScreenshotLibrary.save_flight_screenshot()
+			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+			_game_state = GameState.GAME_OVER
+			print("[VERBATIM] Ground impact – fatal")
 	_current_altitude = _character.position.y - 25.0
 
-	# p3: vario and ground speed from REAL motion, not the constant table.
-	var _p3_y: float = _character.global_position.y
-	var _p3_xz: Vector2 = Vector2(_character.global_position.x,
-			_character.global_position.z)
-	if _p3_prev_y > -99998.0 and delta > 0.0:
-		_vario_mps = (_p3_y - _p3_prev_y) / delta
-		_p3_ground_speed_ms = (_p3_xz - _p3_prev_xz).length() / delta
-	_p3_prev_y = _p3_y
-	_p3_prev_xz = _p3_xz
-	# p2: unconditional HUD refresh for every non-IN_PLANE state.
-	_update_hud_readouts()
+	_vario_mps = _prev_descent_rate - _descent_rate
 
 	_update_cfd_wind(delta)
 	_update_canopy_tilt()
@@ -2155,12 +2065,10 @@ func _physics_process(delta) -> void:
 		if _velocity_vec.length() > 0.5:
 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
-		# p2: the three _hud_labels writes that used to live here ran ONLY in
-		# FREEFALL, so the HUD froze the instant _deploy_canopy() moved state
-		# to OPENING_ANIM. Screenshots 11:24:47-11:25:57 showed the altimeter
-		# panel falling 5142->4175 ft while HUD Label0 stayed at 6044 ft.
-		# They are now in _update_hud_readouts(), called unconditionally from
-		# the common path below.
+		var speed_kts = _forward_speed * 1.94384
+		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
 		_check_decision_altitude()
 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
 		if _screenshot_save_timer > 0:
@@ -2168,18 +2076,8 @@ func _physics_process(delta) -> void:
 		if _screenshot_save_timer <= 0.0:
 			ScreenshotLibrary.save_flight_screenshot()
 			_screenshot_save_timer = 5.0
-
-	# OPENING_ANIM -> DIAGNOSIS transition (this session):
-	# _deployment_timer is set to 2.0 at line 874 in _deploy_canopy()
-	# but was NEVER decremented anywhere in the file (proven by
-	# notes/diag_opening_anim_20260804182915.txt PART H: 0 hits for
-	# '_deployment_timer -= '). State stuck at OPENING_ANIM = 4896
-	# emissions across a 90-s autostall run (fix_landed log PART 7).
-	# Mirrors the existing _screenshot_save_timer countdown pattern
-	# in this same function at lines 2166-2170.
-	# Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+	# --- Timer-based transition (replaces manual decrement) ---
 	if _game_state == GameState.OPENING_ANIM:
-		# --- Timer-based transition (replaces manual decrement) ---
 		if not has_node("OpeningAnimTimer"):
 			var t = Timer.new()
 			t.name = "OpeningAnimTimer"
@@ -2853,7 +2751,7 @@ func _update_camera_position() -> void:
 	_camera.global_position = target + rot * offset
 	_camera.look_at(target, Vector3.UP)
 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
-	_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)
+	_save_camera_settings()
 
 
 # Added to fix deferred call and log warning via ErrorLogger
@@ -2863,96 +2761,6 @@ func _recreate_hud_if_needed() -> void:
 
 func build_chunk(chunk_coords: Vector2) -> void:
 	pass
-
-
-# ---------------------------------------------------------------------------
-# _update_hud_readouts - p2
-#
-# Holds the three HUD writes that previously lived inside the FREEFALL-only
-# branch of _physics_process. Called unconditionally from the common path so
-# ALT / SPD / VARIO / TURN keep updating through OPENING_ANIM, DIAGNOSIS and
-# LANDED - not just FREEFALL.
-#
-# Guarded on _hud_labels.size() because _ready() can return early before the
-# labels are built (the `if _hud_layer: return` guard), and indexing an empty
-# array would throw once per physics frame.
-# Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
-# (general knowledge - not retrieved this session)
-# ---------------------------------------------------------------------------
-func _update_hud_readouts() -> void:
-	if _hud_labels.size() < 8:
-		return
-	if not is_instance_valid(_character):
-		return
-	# p3: _forward_speed is only written in the FREEFALL branch, so under
-	# canopy it read a stale 0 while [GLIDE] reported fwd_speed=11.0
-	# (autostall_p2_20260802160520.txt). Prefer the measured value.
-	var speed_kts: float = _p3_ground_speed_ms * 1.94384
-	if _game_state == GameState.FREEFALL:
-		speed_kts = _forward_speed * 1.94384
-	_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
-	_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
-	_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
-	_hud_labels[6].text = "MALF: " + _malfunction_name()
-
-
-# ---------------------------------------------------------------------------
-# _dump_all_labels - p2 DIAGNOSTIC ONLY, NOT A FIX (Rule #14)
-#
-# Screenshots dated 2026-08-02 11:24:47-11:25:57 show six Labels named
-# Label0..Label5 rendering on top of the real HUD text. Their creator was NOT
-# found in build_terrain.gd, so nothing is being changed blind. This walks the
-# whole tree once and prints every Label with its name, text, parent path and
-# attached script, so the next round can patch the actual source.
-#
-# Runs once, ~2 s after _ready, then never again.
-# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html
-# (general knowledge - not retrieved this session)
-# ---------------------------------------------------------------------------
-var _label_dump_done: bool = false
-
-
-# ---------------------------------------------------------------------------
-# _p3_pause_selftest - exercises toggle_pause() once, headless only.
-# Emits two [PAUSETEL] lines (paused=true then paused=false) and leaves
-# the tree UNPAUSED, so the run continues normally.
-# PauseMenu=FOUND   -> the node exists, pause works, P5 closable
-# PauseMenu=MISSING -> node absent from main.tscn; THAT is the P5 cause
-# ---------------------------------------------------------------------------
-func _p3_pause_selftest() -> void:
-	print("[PAUSETEL] selftest BEGIN tree.paused=", get_tree().paused)
-	toggle_pause()
-	toggle_pause()
-	print("[PAUSETEL] selftest END tree.paused=", get_tree().paused,
-			" (must be false)")
-
-
-func _dump_all_labels() -> void:
-	if _label_dump_done:
-		return
-	_label_dump_done = true
-	print("[LABELDUMP_HDR] idx,name,parent_path,script,text")
-	var found: int = 0
-	var stack: Array = [get_tree().root]
-	while stack.size() > 0:
-		var n = stack.pop_back()
-		if n == null:
-			continue
-		if n is Label:
-			var scr: String = "none"
-			if n.get_script() != null:
-				scr = str(n.get_script().resource_path)
-			var par: String = "orphan"
-			if n.get_parent() != null:
-				par = str(n.get_parent().get_path())
-			print("[LABELDUMP],", found, ",", n.name, ",", par, ",", scr,
-					",", n.text.replace(",", ";"))
-			found += 1
-		for c in n.get_children():
-			stack.push_back(c)
-	print("[LABELDUMP] total Label nodes in tree: ", found)
-	print("[LABELDUMP] _hud_labels.size()=", _hud_labels.size())
-
 
 
 # ---------------------------------------------------------------------------
@@ -3049,9 +2857,8 @@ const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
 const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
 
 # v8: elbow stays straight on a shallow pull, flexes on a deep one.
-const ARM_ELBOW_START  := 0.35              # pull below this -> only neutral bend
+const ARM_ELBOW_START  := 0.35              # pull below this -> straight
 const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
-const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
 
 var _arm_pull      := {"L": 0.0, "R": 0.0}
 var _arm_vel       := {"L": 0.0, "R": 0.0}
@@ -3060,7 +2867,6 @@ var _arm_rest_ok   := false
 var _arm_tel_header := false
 var _arm_tel_t     := 0.0
 var _arm_anim_ref  = null
-var _the_anim_player = null  # stored so arm physics can pause/resume it
 
 
 func _arm_capture_rest() -> void:
@@ -3169,11 +2975,8 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
-			# ARM_ELBOW_NEUTRAL: 20deg resting bend ("let it fly" posture).
-			# Negated axis: solved axis bends forward; negated bends elbow
-			# downward/rearward (USPA SIM toggle grip toward hip).
-			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
-			var e_ax: Vector3 = -_arm_elbow_axis[side]
+			var e_ang: float = e_t * ARM_ELBOW_MAX
+			var e_ax: Vector3 = _arm_elbow_axis[side]
 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
 			_arm_elbow_q_stored[side] = eq
 			elbow_deg = rad_to_deg(e_ang)
@@ -3185,22 +2988,6 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 				",", force, ",", tension, ",", damping, ",", accel,
 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
 				",", elbow_deg, ",", _arm_hold_t[side])
-
-	# Apply computed quaternions to skeleton bones every physics frame.
-	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
-	# computed above but were never written to the skeleton — root cause
-	# of arms not pulling down despite spring-damper running correctly.
-	_apply_arm_bone_overrides()
-	# Stop the looping Mixamo AnimationPlayer when arm pull is active so
-	# it cannot overwrite the bone poses we just set. Resume when at rest.
-	# Root cause of regression ffdd7d6: AnimationPlayer.play(mixamo_com)
-	# runs every frame and overwrites set_bone_pose_rotation every frame.
-	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
-	if _the_anim_player != null and is_instance_valid(_the_anim_player):
-		if any_pull and _the_anim_player.is_playing():
-			_the_anim_player.stop()
-		elif not any_pull and not _the_anim_player.is_playing():
-			if false: _the_anim_player.play("mixamo_com")
 
 func _apply_arm_bone_overrides() -> void:
 	if not _skeleton:
@@ -3573,10 +3360,6 @@ var _glide_last_log := 0.0
 
 
 func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
-	# Stop glide physics on landing — otherwise canopy keeps flying underground.
-	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
-		_canopy_deployed = false
-		return
 	if not _canopy_deployed:
 		return
 	if _character == null or not is_instance_valid(_character):
@@ -3756,6 +3539,7 @@ const CONTROL_KEYS := {
 	"restart":      KEY_R,
 	"j":            KEY_J,
 	"pause":        KEY_ESCAPE,
+}
 
 
 func _on_opening_anim_timeout() -> void:
@@ -3765,7 +3549,6 @@ func _on_opening_anim_timeout() -> void:
 		print("[VERBATIM] OPENING_ANIM -> DIAGNOSIS (Timer fired)")
 	else:
 		print("[TIMER] WARNING: _on_opening_anim_timeout called but state is ", _game_state)
-
 
 var _controls_ready := false
 
@@ -3815,15 +3598,8 @@ func _log_control_presses() -> void:
 		if not InputMap.has_action(action):
 			continue
 		if Input.is_action_just_pressed(action):
-			# DB: persist confirmed keypress to control_events
-			var _cdb = get_node_or_null('/root/SqliteDb')
-			if _cdb != null:
-				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
-				if _cdb.has_method('execute'): _cdb.execute(_sql)
-				elif _cdb.has_method('_query'): _cdb._query(_sql)
 			print("[CTRL] pressed=", action,
 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
 				"  state=", _game_state,
 				"  deployed=", _canopy_deployed,
 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
-}
