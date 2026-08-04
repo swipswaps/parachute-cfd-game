@@ -1,0 +1,484 @@
+=== plane render-path diagnostic 20260804110116 UTC ===
+godot binary: godot
+
+########## PART 1: WINDOWED RUN (stays IN_PLANE) ##########
+Launching windowed for 25s. A window WILL appear. Do NOT press J.
+cmd: godot --path godot_project  (no --headless, GODOT_HEADLESS unset)
+
+./diag_plane_render_path.sh: line 153: 487758 Killed                     timeout 25 "$GODOT_BIN" --path godot_project > "$RUN" 2>&1
+run exit: 137   run log lines: 200
+
+########## PART 2: RUNTIME PLANE + CAMERA TELEMETRY ##########
+./diag_plane_render_path.sh: line 49: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+27:[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+51:[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+78:[VERBATIM] Cessna model loaded. visible=true scale=(15.0, 15.0, 15.0)
+80:[DIAG] _ready: plane created, _plane_node=FlyingPlane:<CharacterBody3D#38889588332>
+130:[ANIMDIAG] current='' is_playing=false speed_scale=1.0 active=true process_mode=1 list=["Take 001", "mixamo_com"]
+190:[CANOPYSYNC] transition at state=0 deployed=false visible=false
+
+--- GameState transitions (want to STAY at 0/IN_PLANE) ---
+190:[CANOPYSYNC] transition at state=0 deployed=false visible=false
+193:[DIAG] _physics_process: ENTER, state=0
+
+--- first 12 IN_PLANE physics frames (plane pos + camera pos) ---
+195:[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+198:[DIAG] _physics_process: camera moved from (0.0, 1880.516, -167.1839) to (799.9964, 1905.516, -164.7839)
+
+--- any render/mesh/cull warnings ---
+
+########## PART 3: CAMERA->PLANE GEOMETRY ##########
+parsed plane frames=1  camera frames=1
+frame 0: plane=(800.0,1853.8,2.4) camera=(800.0,1905.5,-164.8) delta=(0.0,-51.7,167.2) dist=175.0m
+Note: code calls _camera.look_at(plane) every frame, so the plane is
+centered in view by construction. If dist is within near/far (0.1..10000)
+and PART 2 shows visible=true, the plane IS framed — 'not visible' would
+then mean occlusion, scale, or the window never actually rendered.
+
+########## PART 4: MAIN render-path code (numbered, with path) ##########
+
+===== MAIN  [godot_project/scripts/build_terrain.gd] =====
+--- anchor "plane.global_position = Vector3" @ line 2661 (±5) ---
+ 2656: 	trigger_collision.shape = BoxShape3D.new()
+ 2657: 	trigger_collision.shape.size = Vector3(2, 2, 2)
+ 2658: 	trigger_collision.position = Vector3(1.5, 0, -2)
+ 2659: 	exit_trigger.add_child(trigger_collision)
+ 2660: 
+ 2661: 	plane.global_position = Vector3(0, 1828.8, 0)
+ 2662: 	_log("[VERBATIM] Plane created at altitude 6000")
+ 2663: 
+ 2664: 
+ 2665: func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
+ 2666: 	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
+--- anchor "Cessna" @ line 2642 (±5) ---
+ 2637: 		# Make it visible and large enough to see
+ 2638: 		aircraft.visible = true
+ 2639: 		aircraft.scale = Vector3(15.0, 15.0, 15.0)  # Increased from 1 to 5
+ 2640: 		aircraft.position = Vector3(0, 0, 0)
+ 2641: 		print(
+ 2642: 			"[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale
+ 2643: 		)
+ 2644: 	else:
+ 2645: 		print("[VERBATIM] Failed to load Cessna model")
+ 2646: 
+ 2647: 	var plane_collision := CollisionShape3D.new()
+--- anchor "Cessna" @ line 2645 (±5) ---
+ 2640: 		aircraft.position = Vector3(0, 0, 0)
+ 2641: 		print(
+ 2642: 			"[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale
+ 2643: 		)
+ 2644: 	else:
+ 2645: 		print("[VERBATIM] Failed to load Cessna model")
+ 2646: 
+ 2647: 	var plane_collision := CollisionShape3D.new()
+ 2648: 	plane_collision.shape = BoxShape3D.new()
+ 2649: 	plane_collision.shape.size = Vector3(3, 1, 10)
+ 2650: 	plane.add_child(plane_collision)
+--- anchor "_plane_node = plane" @ line 2629 (±5) ---
+ 2624: 			print("[VERBATIM] plane: test_plane_process method not found")
+ 2625: 		_log("[VERBATIM] Plane script attached")
+ 2626: 	else:
+ 2627: 		_log("[VERBATIM] WARNING: plane.gd not found")
+ 2628: 	add_child(plane)
+ 2629: 	_plane_node = plane
+ 2630: 	plane.add_to_group("plane")
+ 2631: 
+ 2632: 	# Load aircraft model
+ 2633: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+ 2634: 	if plane_scene and plane_scene is PackedScene:
+--- anchor "_camera = Camera3D.new()" @ line 386 (±5) ---
+  381: 	# --------------------------------------------------------------
+  382: 	_load_camera_settings()  # load DB distance before placing camera (line 382 anchor)
+  383: 	# Third‑person camera – child of root, initially follows plane
+  384: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+  385: 	# --------------------------------------------------------------
+  386: 	_camera = Camera3D.new()
+  387: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+  388: 	_camera.fov = 75.0
+  389: 	_camera.near = 0.1
+  390: 	_camera.far = 10000.0
+  391: 	add_child(_camera)
+--- anchor "_camera = Camera3D.new()" @ line 2328 (±5) ---
+ 2323: 
+ 2324: 	_pip_canopy_node = canopy_scene.instantiate()
+ 2325: 	_pip_viewport.add_child(_pip_canopy_node)
+ 2326: 	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+ 2327: 
+ 2328: 	_pip_camera = Camera3D.new()
+ 2329: 	var pip_env := WorldEnvironment.new()
+ 2330: 	var env := Environment.new()
+ 2331: 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+ 2332: 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+ 2333: 	env.ambient_light_energy = 0.8
+--- anchor "func _update_camera_position" @ line 2797 (±5) ---
+ 2792: 	else:
+ 2793: 		_cam_distance = 300.0
+ 2794: 		print("[CAMERA] Plane camera distance not found, using default 300.0")
+ 2795: 
+ 2796: 
+ 2797: func _update_camera_position() -> void:
+ 2798: 	if not is_instance_valid(_camera):
+ 2799: 		return
+ 2800: 	var target: Vector3
+ 2801: 	if camera_target == "plane" and is_instance_valid(_plane_node):
+ 2802: 		target = _plane_node.global_position
+--- anchor "func _load_camera_settings" @ line 2782 (±5) ---
+ 2777: 		)
+ 2778: 	)
+ 2779: 	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
+ 2780: 
+ 2781: 
+ 2782: func _load_camera_settings() -> void:
+ 2783: 	var db = SqliteDb  # autoload singleton
+ 2784: 	if not db:
+ 2785: 		return
+ 2786: 	# Ensure table exists
+ 2787: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+--- anchor "_camera.look_at" @ line 401 (±5) ---
+  396: 		var plane_pos = _plane_node.global_position
+  397: 		var offset = Vector3(0, 0, -_cam_distance)
+  398: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  399: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  400: 		_camera.global_position = plane_pos + offset
+  401: 		_camera.look_at(plane_pos, Vector3.UP)
+  402: 		_camera.current = true
+  403: 		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+  404: 		print("[DEBUG] Plane position: ", plane_pos)
+  405: 		print("[DEBUG] Camera position: ", _camera.global_position)
+  406: 		print("[DIAG] _ready: camera positioned")
+--- anchor "_camera.look_at" @ line 1645 (±5) ---
+ 1640: 				_character.position = Vector3(100, 1828.8, -100)
+ 1641: 			_show_notification("Jumped! Deploy parachute (SPACE) above 2000 ft AGL")
+ 1642: 			# --- Immediately switch camera to character ---
+ 1643: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+ 1644: 				_camera.global_position = _character.global_position + Vector3(0, 2, 3)
+ 1645: 				_camera.look_at(_character.global_position, Vector3.UP)
+ 1646: 				print("[CAMERA] Switched to character after exit")
+ 1647: 				_camera.current = true  # ensure the camera becomes active
+ 1648: 		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
+ 1649: 		return
+ 1650: 
+--- anchor "_camera.look_at" @ line 1802 (±5) ---
+ 1797: 				var target = _character.global_position
+ 1798: 				var offset = Vector3(0, 0, -_cam_distance)
+ 1799: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1800: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1801: 				_camera.global_position = target + offset
+ 1802: 				_camera.look_at(target, Vector3.UP)
+ 1803: 				print("[CAMERA] Switched to character (J)")
+ 1804: 		else:
+ 1805: 			camera_target = "plane"
+ 1806: 			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+ 1807: 				var target = _plane_node.global_position
+--- anchor "_camera.look_at" @ line 1812 (±5) ---
+ 1807: 				var target = _plane_node.global_position
+ 1808: 				var offset = Vector3(0, 0, -_cam_distance)
+ 1809: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1810: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1811: 				_camera.global_position = target + offset
+ 1812: 				_camera.look_at(target, Vector3.UP)
+ 1813: 				print("[CAMERA] Switched to plane (J)")
+ 1814: 
+ 1815: 
+ 1816: # ------------------------------------------------------------------
+ 1817: # Reset game to initial state (deterministic, idempotent)
+--- anchor "_camera.look_at" @ line 1948 (±5) ---
+ 1943: 			return
+ 1944: 		var offset = Vector3(0, 0, -_cam_distance)
+ 1945: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1946: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1947: 		_camera.global_position = target + offset
+ 1948: 		_camera.look_at(target, Vector3.UP)
+ 1949: 		print(
+ 1950: 			"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)
+ 1951: 		)
+ 1952: 
+ 1953: 	if event is InputEventKey and event.pressed and not event.echo:
+--- anchor "_camera.look_at" @ line 2056 (±5) ---
+ 2051: 			var target = _plane_node.global_position
+ 2052: 			var offset = Vector3(0, 0, -_cam_distance)
+ 2053: 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 2054: 			offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 2055: 			_camera.global_position = target + offset
+ 2056: 			_camera.look_at(target, Vector3.UP)
+ 2057: 			print(
+ 2058: 				"[DIAG] _physics_process: camera moved from ",
+ 2059: 				old_pos,
+ 2060: 				" to ",
+ 2061: 				_camera.global_position
+--- anchor "_camera.look_at" @ line 2080 (±5) ---
+ 2075: 		var target = _character.global_position
+ 2076: 		var offset = Vector3(0, 0, -_cam_distance)
+ 2077: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 2078: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 2079: 		_camera.global_position = target + offset
+ 2080: 		_camera.look_at(target, Vector3.UP)
+ 2081: 		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
+ 2082: 	_prev_descent_rate = _descent_rate
+ 2083: 	# p2 VARIO FIX: the result of _get_current_descent_rate() used to go
+ 2084: 	# into a LOCAL named `descent`; the member _descent_rate was never
+ 2085: 	# assigned, so _vario_mps = _prev_descent_rate - _descent_rate was
+--- anchor "_camera.look_at" @ line 2337 (±5) ---
+ 2332: 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+ 2333: 	env.ambient_light_energy = 0.8
+ 2334: 	pip_env.environment = env
+ 2335: 	_pip_viewport.add_child(pip_env)
+ 2336: 	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+ 2337: 	_pip_camera.look_at_from_position(
+ 2338: 		Vector3(0.0, 1.8, 0.0), Vector3(0.0, 5.0, 0.0), Vector3.FORWARD
+ 2339: 	)
+ 2340: 	_pip_camera.fov = 110.0
+ 2341: 	_pip_viewport.add_child(_pip_camera)
+ 2342: 	_pip_camera.current = true
+--- anchor "_camera.look_at" @ line 2813 (±5) ---
+ 2808: 		else:
+ 2809: 			return
+ 2810: 	var offset := Vector3(0, 0, _cam_distance)
+ 2811: 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
+ 2812: 	_camera.global_position = target + rot * offset
+ 2813: 	_camera.look_at(target, Vector3.UP)
+ 2814: 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
+ 2815: 	_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)
+ 2816: 
+ 2817: 
+ 2818: # Added to fix deferred call and log warning via ErrorLogger
+--- anchor "_camera.look_at" @ line 3673 (±5) ---
+ 3668: 	# Straight up is degenerate for look_at unless the up-hint is horizontal,
+ 3669: 	# so the current heading is used as that hint.
+ 3670: 	var up_hint := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+ 3671: 	if up_hint.length() < 0.001:
+ 3672: 		up_hint = Vector3.FORWARD
+ 3673: 	_pip_camera.look_at(eye + Vector3(0.0, 30.0, 0.0), up_hint)
+ 3674: 
+ 3675: 	_pip_log_t += delta
+ 3676: 	if _pip_log_t > 2.0:
+ 3677: 		_pip_log_t = 0.0
+ 3678: 		var what := "canopy" if _canopy_deployed else "aircraft/sky"
+
+########## PART 5: _0062 render-path code (numbered, with path) ##########
+
+===== _0062  [/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062/godot_project/scripts/build_terrain.gd] =====
+--- anchor "plane.global_position = Vector3" @ line 2536 (±5) ---
+ 2531: 	trigger_collision.shape = BoxShape3D.new()
+ 2532: 	trigger_collision.shape.size = Vector3(2, 2, 2)
+ 2533: 	trigger_collision.position = Vector3(1.5, 0, -2)
+ 2534: 	exit_trigger.add_child(trigger_collision)
+ 2535: 
+ 2536: 	plane.global_position = Vector3(0, 1828.8, 0)
+ 2537: 	_log("[VERBATIM] Plane created at altitude 6000")
+ 2538: 
+ 2539: 
+ 2540: func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
+ 2541: 	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
+--- anchor "Cessna" @ line 2517 (±5) ---
+ 2512: 		# Make it visible and large enough to see
+ 2513: 		aircraft.visible = true
+ 2514: 		aircraft.scale = Vector3(15.0, 15.0, 15.0)  # Increased from 1 to 5
+ 2515: 		aircraft.position = Vector3(0, 0, 0)
+ 2516: 		print(
+ 2517: 			"[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale
+ 2518: 		)
+ 2519: 	else:
+ 2520: 		print("[VERBATIM] Failed to load Cessna model")
+ 2521: 
+ 2522: 	var plane_collision := CollisionShape3D.new()
+--- anchor "Cessna" @ line 2520 (±5) ---
+ 2515: 		aircraft.position = Vector3(0, 0, 0)
+ 2516: 		print(
+ 2517: 			"[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale
+ 2518: 		)
+ 2519: 	else:
+ 2520: 		print("[VERBATIM] Failed to load Cessna model")
+ 2521: 
+ 2522: 	var plane_collision := CollisionShape3D.new()
+ 2523: 	plane_collision.shape = BoxShape3D.new()
+ 2524: 	plane_collision.shape.size = Vector3(3, 1, 10)
+ 2525: 	plane.add_child(plane_collision)
+--- anchor "_plane_node = plane" @ line 2504 (±5) ---
+ 2499: 			print("[VERBATIM] plane: test_plane_process method not found")
+ 2500: 		_log("[VERBATIM] Plane script attached")
+ 2501: 	else:
+ 2502: 		_log("[VERBATIM] WARNING: plane.gd not found")
+ 2503: 	add_child(plane)
+ 2504: 	_plane_node = plane
+ 2505: 	plane.add_to_group("plane")
+ 2506: 
+ 2507: 	# Load aircraft model
+ 2508: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+ 2509: 	if plane_scene and plane_scene is PackedScene:
+--- anchor "_camera = Camera3D.new()" @ line 377 (±5) ---
+  372: 
+  373: 	# --------------------------------------------------------------
+  374: 	# Third‑person camera – child of root, initially follows plane
+  375: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+  376: 	# --------------------------------------------------------------
+  377: 	_camera = Camera3D.new()
+  378: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+  379: 	_camera.fov = 75.0
+  380: 	_camera.near = 0.1
+  381: 	_camera.far = 10000.0
+  382: 	add_child(_camera)
+--- anchor "_camera = Camera3D.new()" @ line 2203 (±5) ---
+ 2198: 
+ 2199: 	_pip_canopy_node = canopy_scene.instantiate()
+ 2200: 	_pip_viewport.add_child(_pip_canopy_node)
+ 2201: 	_pip_canopy_node.position = Vector3(0.0, 5.0, 0.0)
+ 2202: 
+ 2203: 	_pip_camera = Camera3D.new()
+ 2204: 	var pip_env := WorldEnvironment.new()
+ 2205: 	var env := Environment.new()
+ 2206: 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+ 2207: 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+ 2208: 	env.ambient_light_energy = 0.8
+--- anchor "func _update_camera_position" @ line 2672 (±5) ---
+ 2667: 	else:
+ 2668: 		_cam_distance = 300.0
+ 2669: 		print("[CAMERA] Plane camera distance not found, using default 300.0")
+ 2670: 
+ 2671: 
+ 2672: func _update_camera_position() -> void:
+ 2673: 	if not is_instance_valid(_camera):
+ 2674: 		return
+ 2675: 	var target: Vector3
+ 2676: 	if camera_target == "plane" and is_instance_valid(_plane_node):
+ 2677: 		target = _plane_node.global_position
+--- anchor "func _load_camera_settings" @ line 2657 (±5) ---
+ 2652: 		)
+ 2653: 	)
+ 2654: 	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
+ 2655: 
+ 2656: 
+ 2657: func _load_camera_settings() -> void:
+ 2658: 	var db = SqliteDb  # autoload singleton
+ 2659: 	if not db:
+ 2660: 		return
+ 2661: 	# Ensure table exists
+ 2662: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+--- anchor "_camera.look_at" @ line 392 (±5) ---
+  387: 		var plane_pos = _plane_node.global_position
+  388: 		var offset = Vector3(0, 0, -_cam_distance)
+  389: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+  390: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+  391: 		_camera.global_position = plane_pos + offset
+  392: 		_camera.look_at(plane_pos, Vector3.UP)
+  393: 		_camera.current = true
+  394: 		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+  395: 		print("[DEBUG] Plane position: ", plane_pos)
+  396: 		print("[DEBUG] Camera position: ", _camera.global_position)
+  397: 		print("[DIAG] _ready: camera positioned")
+--- anchor "_camera.look_at" @ line 1570 (±5) ---
+ 1565: 				_character.position = Vector3(100, 1828.8, -100)
+ 1566: 			_show_notification("Jumped! Deploy parachute (SPACE) above 2000 ft AGL")
+ 1567: 			# --- Immediately switch camera to character ---
+ 1568: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+ 1569: 				_camera.global_position = _character.global_position + Vector3(0, 2, 3)
+ 1570: 				_camera.look_at(_character.global_position, Vector3.UP)
+ 1571: 				print("[CAMERA] Switched to character after exit")
+ 1572: 				_camera.current = true  # ensure the camera becomes active
+ 1573: 		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
+ 1574: 		return
+ 1575: 
+--- anchor "_camera.look_at" @ line 1718 (±5) ---
+ 1713: 				var target = _character.global_position
+ 1714: 				var offset = Vector3(0, 0, -_cam_distance)
+ 1715: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1716: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1717: 				_camera.global_position = target + offset
+ 1718: 				_camera.look_at(target, Vector3.UP)
+ 1719: 				print("[CAMERA] Switched to character (J)")
+ 1720: 		else:
+ 1721: 			camera_target = "plane"
+ 1722: 			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+ 1723: 				var target = _plane_node.global_position
+--- anchor "_camera.look_at" @ line 1728 (±5) ---
+ 1723: 				var target = _plane_node.global_position
+ 1724: 				var offset = Vector3(0, 0, -_cam_distance)
+ 1725: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1726: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1727: 				_camera.global_position = target + offset
+ 1728: 				_camera.look_at(target, Vector3.UP)
+ 1729: 				print("[CAMERA] Switched to plane (J)")
+ 1730: 
+ 1731: 
+ 1732: # ------------------------------------------------------------------
+ 1733: # Reset game to initial state (deterministic, idempotent)
+--- anchor "_camera.look_at" @ line 1851 (±5) ---
+ 1846: 			return
+ 1847: 		var offset = Vector3(0, 0, -_cam_distance)
+ 1848: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1849: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1850: 		_camera.global_position = target + offset
+ 1851: 		_camera.look_at(target, Vector3.UP)
+ 1852: 		print(
+ 1853: 			"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)
+ 1854: 		)
+ 1855: 
+ 1856: 	if event is InputEventKey and event.pressed and not event.echo:
+--- anchor "_camera.look_at" @ line 1949 (±5) ---
+ 1944: 			var target = _plane_node.global_position
+ 1945: 			var offset = Vector3(0, 0, -_cam_distance)
+ 1946: 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1947: 			offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1948: 			_camera.global_position = target + offset
+ 1949: 			_camera.look_at(target, Vector3.UP)
+ 1950: 			print(
+ 1951: 				"[DIAG] _physics_process: camera moved from ",
+ 1952: 				old_pos,
+ 1953: 				" to ",
+ 1954: 				_camera.global_position
+--- anchor "_camera.look_at" @ line 1973 (±5) ---
+ 1968: 		var target = _character.global_position
+ 1969: 		var offset = Vector3(0, 0, -_cam_distance)
+ 1970: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 1971: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 1972: 		_camera.global_position = target + offset
+ 1973: 		_camera.look_at(target, Vector3.UP)
+ 1974: 		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
+ 1975: 	_prev_descent_rate = _descent_rate
+ 1976: 	_apply_malfunction_effects(delta)
+ 1977: 	var descent = _get_current_descent_rate() * 60.0 * delta
+ 1978: 	_character.position.y -= descent
+--- anchor "_camera.look_at" @ line 2212 (±5) ---
+ 2207: 	env.ambient_light_color = Color(1.0, 1.0, 1.0)
+ 2208: 	env.ambient_light_energy = 0.8
+ 2209: 	pip_env.environment = env
+ 2210: 	_pip_viewport.add_child(pip_env)
+ 2211: 	_pip_camera.position = Vector3(0.0, 1.8, 0.0)
+ 2212: 	_pip_camera.look_at_from_position(
+ 2213: 		Vector3(0.0, 1.8, 0.0), Vector3(0.0, 5.0, 0.0), Vector3.FORWARD
+ 2214: 	)
+ 2215: 	_pip_camera.fov = 110.0
+ 2216: 	_pip_viewport.add_child(_pip_camera)
+ 2217: 	_pip_camera.current = true
+--- anchor "_camera.look_at" @ line 2688 (±5) ---
+ 2683: 		else:
+ 2684: 			return
+ 2685: 	var offset := Vector3(0, 0, _cam_distance)
+ 2686: 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
+ 2687: 	_camera.global_position = target + rot * offset
+ 2688: 	_camera.look_at(target, Vector3.UP)
+ 2689: 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
+ 2690: 	_save_camera_settings()
+ 2691: 
+ 2692: 
+ 2693: # Added to fix deferred call and log warning via ErrorLogger
+--- anchor "_camera.look_at" @ line 3437 (±5) ---
+ 3432: 	# Straight up is degenerate for look_at unless the up-hint is horizontal,
+ 3433: 	# so the current heading is used as that hint.
+ 3434: 	var up_hint := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+ 3435: 	if up_hint.length() < 0.001:
+ 3436: 		up_hint = Vector3.FORWARD
+ 3437: 	_pip_camera.look_at(eye + Vector3(0.0, 30.0, 0.0), up_hint)
+ 3438: 
+ 3439: 	_pip_log_t += delta
+ 3440: 	if _pip_log_t > 2.0:
+ 3441: 		_pip_log_t = 0.0
+ 3442: 		var what := "canopy" if _canopy_deployed else "aircraft/sky"
+
+########## PART 6: DIFF main vs _0062, plane-create block ##########
+MAIN slice: lines 2642..2629 of godot_project/scripts/build_terrain.gd
+REF slice: lines 2517..2504 of /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062/godot_project/scripts/build_terrain.gd
+--- diff (REF=_0062 < , MAIN > ) ---
+
+=== END DIAGNOSTIC ===
