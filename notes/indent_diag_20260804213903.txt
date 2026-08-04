@@ -1,0 +1,63 @@
+=== INDENTATION DIAGNOSTIC — 20260804213903 UTC ===
+
+=== LINES 1900-1950 (with visible whitespace) ===
+^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+^I^Ioffset = offset.rotated(Vector3.RIGHT, _cam_elevation)$
+^I^I_camera.global_position = target + offset$
+^I^I_camera.look_at(target, Vector3.UP)$
+^I^Iprint($
+^I^I^I"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)$
+^I^I)$
+$
+^Iif event is InputEventKey and event.pressed and not event.echo:$
+^I^Ivar action := ""$
+^I^Iif event.keycode == KEY_Q:$
+^I^I^Iaction = "turn_left (Q)"$
+^I^Ielif event.keycode == KEY_E:$
+^I^I^Iaction = "turn_right (E)"$
+^I^Ielif event.keycode == KEY_SPACE:$
+^I^I^Iaction = "deploy (SPACE)"$
+^I^Ielif event.keycode == KEY_C:$
+^I^I^Iaction = "cycle_camera (C)"$
+^I^Ielif event.keycode == KEY_H:$
+^I^I^Iaction = "toggle_hud (H)"$
+^I^Ielif event.keycode == KEY_X:$
+^I^I^Iaction = "cutaway (X)"$
+^I^Ielif event.keycode == KEY_V:$
+^I^I^Iaction = "reserve (V)"$
+^I^Ielif event.keycode == KEY_F:$
+^I^I^Iaction = "flare (F)"$
+^I^Ielif event.keycode == KEY_R:$
+^I^I^Iaction = "restart (R)"$
+^I^Iif action != "":$
+^I^I^Iprint("[VERBATIM] INPUT: action=", action)$
+^Iif event.is_action_pressed("pause"):$
+^I^Itoggle_pause()$
+$
+^I# Manual save key (S)$
+^Iif event is InputEventKey and event.pressed and event.keycode == KEY_S:$
+^I^I_save_camera_settings()$
+^I^Iprint("[CAMERA] Settings saved manually")$
+$
+$
+func _physics_process(delta) -> void:$
+_apply_arm_bone_overrides()$
+^I# ADDED (this session): explicit poll calls, since Godot never invokes$
+^I# ADDED (this session): explicit poll calls, since Godot never invokes$
+^I# ForensicHUD._input()/ForensicPanel._process() automatically.$
+^Iif ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):$
+^I^IForensicHUD.poll_forensic_hud()$
+^Iif ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):$
+^I^IForensicPanel.poll_forensic_panel()$
+^Iif _character and is_instance_valid(_character):$
+^I^IAltimeterHUD.update_altitude(_character.global_position.y * 3.28084)$
+^I# --- Q/E turn input (checked first so it's available for all states) ---$
+
+=== _input FUNCTION (start + 50 lines) ===
+
+=== END OF _input (closing brace context) ===
+Last line of _input: 3552:}
+
+=== _physics_process FUNCTION (first 30 lines) ===
+
+=== END DIAGNOSTIC ===
