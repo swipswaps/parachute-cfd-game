@@ -1,0 +1,155 @@
+=== OPENING_ANIM -> DIAGNOSIS transition fix 20260804184152 UTC ===
+
+########## PART 1: PRE-STATE (grounded counts in CODE) ##########
+GameState.DIAGNOSIS writes in CODE : 0
+_deployment_timer -= delta hits    : 0
+GameState.LANDED writes in CODE    : 2
+
+########## PART 2: APPLY PATCH ##########
+[DIAG] GameState.DIAGNOSIS writes in CODE before patch: 0
+[DIAG] _deployment_timer -= delta occurrences before: 0
+[2026-08-04T18:41:53.023165+00:00] [SUCCESS] anchors: A=2170  B=2171
+[2026-08-04T18:41:53.024005+00:00] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260804184153
+[2026-08-04T18:41:53.029363+00:00] [SUCCESS] write: read-back match
+[2026-08-04T18:41:53.031410+00:00] [SUCCESS] tabs_only: no leading spaces
+[2026-08-04T18:41:53.034484+00:00] [SUCCESS] diagnosis_write: exactly 1 GameState.DIAGNOSIS write in code
+[2026-08-04T18:41:53.034769+00:00] [SUCCESS] timer_decrement: exactly 1 _deployment_timer -= delta in code
+
+PATCH APPLIED: godot_project/scripts/build_terrain.gd
+Backup: godot_project/scripts/build_terrain.gd.bak.20260804184153
+
+########## PART 3: POST-STATE (grounded counts in CODE) ##########
+GameState.DIAGNOSIS writes in CODE : 1
+_deployment_timer -= delta hits    : 1
+GameState.LANDED writes in CODE    : 2
+
+########## PART 4: DIFF ##########
+2170a2171,2186
+> 
+> 	# OPENING_ANIM -> DIAGNOSIS transition (this session):
+> 	# _deployment_timer is set to 2.0 at line 874 in _deploy_canopy()
+> 	# but was NEVER decremented anywhere in the file (proven by
+> 	# notes/diag_opening_anim_20260804182915.txt PART H: 0 hits for
+> 	# '_deployment_timer -= '). State stuck at OPENING_ANIM = 4896
+> 	# emissions across a 90-s autostall run (fix_landed log PART 7).
+> 	# Mirrors the existing _screenshot_save_timer countdown pattern
+> 	# in this same function at lines 2166-2170.
+> 	# Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+> 	if _game_state == GameState.OPENING_ANIM:
+> 		_deployment_timer -= delta
+> 		if _deployment_timer <= 0.0:
+> 			_deployment_timer = 0.0
+> 			_game_state = GameState.DIAGNOSIS
+> 			print("[VERBATIM] OPENING_ANIM -> DIAGNOSIS (canopy fully open)")
+
+########## PART 5: NEW insertion block, numbered ##########
+ 1484: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+ 1485: 	elif _current_altitude <= 0.0 and not _safe_landing:
+ 1486: 		ScreenshotLibrary.save_flight_screenshot()
+ 1487: 		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+ 1488: 		_game_state = GameState.GAME_OVER
+ 1489: 		print("[VERBATIM] FATAL – ground impact without safe landing")
+ 1490: 		_show_notification("FATAL – ground impact")
+ 1491: 
+ 1492: 
+ 1493: func _get_current_descent_rate() -> float:
+ 1494: 	if _game_state == GameState.FREEFALL:
+ 1495: 		return 1.2
+ 1496: 	if _game_state == GameState.OPENING_ANIM:
+ 1497: 		return 0.3
+ 1498: 	if _game_state != GameState.DIAGNOSIS:
+ 1499: 		return 0.0
+ 1500: 	if _reserve_done or _flare_done:
+ 1501: 		return DESCENT_RATE_GOOD
+ 1502: 	match _malfunction:
+ 1503: 		MalfunctionType.BAG_LOCK:
+ 1504: 			return DESCENT_RATE_BAGLOCK
+ 1505: 		MalfunctionType.GOOD:
+ 1506: 			return DESCENT_RATE_GOOD
+ 1507: 		_:
+
+########## PART 6: AUTOSTALL RUN (headless pipeline) ##########
+launching autostall_patched.py --no-timeout
+autostall pid=565667
+t=  2s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t=  4s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t=  6s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t=  8s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 10s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 12s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 14s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 16s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 18s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 20s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 22s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 24s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 26s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 28s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 30s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 32s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 34s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 36s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 38s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 40s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 42s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 44s  frames=0  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 46s  frames=8  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 48s  frames=113  DIAG-hits=0  LANDED-hits=0  SAFE=0  completed=0
+t= 50s  frames=234  DIAG-hits=394  LANDED-hits=0  SAFE=0  completed=0
+t= 52s  frames=355  DIAG-hits=881  LANDED-hits=0  SAFE=0  completed=0
+t= 54s  frames=454  DIAG-hits=1244  LANDED-hits=0  SAFE=0  completed=0
+t= 56s  frames=576  DIAG-hits=1717  LANDED-hits=0  SAFE=0  completed=0
+t= 58s  frames=698  DIAG-hits=2174  LANDED-hits=0  SAFE=0  completed=0
+t= 60s  frames=820  DIAG-hits=2665  LANDED-hits=0  SAFE=0  completed=0
+t= 62s  frames=940  DIAG-hits=3132  LANDED-hits=0  SAFE=0  completed=0
+t= 64s  frames=1043  DIAG-hits=3548  LANDED-hits=0  SAFE=0  completed=0
+t= 66s  frames=1043  DIAG-hits=3548  LANDED-hits=0  SAFE=0  completed=1
+Game completed line seen; giving 4s for tail
+
+########## PART 7: STATE DISTRIBUTION ##########
+  state=0 : 12
+  state=1 : 11
+  state=2 : 448
+  state=3 : 3548
+  state=4 : 0
+  state=5 : 0
+
+--- OPENING_ANIM -> DIAGNOSIS transition prints ---
+1369:[VERBATIM] OPENING_ANIM -> DIAGNOSIS (canopy fully open)
+
+--- SAFE LANDING prints ---
+
+--- Game completed lines ---
+10660:Game completed: False
+
+--- last 25 lines of autostall log ---
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[AUDIT] _exit_tree: ENTER
+[AUDIT] _save_position: ENTER
+[VERBATIM] DatabaseGuard: _exit_tree called
+[VERBATIM] DB CLOSED
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+PulseAudio: context terminated
+
+=== AUTOSTALL FINISHED ===
+Game completed: False
+Fix attempted:  False
+Runtime:        33.3s
+Detailed log:   autostall_summary.json
+===========================
+
+########## PART 8: VERDICT ##########
+PARTIAL: DIAGNOSIS fired (1 hits) but LANDED never reached. See tail.
+
+=== END ===

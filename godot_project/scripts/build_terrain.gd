@@ -2168,6 +2168,22 @@ func _physics_process(delta) -> void:
 		if _screenshot_save_timer <= 0.0:
 			ScreenshotLibrary.save_flight_screenshot()
 			_screenshot_save_timer = 5.0
+
+	# OPENING_ANIM -> DIAGNOSIS transition (this session):
+	# _deployment_timer is set to 2.0 at line 874 in _deploy_canopy()
+	# but was NEVER decremented anywhere in the file (proven by
+	# notes/diag_opening_anim_20260804182915.txt PART H: 0 hits for
+	# '_deployment_timer -= '). State stuck at OPENING_ANIM = 4896
+	# emissions across a 90-s autostall run (fix_landed log PART 7).
+	# Mirrors the existing _screenshot_save_timer countdown pattern
+	# in this same function at lines 2166-2170.
+	# Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+	if _game_state == GameState.OPENING_ANIM:
+		_deployment_timer -= delta
+		if _deployment_timer <= 0.0:
+			_deployment_timer = 0.0
+			_game_state = GameState.DIAGNOSIS
+			print("[VERBATIM] OPENING_ANIM -> DIAGNOSIS (canopy fully open)")
 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
 		print("[VERBATIM] DIAGNOSIS turning block executed")
 		print("[DIAG] _turn_input = ", _turn_input)
