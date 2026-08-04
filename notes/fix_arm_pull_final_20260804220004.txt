@@ -1,0 +1,17 @@
+=== FIX _arm_pull DECLARATION — 20260804220004 UTC ===
+
+Backup created: godot_project/scripts/build_terrain.gd.bak.20260804220004
+Inserted _arm_pull declaration at line 3030
+Patch applied.
+
+=== VERIFICATION (Godot headless) ===
+✅ No parse errors detected.
+
+=== LINES AROUND INSERTION (visible whitespace) ===
+2058:^I^Ivar ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)$
+2934:^I^Ivar pull: float = _arm_pull[side]$
+2962:^I^I_arm_pull[side] = pull$
+3030:var _arm_pull := {"L": 0.0, "R": 0.0}$
+3335:# _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.$
+3374:^Ivar bl: float = _arm_pull["L"]$
+3375:^Ivar br: float = _arm_pull["R"]$
