@@ -1,0 +1,277 @@
+=== FIX INDENTATION — 20260804220950 UTC ===
+
+=== LINES 275-295 (BEFORE FIX) ===
+ 275: ^I^Iconst H = 1024$
+ 276: ^I^Iconst MAX_ELEV = 80.0$
+ 277: ^I^Iconst SCALE_XZ = 4000.0$
+ 278: ^I^Ifor z in range(H):$
+ 279: ^Ivar _loop_counter := 0$
+ 280: ^I^I^Ifor x in range(W):$
+ 281: ^I^I_loop_counter += 1$
+ 282: ^I^Iif _loop_counter % 100 == 0:$
+ 283: ^I^I^Iawait get_tree().process_frame$
+ 284: ^I^I^I^Ivar px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ$
+ 285: ^I^I^I^Ivar pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ$
+ 286: ^I^I^I^Ivar idx = (z * W + x) * 2$
+ 287: ^I^I^I^Ivar raw = data.decode_u16(idx) if idx + 1 < data.size() else 0$
+ 288: ^I^I^I^Ivar py = (float(raw) / 65535.0) * MAX_ELEV$
+ 289: ^I^I^I^Iverts.push_back(Vector3(px, py, pz))$
+ 290: ^I^I^I^Iuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))$
+ 291: ^I^Ivar indices := []$
+ 292: ^I^Ifor z in range(H - 1):$
+ 293: ^I^I^Ifor x in range(W - 1):$
+ 294: ^I^I^I^Ivar a = z * W + x$
+ 295: ^I^I^I^Ivar b = a + 1$
+Patch applied. Backup: godot_project/scripts/build_terrain.gd.bak.20260804220950
+
+=== LINES 275-295 (AFTER FIX) ===
+ 275: ^I^Iconst H = 1024$
+ 276: ^I^Iconst MAX_ELEV = 80.0$
+ 277: ^I^Iconst SCALE_XZ = 4000.0$
+ 278: ^I^Ifor z in range(H):$
+ 279: ^I^I^Ivar _loop_counter := 0$
+ 280: ^I^I^Ifor x in range(W):$
+ 281: ^I^I^I^I_loop_counter += 1$
+ 282: ^I^I^I^Iif _loop_counter % 100 == 0:$
+ 283: ^I^I^I^I^Iawait get_tree().process_frame$
+ 284: ^I^I^I^Ivar pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ$
+ 285: ^I^I^I^Ivar idx = (z * W + x) * 2$
+ 286: ^I^I^I^Ivar raw = data.decode_u16(idx) if idx + 1 < data.size() else 0$
+ 287: ^I^I^I^Ivar py = (float(raw) / 65535.0) * MAX_ELEV$
+ 288: ^I^I^I^Iverts.push_back(Vector3(px, py, pz))$
+ 289: ^I^I^I^Iuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))$
+ 290: ^I^Ivar indices := []$
+ 291: ^I^Ifor z in range(H - 1):$
+ 292: ^I^I^Ifor x in range(W - 1):$
+ 293: ^I^I^I^Ivar a = z * W + x$
+ 294: ^I^I^I^Ivar b = a + 1$
+ 295: ^I^I^I^Ivar c = a + W$
+
+=== DIFF (patched vs backup) ===
+--- godot_project/scripts/build_terrain.gd.bak.20260804220950	2026-08-04 18:08:30.071948020 -0400
++++ godot_project/scripts/build_terrain.gd	2026-08-04 18:09:50.522321210 -0400
+@@ -276,12 +276,11 @@
+ 		const MAX_ELEV = 80.0
+ 		const SCALE_XZ = 4000.0
+ 		for z in range(H):
+-	var _loop_counter := 0
++			var _loop_counter := 0
+ 			for x in range(W):
+-		_loop_counter += 1
+-		if _loop_counter % 100 == 0:
+-			await get_tree().process_frame
+-				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
++				_loop_counter += 1
++				if _loop_counter % 100 == 0:
++					await get_tree().process_frame
+ 				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+ 				var idx = (z * W + x) * 2
+ 				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+
+=== VERIFICATION (Godot headless) ===
+SCRIPT ERROR: Parse Error: Identifier "px" not declared in the current scope.
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== CLEANING DATABASE LOCKS ===
+
+=== RUNNING AUTOSTALL ===
+[2026-08-04T22:09:54.709603+00:00] [success] hub_preflight: Hub healthy before launch
+[DB] Log failed: NOT NULL constraint failed: diagnostic_log.file_path
+[HUB] Checking hub health...
+[HUB] Hub is already healthy.
+[DISPLAY] Using existing display: :0.0
+[ENV] Using DISPLAY=:0.0
+[PATCH] Auto‑start patch already applied.
+[SETUP] godot binary: /usr/bin/godot
+[SETUP] project dir:  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project
+[RUN] /usr/bin/godot --path godot_project --verbose
+[RUN] stall threshold: 30.0s   timeout: 120s
+[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)
+========================================================================
+[DB] Using table: files_to_fix
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Unrecognized output string "misc2" in mapping:
+030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+SDL: Init OK!
+Xshape 1.1 detected.
+Xinerama 1.1 detected.
+Xrandr 1.6 detected.
+Xrender 0.11 detected.
+Xinput 2.2 detected.
+XInput: Refreshing devices.
+XInput: No touch devices found.
+Detecting GPUs, set DRI_PRIME in the environment to override GPU detection logic.
+Only one GPU found, using default.
+Failed loading custom cursor: crossed_circle
+DBus 1.16.2 detected.
+Using "default" pen tablet driver...
+Shader 'CanvasSdfShaderGLES3' SHA256: 4178a370fca21ad6216db6f7823dc24d65f8d4ad71442bbaa5d6f9a230a081ea
+Shader 'SkeletonShaderGLES3' SHA256: 8bc0ec35c83978cd6d65ef8fc16df8e916ba1e2a9d5a98423fd53815bae40b65
+Shader 'ParticlesShaderGLES3' SHA256: 6afaaf25f8938f1e43e69699472011afc51b674c0df4cd381d188953d85ec5a3
+Shader 'ParticlesCopyShaderGLES3' SHA256: 39392086598b90ead64d3323c81c8ade94c690b12d308ef31d5b9690c172fb22
+Shader 'CopyShaderGLES3' SHA256: 997ec09347cd52d2f6dc09d2a1ab366d3ba8485a46f43f593451013172c4c0ad
+Shader 'CubemapFilterShaderGLES3' SHA256: 32dcf4d8e16f18e32b807a2d1406cca20c37a1e6fcccf8420addb836c4d08aa5
+Shader 'GlowShaderGLES3' SHA256: a6700f3ac665fc4867995c9fcc2052c36df9c7d4909f0d5b8d1092726671dbd0
+Shader 'PostShaderGLES3' SHA256: 6eedbef0b87035bc14ebaf4f413c9e32fa64d5e88a36f1d51dbd0c2be5e54df3
+Shader 'FeedShaderGLES3' SHA256: bddb9e1271cb1ff96bb0f53b92f2724c49e525ede46d8de0d776819eca048a2d
+Shader 'CanvasShaderGLES3' SHA256: f4ec43ced4296bc56a0508da1fd428b360690cb08bcc44b1135a42a01b3844af
+Shader 'CanvasOcclusionShaderGLES3' SHA256: 578a45ce760a0ed6361559f46e9aedf93aa4cc3580d835d6dbc5ae8e4265557c
+Shader 'SceneShaderGLES3' SHA256: 23ab6aea89cc6db38dee15711362af8e7ad9c08bbe99cb758445c4ca6f910f83
+Shader 'SkyShaderGLES3' SHA256: 5d5d48528e786bc9445620d0ef25bddc8d0c7ce6aa74df01c30eb96e7c51f67e
+OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+PulseAudio 17.0.0 detected.
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context other
+PulseAudio: context ready
+PulseAudio: Detecting channels for device: alsa_output.pci-0000_00_1b.0.analog-stereo
+PulseAudio: detected 2 output channels
+PulseAudio: audio buffer frames: 512 calculated output latency: 11ms
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2475187701
+EDITOR API HASH: 3867286884
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://TelemetryLogger.gd
+Loading resource: res://scripts/SqliteDb.gd
+Loading resource: res://autoloads/HealthChecker.gd
+Loading resource: res://scripts/HubManager.gd
+Loading resource: res://scripts/DatabaseGuard.gd
+Loading resource: res://scripts/ResourceThrottle.gd
+Loading resource: res://scripts/PerformanceMonitor.gd
+Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+Loading resource: res://scripts/SqliteWatchdog.gd
+Loading resource: res://scripts/StructuredLogger.gd
+Loading resource: res://scripts/InputManager.gd
+Loading resource: res://scripts/GameIntegrity.gd
+Loading resource: res://scripts/altimeter_hud.gd
+Loading resource: res://scripts/forensic_hud.gd
+Loading resource: res://scripts/audit.gd
+Loading resource: res://scripts/wind_field.gd
+Loading resource: res://autoloads/CursorManager.gd
+Loading resource: res://autoloads/Gamification.gd
+Loading resource: res://autoloads/forensic_panel.gd
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn
+Loading resource: res://scripts/build_terrain.gd
+SCRIPT ERROR: Parse Error: Identifier "px" not declared in the current scope.
+          at: GDScript::reload (res://scripts/build_terrain.gd:288)
+
+[DIAG] Error in godot_project/scripts/build_terrain.gd at line 288:
+      [STALL SOURCE] godot_project/scripts/build_terrain.gd lines 285-291 (offending line 288):
+          285: 				var idx = (z * W + x) * 2
+          286: 				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+          287: 				var py = (float(raw) / 65535.0) * MAX_ELEV
+      >>  288: 				verts.push_back(Vector3(px, py, pz))
+          289: 				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
+          290: 		var indices := []
+          291: 		for z in range(H - 1):
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+[DIAG] Godot error:
+  ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+
+[DIAG] Engine error in modules/gdscript/gdscript.cpp at line 2907:
+      [ENGINE SOURCE] modules/gdscript/gdscript.cpp lines 2904-2910 (line 2907):
+         2904: 
+         2905: 	if (err && scr.is_valid()) {
+         2906: 		// If !scr.is_valid(), the error was likely from scr->load_source_code(), which already generates an error.
+      >> 2907: 		ERR_PRINT_ED(vformat(R"(Failed to load script "%s" with error "%s".)", p_original_path, error_names[err]));
+         2908: 	}
+         2909: 
+         2910: 	if (r_error) {
+Loading resource: res://assets/terrain/black_env.tres
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-04T18:09:56 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-04T18:09:56 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[INPUT] unhandled_input triggered
+[HubManager] Hub already running (env) - skipping startup
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_cite_completed: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _exit_tree: ENTER
+[AUDIT] _save_position: ENTER
