@@ -1,0 +1,111 @@
+=== CONTEXT DIAGNOSTIC — 20260804214153 UTC ===
+
+=== LINES 1870-1950 (with visible whitespace) ===
+^I$PauseMenu.visible = tree.paused$
+^Iif tree.paused:$
+^I^IInput.mouse_mode = Input.MOUSE_MODE_VISIBLE$
+^Ielse:$
+^I^IInput.mouse_mode = Input.MOUSE_MODE_CAPTURED$
+$
+$
+func _input(event: InputEvent) -> void:$
+^I# Ignore F3 M-bM-^@M-^S let forensic_hud handle it$
+^Iif event is InputEventKey and event.keycode == KEY_F3:$
+^I^Ireturn$
+^Iprint("[DEBUG] _input (build_terrain) called, event=", event)$
+^Iif event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):$
+^I^Ivar rel = (event as InputEventMouseMotion).relative$
+^I^I# Adjust azimuth and elevation based on mouse drag$
+^I^I_cam_azimuth -= rel.x * 0.005$
+^I^I_cam_elevation -= rel.y * 0.005$
+^I^I# _character.rotation.y = _cam_azimuth  # removed to match plane behaviour$
+^I^I# Clamp elevation to avoid flipping$
+^I^I_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)$
+^I^I_update_camera_position()$
+^I^I# Immediately update camera position if we have a target$
+^I^Ivar target: Vector3$
+^I^Iif camera_target == "plane" and is_instance_valid(_plane_node):$
+^I^I^Itarget = _plane_node.global_position$
+^I^Ielif camera_target == "character" and is_instance_valid(_character):$
+^I^I^Itarget = _character.global_position$
+^I^Ielse:$
+^I^I^Ireturn$
+^I^Ivar offset = Vector3(0, 0, -_cam_distance)$
+^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+^I^Ioffset = offset.rotated(Vector3.RIGHT, _cam_elevation)$
+^I^I_camera.global_position = target + offset$
+^I^I_camera.look_at(target, Vector3.UP)$
+^I^Iprint($
+^I^I^I"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)$
+^I^I)$
+$
+^Iif event is InputEventKey and event.pressed and not event.echo:$
+^I^Ivar action := ""$
+^I^Iif event.keycode == KEY_Q:$
+^I^I^Iaction = "turn_left (Q)"$
+^I^Ielif event.keycode == KEY_E:$
+^I^I^Iaction = "turn_right (E)"$
+^I^Ielif event.keycode == KEY_SPACE:$
+^I^I^Iaction = "deploy (SPACE)"$
+^I^Ielif event.keycode == KEY_C:$
+^I^I^Iaction = "cycle_camera (C)"$
+^I^Ielif event.keycode == KEY_H:$
+^I^I^Iaction = "toggle_hud (H)"$
+^I^Ielif event.keycode == KEY_X:$
+^I^I^Iaction = "cutaway (X)"$
+^I^Ielif event.keycode == KEY_V:$
+^I^I^Iaction = "reserve (V)"$
+^I^Ielif event.keycode == KEY_F:$
+^I^I^Iaction = "flare (F)"$
+^I^Ielif event.keycode == KEY_R:$
+^I^I^Iaction = "restart (R)"$
+^I^Iif action != "":$
+^I^I^Iprint("[VERBATIM] INPUT: action=", action)$
+^Iif event.is_action_pressed("pause"):$
+^I^Itoggle_pause()$
+$
+^I# Manual save key (S)$
+^Iif event is InputEventKey and event.pressed and event.keycode == KEY_S:$
+^I^I_save_camera_settings()$
+^I^Iprint("[CAMERA] Settings saved manually")$
+$
+$
+func _physics_process(delta) -> void:$
+_apply_arm_bone_overrides()$
+^I# ADDED (this session): explicit poll calls, since Godot never invokes$
+^I# ADDED (this session): explicit poll calls, since Godot never invokes$
+^I# ForensicHUD._input()/ForensicPanel._process() automatically.$
+^Iif ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):$
+^I^IForensicHUD.poll_forensic_hud()$
+^Iif ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):$
+^I^IForensicPanel.poll_forensic_panel()$
+^Iif _character and is_instance_valid(_character):$
+^I^IAltimeterHUD.update_altitude(_character.global_position.y * 3.28084)$
+^I# --- Q/E turn input (checked first so it's available for all states) ---$
+
+=== _input DEFINITION + 20 LINES ===
+1877:func _input(event: InputEvent) -> void:
+
+=== FUNCTION DEFINITIONS BEFORE LINE 1939 ===
+240:func _ready() -> void:
+597:func _check_arm_pose() -> void:
+617:func _create_runway(
+637:func _load_character() -> void:
+741:func _force_neutral_arms() -> void:
+768:func _load_faa_obstacles() -> void:
+829:func _find_first_mesh(node: Node) -> MeshInstance3D:
+839:func _deploy_canopy() -> void:
+861:func _create_procedural_canopy() -> void:
+886:func _rotate_arm(left: bool) -> void:
+909:func _randomize_malfunction() -> void:
+927:func _apply_malfunction_effects(delta) -> void:
+943:func _malfunction_name() -> String:
+964:func _update_canopy_visuals() -> void:
+994:func _flight_control_check() -> void:
+1016:func _do_cutaway() -> void:
+1044:func _do_reserve() -> void:
+1086:func _do_flare() -> void:
+1134:func _calculate_score() -> void:
+1161:func _init_leaderboard() -> void:
+
+=== END DIAGNOSTIC ===
