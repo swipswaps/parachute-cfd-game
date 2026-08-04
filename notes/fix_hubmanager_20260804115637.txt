@@ -1,0 +1,59 @@
+=== HubManager non-blocking fix 20260804115637 UTC ===
+
+########## PART 1: APPLY PATCH ##########
+[2026-08-04T11:56:37.501418+00:00] [SUCCESS] backup: godot_project/scripts/HubManager.gd.bak.20260804115637
+[2026-08-04T11:56:37.501499+00:00] [SUCCESS] extract: lines 7..46 (40 lines)
+[2026-08-04T11:56:37.501775+00:00] [SUCCESS] write: patched + read-back match
+[2026-08-04T11:56:37.501812+00:00] [SUCCESS] tabs_only: no leading spaces
+forbidden 'OS.execute' still in _ensure_hub - restored
+
+########## PART 2: DIFF (patched vs backup) ##########
+
+########## PART 3: NEW _ensure_hub, numbered (with file path) ##########
+file: godot_project/scripts/HubManager.gd
+    7: func _ensure_hub():
+    8: 	var port = 8765
+    9: 	var endpoint = "/api/gamification"
+   10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+   11: 	var output = []
+   12: 	var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
+   13: 	if exit_code == 0 and output.size() > 0 and output[0] == "200":
+   14: 		print("[HubManager] Hub already running.")
+   15: 		return
+   16: 
+   17: 	# Added by autostall_patched.py – skip if hub already running
+   18: 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
+   19: 		print("[HubManager] Hub already running – skipping startup")
+   20: 		return
+   21: 	# Original startup block follows
+   22: 	print("[HubManager] Hub not responding; starting it...")
+   23: 	var project_dir = ProjectSettings.globalize_path("res://")
+   24: 	# FIX (this session): project_dir = res:// resolves to godot_project/,
+   25: 	# but forensic_hub_server.py lives one directory up, at the outer
+   26: 	# project root — confirmed via find: only one copy exists, and it's
+   27: 	# not inside godot_project/. The cd+exec was silently failing every
+   28: 	# run. Fixed by cd-ing up one level before invoking the script.
+   29: 	# FIX (this session): script requires <project_root> positional arg.
+   30: 	# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"
+   31: 	# After the cd, "." is the outer project root the script needs.
+   32: 	var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir
+   33: 	OS.execute("/bin/sh", ["-c", start_cmd])
+   34: 	# Wait a moment and re-check
+   35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+   36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+   37: 	# always fired before the server was listening. Confirmed via
+   38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+   39: 	await get_tree().create_timer(5.0).timeout
+   40: 	var output2 = []
+   41: 	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+   42: 	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
+   43: 		print("[HubManager] Hub started successfully.")
+   44: 	else:
+   45: 		print("[HubManager] Failed to start hub after 2 seconds.")
+   46: 
+
+########## PART 4: POST-FIX WINDOWED RUN (frame throughput) ##########
+launching godot (line-buffered). Sampling frames every second.
+godot pid=495654
+./fix_hubmanager_nonblocking.sh: line 135: 0
+0: arithmetic syntax error in expression (error token is "0")
