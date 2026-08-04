@@ -1,0 +1,16 @@
+=== FIX STRAY INDENT — 20260804215645 UTC ===
+
+Backup created: godot_project/scripts/build_terrain.gd.bak.20260804215645
+WARNING: line 2867 is not a blank tab line. Content: '\tif _camera_save_timer > 0.0:\n'
+Patch applied.
+
+=== VERIFICATION (Godot headless) ===
+SCRIPT ERROR: Parse Error: Unexpected "Indent" in class body.
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== LINE 2867 AFTER FIX (visible whitespace) ===
+2865: const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull$
+2866: $
+2867: ^Iif _camera_save_timer > 0.0:$
+2868: ^I^Ireturn$
+2869: ^I_camera_save_timer = 0.5$
