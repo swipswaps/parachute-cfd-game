@@ -238,8 +238,6 @@ var _last_frame_keys := {
 # Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
 # ------------------------------------------------------------------
 func _ready() -> void:
-	print("[PLANE_DEBUG] _create_plane() called at beginning of _ready()")
-	_create_plane()
 	print('[PLANE_DEBUG] _ready() START')
 	camera_distance = 60.0  # reset to default
 
@@ -583,6 +581,8 @@ func _ready() -> void:
 		timer.start()
 		print("[VERBATIM] Self-test timer started.")
 		# SELF-TEST TIMER INJECTED (v6.5.154)
+	print("[PLANE_DEBUG] _create_plane() called from end of _ready()")
+	_create_plane()
 
 # ------------------------------------------------------------------
 # Helper: create runway (returns MeshInstance3D)

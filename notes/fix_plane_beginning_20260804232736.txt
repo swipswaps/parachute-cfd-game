@@ -1,0 +1,397 @@
+=== INSERT _create_plane() AT BEGINNING OF _ready() — 20260804232736 UTC ===
+
+Run ID: run_20260804232736
+
+=== LINES 588-600 (CURRENT) ===
+ 588: # Helper: create runway (returns MeshInstance3D)$
+ 589: # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html$
+ 590: # ------------------------------------------------------------------$
+ 591: $
+ 592: # Gate: Verify arms are not extended (R099)$
+ 593: $
+ 594: ^I^Iprint("[VERBATIM] Self-test timer started.")$
+ 595: ^I# SELF-TEST TIMER INJECTED (v6.5.151)$
+ 596: $
+ 597: $
+ 598: func _check_arm_pose() -> void:$
+ 599: ^Ivar skeleton = _character.find_child("Skeleton3D", true, false)$
+ 600: ^Iif not skeleton:$
+Removed _create_plane() call at line 584
+Removed _create_plane() call at line 585
+Patch applied. Backup: godot_project/scripts/build_terrain.gd.bak.20260804232736
+
+=== MODIFIED LINES 588-600 ===
+ 588: # Helper: create runway (returns MeshInstance3D)$
+ 589: # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html$
+ 590: # ------------------------------------------------------------------$
+ 591: $
+ 592: # Gate: Verify arms are not extended (R099)$
+ 593: $
+ 594: ^I^Iprint("[VERBATIM] Self-test timer started.")$
+ 595: ^I# SELF-TEST TIMER INJECTED (v6.5.151)$
+ 596: $
+ 597: $
+ 598: func _check_arm_pose() -> void:$
+ 599: ^Ivar skeleton = _character.find_child("Skeleton3D", true, false)$
+ 600: ^Iif not skeleton:$
+
+=== BEGINNING OF _ready() (lines 240-260) ===
+ 240: func _ready() -> void:$
+ 241: ^Iprint("[PLANE_DEBUG] _create_plane() called at beginning of _ready()")$
+ 242: ^I_create_plane()$
+ 243: ^Iprint('[PLANE_DEBUG] _ready() START')$
+ 244: ^Icamera_distance = 60.0  # reset to default$
+ 245: $
+ 246: ^I_load_camera_settings()$
+ 247: ^Iget_tree().paused = true$
+ 248: ^Iprocess_mode = PROCESS_MODE_ALWAYS$
+ 249: ^Iprint("[INIT] Press SPACE to start")$
+ 250: ^Iprint("[DIAG] _ready: ENTER")$
+ 251: ^Iprint("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _ready gate=none")$
+ 252: ^I# Loading screen removed M-bM-^@M-^S it was blocking the view and useless.$
+ 253: ^I# _init_screenshot_library()  # optional, can keep$
+ 254: ^I# _show_loading_screen()      # REMOVED$
+ 255: $
+ 256: ^I# --------------------------------------------------------------$
+ 257: ^I# Terrain generation (full M-bM-^@M-^S uses heightmap and baked colours) with fallback$
+ 258: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html$
+ 259: ^I# --------------------------------------------------------------$
+ 260: ^Ivar file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)$
+
+=== RUNNING GODOT (headless) ===
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Unrecognized output string "misc2" in mapping:
+030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+SDL: Init OK!
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2475187701
+EDITOR API HASH: 3867286884
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://TelemetryLogger.gd
+Loading resource: res://scripts/SqliteDb.gd
+Loading resource: res://autoloads/HealthChecker.gd
+Loading resource: res://scripts/HubManager.gd
+Loading resource: res://scripts/DatabaseGuard.gd
+Loading resource: res://scripts/ResourceThrottle.gd
+Loading resource: res://scripts/PerformanceMonitor.gd
+Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+Loading resource: res://scripts/SqliteWatchdog.gd
+Loading resource: res://scripts/StructuredLogger.gd
+Loading resource: res://scripts/InputManager.gd
+Loading resource: res://scripts/GameIntegrity.gd
+Loading resource: res://scripts/altimeter_hud.gd
+Loading resource: res://scripts/forensic_hud.gd
+Loading resource: res://scripts/audit.gd
+Loading resource: res://scripts/wind_field.gd
+Loading resource: res://autoloads/CursorManager.gd
+Loading resource: res://autoloads/Gamification.gd
+Loading resource: res://autoloads/forensic_panel.gd
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn
+Loading resource: res://scripts/build_terrain.gd
+Loading resource: res://assets/terrain/black_env.tres
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 1ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-04T19:27:37 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-04T19:27:37 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[PLANE_DEBUG] _create_plane() called at beginning of _ready()
+[PLANE_DEBUG] _create_plane() START
+[VERBATIM] [VERBATIM] Creating plane node...
+Loading resource: res://scripts/plane.gd
+[VERBATIM] [VERBATIM] Plane script attached
+[PLANE_DEBUG] _plane_node assigned: FlyingPlane:<CharacterBody3D#37580965466>
+[PLANE_DEBUG] _plane_node assigned: FlyingPlane:<CharacterBody3D#37580965466>
+[PLANE_DEBUG] _plane_node assigned: FlyingPlane:<CharacterBody3D#37580965466>
+Loading resource: res://assets/aircraft/cesna_airplane.glb
+Loading resource: res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn
+Loading resource: res://assets/aircraft/cesna_airplane_2.png
+Loading resource: res://.godot/imported/cesna_airplane_2.png-a0ae2ab0bf25959dd0beafc4e856bc3b.s3tc.ctex
+Loading resource: res://assets/aircraft/cesna_airplane_0.png
+Loading resource: res://.godot/imported/cesna_airplane_0.png-e0456c27d48acd63e1dd01ab23117de6.s3tc.ctex
+Loading resource: res://assets/aircraft/cesna_airplane_1.png
+Loading resource: res://.godot/imported/cesna_airplane_1.png-40e4f0bad9835f0987c7e03e2e3ca5b0.s3tc.ctex
+[VERBATIM] Cessna model loaded. visible=true scale=(15.0, 15.0, 15.0)
+[VERBATIM] [VERBATIM] Plane created at altitude 6000
+[PLANE_DEBUG] _ready() START
+[CAMERA_DEBUG] Loaded camera distance from DB: 175.0
+[CAMERA_DEBUG] _load_camera_settings() END
+[INIT] Press SPACE to start
+[DIAG] _ready: ENTER
+[VERBATIM] 2026-08-04T19:27:37 ENTER _ready gate=none
+[VERBATIM] Baked colours loaded: 3145728
+[AUDIT] poll_forensic_hud: ENTER
+[FPANEL] _process() alive, frame=0
+[CONTROLS] ---- InputMap audit and repair ----
+[CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+[CONTROLS] turnleft  action_existed=true  keys_before=[]  wanted=Q  added=true
+[CONTROLS] turnright  action_existed=true  keys_before=[]  wanted=E  added=true
+[CONTROLS] camera_cycle  action_existed=true  keys_before=[]  wanted=C  added=true
+[CONTROLS] cutaway  action_existed=true  keys_before=[]  wanted=X  added=true
+[CONTROLS] reserve  action_existed=true  keys_before=[]  wanted=V  added=true
+[CONTROLS] flare  action_existed=true  keys_before=[]  wanted=F  added=true
+[CONTROLS] togglehud  action_existed=true  keys_before=[]  wanted=H  added=true
+[CONTROLS] flightcheck  action_existed=true  keys_before=[]  wanted=G  added=true
+[CONTROLS] restart  action_existed=true  keys_before=[]  wanted=R  added=true
+[CONTROLS] j  action_existed=true  keys_before=["J"]  wanted=J  added=false
+[CONTROLS] pause  action_existed=true  keys_before=[]  wanted=Escape  added=true
+[CONTROLS] ---- 11 binding(s) added ----
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[HubManager] Hub spawn requested pid=649072 non-blocking
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9856, 1853.8, 4.799971)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9676, 1853.8, 7.199903)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9424, 1853.8, 9.59977)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.91, 1853.8, 11.99955)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.8704, 1853.8, 14.39922)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.8236, 1853.8, 16.79877)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.7696, 1853.8, 19.19816)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.7084, 1853.8, 21.59738)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.64, 1853.8, 23.9964)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.5645, 1853.8, 26.39521)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.4816, 1853.8, 28.79378)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.3917, 1853.8, 31.19209)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.2945, 1853.8, 33.59012)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.1901, 1853.8, 35.98785)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.0786, 1853.8, 38.38526)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.9598, 1853.8, 40.78231)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.8339, 1853.8, 43.17901)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.7007, 1853.8, 45.57531)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.5604, 1853.8, 47.97121)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.4129, 1853.8, 50.36667)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.2582, 1853.8, 52.76168)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (798.0964, 1853.8, 55.15621)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (797.9273, 1853.8, 57.55025)
+[DIAG] _physics_process: checking camera follow
+
+=== LOGGING TO DB ===
+Parse error near line 1: table debug_capture has no column named run_id
+Parse error near line 303: table patch_history has no column named run_id
+
+=== VERIFICATION ===
+Error: in prepare, no such column: run_id
+  SELECT COUNT(*) FROM debug_capture WHERE run_id='run_20260804232736' AND outpu
+                             error here ---^
+Error: in prepare, no such column: run_id
+  SELECT COUNT(*) FROM debug_capture WHERE run_id='run_20260804232736' AND outpu
+                             error here ---^
+./fix_plane_beginning.sh: line 170: [: : integer expected
+❌ Parse errors or missing telemetry.
+
+=== DIFF ===
+--- godot_project/scripts/build_terrain.gd.bak.20260804232736	2026-08-04 19:26:41.319038447 -0400
++++ godot_project/scripts/build_terrain.gd	2026-08-04 19:27:36.766035046 -0400
+@@ -238,6 +238,8 @@
+ # Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
+ # ------------------------------------------------------------------
+ func _ready() -> void:
++	print("[PLANE_DEBUG] _create_plane() called at beginning of _ready()")
++	_create_plane()
+ 	print('[PLANE_DEBUG] _ready() START')
+ 	camera_distance = 60.0  # reset to default
+ 
+@@ -581,8 +583,6 @@
+ 		timer.start()
+ 		print("[VERBATIM] Self-test timer started.")
+ 		# SELF-TEST TIMER INJECTED (v6.5.154)
+-	print("[PLANE_DEBUG] _create_plane() called from end of _ready()")
+-	_create_plane()
+ 
+ # ------------------------------------------------------------------
+ # Helper: create runway (returns MeshInstance3D)
