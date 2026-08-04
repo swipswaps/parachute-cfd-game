@@ -1,0 +1,46 @@
+=== CONTEXT AROUND LINE 2867 — 20260804215714 UTC ===
+
+=== Lines 2840–2880 with visible whitespace ===
+2840: # Damping ratio: C_DAMP / (2*sqrt(K_LINE*ARM_INERTIA)) = 0.62 (underdamped,$
+2841: # so the toggle springs back with a small natural overshoot).$
+2842: #$
+2843: # Refs (general knowledge - not retrieved this session):$
+2844: #   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html$
+2845: #   https://docs.godotengine.org/en/stable/classes/class_quaternion.html$
+2846: #   https://docs.godotengine.org/en/stable/classes/class_animationplayer.html$
+2847: # ===========================================================================$
+2848: $
+2849: const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below$
+2850: const ARM_K_LINE       := 8.0$
+2851: const ARM_C_DAMP       := 3.5$
+2852: const ARM_INERTIA      := 1.0$
+2853: const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0$
+2854: const ARM_EPS          := 0.0005$
+2855: $
+2856: # v8: a constant force settles at a constant deflection (eq = F/K), so a$
+2857: # longer hold used to change nothing after ~1 s. Ramping the force while$
+2858: # held makes a sustained pull go deeper, which is what a real flare does.$
+2859: const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap$
+2860: const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0$
+2861: const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX$
+2862: $
+2863: # v8: elbow stays straight on a shallow pull, flexes on a deep one.$
+2864: const ARM_ELBOW_START  := 0.35              # pull below this -> straight$
+2865: const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull$
+2866: $
+2867: ^Iif _camera_save_timer > 0.0:$
+2868: ^I^Ireturn$
+2869: ^I_camera_save_timer = 0.5$
+2870: var _arm_pull      := {"L": 0.0, "R": 0.0}$
+2871: ^Iif _camera_save_timer > 0.0:$
+2872: ^I^Ireturn$
+2873: ^I_camera_save_timer = 0.5$
+2874: var _arm_vel       := {"L": 0.0, "R": 0.0}$
+2875: var _arm_rest_q    := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}$
+2876: var _arm_rest_ok   := false$
+2877: var _arm_tel_header := false$
+2878: var _arm_tel_t     := 0.0$
+2879: var _arm_anim_ref  = null$
+2880: $
+
+=== END ===
