@@ -360,6 +360,8 @@ func _ready() -> void:
 	# --------------------------------------------------------------
 	# Plane – must be created before camera look_at
 	# --------------------------------------------------------------
+	_create_plane()
+	print('[PLANE_DEBUG] _create_plane() called')
 	_setup_plane_node()
 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
 
@@ -581,8 +583,6 @@ func _ready() -> void:
 		timer.start()
 		print("[VERBATIM] Self-test timer started.")
 		# SELF-TEST TIMER INJECTED (v6.5.154)
-	print("[PLANE_DEBUG] _create_plane() called from end of _ready()")
-	_create_plane()
 
 # ------------------------------------------------------------------
 # Helper: create runway (returns MeshInstance3D)
