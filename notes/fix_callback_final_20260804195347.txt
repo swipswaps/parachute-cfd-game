@@ -1,0 +1,38 @@
+=== CALLBACK PLACEMENT FINAL FIX ===
+Applied: Tue Aug  4 07:53:47 PM UTC 2026
+
+--- Last 30 lines of corrected file ---
+			"  added=", need)
+	print("[CONTROLS] ---- ", added, " binding(s) added ----")
+
+
+func _key_event(keycode: int) -> InputEventKey:
+	var ev := InputEventKey.new()
+	ev.physical_keycode = keycode
+	ev.keycode = keycode
+	return ev
+
+
+func _log_control_presses() -> void:
+	# One line per press: which control, in which state, canopy or not.
+	# This is what the autostall log needs so an attempted control is
+	# visible even when its handler does nothing.
+	for action in CONTROL_KEYS:
+		if not InputMap.has_action(action):
+			continue
+		if Input.is_action_just_pressed(action):
+			# DB: persist confirmed keypress to control_events
+			var _cdb = get_node_or_null('/root/SqliteDb')
+			if _cdb != null:
+				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+				if _cdb.has_method('execute'): _cdb.execute(_sql)
+				elif _cdb.has_method('_query'): _cdb._query(_sql)
+			print("[CTRL] pressed=", action,
+				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+				"  state=", _game_state,
+				"  deployed=", _canopy_deployed,
+				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+--- Verifying callback is before closing brace ---
+3761:func _on_opening_anim_timeout() -> void:
+3769:}
