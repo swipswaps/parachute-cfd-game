@@ -1,0 +1,26 @@
+=== LINE 2867 CONTEXT — 20260804215619 UTC ===
+
+=== Lines 2860–2880 with visible whitespace ===
+2860: const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0$
+2861: const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX$
+2862: $
+2863: # v8: elbow stays straight on a shallow pull, flexes on a deep one.$
+2864: const ARM_ELBOW_START  := 0.35              # pull below this -> straight$
+2865: const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull$
+2866: $
+2867: ^Iif _camera_save_timer > 0.0:$
+2868: ^I^Ireturn$
+2869: ^I_camera_save_timer = 0.5$
+2870: var _arm_pull      := {"L": 0.0, "R": 0.0}$
+2871: ^Iif _camera_save_timer > 0.0:$
+2872: ^I^Ireturn$
+2873: ^I_camera_save_timer = 0.5$
+2874: var _arm_vel       := {"L": 0.0, "R": 0.0}$
+2875: var _arm_rest_q    := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}$
+2876: var _arm_rest_ok   := false$
+2877: var _arm_tel_header := false$
+2878: var _arm_tel_t     := 0.0$
+2879: var _arm_anim_ref  = null$
+2880: $
+
+=== END ===
