@@ -1,0 +1,60 @@
+=== exact bytes diag 20260804010341 ===
+
+
+--- grep -n for spawn line ---
+2661:	plane.global_position = Vector3(0, _PLANE_ALTITUDE, 0)
+
+--- lines 2656-2665 (spawn, cat -A to show whitespace) ---
+^Itrigger_collision.shape = BoxShape3D.new()$
+^Itrigger_collision.shape.size = Vector3(2, 2, 2)$
+^Itrigger_collision.position = Vector3(1.5, 0, -2)$
+^Iexit_trigger.add_child(trigger_collision)$
+$
+^Iplane.global_position = Vector3(0, _PLANE_ALTITUDE, 0)$
+^I_log("[VERBATIM] Plane created at altitude 6000")$
+$
+$
+func _wait_for_movement(timeout_sec: float = 2.0) -> bool:$
+
+--- grep -n for _update_camera_position offset line ---
+2810:	var offset := Vector3(0, 0, -_cam_distance)
+
+--- lines 2805-2815 (cat -A) ---
+^Ielse:$
+^I^Iif is_instance_valid(_plane_node):$
+^I^I^Itarget = _plane_node.global_position$
+^I^Ielse:$
+^I^I^Ireturn$
+^Ivar offset := Vector3(0, 0, -_cam_distance)$
+^Ivar rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)$
+^I_camera.global_position = target + rot * offset$
+^I_camera.look_at(target, Vector3.UP)$
+^Iprint("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)$
+^I_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)$
+
+--- grep -n for _reset_game ---
+1383:		_reset_game()
+1655:			_reset_game()
+1819:func _reset_game() -> void:
+1820:	print("[DIAG] _reset_game: ENTER")
+1821:	print("[VERBATIM] === RESETTING GAME ===")
+1863:	print("[DIAG] _reset_game: EXIT, new state=", _game_state)
+
+--- lines 1818-1832 (cat -A) ---
+# ------------------------------------------------------------------$
+func _reset_game() -> void:$
+^Iprint("[DIAG] _reset_game: ENTER")$
+^Iprint("[VERBATIM] === RESETTING GAME ===")$
+^I_game_state = GameState.IN_PLANE$
+^I_load_camera_settings()  # restore plane camera distance on restart$
+^Iif _plane_node:$
+^I^I_plane_node.visible = true$
+^I^I_plane_angle = 0.0$
+^I_character.visible = false$
+^I_character.position = Vector3(100.0, 1828.8, -100.0)$
+^I_velocity_vec = Vector3.ZERO$
+^I_forward_speed = 0.0$
+^I_descent_rate = 0.0$
+^I_current_altitude = 3000.0$
+
+=== END ===
