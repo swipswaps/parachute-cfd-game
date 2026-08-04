@@ -1,0 +1,447 @@
+=== landing transition diagnostic 20260804121715 UTC ===
+target file: godot_project/scripts/build_terrain.gd
+lines: 3778
+
+########## PART A: every _game_state = TRANSITION ##########
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:875 (+/-4) ---
+  871: 	_canopy_deployed = true
+  872: 	_canopy_instance.visible = true
+  873: 	_canopy_instance.scale = Vector3.ZERO
+  874: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+  875: 	_game_state = GameState.OPENING_ANIM
+  876: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+  877: 
+  878: 	if not _replay_playing:
+  879: 		_replay_recording.clear()
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:1164 (+/-4) ---
+ 1160: 		print("[VERBATIM] EXIT _do_flare early=no_fc")
+ 1161: 		return
+ 1162: 	_flare_done = true
+ 1163: 	_safe_landing = true
+ 1164: 	_game_state = GameState.LANDED
+ 1165: 	_capture_3d_screenshot()
+ 1166: 
+ 1167: 	print("[VERBATIM] FLARE executed – GOOD canopy landing")
+ 1168: 	_show_notification("Flare – good landing!")
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:1482 (+/-4) ---
+ 1478: 		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+ 1479: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+ 1480: 			ScreenshotLibrary.save_flight_screenshot()
+ 1481: 			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+ 1482: 			_game_state = GameState.GAME_OVER
+ 1483: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+ 1484: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+ 1485: 	elif _current_altitude <= 0.0 and not _safe_landing:
+ 1486: 		ScreenshotLibrary.save_flight_screenshot()
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:1488 (+/-4) ---
+ 1484: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+ 1485: 	elif _current_altitude <= 0.0 and not _safe_landing:
+ 1486: 		ScreenshotLibrary.save_flight_screenshot()
+ 1487: 		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+ 1488: 		_game_state = GameState.GAME_OVER
+ 1489: 		print("[VERBATIM] FATAL – ground impact without safe landing")
+ 1490: 		_show_notification("FATAL – ground impact")
+ 1491: 
+ 1492: 
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:1632 (+/-4) ---
+ 1628: 		_headless_auto_jump = false  # consume the flag
+ 1629: 		if _exit_pressed:
+ 1630: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+ 1631: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+ 1632: 			_game_state = GameState.FREEFALL
+ 1633: 			_cam_distance = 5.0
+ 1634: 			if _plane_node:
+ 1635: 				_plane_node.visible = false
+ 1636: 			_character.visible = true
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:1822 (+/-4) ---
+ 1818: # ------------------------------------------------------------------
+ 1819: func _reset_game() -> void:
+ 1820: 	print("[DIAG] _reset_game: ENTER")
+ 1821: 	print("[VERBATIM] === RESETTING GAME ===")
+ 1822: 	_game_state = GameState.IN_PLANE
+ 1823: 	_load_camera_settings()  # restore plane camera distance on restart
+ 1824: 	if _plane_node:
+ 1825: 		_plane_node.visible = true
+ 1826: 		_plane_angle = 0.0
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:2100 (+/-4) ---
+ 2096: 		_character.position.y = 25.0
+ 2097: 		if not _safe_landing:
+ 2098: 			ScreenshotLibrary.save_flight_screenshot()
+ 2099: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+ 2100: 			_game_state = GameState.GAME_OVER
+ 2101: 			print("[VERBATIM] Ground impact – fatal")
+ 2102: 	_current_altitude = _character.position.y - 25.0
+ 2103: 
+ 2104: 	# p3: vario and ground speed from REAL motion, not the constant table.
+--- _game_state\s*=\s*GameState\. @ godot_project/scripts/build_terrain.gd:2744 (+/-4) ---
+ 2740: 	else:
+ 2741: 		print("[TEST] ZOOM: PASS (no pip container, skip test)")
+ 2742: 	var old_state = _game_state
+ 2743: 	if _game_state == GameState.IN_PLANE:
+ 2744: 		_game_state = GameState.FREEFALL
+ 2745: 		_character.visible = true
+ 2746: 		if _plane_node:
+ 2747: 			_plane_node.visible = false
+ 2748: 			_character.position = _plane_node.position + Vector3(0, -2, 0)
+
+########## PART B: every write to _character.position.y ##########
+--- _character\.position\.y @ godot_project/scripts/build_terrain.gd:2091 (+/-4) ---
+ 2087: 	# so that function's `_descent_rate += ...` additions survive.
+ 2088: 	_descent_rate = _get_current_descent_rate()
+ 2089: 	_apply_malfunction_effects(delta)
+ 2090: 	var descent = _descent_rate * 60.0 * delta
+ 2091: 	_character.position.y -= descent
+ 2092: 	# v11: only .y was ever written here, so the canopy had no forward
+ 2093: 	# flight at all. Horizontal glide and turning are applied below.
+ 2094: 	_update_canopy_glide(delta, descent)
+ 2095: 	if _character.position.y < 25.0:
+--- _character\.position\.y @ godot_project/scripts/build_terrain.gd:2096 (+/-4) ---
+ 2092: 	# v11: only .y was ever written here, so the canopy had no forward
+ 2093: 	# flight at all. Horizontal glide and turning are applied below.
+ 2094: 	_update_canopy_glide(delta, descent)
+ 2095: 	if _character.position.y < 25.0:
+ 2096: 		_character.position.y = 25.0
+ 2097: 		if not _safe_landing:
+ 2098: 			ScreenshotLibrary.save_flight_screenshot()
+ 2099: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+ 2100: 			_game_state = GameState.GAME_OVER
+--- _character\.position\.y @ godot_project/scripts/build_terrain.gd:2102 (+/-4) ---
+ 2098: 			ScreenshotLibrary.save_flight_screenshot()
+ 2099: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+ 2100: 			_game_state = GameState.GAME_OVER
+ 2101: 			print("[VERBATIM] Ground impact – fatal")
+ 2102: 	_current_altitude = _character.position.y - 25.0
+ 2103: 
+ 2104: 	# p3: vario and ground speed from REAL motion, not the constant table.
+ 2105: 	var _p3_y: float = _character.global_position.y
+ 2106: 	var _p3_xz: Vector2 = Vector2(_character.global_position.x,
+--- _character\.position\.y @ godot_project/scripts/build_terrain.gd:3497 (+/-4) ---
+ 3493: # CANOPY GLIDE  (fix_canopy_glide_v11)
+ 3494: #
+ 3495: # A ram-air canopy is a wing with no thrust: it trades height for forward
+ 3496: # speed and is steered by asymmetric brake. Before this, _physics_process
+ 3497: # wrote only _character.position.y, so there was no forward flight to steer -
+ 3498: # which is why turning appeared to do nothing after deployment, and why
+ 3499: # 0778.txt shows the turning block executing every frame against a null
+ 3500: # controller (has_pc=false).
+ 3501: #
+--- _character\.position\.y @ godot_project/scripts/build_terrain.gd:3575 (+/-4) ---
+ 3571: 	# model still governs freefall and any non-deployed state.
+ 3572: 	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+ 3573: 	ratio = maxf(ratio, 0.6)
+ 3574: 	var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sym * sym * sym
+ 3575: 	_character.position.y += descent_this_frame - sink * delta
+ 3576: 
+ 3577: 	# ---- telemetry -------------------------------------------------------
+ 3578: 	_glide_tel_t += delta
+ 3579: 	if not _glide_tel_hdr:
+--- _character\.position\.y @ godot_project/scripts/build_terrain.gd:3778 (+/-4) ---
+ 3774: 			print("[CTRL] pressed=", action,
+ 3775: 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+ 3776: 				"  state=", _game_state,
+ 3777: 				"  deployed=", _canopy_deployed,
+ 3778: 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+########## PART C: every reference to GameState.LANDED ##########
+--- GameState\.LANDED @ godot_project/scripts/build_terrain.gd:1164 (+/-4) ---
+ 1160: 		print("[VERBATIM] EXIT _do_flare early=no_fc")
+ 1161: 		return
+ 1162: 	_flare_done = true
+ 1163: 	_safe_landing = true
+ 1164: 	_game_state = GameState.LANDED
+ 1165: 	_capture_3d_screenshot()
+ 1166: 
+ 1167: 	print("[VERBATIM] FLARE executed – GOOD canopy landing")
+ 1168: 	_show_notification("Flare – good landing!")
+--- GameState\.LANDED @ godot_project/scripts/build_terrain.gd:1651 (+/-4) ---
+ 1647: 				_camera.current = true  # ensure the camera becomes active
+ 1648: 		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
+ 1649: 		return
+ 1650: 
+ 1651: 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+ 1652: 		if Input.is_action_just_pressed("restart"):
+ 1653: 			print("[DIAG] _poll_controls: restart pressed")
+ 1654: 			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+ 1655: 			_reset_game()
+--- GameState\.LANDED @ godot_project/scripts/build_terrain.gd:3536 (+/-4) ---
+ 3532: 
+ 3533: 
+ 3534: func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+ 3535: 	# Stop glide physics on landing — otherwise canopy keeps flying underground.
+ 3536: 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+ 3537: 		_canopy_deployed = false
+ 3538: 		return
+ 3539: 	if not _canopy_deployed:
+ 3540: 		return
+
+########## PART D: ground-plane constants / MAX_ELEV / GROUND ##########
+--- (^|[^A-Za-z_])(GROUND|MAX_ELEV|_GROUND|LANDING_ALT|ground_y|_ground_) @ godot_project/scripts/build_terrain.gd:223 (+/-3) ---
+  220: # (general knowledge - not retrieved this session)
+  221: var _p3_prev_y: float = -99999.0
+  222: var _p3_prev_xz: Vector2 = Vector2.ZERO
+  223: var _p3_ground_speed_ms: float = 0.0
+  224: 
+  225: # ------------------------------------------------------------------
+  226: # Polling state for one‑shot actions
+--- (^|[^A-Za-z_])(GROUND|MAX_ELEV|_GROUND|LANDING_ALT|ground_y|_ground_) @ godot_project/scripts/build_terrain.gd:289 (+/-3) ---
+  286: 		const W = 512
+  287: 		const H = 512
+  288: 		const HM_SRC = 4096
+  289: 		const MAX_ELEV = 20.0
+  290: 		const SCALE_XZ = 4000.0
+  291: 		var verts := []
+  292: 		var uvs := []
+--- (^|[^A-Za-z_])(GROUND|MAX_ELEV|_GROUND|LANDING_ALT|ground_y|_ground_) @ godot_project/scripts/build_terrain.gd:301 (+/-3) ---
+  298: 				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC - 1))
+  299: 				var hidx := (hm_z * HM_SRC + hm_x) * 2
+  300: 				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
+  301: 				var py = (float(raw) / 65535.0) * MAX_ELEV
+  302: 				verts.push_back(Vector3(px, py, pz))
+  303: 				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
+  304: 		var indices := []
+--- (^|[^A-Za-z_])(GROUND|MAX_ELEV|_GROUND|LANDING_ALT|ground_y|_ground_) @ godot_project/scripts/build_terrain.gd:814 (+/-3) ---
+  811: 	var placed: int = 0
+  812: 	for obs in obstacles:
+  813: 		var wx: float = float(obs.get("world_x", 0.0))
+  814: 		var wy: float = float(obs.get("ground_y", 0.0))
+  815: 		var wz: float = float(obs.get("world_z", 0.0))
+  816: 		var agl: float = float(obs.get("height_m", 5.0))
+  817: 		var otype: String = str(obs.get("type", "UNKNOWN"))
+--- (^|[^A-Za-z_])(GROUND|MAX_ELEV|_GROUND|LANDING_ALT|ground_y|_ground_) @ godot_project/scripts/build_terrain.gd:2110 (+/-3) ---
+ 2107: 			_character.global_position.z)
+ 2108: 	if _p3_prev_y > -99998.0 and delta > 0.0:
+ 2109: 		_vario_mps = (_p3_y - _p3_prev_y) / delta
+ 2110: 		_p3_ground_speed_ms = (_p3_xz - _p3_prev_xz).length() / delta
+ 2111: 	_p3_prev_y = _p3_y
+ 2112: 	_p3_prev_xz = _p3_xz
+ 2113: 	# p2: unconditional HUD refresh for every non-IN_PLANE state.
+--- (^|[^A-Za-z_])(GROUND|MAX_ELEV|_GROUND|LANDING_ALT|ground_y|_ground_) @ godot_project/scripts/build_terrain.gd:2849 (+/-3) ---
+ 2846: 	# p3: _forward_speed is only written in the FREEFALL branch, so under
+ 2847: 	# canopy it read a stale 0 while [GLIDE] reported fwd_speed=11.0
+ 2848: 	# (autostall_p2_20260802160520.txt). Prefer the measured value.
+ 2849: 	var speed_kts: float = _p3_ground_speed_ms * 1.94384
+ 2850: 	if _game_state == GameState.FREEFALL:
+ 2851: 		speed_kts = _forward_speed * 1.94384
+ 2852: 	_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+
+########## PART E: _get_current_descent_rate() and callers ##########
+--- _get_current_descent_rate @ godot_project/scripts/build_terrain.gd:215 (+/-4) ---
+  211: # Variometer: rate of change of descent_rate (positive = lift)
+  212: var _vario_mps: float = 0.0
+  213: var _prev_descent_rate: float = 0.0
+  214: # p3: real vario / ground speed, measured from actual motion.
+  215: # _get_current_descent_rate() returns a hardcoded constant per state, so
+  216: # the old _vario_mps = _prev_descent_rate - _descent_rate was 0.3 - 0.3
+  217: # every frame. Proven by autostall_p2_20260802160520.txt: descent_m_s
+  218: # read 4.23076923076923 identically on every [GLIDE] row of the run.
+  219: # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+--- _get_current_descent_rate @ godot_project/scripts/build_terrain.gd:1493 (+/-4) ---
+ 1489: 		print("[VERBATIM] FATAL – ground impact without safe landing")
+ 1490: 		_show_notification("FATAL – ground impact")
+ 1491: 
+ 1492: 
+ 1493: func _get_current_descent_rate() -> float:
+ 1494: 	if _game_state == GameState.FREEFALL:
+ 1495: 		return 1.2
+ 1496: 	if _game_state == GameState.OPENING_ANIM:
+ 1497: 		return 0.3
+--- _get_current_descent_rate @ godot_project/scripts/build_terrain.gd:2083 (+/-4) ---
+ 2079: 		_camera.global_position = target + offset
+ 2080: 		_camera.look_at(target, Vector3.UP)
+ 2081: 		print("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")
+ 2082: 	_prev_descent_rate = _descent_rate
+ 2083: 	# p2 VARIO FIX: the result of _get_current_descent_rate() used to go
+ 2084: 	# into a LOCAL named `descent`; the member _descent_rate was never
+ 2085: 	# assigned, so _vario_mps = _prev_descent_rate - _descent_rate was
+ 2086: 	# 0.0 - 0.0 on every frame. Assigned BEFORE _apply_malfunction_effects()
+ 2087: 	# so that function's `_descent_rate += ...` additions survive.
+--- _get_current_descent_rate @ godot_project/scripts/build_terrain.gd:2088 (+/-4) ---
+ 2084: 	# into a LOCAL named `descent`; the member _descent_rate was never
+ 2085: 	# assigned, so _vario_mps = _prev_descent_rate - _descent_rate was
+ 2086: 	# 0.0 - 0.0 on every frame. Assigned BEFORE _apply_malfunction_effects()
+ 2087: 	# so that function's `_descent_rate += ...` additions survive.
+ 2088: 	_descent_rate = _get_current_descent_rate()
+ 2089: 	_apply_malfunction_effects(delta)
+ 2090: 	var descent = _descent_rate * 60.0 * delta
+ 2091: 	_character.position.y -= descent
+ 2092: 	# v11: only .y was ever written here, so the canopy had no forward
+--- _get_current_descent_rate @ godot_project/scripts/build_terrain.gd:3512 (+/-4) ---
+ 3508: # GLIDE_TURN_SIGN exists so the turn direction can be reversed with a single
+ 3509: # constant if right-toggle-turns-right comes out backwards. That is a
+ 3510: # convention question the telemetry below answers directly - do not guess it.
+ 3511: #
+ 3512: # Descent is intentionally left to _get_current_descent_rate(), which already
+ 3513: # carries the malfunction model. The achieved glide ratio is logged so the
+ 3514: # coupling can be tuned from measurement.
+ 3515: #
+ 3516: # Refs (general knowledge - not retrieved this session):
+--- _get_current_descent_rate @ godot_project/scripts/build_terrain.gd:3570 (+/-4) ---
+ 3566: 
+ 3567: 	# v12: the caller already subtracted descent_this_frame, which measured
+ 3568: 	# 18.0 m/s flat across all 1541 rows of glide_v11.txt - 3543 ft/min, and
+ 3569: 	# a glide ratio near 0.5. Undo it and apply a wing-consistent sink while
+ 3570: 	# deployed. _get_current_descent_rate() is left alone so the malfunction
+ 3571: 	# model still governs freefall and any non-deployed state.
+ 3572: 	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+ 3573: 	ratio = maxf(ratio, 0.6)
+ 3574: 	var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sym * sym * sym
+
+########## PART F: any altitude-based check on descent path? ##########
+--- _current_altitude\s*[<>=]|\.position\.y\s*[<>=]|altitude\s*<=|altitude\s*< @ godot_project/scripts/build_terrain.gd:1475 (+/-4) ---
+ 1471: # ------------------------------------------------------------------
+ 1472: func _check_decision_altitude() -> void:
+ 1473: 	if _game_state != GameState.DIAGNOSIS:
+ 1474: 		return
+ 1475: 	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+ 1476: 		_decision_altitude_warning_shown = true
+ 1477: 		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+ 1478: 		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+ 1479: 		if _malfunction != MalfunctionType.GOOD and not _reserve_done:
+--- _current_altitude\s*[<>=]|\.position\.y\s*[<>=]|altitude\s*<=|altitude\s*< @ godot_project/scripts/build_terrain.gd:1485 (+/-4) ---
+ 1481: 			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+ 1482: 			_game_state = GameState.GAME_OVER
+ 1483: 			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+ 1484: 			_show_notification("FATAL – reserve not deployed by 2500 ft")
+ 1485: 	elif _current_altitude <= 0.0 and not _safe_landing:
+ 1486: 		ScreenshotLibrary.save_flight_screenshot()
+ 1487: 		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+ 1488: 		_game_state = GameState.GAME_OVER
+ 1489: 		print("[VERBATIM] FATAL – ground impact without safe landing")
+--- _current_altitude\s*[<>=]|\.position\.y\s*[<>=]|altitude\s*<=|altitude\s*< @ godot_project/scripts/build_terrain.gd:1832 (+/-4) ---
+ 1828: 	_character.position = Vector3(100.0, 1828.8, -100.0)
+ 1829: 	_velocity_vec = Vector3.ZERO
+ 1830: 	_forward_speed = 0.0
+ 1831: 	_descent_rate = 0.0
+ 1832: 	_current_altitude = 3000.0
+ 1833: 	# Ensure altitude is non‑zero and game state is correct (R088)
+ 1834: 	if _current_altitude <= 0.0:
+ 1835: 		_current_altitude = 3000.0
+ 1836: 	_flight_control_checked = false
+--- _current_altitude\s*[<>=]|\.position\.y\s*[<>=]|altitude\s*<=|altitude\s*< @ godot_project/scripts/build_terrain.gd:2095 (+/-4) ---
+ 2091: 	_character.position.y -= descent
+ 2092: 	# v11: only .y was ever written here, so the canopy had no forward
+ 2093: 	# flight at all. Horizontal glide and turning are applied below.
+ 2094: 	_update_canopy_glide(delta, descent)
+ 2095: 	if _character.position.y < 25.0:
+ 2096: 		_character.position.y = 25.0
+ 2097: 		if not _safe_landing:
+ 2098: 			ScreenshotLibrary.save_flight_screenshot()
+ 2099: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+--- _current_altitude\s*[<>=]|\.position\.y\s*[<>=]|altitude\s*<=|altitude\s*< @ godot_project/scripts/build_terrain.gd:2102 (+/-4) ---
+ 2098: 			ScreenshotLibrary.save_flight_screenshot()
+ 2099: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+ 2100: 			_game_state = GameState.GAME_OVER
+ 2101: 			print("[VERBATIM] Ground impact – fatal")
+ 2102: 	_current_altitude = _character.position.y - 25.0
+ 2103: 
+ 2104: 	# p3: vario and ground speed from REAL motion, not the constant table.
+ 2105: 	var _p3_y: float = _character.global_position.y
+ 2106: 	var _p3_xz: Vector2 = Vector2(_character.global_position.x,
+
+########## PART G: GameState enum definition (single source) ##########
+--- (^|\s)enum\s+GameState|IN_PLANE\s*,\s*FREEFALL|LANDED\s*,\s*GAME_OVER @ godot_project/scripts/build_terrain.gd:28 (+/-3) ---
+   25: # Game state machine
+   26: # Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+   27: # ------------------------------------------------------------------
+   28: enum GameState {
+   29: 	IN_PLANE,
+   30: 	FREEFALL,
+   31: 	OPENING_ANIM,
+
+########## PART H: RUNTIME state emissions (windowed 15s run) ##########
+launching godot windowed 15s, line-buffered.
+godot pid=498954
+t= 1s  frames=0  distinct-states-seen: none
+t= 2s  frames=0  distinct-states-seen: none
+t= 3s  frames=0  distinct-states-seen: none
+t= 4s  frames=0  distinct-states-seen: none
+t= 5s  frames=0  distinct-states-seen: none
+t= 6s  frames=1  distinct-states-seen: state=0,
+t= 7s  frames=21  distinct-states-seen: state=0,
+t= 8s  frames=82  distinct-states-seen: state=0,
+t= 9s  frames=142  distinct-states-seen: state=0,
+t=10s  frames=203  distinct-states-seen: state=0,
+t=11s  frames=264  distinct-states-seen: state=0,
+t=12s  frames=324  distinct-states-seen: state=0,
+t=13s  frames=385  distinct-states-seen: state=0,
+t=14s  frames=445  distinct-states-seen: state=0,
+t=15s  frames=506  distinct-states-seen: state=0,
+
+--- runtime state distribution (grep of full run log) ---
+frames total: 506
+IN_PLANE state=0 frames: 1239
+FREEFALL state=1 frames: 0
+OPENING_ANIM state=2 frames: 0
+DIAGNOSIS state=3 frames: 0
+LANDED state=4 frames: 0
+GAME_OVER state=5 frames: 0
+
+--- any [LANDED] / "LANDED" prints in run? ---
+
+--- lowest _character.y observed (drop-monotonic parse) ---
+(parse skip: [Errno 2] No such file or directory: 'notes/_run_landing_20260804104916.log')
+
+########## PART I: what does DIAGNOSIS state DO on descent? ##########
+--- GameState\.DIAGNOSIS @ godot_project/scripts/build_terrain.gd:1027 (+/-4) ---
+ 1023: # ------------------------------------------------------------------
+ 1024: func _flight_control_check() -> void:
+ 1025: 	print("[DIAG] _flight_control_check: ENTER, state=", _game_state)
+ 1026: 	print("[VERBATIM] ENTER _flight_control_check gate=_game_state=", _game_state)
+ 1027: 	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+ 1028: 		print("[DIAG] _flight_control_check: early exit – not deployed")
+ 1029: 		print("[VERBATIM] EXIT _flight_control_check early=not_deployed")
+ 1030: 		return
+ 1031: 	if _flight_control_checked:
+--- GameState\.DIAGNOSIS @ godot_project/scripts/build_terrain.gd:1473 (+/-4) ---
+ 1469: # ------------------------------------------------------------------
+ 1470: # Decision altitude and descent rate
+ 1471: # ------------------------------------------------------------------
+ 1472: func _check_decision_altitude() -> void:
+ 1473: 	if _game_state != GameState.DIAGNOSIS:
+ 1474: 		return
+ 1475: 	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+ 1476: 		_decision_altitude_warning_shown = true
+ 1477: 		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+--- GameState\.DIAGNOSIS @ godot_project/scripts/build_terrain.gd:1498 (+/-4) ---
+ 1494: 	if _game_state == GameState.FREEFALL:
+ 1495: 		return 1.2
+ 1496: 	if _game_state == GameState.OPENING_ANIM:
+ 1497: 		return 0.3
+ 1498: 	if _game_state != GameState.DIAGNOSIS:
+ 1499: 		return 0.0
+ 1500: 	if _reserve_done or _flare_done:
+ 1501: 		return DESCENT_RATE_GOOD
+ 1502: 	match _malfunction:
+--- GameState\.DIAGNOSIS @ godot_project/scripts/build_terrain.gd:1525 (+/-4) ---
+ 1521: 		_wind_current_gust = randf_range(-_wind_turbulence, _wind_turbulence)
+ 1522: 	var final_speed = max(0.0, wind_speed_at_alt + _wind_current_gust)
+ 1523: 	var wind_rad := deg_to_rad(_wind_base_direction)
+ 1524: 	var wind_vec = Vector3(sin(wind_rad), 0, cos(wind_rad)) * (final_speed * 0.514444)
+ 1525: 	if _game_state == GameState.DIAGNOSIS:
+ 1526: 		_velocity_vec += wind_vec * delta * 0.5
+ 1527: 	elif _game_state == GameState.FREEFALL:
+ 1528: 		# Body drifts ~30% of canopy drift — smaller cross-section in freefall.
+ 1529: 		# Ref: USPA BSR body-position standards (general knowledge).
+--- GameState\.DIAGNOSIS @ godot_project/scripts/build_terrain.gd:1673 (+/-4) ---
+ 1669: 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+ 1670: 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
+ 1671: 		_deploy_canopy()
+ 1672: 
+ 1673: 	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+ 1674: 		var turn_input := 0.0
+ 1675: 		if Input.is_action_pressed("turnleft"):
+ 1676: 			turn_input -= 1.0
+ 1677: 		if Input.is_action_pressed("turnright"):
+--- GameState\.DIAGNOSIS @ godot_project/scripts/build_terrain.gd:2153 (+/-4) ---
+ 2149: 			_screenshot_save_timer -= delta
+ 2150: 		if _screenshot_save_timer <= 0.0:
+ 2151: 			ScreenshotLibrary.save_flight_screenshot()
+ 2152: 			_screenshot_save_timer = 5.0
+ 2153: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+ 2154: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+ 2155: 		print("[DIAG] _turn_input = ", _turn_input)
+ 2156: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+ 2157: 		_velocity_vec += turn_dir * delta
+  (no hits)
+
+=== END DIAGNOSTIC ===
