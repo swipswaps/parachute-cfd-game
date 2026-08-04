@@ -1,0 +1,51 @@
+=== verify plane fix 20260804065915 ===
+
+--- PATCH3 IDEMPOTENCE CHECK: count of _load_camera_settings() calls ---
+4
+--- their line numbers ---
+254:	_load_camera_settings()
+382:	_load_camera_settings()  # load DB distance before placing camera (line 382 anchor)
+1823:	_load_camera_settings()  # restore plane camera distance on restart
+2782:func _load_camera_settings() -> void:
+
+--- lines 378-400 (_ready camera block, cat -A) ---
+^I_setup_plane_node()$
+^Iprint("[DIAG] _ready: plane created, _plane_node=", _plane_node)$
+$
+^I# --------------------------------------------------------------$
+^I_load_camera_settings()  # load DB distance before placing camera (line 382 anchor)$
+^I# ThirdM-bM-^@M-^Qperson camera M-bM-^@M-^S child of root, initially follows plane$
+^I# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html$
+^I# --------------------------------------------------------------$
+^I_camera = Camera3D.new()$
+^I_camera.position = Vector3(0.0, 2.0, 3.0)$
+^I_camera.fov = 75.0$
+^I_camera.near = 0.1$
+^I_camera.far = 10000.0$
+^Iadd_child(_camera)$
+$
+^I# Ensure plane exists before positioning camera$
+^Iif _plane_node:$
+^I^I# Position camera using orbit angles$
+^I^Ivar plane_pos = _plane_node.global_position$
+^I^Ivar offset = Vector3(0, 0, -_cam_distance)$
+^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+^I^Ioffset = offset.rotated(Vector3.RIGHT, _cam_elevation)$
+^I^I_camera.global_position = plane_pos + offset$
+
+--- TABS-ONLY CHECK (Rule #31): lines with leading spaces ---
+leading-space line count: 0
+0
+
+--- all four patches present? ---
+2661:	plane.global_position = Vector3(0, _PLANE_ALTITUDE, 0)
+2810:	var offset := Vector3(0, 0, -_cam_distance)
+1823:	_load_camera_settings()  # restore plane camera distance on restart
+
+--- old buggy values absent? (Rule #29 exact error verification) ---
+old spawn altitude: 0
+0
+positive-Z offset:  0
+0
+
+=== END VERIFY ===
