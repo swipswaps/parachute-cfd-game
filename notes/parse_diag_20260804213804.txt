@@ -1,0 +1,38 @@
+=== PARSE ERROR DIAGNOSTIC — 20260804213804 UTC ===
+
+=== LINE 1939 CONTEXT (±10 lines) ===
+ 1929: 			print("[VERBATIM] INPUT: action=", action)
+ 1930: 	if event.is_action_pressed("pause"):
+ 1931: 		toggle_pause()
+ 1932: 
+ 1933: 	# Manual save key (S)
+ 1934: 	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+ 1935: 		_save_camera_settings()
+ 1936: 		print("[CAMERA] Settings saved manually")
+ 1937: 
+ 1938: 
+ 1939: func _physics_process(delta) -> void:
+ 1940: _apply_arm_bone_overrides()
+ 1941: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+ 1942: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+ 1943: 	# ForensicHUD._input()/ForensicPanel._process() automatically.
+ 1944: 	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+ 1945: 		ForensicHUD.poll_forensic_hud()
+ 1946: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+ 1947: 		ForensicPanel.poll_forensic_panel()
+ 1948: 	if _character and is_instance_valid(_character):
+ 1949: 		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+
+=== _physics_process FUNCTION (first 30 lines) ===
+1939:func _physics_process(delta) -> void:
+
+=== TOP-LEVEL CALLS TO _apply_arm_bone_overrides ===
+3002:func _apply_arm_bone_overrides() -> void:
+
+=== DEFINITION OF _apply_arm_bone_overrides ===
+3002:func _apply_arm_bone_overrides() -> void:
+
+=== LINES THAT LOOK LIKE A FUNCTION DECLARATION WITHOUT BODY ===
+None found
+
+=== END DIAGNOSTIC ===
