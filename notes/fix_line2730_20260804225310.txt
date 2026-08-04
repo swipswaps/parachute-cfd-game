@@ -1,0 +1,55 @@
+=== FIX LINE 2730 — 20260804225310 UTC ===
+
+=== LINES 2725-2745 (BEFORE) ===
+2725: ^I^I)$
+2726: ^I)$
+2727: ^Iprint("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)$
+2728: $
+2729: $
+2730: func _load_camera_settings() -> void:$
+2731:     var db = SqliteDb  # autoload singleton$
+2732:     if not db:$
+2733:         print("[CAMERA_DEBUG] SqliteDb not available M-bM-^@M-^S using default")$
+2734:         _cam_distance = 300.0$
+2735:         return$
+2736:     # Ensure table exists (idempotent)$
+2737:     db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")$
+2738:     var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")$
+2739:     if result and result.size() > 0:$
+2740:         _cam_distance = float(result[0]["value"])$
+2741:         print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)$
+2742:     else:$
+2743:         _cam_distance = 300.0$
+2744:         print("[CAMERA_DEBUG] Using default 300.0")$
+2745:     print("[CAMERA_DEBUG] _load_camera_settings() END")$
+Line 2730 already has no leading spaces
+Patch applied.
+
+=== LINES 2725-2745 (AFTER) ===
+2725: ^I^I)$
+2726: ^I)$
+2727: ^Iprint("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)$
+2728: $
+2729: $
+2730: func _load_camera_settings() -> void:$
+2731:     var db = SqliteDb  # autoload singleton$
+2732:     if not db:$
+2733:         print("[CAMERA_DEBUG] SqliteDb not available M-bM-^@M-^S using default")$
+2734:         _cam_distance = 300.0$
+2735:         return$
+2736:     # Ensure table exists (idempotent)$
+2737:     db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")$
+2738:     var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")$
+2739:     if result and result.size() > 0:$
+2740:         _cam_distance = float(result[0]["value"])$
+2741:         print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)$
+2742:     else:$
+2743:         _cam_distance = 300.0$
+2744:         print("[CAMERA_DEBUG] Using default 300.0")$
+2745:     print("[CAMERA_DEBUG] _load_camera_settings() END")$
+
+=== VERIFICATION (Godot headless) ===
+SCRIPT ERROR: Parse Error: Used space character for indentation instead of tab as used before in the file.
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== DIFF ===
