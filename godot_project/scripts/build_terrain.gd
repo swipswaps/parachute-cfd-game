@@ -2094,11 +2094,29 @@ func _physics_process(delta) -> void:
 	_update_canopy_glide(delta, descent)
 	if _character.position.y < 25.0:
 		_character.position.y = 25.0
-		if not _safe_landing:
-			ScreenshotLibrary.save_flight_screenshot()
-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
-			_game_state = GameState.GAME_OVER
-			print("[VERBATIM] Ground impact – fatal")
+		# LANDED-transition fix (this session):
+		# Old code only wrote GAME_OVER when `not _safe_landing`, so a
+		# deployed-canopy descent to ground without a flare press left
+		# the state stuck at DIAGNOSIS forever. Proven by
+		# notes/diag_landing_20260804121715.txt PART H: 1239 state=0
+		# emissions and zero emissions in states 1..5 across 506 frames.
+		# Ref: state machine tutorial (referenced at line 26 of this file):
+		#   https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+		# Descent-rate threshold rationale: parachute canopies typically
+		# achieve 4-6 m/s rate of descent when fully inflated (USPA SIM,
+		# general knowledge - not retrieved this session); 8 m/s allows
+		# margin for a hard but survivable arrival.
+		if _game_state != GameState.LANDED and _game_state != GameState.GAME_OVER:
+			var safe := _safe_landing or (_canopy_deployed and _descent_rate < 8.0)
+			if safe:
+				_safe_landing = true
+				_game_state = GameState.LANDED
+				print("[VERBATIM] Ground contact - SAFE LANDING (state=LANDED)")
+			else:
+				ScreenshotLibrary.save_flight_screenshot()
+				print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+				_game_state = GameState.GAME_OVER
+				print("[VERBATIM] Ground impact - fatal")
 	_current_altitude = _character.position.y - 25.0
 
 	# p3: vario and ground speed from REAL motion, not the constant table.

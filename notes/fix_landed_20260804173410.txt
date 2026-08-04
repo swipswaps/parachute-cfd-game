@@ -1,0 +1,173 @@
+=== LANDED transition fix 20260804173410 UTC ===
+
+########## PART 1: PRE-STATE (grounded) ##########
+GameState.LANDED reference count BEFORE: 3
+ground-clamp block hit BEFORE:
+grep: warning: stray \ before t
+
+########## PART 2: APPLY PATCH ##########
+[DIAG] file length: 150958 bytes, 3778 lines
+[DIAG] GameState.LANDED references before: 3
+[2026-08-04T17:34:10.333309+00:00] [SUCCESS] extract: lines 2095..2101 match expected shape
+[2026-08-04T17:34:10.355055+00:00] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260804173410
+[2026-08-04T17:34:10.361228+00:00] [SUCCESS] write: read-back match
+[2026-08-04T17:34:10.363129+00:00] [SUCCESS] tabs_only: no leading spaces
+[2026-08-04T17:34:10.367884+00:00] [SUCCESS] landed_writes: exactly 2 (flare + ground contact)
+[2026-08-04T17:34:10.368563+00:00] [SUCCESS] safe_predicate_present: verified in code
+
+PATCH APPLIED: godot_project/scripts/build_terrain.gd
+Backup: godot_project/scripts/build_terrain.gd.bak.20260804173410
+
+########## PART 3: POST-STATE ##########
+GameState.LANDED reference count AFTER: 5
+safe-landing predicate present AFTER:
+2110:			var safe := _safe_landing or (_canopy_deployed and _descent_rate < 8.0)
+
+########## PART 4: DIFF ##########
+2097,2101c2097,2119
+< 		if not _safe_landing:
+< 			ScreenshotLibrary.save_flight_screenshot()
+< 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+< 			_game_state = GameState.GAME_OVER
+< 			print("[VERBATIM] Ground impact – fatal")
+---
+> 		# LANDED-transition fix (this session):
+> 		# Old code only wrote GAME_OVER when `not _safe_landing`, so a
+> 		# deployed-canopy descent to ground without a flare press left
+> 		# the state stuck at DIAGNOSIS forever. Proven by
+> 		# notes/diag_landing_20260804121715.txt PART H: 1239 state=0
+> 		# emissions and zero emissions in states 1..5 across 506 frames.
+> 		# Ref: state machine tutorial (referenced at line 26 of this file):
+> 		#   https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+> 		# Descent-rate threshold rationale: parachute canopies typically
+> 		# achieve 4-6 m/s rate of descent when fully inflated (USPA SIM,
+> 		# general knowledge - not retrieved this session); 8 m/s allows
+> 		# margin for a hard but survivable arrival.
+> 		if _game_state != GameState.LANDED and _game_state != GameState.GAME_OVER:
+> 			var safe := _safe_landing or (_canopy_deployed and _descent_rate < 8.0)
+> 			if safe:
+> 				_safe_landing = true
+> 				_game_state = GameState.LANDED
+> 				print("[VERBATIM] Ground contact - SAFE LANDING (state=LANDED)")
+> 			else:
+> 				ScreenshotLibrary.save_flight_screenshot()
+> 				print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+> 				_game_state = GameState.GAME_OVER
+> 				print("[VERBATIM] Ground impact - fatal")
+
+########## PART 5: NEW ground-contact block, numbered ##########
+ 2095: 	if _character.position.y < 25.0:
+ 2096: 		_character.position.y = 25.0
+ 2097: 		# LANDED-transition fix (this session):
+ 2098: 		# Old code only wrote GAME_OVER when `not _safe_landing`, so a
+ 2099: 		# deployed-canopy descent to ground without a flare press left
+ 2100: 		# the state stuck at DIAGNOSIS forever. Proven by
+ 2101: 		# notes/diag_landing_20260804121715.txt PART H: 1239 state=0
+ 2102: 		# emissions and zero emissions in states 1..5 across 506 frames.
+ 2103: 		# Ref: state machine tutorial (referenced at line 26 of this file):
+ 2104: 		#   https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
+ 2105: 		# Descent-rate threshold rationale: parachute canopies typically
+ 2106: 		# achieve 4-6 m/s rate of descent when fully inflated (USPA SIM,
+ 2107: 		# general knowledge - not retrieved this session); 8 m/s allows
+ 2108: 		# margin for a hard but survivable arrival.
+ 2109: 		if _game_state != GameState.LANDED and _game_state != GameState.GAME_OVER:
+ 2110: 			var safe := _safe_landing or (_canopy_deployed and _descent_rate < 8.0)
+ 2111: 			if safe:
+ 2112: 				_safe_landing = true
+ 2113: 				_game_state = GameState.LANDED
+ 2114: 				print("[VERBATIM] Ground contact - SAFE LANDING (state=LANDED)")
+ 2115: 			else:
+ 2116: 				ScreenshotLibrary.save_flight_screenshot()
+ 2117: 				print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+ 2118: 				_game_state = GameState.GAME_OVER
+ 2119: 				print("[VERBATIM] Ground impact - fatal")
+ 2120: 	_current_altitude = _character.position.y - 25.0
+
+########## PART 6: AUTOSTALL RUN (headless pipeline exerciser) ##########
+launching autostall_patched.py --no-timeout, streaming to log
+autostall pid=550770
+t=  2s  frames=0  LANDED-hits=0  completed-lines=0
+t=  4s  frames=0  LANDED-hits=0  completed-lines=0
+t=  6s  frames=0  LANDED-hits=0  completed-lines=0
+t=  8s  frames=0  LANDED-hits=0  completed-lines=0
+t= 10s  frames=0  LANDED-hits=0  completed-lines=0
+t= 12s  frames=0  LANDED-hits=0  completed-lines=0
+t= 14s  frames=0  LANDED-hits=0  completed-lines=0
+t= 16s  frames=0  LANDED-hits=0  completed-lines=0
+t= 18s  frames=0  LANDED-hits=0  completed-lines=0
+t= 20s  frames=0  LANDED-hits=0  completed-lines=0
+t= 22s  frames=0  LANDED-hits=0  completed-lines=0
+t= 24s  frames=0  LANDED-hits=0  completed-lines=0
+t= 26s  frames=0  LANDED-hits=0  completed-lines=0
+t= 28s  frames=0  LANDED-hits=0  completed-lines=0
+t= 30s  frames=0  LANDED-hits=0  completed-lines=0
+t= 32s  frames=0  LANDED-hits=0  completed-lines=0
+t= 34s  frames=0  LANDED-hits=0  completed-lines=0
+t= 36s  frames=0  LANDED-hits=0  completed-lines=0
+t= 38s  frames=0  LANDED-hits=0  completed-lines=0
+t= 40s  frames=0  LANDED-hits=0  completed-lines=0
+t= 42s  frames=0  LANDED-hits=0  completed-lines=0
+t= 44s  frames=0  LANDED-hits=0  completed-lines=0
+t= 46s  frames=0  LANDED-hits=0  completed-lines=0
+t= 48s  frames=0  LANDED-hits=0  completed-lines=0
+t= 50s  frames=0  LANDED-hits=0  completed-lines=0
+t= 52s  frames=0  LANDED-hits=0  completed-lines=0
+t= 54s  frames=0  LANDED-hits=0  completed-lines=0
+t= 56s  frames=0  LANDED-hits=0  completed-lines=0
+t= 58s  frames=0  LANDED-hits=0  completed-lines=0
+t= 60s  frames=0  LANDED-hits=0  completed-lines=0
+t= 62s  frames=1  LANDED-hits=0  completed-lines=0
+t= 64s  frames=8  LANDED-hits=0  completed-lines=0
+t= 66s  frames=8  LANDED-hits=0  completed-lines=0
+t= 68s  frames=8  LANDED-hits=0  completed-lines=0
+t= 70s  frames=32  LANDED-hits=0  completed-lines=0
+t= 72s  frames=154  LANDED-hits=0  completed-lines=0
+t= 74s  frames=274  LANDED-hits=0  completed-lines=0
+t= 76s  frames=396  LANDED-hits=0  completed-lines=0
+t= 78s  frames=517  LANDED-hits=0  completed-lines=0
+t= 80s  frames=639  LANDED-hits=0  completed-lines=0
+t= 82s  frames=760  LANDED-hits=0  completed-lines=0
+t= 84s  frames=882  LANDED-hits=0  completed-lines=0
+t= 86s  frames=1003  LANDED-hits=0  completed-lines=0
+t= 88s  frames=1125  LANDED-hits=0  completed-lines=0
+t= 90s  frames=1246  LANDED-hits=0  completed-lines=0
+
+########## PART 7: LANDED EVIDENCE (grep) ##########
+--- state emission distribution ---
+  state=0 : 12
+  state=1 : 11
+  state=2 : 4896
+  state=3 : 0
+  state=4 : 0
+  state=5 : 0
+
+--- SAFE LANDING lines ---
+
+--- Game completed lines ---
+
+--- last 20 lines of autostall log ---
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=2
+[DIAG] _physics_process: camera target set to character (state: 2)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=2
+[VERBATIM] POLL: _poll_controls() entered, game_state=2
+[VERBATIM] POLL: checking deploy state=2 canopy=true
+
+########## PART 8: VERDICT ##########
+FAIL: no LANDED emissions. Tail above shows where it stopped.
+
+=== END ===
