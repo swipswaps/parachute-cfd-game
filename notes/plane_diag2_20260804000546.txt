@@ -1,0 +1,405 @@
+=== plane diag2 20260804000546 UTC ===
+
+
+--- lines 370-410 (_ready camera + plane setup) ---
+ 370: 	print("[DEBUG] _character global_position: ", _character.global_position)
+ 371: 	_load_character()
+ 372: 	print("[DIAG] _ready: character loaded")
+ 373: 
+ 374: 	# --------------------------------------------------------------
+ 375: 	# Plane – must be created before camera look_at
+ 376: 	# --------------------------------------------------------------
+ 377: 	_create_plane()
+ 378: 	_setup_plane_node()
+ 379: 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
+ 380: 
+ 381: 	# --------------------------------------------------------------
+ 382: 	# Third‑person camera – child of root, initially follows plane
+ 383: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+ 384: 	# --------------------------------------------------------------
+ 385: 	_camera = Camera3D.new()
+ 386: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+ 387: 	_camera.fov = 75.0
+ 388: 	_camera.near = 0.1
+ 389: 	_camera.far = 10000.0
+ 390: 	add_child(_camera)
+ 391: 
+ 392: 	# Ensure plane exists before positioning camera
+ 393: 	if _plane_node:
+ 394: 		# Position camera using orbit angles
+ 395: 		var plane_pos = _plane_node.global_position
+ 396: 		var offset = Vector3(0, 0, -_cam_distance)
+ 397: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+ 398: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+ 399: 		_camera.global_position = plane_pos + offset
+ 400: 		_camera.look_at(plane_pos, Vector3.UP)
+ 401: 		_camera.current = true
+ 402: 		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+ 403: 		print("[DEBUG] Plane position: ", plane_pos)
+ 404: 		print("[DEBUG] Camera position: ", _camera.global_position)
+ 405: 		print("[DIAG] _ready: camera positioned")
+ 406: 	else:
+ 407: 		print("[ERROR] Plane node is null, camera not positioned.")
+ 408: 		print("[DIAG] _ready: ERROR – plane node null")
+ 409: 
+ 410: 	print("[VERBATIM] Camera attached to root, following plane")
+
+--- lines 1620-1660 (exit-aircraft / _cam_distance=5.0 block) ---
+1620: 		# reliable across _physics_process/_process frame boundary).
+1621: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1622: 		var _exit_pressed = (
+1623: 			Input.is_action_just_pressed("deploy")
+1624: 			or Input.is_key_pressed(KEY_J)
+1625: 			or _headless_auto_jump
+1626: 		)
+1627: 		_headless_auto_jump = false  # consume the flag
+1628: 		if _exit_pressed:
+1629: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+1630: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+1631: 			_game_state = GameState.FREEFALL
+1632: 			_cam_distance = 5.0
+1633: 			if _plane_node:
+1634: 				_plane_node.visible = false
+1635: 			_character.visible = true
+1636: 			if _plane_node:
+1637: 				_character.position = _plane_node.position + Vector3(0, -2.0, 0)
+1638: 			else:
+1639: 				_character.position = Vector3(100, 1828.8, -100)
+1640: 			_show_notification("Jumped! Deploy parachute (SPACE) above 2000 ft AGL")
+1641: 			# --- Immediately switch camera to character ---
+1642: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+1643: 				_camera.global_position = _character.global_position + Vector3(0, 2, 3)
+1644: 				_camera.look_at(_character.global_position, Vector3.UP)
+1645: 				print("[CAMERA] Switched to character after exit")
+1646: 				_camera.current = true  # ensure the camera becomes active
+1647: 		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
+1648: 		return
+1649: 
+1650: 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+1651: 		if Input.is_action_just_pressed("restart"):
+1652: 			print("[DIAG] _poll_controls: restart pressed")
+1653: 			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
+1654: 			_reset_game()
+1655: 		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
+1656: 		return
+1657: 
+1658: 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+1659: 	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+1660: 	# _deploy_canopy() requires state==FREEFALL; this flag is consumed only here,
+
+--- lines 1780-1830 (camera_target switch) ---
+1780: 	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D):
+1781: 		cam_move.x += 1.0
+1782: 	if cam_move.length() > 0:
+1783: 		cam_move = cam_move.normalized() * 100.0
+1784: 		_camera.position += cam_move
+1785: 		_camera.position.x = clamp(_camera.position.x, -2000.0, 2000.0)
+1786: 		_camera.position.z = clamp(_camera.position.z, -2000.0, 2000.0)
+1787: 
+1788: 	_last_frame_keys["Q"] = Input.is_key_pressed(KEY_Q)
+1789: 	_last_frame_keys["E"] = Input.is_key_pressed(KEY_E)
+1790: 
+1791: 	# --- Camera toggle on J (when not in plane) ---
+1792: 	if Input.is_action_just_pressed("j") and _game_state != GameState.IN_PLANE:
+1793: 		if camera_target == "plane":
+1794: 			camera_target = "character"
+1795: 			if is_instance_valid(_character) and is_instance_valid(_camera):
+1796: 				var target = _character.global_position
+1797: 				var offset = Vector3(0, 0, -_cam_distance)
+1798: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1799: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1800: 				_camera.global_position = target + offset
+1801: 				_camera.look_at(target, Vector3.UP)
+1802: 				print("[CAMERA] Switched to character (J)")
+1803: 		else:
+1804: 			camera_target = "plane"
+1805: 			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+1806: 				var target = _plane_node.global_position
+1807: 				var offset = Vector3(0, 0, -_cam_distance)
+1808: 				offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1809: 				offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1810: 				_camera.global_position = target + offset
+1811: 				_camera.look_at(target, Vector3.UP)
+1812: 				print("[CAMERA] Switched to plane (J)")
+1813: 
+1814: 
+1815: # ------------------------------------------------------------------
+1816: # Reset game to initial state (deterministic, idempotent)
+1817: # ------------------------------------------------------------------
+1818: func _reset_game() -> void:
+1819: 	print("[DIAG] _reset_game: ENTER")
+1820: 	print("[VERBATIM] === RESETTING GAME ===")
+1821: 	_game_state = GameState.IN_PLANE
+1822: 	if _plane_node:
+1823: 		_plane_node.visible = true
+1824: 		_plane_angle = 0.0
+1825: 	_character.visible = false
+1826: 	_character.position = Vector3(100.0, 1828.8, -100.0)
+1827: 	_velocity_vec = Vector3.ZERO
+1828: 	_forward_speed = 0.0
+1829: 	_descent_rate = 0.0
+1830: 	_current_altitude = 3000.0
+
+--- lines 1920-1960 (_update_camera_position) ---
+1920: func _input(event: InputEvent) -> void:
+1921: 	# Ignore F3 – let forensic_hud handle it
+1922: 	if event is InputEventKey and event.keycode == KEY_F3:
+1923: 		return
+1924: 	print("[DEBUG] _input (build_terrain) called, event=", event)
+1925: 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+1926: 		var rel = (event as InputEventMouseMotion).relative
+1927: 		# Adjust azimuth and elevation based on mouse drag
+1928: 		_cam_azimuth -= rel.x * 0.005
+1929: 		_cam_elevation -= rel.y * 0.005
+1930: 		# _character.rotation.y = _cam_azimuth  # removed to match plane behaviour
+1931: 		# Clamp elevation to avoid flipping
+1932: 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
+1933: 		_update_camera_position()
+1934: 		# Immediately update camera position if we have a target
+1935: 		var target: Vector3
+1936: 		if camera_target == "plane" and is_instance_valid(_plane_node):
+1937: 			target = _plane_node.global_position
+1938: 		elif camera_target == "character" and is_instance_valid(_character):
+1939: 			target = _character.global_position
+1940: 		else:
+1941: 			return
+1942: 		var offset = Vector3(0, 0, -_cam_distance)
+1943: 		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+1944: 		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+1945: 		_camera.global_position = target + offset
+1946: 		_camera.look_at(target, Vector3.UP)
+1947: 		print(
+1948: 			"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)
+1949: 		)
+1950: 
+1951: 	if event is InputEventKey and event.pressed and not event.echo:
+1952: 		var action := ""
+1953: 		if event.keycode == KEY_Q:
+1954: 			action = "turn_left (Q)"
+1955: 		elif event.keycode == KEY_E:
+1956: 			action = "turn_right (E)"
+1957: 		elif event.keycode == KEY_SPACE:
+1958: 			action = "deploy (SPACE)"
+1959: 		elif event.keycode == KEY_C:
+1960: 			action = "cycle_camera (C)"
+
+--- lines 2000-2070 (_physics_process IN_PLANE branch) ---
+2000: 	# --- Q/E turn input (checked first so it's available for all states) ---
+2001: 	if Input.is_key_pressed(KEY_Q):
+2002: 		_turn_input = -1.0
+2003: 	elif Input.is_key_pressed(KEY_E):
+2004: 		_turn_input = 1.0
+2005: 	else:
+2006: 		_turn_input = 0.0
+2007: 	# fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+2008: 	# Held state is read directly from the keys here, so release is handled
+2009: 	# (the old edge-triggered path executed nothing on key-up).
+2010: 	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+2011: 	_ensure_controls()
+2012: 	_log_control_presses()
+2013: 	_sync_main_canopy()
+2014: 	_pip_live_view(delta)
+2015: 
+2016: 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
+2017: 	if _game_state == GameState.IN_PLANE:
+2018: 		print("[DIAG] _physics_process: IN_PLANE branch entered")
+2019: 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+2020: 		if _plane_node:
+2021: 			_plane_node.position = Vector3(
+2022: 				cos(_plane_angle) * _PLANE_ORBIT_RADIUS,
+2023: 				_PLANE_ALTITUDE,
+2024: 				sin(_plane_angle) * _PLANE_ORBIT_RADIUS
+2025: 			)
+2026: 			_plane_node.rotation.y = _plane_angle + PI / 2.0
+2027: 			# Headless auto-start: fire SPACE on first IN_PLANE frame
+2028: 			# (Rule #1 grounded: this is the first rendered frame, confirmed
+2029: 			#  by _0283.txt showing plane position update before stall)
+2030: 			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+2031: 				if not ProjectSettings.has_setting("_headless_space_fired"):
+2032: 					ProjectSettings.set_setting("_headless_space_fired", true)
+2033: 					Input.action_press("deploy")
+2034: 					Input.action_release("deploy")
+2035: 					_headless_auto_deploy = true
+2036: 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+2037: 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+2038: 		else:
+2039: 			print("[DIAG] _physics_process: plane_node is NULL")
+2040: 		if _hud_labels.size() > 0:
+2041: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+2042: 		if _hud_labels.size() > 7:
+2043: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+2044: 		# --- CAMERA FOLLOW ---
+2045: 		print("[DIAG] _physics_process: checking camera follow")
+2046: 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+2047: 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+2048: 			var old_pos = _camera.global_position
+2049: 			var target = _plane_node.global_position
+2050: 			var offset = Vector3(0, 0, -_cam_distance)
+2051: 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+2052: 			offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+2053: 			_camera.global_position = target + offset
+2054: 			_camera.look_at(target, Vector3.UP)
+2055: 			print(
+2056: 				"[DIAG] _physics_process: camera moved from ",
+2057: 				old_pos,
+2058: 				" to ",
+2059: 				_camera.global_position
+2060: 			)
+2061: 		else:
+2062: 			print(
+2063: 				"[DIAG] _physics_process: camera follow skipped – plane=",
+2064: 				_plane_node,
+2065: 				" camera=",
+2066: 				_camera
+2067: 			)
+2068: 		print("[DIAG] _physics_process: IN_PLANE returning")
+2069: 		return
+2070: 
+
+--- lines 2600-2680 (_setup_plane_node + plane creation) ---
+2600: 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+2601: 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+2602: 		label.add_theme_color_override("font_color", Color(0.8, 0.9, 1.0))
+2603: 		label.add_theme_font_size_override("font_size", 20)
+2604: 		placeholder.add_child(label)
+2605: 		_loading_layer.add_child(placeholder)
+2606: 		print("[VERBATIM] No screenshots – showing placeholder message")
+2607: 	add_child(_loading_layer)
+2608: 	print("[VERBATIM] EXIT _show_loading_screen")
+2609: 
+2610: 
+2611: func _create_plane() -> void:
+2612: 	_log("[VERBATIM] Creating plane node...")
+2613: 	var plane := CharacterBody3D.new()
+2614: 	plane.name = "FlyingPlane"
+2615: 	var plane_script = load("res://scripts/plane.gd")
+2616: 	if plane_script:
+2617: 		plane.set_script(plane_script)
+2618: 		plane.process_mode = PROCESS_MODE_ALWAYS
+2619: 		if plane.has_method("test_plane_process"):
+2620: 			plane.test_plane_process()
+2621: 		else:
+2622: 			print("[VERBATIM] plane: test_plane_process method not found")
+2623: 		_log("[VERBATIM] Plane script attached")
+2624: 	else:
+2625: 		_log("[VERBATIM] WARNING: plane.gd not found")
+2626: 	add_child(plane)
+2627: 	_plane_node = plane
+2628: 	plane.add_to_group("plane")
+2629: 
+2630: 	# Load aircraft model
+2631: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+2632: 	if plane_scene and plane_scene is PackedScene:
+2633: 		var aircraft = plane_scene.instantiate()
+2634: 		plane.add_child(aircraft)
+2635: 		# Make it visible and large enough to see
+2636: 		aircraft.visible = true
+2637: 		aircraft.scale = Vector3(15.0, 15.0, 15.0)  # Increased from 1 to 5
+2638: 		aircraft.position = Vector3(0, 0, 0)
+2639: 		print(
+2640: 			"[VERBATIM] Cessna model loaded. visible=", aircraft.visible, " scale=", aircraft.scale
+2641: 		)
+2642: 	else:
+2643: 		print("[VERBATIM] Failed to load Cessna model")
+2644: 
+2645: 	var plane_collision := CollisionShape3D.new()
+2646: 	plane_collision.shape = BoxShape3D.new()
+2647: 	plane_collision.shape.size = Vector3(3, 1, 10)
+2648: 	plane.add_child(plane_collision)
+2649: 
+2650: 	var exit_trigger := Area3D.new()
+2651: 	exit_trigger.name = "ExitTrigger"
+2652: 	plane.add_child(exit_trigger)
+2653: 	var trigger_collision := CollisionShape3D.new()
+2654: 	trigger_collision.shape = BoxShape3D.new()
+2655: 	trigger_collision.shape.size = Vector3(2, 2, 2)
+2656: 	trigger_collision.position = Vector3(1.5, 0, -2)
+2657: 	exit_trigger.add_child(trigger_collision)
+2658: 
+2659: 	plane.global_position = Vector3(0, 1828.8, 0)
+2660: 	_log("[VERBATIM] Plane created at altitude 6000")
+2661: 
+2662: 
+2663: func _wait_for_movement(timeout_sec: float = 2.0) -> bool:
+2664: 	var start_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2665: 	var elapsed := 0.0
+2666: 	while elapsed < timeout_sec:
+2667: 		await get_tree().create_timer(0.1).timeout
+2668: 		elapsed += 0.1
+2669: 		var new_pos = _plane_node.position if _plane_node else Vector3.ZERO
+2670: 		if (new_pos - start_pos).length() > 1.0:
+2671: 			return true
+2672: 	return false
+2673: 
+2674: 
+2675: # --- Injected missing function: _setup_plane_node ---
+2676: func _setup_plane_node() -> void:
+2677: 	if not _plane_node:
+2678: 		_plane_node = _find_node_with_method(self, "_on_exit_trigger_body_entered")
+2679: 	if not _plane_node:
+2680: 		_log("[VERBATIM] WARNING: plane node not found")
+2681: 
+2682: 
+2683: # Helper to find node with a specific method
+2684: 
+2685: 
+2686: # --- Injected missing function: _log ---
+2687: func _log(msg: String) -> void:
+2688: 	print("[VERBATIM] " + msg)
+2689: 	if _notification_label:
+2690: 		_notification_label.text = msg
+2691: 		_notification_label.add_theme_color_override(
+2692: 			"font_color", Color(1, 0, 0) if "ERROR" in msg or "FATAL" in msg else Color(1, 0.8, 0)
+2693: 		)
+2694: 
+2695: 
+2696: # ------------------------------------------------------------------
+2697: # EXIT TREE - Clean up database connections
+2698: # ------------------------------------------------------------------
+2699: 
+2700: 
+
+--- lines 2780-2815 (_load_camera_settings) ---
+2780: func _load_camera_settings() -> void:
+2781: 	var db = SqliteDb  # autoload singleton
+2782: 	if not db:
+2783: 		return
+2784: 	# Ensure table exists
+2785: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2786: 	var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+2787: 	if result and result.size() > 0:
+2788: 		_cam_distance = float(result[0]["value"])
+2789: 		print("[CAMERA] Loaded plane camera distance from DB: ", _cam_distance)
+2790: 	else:
+2791: 		_cam_distance = 300.0
+2792: 		print("[CAMERA] Plane camera distance not found, using default 300.0")
+2793: 
+2794: 
+2795: func _update_camera_position() -> void:
+2796: 	if not is_instance_valid(_camera):
+2797: 		return
+2798: 	var target: Vector3
+2799: 	if camera_target == "plane" and is_instance_valid(_plane_node):
+2800: 		target = _plane_node.global_position
+2801: 	elif camera_target == "character" and is_instance_valid(_character):
+2802: 		target = _character.global_position
+2803: 	else:
+2804: 		if is_instance_valid(_plane_node):
+2805: 			target = _plane_node.global_position
+2806: 		else:
+2807: 			return
+2808: 	var offset := Vector3(0, 0, _cam_distance)
+2809: 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
+2810: 	_camera.global_position = target + rot * offset
+2811: 	_camera.look_at(target, Vector3.UP)
+2812: 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
+2813: 	_cam_save_pending = true  # flush to DB on RMB release (Rule #46 throttle)
+2814: 
+2815: 
+
+--- DB: user_preferences camera rows ---
+camera_distance|11.0
+camera_distance_freefall|5.0
+camera_distance_plane|140.0
+
+=== END DIAG ===
