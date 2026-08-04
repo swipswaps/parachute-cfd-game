@@ -1,0 +1,5 @@
+[2026-08-04T00:22:29.928954+00:00] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260804002229
+[2026-08-04T00:22:29.929785+00:00] [SUCCESS] patch3_load_settings_early: _load_camera_settings() called before camera placement
+[2026-08-04T00:22:29.930330+00:00] [FAILURE] ROLLBACK: restored from backup; errors: ['PATCH1 match=0 (expected 1)', 'PATCH2 match=0 (expected 1)', 'PATCH4 match=0 (expected 1)']
+PATCH FAILED: ['PATCH1 match=0 (expected 1)', 'PATCH2 match=0 (expected 1)', 'PATCH4 match=0 (expected 1)']
+--- diff (first 40 lines) ---

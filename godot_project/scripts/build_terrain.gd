@@ -379,6 +379,7 @@ func _ready() -> void:
 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
 
 	# --------------------------------------------------------------
+	_load_camera_settings()  # load DB distance before placing camera (line 382 anchor)
 	# Third‑person camera – child of root, initially follows plane
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
 	# --------------------------------------------------------------
@@ -1819,6 +1820,7 @@ func _reset_game() -> void:
 	print("[DIAG] _reset_game: ENTER")
 	print("[VERBATIM] === RESETTING GAME ===")
 	_game_state = GameState.IN_PLANE
+	_load_camera_settings()  # restore plane camera distance on restart
 	if _plane_node:
 		_plane_node.visible = true
 		_plane_angle = 0.0
@@ -2656,7 +2658,7 @@ func _create_plane() -> void:
 	trigger_collision.position = Vector3(1.5, 0, -2)
 	exit_trigger.add_child(trigger_collision)
 
-	plane.global_position = Vector3(0, 1828.8, 0)
+	plane.global_position = Vector3(0, _PLANE_ALTITUDE, 0)
 	_log("[VERBATIM] Plane created at altitude 6000")
 
 
@@ -2805,7 +2807,7 @@ func _update_camera_position() -> void:
 			target = _plane_node.global_position
 		else:
 			return
-	var offset := Vector3(0, 0, _cam_distance)
+	var offset := Vector3(0, 0, -_cam_distance)
 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
 	_camera.global_position = target + rot * offset
 	_camera.look_at(target, Vector3.UP)
