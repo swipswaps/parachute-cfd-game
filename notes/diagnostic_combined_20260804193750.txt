@@ -1,0 +1,33 @@
+=== COMBINED DIAGNOSTIC REPORT (fresh) ===
+Generated: Tue Aug  4 07:37:50 PM UTC 2026
+
+--- LEAN DIAGNOSTIC (largest .gd file) ---
+
+--- DRY-RUN OUTPUT (proposed Timer patch) ---
+
+--- CURRENT build_terrain.gd CONTEXT (around OPENING_ANIM) ---
+1491-
+1492-
+1493-func _get_current_descent_rate() -> float:
+1494-	if _game_state == GameState.FREEFALL:
+1495-		return 1.2
+1496:	if _game_state == GameState.OPENING_ANIM:
+1497-		return 0.3
+1498-	if _game_state != GameState.DIAGNOSIS:
+1499-		return 0.0
+1500-	if _reserve_done or _flare_done:
+1501-		return DESCENT_RATE_GOOD
+--
+1526-		_velocity_vec += wind_vec * delta * 0.5
+1527-	elif _game_state == GameState.FREEFALL:
+1528-		# Body drifts ~30% of canopy drift — smaller cross-section in freefall.
+1529-		# Ref: USPA BSR body-position standards (general knowledge).
+1530-		_character.position += wind_vec * delta * 0.3
+1531:	elif _game_state == GameState.OPENING_ANIM:
+1532-		# Canopy rides the air mass fully — primary landing-spot offset driver.
+1533-		# wind_vec already in m/s (kts * 0.514444 applied above).
+
+--- FULL _physics_process function (abridged) ---
+func _physics_process(delta) -> void:
+
+--- END OF REPORT ---
