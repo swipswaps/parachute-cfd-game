@@ -20,3 +20,64 @@ You can restore with: cp {backup_path} {target}
 5. Capture the console output (telemetry) if the issue persists.
 
 === STAGING AND PUSHING EVIDENCE ===
+Staged files: 51
+[main 3946145] Arm diagnostic and mixamo_com patch (20260803222845)
+ 51 files changed, 22308 insertions(+)
+ create mode 100755 backups/altimeter_hud.gd.bak.20260717181255
+ create mode 100755 backups/altimeter_hud.gd.bak.20260717181841
+ create mode 100644 backups/audit_report.txt.bak.20260719084335
+ create mode 100644 backups/audit_report_20260703_165114.log.bak.20260719084333
+ create mode 100644 backups/build_terrain.gd.bak.20260719084340
+ create mode 100644 backups/build_terrain.gd.bak.20260719163528
+ create mode 100644 backups/build_terrain.gd.bak.20260719164201
+ create mode 100644 backups/build_terrain.gd.bak.20260803222845
+ create mode 100644 backups/critical_issues.txt.bak.20260719084335
+ create mode 100644 backups/forensic_hud.gd.bak.20260717181255
+ create mode 100644 backups/forensic_hud.gd.bak.20260717181841
+ create mode 100644 backups/forensic_hud.gd.bak.20260719084340
+ create mode 100644 backups/forensic_panel.gd.bak.20260719084340
+ create mode 100644 backups/forensic_panel.gd.bak.20260719163527
+ create mode 100644 backups/forensic_panel.gd.bak.20260719164201
+ create mode 100644 backups/forensic_panel.gd.bak.20260719174637
+ create mode 100644 backups/forensic_panel.gd.bak.20260719175647
+ create mode 100644 backups/forensic_panel.gd.bak.20260719183506
+ create mode 100644 backups/forensic_panel.gd.bak.20260719192555
+ create mode 100644 backups/project.bak_controls_20260707_072652.bak.20260719084335
+ create mode 100644 backups/project.godot.all_fix_bak.bak.20260719084332
+ create mode 100644 backups/project.godot.backup.20260704_121906.bak.20260719084334
+ create mode 100644 backups/project.godot.backup.20260704_122903.bak.20260719084334
+ create mode 100644 backups/project.godot.backup.20260704_125806.bak.20260719084334
+ create mode 100644 backups/project.godot.backup.20260704_140541.bak.20260719084334
+ create mode 100644 backups/project.godot.backup.20260704_143801.bak.20260719084334
+ create mode 100644 backups/project.godot.backup.20260704_144013.bak.20260719084335
+ create mode 100644 backups/project.godot.backup.bak.20260719084339
+ create mode 100644 backups/project.godot.backup_20260706_050256.bak.20260719084335
+ create mode 100644 backups/project.godot.backup_autoload.bak.20260719084337
+ create mode 100644 backups/project.godot.backup_final.bak.20260719084338
+ create mode 100644 backups/project.godot.backup_final_fix.bak.20260719084338
+ create mode 100644 backups/project.godot.backup_final_input.bak.20260719084338
+ create mode 100644 backups/project.godot.backup_input_fix.bak.20260719084338
+ create mode 100644 backups/project.godot.backup_input_fix_v2.bak.20260719084338
+ create mode 100644 backups/project.godot.bak.20260711_181425.bak.20260719084335
+ create mode 100644 backups/project.godot.bak.20260711_204216.bak.20260719084336
+ create mode 100644 backups/project.godot.bak.20260717174419
+ create mode 100644 backups/project.godot.bak.20260717201148.bak.20260719084339
+ create mode 100644 backups/project.godot.bak.20260719084339
+ create mode 100644 backups/project.godot.bak.20260719174637
+ create mode 100644 backups/project.godot.bak.20260719182420
+ create mode 100644 backups/project.godot.bak_bind_flight.bak.20260719084333
+ create mode 100644 backups/project.godot.bak_input.bak.20260719084333
+ create mode 100644 backups/project.godot.bak_safe_input.bak.20260719084333
+ create mode 100644 backups/project.godot.bak_sensible_bindings.bak.20260719084333
+ create mode 100644 backups/project.godot.bak_sqlitedb_autoload.bak.20260719084333
+ create mode 100644 backups/project.godot.before_cleanup.bak.20260719084334
+ create mode 100755 backups/project.godot_0001.bak.20260719084332
+ create mode 100644 backups/project.godot_0100.bak.20260719084332
+ create mode 100644 notes/arm_diagnostic_20260803222845.txt
+To https://github.com/swipswaps/parachute-cfd-game.git
+   205f670..3946145  main -> main
+3946145f0f9de1c13ee3aa4a21c47f6e8235ba97	refs/heads/main
+local HEAD: 3946145f0f9de1c13ee3aa4a21c47f6e8235ba97
+
+=== RAW LINK FOR REVIEW ===
+https://raw.githubusercontent.com/<owner>/<repo>/main/notes/arm_diagnostic_20260803222845.txt

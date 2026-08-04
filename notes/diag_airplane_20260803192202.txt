@@ -1,0 +1,59 @@
+=== diag_and_fix_airplane.sh — 20260803192202 UTC ===
+
+./diag_and_fix_airplane.sh: line 74: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+
+--- REAL BYTES (tabs visible via cat -A) ---
+2000: ^I^Iif camera_target == "plane" and is_instance_valid(_plane_node):$
+2001: ^I^I^Itarget = _plane_node.global_position$
+2002: ^I^Ielif camera_target == "character" and is_instance_valid(_character):$
+2003: ^I^I^Itarget = _character.global_position$
+2004: ^I^Ielse:$
+2005: ^I^I^Ireturn$
+2006: ^I^Ivar offset = Vector3(0, 0, -_cam_distance)$
+2007: ^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+2008: ^I^Ioffset = offset.rotated(Vector3.RIGHT, _cam_elevation)$
+2009: ^I^I_camera.global_position = target + offset$
+2010: ^I^I_camera.look_at(target, Vector3.UP)$
+2011: ^I^Iprint($
+2012: ^I^I^I"[VERBATIM] cam_orbit az=", rad_to_deg(_cam_azimuth), " el=", rad_to_deg(_cam_elevation)$
+2013: ^I^I)$
+2014: $
+2015: ^Iif event is InputEventKey and event.pressed and not event.echo:$
+2016: ^I^Ivar action := ""$
+2017: ^I^Iif event.keycode == KEY_Q:$
+2018: ^I^I^Iaction = "turn_left (Q)"$
+2019: ^I^Ielif event.keycode == KEY_E:$
+2020: ^I^I^Iaction = "turn_right (E)"$
+
+--- GREP: InputEventMouseButton occurrences ---
+1877:	if event is InputEventMouseButton and event.pressed:
+1959:	# CITATION [3]: Godot Engine 4.x Documentation, Class: InputEventMouseButton
+1962:	#   InputEventMouseButton.pressed distinguishes the down-edge (true) from
+1980:	if event is InputEventMouseButton:
+
+--- GREP: InputEventKey occurrences ---
+1892:		and event is InputEventKey
+1956:	if event is InputEventKey and event.keycode == KEY_F3:
+2015:	if event is InputEventKey and event.pressed and not event.echo:
+2041:	if event is InputEventKey and event.pressed and event.keycode == KEY_S:
+3809:			if ev is InputEventKey:
+3826:func _key_event(keycode: int) -> InputEventKey:
+3827:	var ev := InputEventKey.new()
+
+--- EXTRACTING ANCHOR BLOCK ---
+ANCHOR_FOUND_AT_LINE_1956
+---BEGIN_BLOCK---
+
+func _input(event: InputEvent) -> void:
+	# Ignore F3 – let forensic_hud handle it
+	if event is InputEventKey and event.keycode == KEY_F3:
+		return
+---END_BLOCK---
+TABS_CHECK_PASSED
+
+--- END EXTRACTION ---
+
+--- GODOT STATIC CHECK ---
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+

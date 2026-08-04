@@ -1,0 +1,26 @@
+=== HUB INDENT FIX SUMMARY — 20260803153753 UTC ===
+
+1. HubManager file: godot_project/scripts/HubManager.gd
+2. Converted leading spaces to tabs.
+3. Godot exit code: 130
+4. GLIDE telemetry count: 6
+5. Key markers:
+   Loading resource: res://scripts/HubManager.gd
+   SCRIPT ERROR: Parse Error: Expected indented block after "if" block.
+             at: GDScript::reload (res://scripts/HubManager.gd:22)
+   ERROR: Failed to load script "res://scripts/HubManager.gd" with error "Parse error".
+   ERROR: Failed to instantiate an autoload, script 'res://scripts/HubManager.gd' does not inherit from 'Node'.
+   [VERBATIM] Headless auto‑start triggered (deploy)
+   [VERBATIM] Headless auto‑start triggered (ui_accept)
+   [VERBATIM] Headless auto‑start triggered.
+   [VERBATIM] Headless auto‑start triggered.
+   [VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).
+   [VERBATIM] Headless altitude warp: 200m AGL
+   [VERBATIM] Headless auto-deploy triggered (FREEFALL).
+   [GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,heading_deg,descent_m_s,glide_ratio,x,z,raw_descent
+   [GLIDE],0.51666666666667,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.9443359375,25.4449024200439,18.0
+   [GLIDE],1.01666666666667,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.9443359375,33.6138038635254,18.0
+   [GLIDE],1.53333333333333,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.9443359375,42.052864074707,18.0
+   [GLIDE],2.05,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.9443359375,50.4896812438965,18.0
+   [GLIDE],2.56666666666666,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.9443359375,58.9242324829102,18.0
+   [GLIDE],3.08333333333333,0.0,0.0,0.0,0.0,11.0,0.0,0.0,4.23076923076923,2.6,800.9443359375,67.3564987182617,18.0

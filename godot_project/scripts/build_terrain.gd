@@ -2179,11 +2179,18 @@ func _physics_process(delta) -> void:
 	# in this same function at lines 2166-2170.
 	# Ref: https://docs.godotengine.org/en/stable/tutorials/scripting/state_machines.html
 	if _game_state == GameState.OPENING_ANIM:
-		_deployment_timer -= delta
-		if _deployment_timer <= 0.0:
-			_deployment_timer = 0.0
-			_game_state = GameState.DIAGNOSIS
-			print("[VERBATIM] OPENING_ANIM -> DIAGNOSIS (canopy fully open)")
+	    # --- Timer-based transition (replaces manual decrement) ---
+	    if not has_node("OpeningAnimTimer"):
+	        var t = Timer.new()
+	        t.name = "OpeningAnimTimer"
+	        t.wait_time = 2.0
+	        t.one_shot = true
+	        t.timeout.connect(_on_opening_anim_timeout)
+	        add_child(t)
+	        t.start()
+	        print("[TIMER] OpeningAnimTimer started (2.0s)")
+	    # End of replacement
+
 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
 		print("[VERBATIM] DIAGNOSIS turning block executed")
 		print("[DIAG] _turn_input = ", _turn_input)
@@ -3749,6 +3756,16 @@ const CONTROL_KEYS := {
 	"restart":      KEY_R,
 	"j":            KEY_J,
 	"pause":        KEY_ESCAPE,
+
+
+func _on_opening_anim_timeout() -> void:
+	if _game_state == GameState.OPENING_ANIM:
+		_game_state = GameState.DIAGNOSIS
+		_deployment_timer = 0.0
+		print("[VERBATIM] OPENING_ANIM -> DIAGNOSIS (Timer fired)")
+	else:
+		print("[TIMER] WARNING: _on_opening_anim_timeout called but state is ", _game_state)
+
 }
 
 var _controls_ready := false

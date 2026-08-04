@@ -1,0 +1,38 @@
+=== DATABASE AUDIT — 20260803144332 UTC ===
+
+1. Recent parse errors (last 5):
+2026-06-24 20:40:51|test_runner.gd|gdformat reformatted file
+
+2. Runtime failures (last 5):
+
+3. Resource contention (last 5):
+
+4. Game state log (last 10):
+2026-06-25 14:08:24|-1|0.0|0
+2026-06-25 13:31:39|-1|0.0|0
+2026-06-25 13:30:00|-1|0.0|0
+2026-06-25 13:21:44|-1|0.0|0
+2026-06-25 13:03:49|-1|0.0|0
+2026-06-25 12:39:28|-1|0.0|0
+2026-06-25 12:29:10|-1|0.0|0
+2026-06-25 12:00:34|-1|0.0|0
+2026-06-24 21:16:17|0|0.0|0
+2026-06-24 21:07:03|0|0.0|0
+
+5. Issues (last 5):
+2026-06-25 14:08:09|AUDIT_START|audit.gd _ready called|session begin|1
+2026-06-25 14:07:52|AUDIT_START|audit.gd _ready called|session begin|1
+2026-06-25 13:31:23|AUDIT_START|audit.gd _ready called|session begin|1
+2026-06-25 13:31:07|AUDIT_START|audit.gd _ready called|session begin|1
+2026-06-25 13:29:45|AUDIT_START|audit.gd _ready called|session begin|1
+
+6. Omissions (last 5):
+2026-06-24 21:05:50|O10_aero_units_uid_unverified|AeroUnits autoload uses uid:// reference that may not resolve|pending
+2026-06-24 21:05:49|O9_screenshot_path_mismatch|screenshot library loads user:// paths that do not exist on disk|fixed
+2026-06-24 21:05:49|O8_windfield_not_autoloaded|wind_field.gd not in [autoload] — wind simulation never runs|fixed
+2026-06-24 21:05:49|O7_audit_not_autoloaded|audit.gd not in [autoload] — DB audit trail never runs|fixed
+2026-06-24 21:05:49|O6_forensichud_not_autoloaded|forensic_hud.gd not in [autoload] — ForensicHUD always null|fixed
+
+7. Throttle log:
+
+8. Verbatim logs (last 5):
