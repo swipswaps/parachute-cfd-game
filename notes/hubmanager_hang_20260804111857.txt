@@ -1,0 +1,208 @@
+=== HubManager hang diagnostic 20260804111857 UTC ===
+godot: godot
+
+########## PART A: HubManager hub-start code ##########
+HubManager path: godot_project/scripts/HubManager.gd
+--- "Hub not responding" @ godot_project/scripts/HubManager.gd:22 (context) ---
+   18: 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
+   19: 		print("[HubManager] Hub already running – skipping startup")
+   20: 		return
+   21: 	# Original startup block follows
+   22: 	print("[HubManager] Hub not responding; starting it...")
+   23: 	var project_dir = ProjectSettings.globalize_path("res://")
+   24: 	# FIX (this session): project_dir = res:// resolves to godot_project/,
+   25: 	# but forensic_hub_server.py lives one directory up, at the outer
+   26: 	# project root — confirmed via find: only one copy exists, and it's
+--- "OS.execute" @ godot_project/scripts/HubManager.gd:12 (context) ---
+    8: 	var port = 8765
+    9: 	var endpoint = "/api/gamification"
+   10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+   11: 	var output = []
+   12: 	var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
+   13: 	if exit_code == 0 and output.size() > 0 and output[0] == "200":
+   14: 		print("[HubManager] Hub already running.")
+   15: 		return
+   16: 
+--- "OS.execute" @ godot_project/scripts/HubManager.gd:33 (context) ---
+   29: 	# FIX (this session): script requires <project_root> positional arg.
+   30: 	# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"
+   31: 	# After the cd, "." is the outer project root the script needs.
+   32: 	var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir
+   33: 	OS.execute("/bin/sh", ["-c", start_cmd])
+   34: 	# Wait a moment and re-check
+   35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+   36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+   37: 	# always fired before the server was listening. Confirmed via
+--- "OS.execute" @ godot_project/scripts/HubManager.gd:41 (context) ---
+   37: 	# always fired before the server was listening. Confirmed via
+   38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+   39: 	await get_tree().create_timer(5.0).timeout
+   40: 	var output2 = []
+   41: 	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+   42: 	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
+   43: 		print("[HubManager] Hub started successfully.")
+   44: 	else:
+   45: 		print("[HubManager] Failed to start hub after 2 seconds.")
+--- "func _ensure_hub" @ godot_project/scripts/HubManager.gd:7 (context) ---
+    3: func _ready():
+    4: 	# Defer to avoid blocking startup
+    5: 	call_deferred("_ensure_hub")
+    6: 
+    7: func _ensure_hub():
+    8: 	var port = 8765
+    9: 	var endpoint = "/api/gamification"
+   10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+   11: 	var output = []
+--- "await" @ godot_project/scripts/HubManager.gd:39 (context) ---
+   35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+   36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+   37: 	# always fired before the server was listening. Confirmed via
+   38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+   39: 	await get_tree().create_timer(5.0).timeout
+   40: 	var output2 = []
+   41: 	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+   42: 	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
+   43: 		print("[HubManager] Hub started successfully.")
+
+########## PART B: LIVE STATE AT HANG ##########
+godot pid=490626; waiting for hang signature (max 30s)...
+hang signature seen at ~9s. physics frames before=1 after+3s=1
+
+--- /proc/490626/status ---
+State:	S (sleeping)
+VmRSS:	  259336 kB
+Threads:	15
+
+--- /proc/490626/wchan (kernel wait channel) ---
+anon_pipe_read
+
+--- open sockets/pipes (blocking connect leaves a trace) ---
+lrwx------. 1 owner owner 64 Aug  4 07:19 10 -> socket:[19171925]
+lrwx------. 1 owner owner 64 Aug  4 07:19 11 -> socket:[19171929]
+lrwx------. 1 owner owner 64 Aug  4 07:19 12 -> socket:[19171931]
+lrwx------. 1 owner owner 64 Aug  4 07:19 17 -> socket:[19172420]
+lr-x------. 1 owner owner 64 Aug  4 07:19 18 -> pipe:[19171970]
+l-wx------. 1 owner owner 64 Aug  4 07:19 19 -> pipe:[19171970]
+lrwx------. 1 owner owner 64 Aug  4 07:19 21 -> socket:[19171971]
+lrwx------. 1 owner owner 64 Aug  4 07:19 26 -> socket:[19173397]
+lrwx------. 1 owner owner 64 Aug  4 07:19 28 -> socket:[19173398]
+lrwx------. 1 owner owner 64 Aug  4 07:19 29 -> socket:[19173399]
+lrwx------. 1 owner owner 64 Aug  4 07:19 30 -> socket:[19173400]
+lrwx------. 1 owner owner 64 Aug  4 07:19 31 -> socket:[19173401]
+lr-x------. 1 owner owner 64 Aug  4 07:19 34 -> pipe:[19173407]
+lrwx------. 1 owner owner 64 Aug  4 07:19 4 -> socket:[19171918]
+lrwx------. 1 owner owner 64 Aug  4 07:19 5 -> socket:[19171919]
+lrwx------. 1 owner owner 64 Aug  4 07:19 8 -> socket:[19171920]
+
+--- child processes (did hub spawn? blocking wait?) ---
+    PID STAT WCHAN  CMD
+ 490713 Z+   -      [sh] <defunct>
+
+--- gdb thread backtrace (if available) ---
+[New LWP 490700]
+[New LWP 490695]
+[New LWP 490694]
+[New LWP 490657]
+[New LWP 490656]
+[New LWP 490655]
+[New LWP 490652]
+[New LWP 490651]
+[New LWP 490642]
+[New LWP 490641]
+[New LWP 490640]
+[New LWP 490639]
+[New LWP 490638]
+[New LWP 490637]
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <ima:enforcing>
+  <https://debuginfod.fedoraproject.org/>
+  <ima:ignore>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+
+Thread 15 (Thread 0x7f31659ff6c0 (LWP 490637) "godot"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627c2ac in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f317627e97e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f3176444e00 in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /lib64/libstdc++.so.6
+#5  0x000000000489505b in _IP_ResolverPrivate::_thread_function(void*) ()
+#6  0x00000000046f9145 in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+#7  0x00007f317644e424 in execute_native_thread_routine () from /lib64/libstdc++.so.6
+#8  0x00007f317627f464 in start_thread () from /lib64/libc.so.6
+#9  0x00007f31763025ec in __clone3 () from /lib64/libc.so.6
+
+Thread 14 (Thread 0x7f31651d56c0 (LWP 490638) "WorkerThread 0"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627c2ac in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f317627e97e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f3176444e00 in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /lib64/libstdc++.so.6
+#5  0x0000000004cb5585 in WorkerThreadPool::_thread_function(void*) ()
+#6  0x00000000046f9145 in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+#7  0x00007f317644e424 in execute_native_thread_routine () from /lib64/libstdc++.so.6
+#8  0x00007f317627f464 in start_thread () from /lib64/libc.so.6
+#9  0x00007f31763025ec in __clone3 () from /lib64/libc.so.6
+
+Thread 13 (Thread 0x7f31649d46c0 (LWP 490639) "WorkerThread 1"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627c2ac in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f317627e97e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f3176444e00 in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /lib64/libstdc++.so.6
+#5  0x0000000004cb5585 in WorkerThreadPool::_thread_function(void*) ()
+#6  0x00000000046f9145 in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+#7  0x00007f317644e424 in execute_native_thread_routine () from /lib64/libstdc++.so.6
+#8  0x00007f317627f464 in start_thread () from /lib64/libc.so.6
+#9  0x00007f31763025ec in __clone3 () from /lib64/libc.so.6
+
+Thread 12 (Thread 0x7f315bfff6c0 (LWP 490640) "WorkerThread 2"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627c2ac in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f317627e97e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f3176444e00 in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /lib64/libstdc++.so.6
+#5  0x0000000004cb5585 in WorkerThreadPool::_thread_function(void*) ()
+#6  0x00000000046f9145 in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+#7  0x00007f317644e424 in execute_native_thread_routine () from /lib64/libstdc++.so.6
+#8  0x00007f317627f464 in start_thread () from /lib64/libc.so.6
+#9  0x00007f31763025ec in __clone3 () from /lib64/libc.so.6
+
+Thread 11 (Thread 0x7f315b7fe6c0 (LWP 490641) "WorkerThread 3"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627c2ac in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f317627e97e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+#4  0x00007f3176444e00 in std::condition_variable::wait(std::unique_lock<std::mutex>&) () from /lib64/libstdc++.so.6
+#5  0x0000000004cb5585 in WorkerThreadPool::_thread_function(void*) ()
+#6  0x00000000046f9145 in Thread::callback(unsigned long, Thread::Settings const&, void (*)(void*), void*) ()
+#7  0x00007f317644e424 in execute_native_thread_routine () from /lib64/libstdc++.so.6
+#8  0x00007f317627f464 in start_thread () from /lib64/libc.so.6
+#9  0x00007f31763025ec in __clone3 () from /lib64/libc.so.6
+
+Thread 10 (Thread 0x7f315abff6c0 (LWP 490642) "libusb_event"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627bc84 in __syscall_cancel () from /lib64/libc.so.6
+#3  0x00007f31762f51de in poll () from /lib64/libc.so.6
+#4  0x00007f3164183ce9 in linux_udev_event_thread_main.lto_priv () from /lib64/libusb-1.0.so.0
+#5  0x00007f317627f464 in start_thread () from /lib64/libc.so.6
+#6  0x00007f31763025ec in __clone3 () from /lib64/libc.so.6
+
+Thread 9 (Thread 0x7f3159ffe6c0 (LWP 490651) "godot:disk$0"):
+#0  0x00007f31762879a2 in __syscall_cancel_arch () from /lib64/libc.so.6
+#1  0x00007f317627bc3c in __internal_syscall_cancel () from /lib64/libc.so.6
+#2  0x00007f317627c2ac in __futex_abstimed_wait_common () from /lib64/libc.so.6
+#3  0x00007f317627e97e in pthread_cond_wait@@GLIBC_2.3.2 () from /lib64/libc.so.6
+
+--- port 8765 listener ---
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python3",pid=490716,fd=3))                                                           
+
+(killed AFTER capture — the timeout did not omit the stack)
+
+=== END ===
