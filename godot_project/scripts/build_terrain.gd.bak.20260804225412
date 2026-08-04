@@ -2728,21 +2728,21 @@ func _save_camera_settings() -> void:
 
 
 func _load_camera_settings() -> void:
-var db = SqliteDb  # autoload singleton
-if not db:
-print("[CAMERA_DEBUG] SqliteDb not available – using default")
-_cam_distance = 300.0
-return
-# Ensure table exists (idempotent)
-db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
-var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
-if result and result.size() > 0:
-_cam_distance = float(result[0]["value"])
-print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)
-else:
-_cam_distance = 300.0
-print("[CAMERA_DEBUG] Using default 300.0")
-print("[CAMERA_DEBUG] _load_camera_settings() END")
+    var db = SqliteDb  # autoload singleton
+    if not db:
+        print("[CAMERA_DEBUG] SqliteDb not available – using default")
+        _cam_distance = 300.0
+        return
+    # Ensure table exists (idempotent)
+    db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+    var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+    if result and result.size() > 0:
+        _cam_distance = float(result[0]["value"])
+        print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)
+    else:
+        _cam_distance = 300.0
+        print("[CAMERA_DEBUG] Using default 300.0")
+    print("[CAMERA_DEBUG] _load_camera_settings() END")
 func _update_camera_position() -> void:
 	if not is_instance_valid(_camera):
 		return

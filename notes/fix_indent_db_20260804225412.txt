@@ -1,0 +1,256 @@
+=== DB‑DRIVEN INDENTATION FIX — 20260804225412 UTC ===
+
+Run ID: run_20260804225412
+
+=== LINES 2720-2745 (BEFORE) ===
+2720: ^I^I^I"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"$
+2721: ^I^I^I+ key$
+2722: ^I^I^I+ "', '"$
+2723: ^I^I^I+ str(_cam_distance)$
+2724: ^I^I^I+ "')"$
+2725: ^I^I)$
+2726: ^I)$
+2727: ^Iprint("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)$
+2728: $
+2729: $
+2730: func _load_camera_settings() -> void:$
+2731:     var db = SqliteDb  # autoload singleton$
+2732:     if not db:$
+2733:         print("[CAMERA_DEBUG] SqliteDb not available M-bM-^@M-^S using default")$
+2734:         _cam_distance = 300.0$
+2735:         return$
+2736:     # Ensure table exists (idempotent)$
+2737:     db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")$
+2738:     var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")$
+2739:     if result and result.size() > 0:$
+2740:         _cam_distance = float(result[0]["value"])$
+2741:         print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)$
+2742:     else:$
+2743:         _cam_distance = 300.0$
+2744:         print("[CAMERA_DEBUG] Using default 300.0")$
+2745:     print("[CAMERA_DEBUG] _load_camera_settings() END")$
+Fixed line 2731: removed leading spaces
+Fixed line 2732: removed leading spaces
+Fixed line 2733: removed leading spaces
+Fixed line 2734: removed leading spaces
+Fixed line 2735: removed leading spaces
+Fixed line 2736: removed leading spaces
+Fixed line 2737: removed leading spaces
+Fixed line 2738: removed leading spaces
+Fixed line 2739: removed leading spaces
+Fixed line 2740: removed leading spaces
+Fixed line 2741: removed leading spaces
+Fixed line 2742: removed leading spaces
+Fixed line 2743: removed leading spaces
+Fixed line 2744: removed leading spaces
+Fixed line 2745: removed leading spaces
+Patch applied. Fixed 15 lines. Backup: godot_project/scripts/build_terrain.gd.bak.20260804225412
+
+=== LINES 2720-2745 (AFTER) ===
+2720: ^I^I^I"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"$
+2721: ^I^I^I+ key$
+2722: ^I^I^I+ "', '"$
+2723: ^I^I^I+ str(_cam_distance)$
+2724: ^I^I^I+ "')"$
+2725: ^I^I)$
+2726: ^I)$
+2727: ^Iprint("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)$
+2728: $
+2729: $
+2730: func _load_camera_settings() -> void:$
+2731: var db = SqliteDb  # autoload singleton$
+2732: if not db:$
+2733: print("[CAMERA_DEBUG] SqliteDb not available M-bM-^@M-^S using default")$
+2734: _cam_distance = 300.0$
+2735: return$
+2736: # Ensure table exists (idempotent)$
+2737: db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")$
+2738: var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")$
+2739: if result and result.size() > 0:$
+2740: _cam_distance = float(result[0]["value"])$
+2741: print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)$
+2742: else:$
+2743: _cam_distance = 300.0$
+2744: print("[CAMERA_DEBUG] Using default 300.0")$
+2745: print("[CAMERA_DEBUG] _load_camera_settings() END")$
+
+=== RUNNING GODOT ===
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Unrecognized output string "misc2" in mapping:
+030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+Unrecognized output string "misc2" in mapping:
+030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+SDL: Init OK!
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2475187701
+EDITOR API HASH: 3867286884
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://TelemetryLogger.gd
+Loading resource: res://scripts/SqliteDb.gd
+Loading resource: res://autoloads/HealthChecker.gd
+Loading resource: res://scripts/HubManager.gd
+Loading resource: res://scripts/DatabaseGuard.gd
+Loading resource: res://scripts/ResourceThrottle.gd
+Loading resource: res://scripts/PerformanceMonitor.gd
+Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+Loading resource: res://scripts/SqliteWatchdog.gd
+Loading resource: res://scripts/StructuredLogger.gd
+Loading resource: res://scripts/InputManager.gd
+Loading resource: res://scripts/GameIntegrity.gd
+Loading resource: res://scripts/altimeter_hud.gd
+Loading resource: res://scripts/forensic_hud.gd
+Loading resource: res://scripts/audit.gd
+Loading resource: res://scripts/wind_field.gd
+Loading resource: res://autoloads/CursorManager.gd
+Loading resource: res://autoloads/Gamification.gd
+Loading resource: res://autoloads/forensic_panel.gd
+Loaded system CA certificates
+Loading resource: res://scenes/main.tscn
+Loading resource: res://scripts/build_terrain.gd
+SCRIPT ERROR: Parse Error: Expected indented block after function declaration.
+          at: GDScript::reload (res://scripts/build_terrain.gd:2730)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+Loading resource: res://assets/terrain/black_env.tres
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-04T18:54:12 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-04T18:54:12 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[HubManager] Hub spawn requested pid=640695 non-blocking
+[VERBATIM] 2026-08-04T18:54:13 Starting full integrity check and repair
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_hud_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_tool_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup.20260607_151124_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup.20260607_151237_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_hud_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/AirplaneController_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/CanopyReplay_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ComponentRegistry_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/DatabaseGuard_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/FlightTrack_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/GameIntegrity_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/GameIntegrity_2606150714_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HUDManager_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HubManager_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/InputManager_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/PerformanceMonitor_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ResourceThrottle_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/SqliteDb_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/SqliteWatchdog_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/StructuredLogger_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ViewPoseController_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/altimeter_hud_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/audit_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/auto_heal_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-205552_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-210153_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-210819_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-215820_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-222344_2026-08-04_18-54-13.gd.backup
+[VERBATIM] 2026-08-04T18:54:13 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-222819_2026-08-04_18-54-13.gd.backup
+
+=== LOGGING TO DB ===
+Parse error near line 1: table debug_capture has no column named run_id
+Parse error near line 128: table patch_history has no column named run_id
+
+=== VERIFICATION VIA DB ===
+Error: in prepare, no such column: run_id
+  SELECT COUNT(*) FROM debug_capture WHERE run_id='run_20260804225412' AND outpu
+                             error here ---^
+./fix_indentation_db.sh: line 144: [: : integer expected
+❌ Parse errors still present.
+
+=== DIFF ===
+--- godot_project/scripts/build_terrain.gd.bak.20260804225412	2026-08-04 18:53:10.527090850 -0400
++++ godot_project/scripts/build_terrain.gd	2026-08-04 18:54:12.424157965 -0400
+@@ -2728,21 +2728,21 @@
+ 
+ 
+ func _load_camera_settings() -> void:
+-    var db = SqliteDb  # autoload singleton
+-    if not db:
+-        print("[CAMERA_DEBUG] SqliteDb not available – using default")
+-        _cam_distance = 300.0
+-        return
+-    # Ensure table exists (idempotent)
+-    db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+-    var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
+-    if result and result.size() > 0:
+-        _cam_distance = float(result[0]["value"])
+-        print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)
+-    else:
+-        _cam_distance = 300.0
+-        print("[CAMERA_DEBUG] Using default 300.0")
+-    print("[CAMERA_DEBUG] _load_camera_settings() END")
++var db = SqliteDb  # autoload singleton
++if not db:
++print("[CAMERA_DEBUG] SqliteDb not available – using default")
++_cam_distance = 300.0
++return
++# Ensure table exists (idempotent)
++db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
++var result = db._query("SELECT value FROM user_preferences WHERE key = 'camera_distance_plane'")
++if result and result.size() > 0:
++_cam_distance = float(result[0]["value"])
++print("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)
++else:
++_cam_distance = 300.0
++print("[CAMERA_DEBUG] Using default 300.0")
++print("[CAMERA_DEBUG] _load_camera_settings() END")
+ func _update_camera_position() -> void:
+ 	if not is_instance_valid(_camera):
+ 		return
