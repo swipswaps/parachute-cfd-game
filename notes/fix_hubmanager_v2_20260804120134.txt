@@ -1,0 +1,104 @@
+=== HubManager fix v2 20260804120134 UTC ===
+
+########## PART 1: PRE-STATE (Rule #1 grounded) ##########
+file: godot_project/scripts/HubManager.gd
+all func definitions BEFORE patch:
+3:func _ready():
+7:func _ensure_hub():
+_ensure_hub occurrences BEFORE: 1
+
+########## PART 2: APPLY PATCH ##########
+[DIAG] func definitions in file: 2
+  line 3: func _ready():
+  line 7: func _ensure_hub():
+[DIAG] _ensure_hub definitions: 1 at lines [7]
+[2026-08-04T12:01:34.701343+00:00] [SUCCESS] backup: godot_project/scripts/HubManager.gd.bak.20260804120134
+[2026-08-04T12:01:34.701669+00:00] [SUCCESS] write: read-back match
+[2026-08-04T12:01:34.701728+00:00] [SUCCESS] tabs_only: clean
+[2026-08-04T12:01:34.701762+00:00] [SUCCESS] dedup: exactly one func _ensure_hub at line 7
+forbidden 'OS.execute' still in _ensure_hub - restored
+
+########## PART 3: POST-STATE ##########
+all func definitions AFTER patch:
+3:func _ready():
+7:func _ensure_hub():
+_ensure_hub occurrences AFTER: 1
+OS.execute occurrences in whole file AFTER: 3
+OS.create_process occurrences AFTER: 0
+
+########## PART 4: DIFF ##########
+
+########## PART 5: NEW _ensure_hub, numbered ##########
+    7: func _ensure_hub():
+    8: 	var port = 8765
+    9: 	var endpoint = "/api/gamification"
+   10: 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+   11: 	var output = []
+   12: 	var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
+   13: 	if exit_code == 0 and output.size() > 0 and output[0] == "200":
+   14: 		print("[HubManager] Hub already running.")
+   15: 		return
+   16: 
+   17: 	# Added by autostall_patched.py – skip if hub already running
+   18: 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
+   19: 		print("[HubManager] Hub already running – skipping startup")
+   20: 		return
+   21: 	# Original startup block follows
+   22: 	print("[HubManager] Hub not responding; starting it...")
+   23: 	var project_dir = ProjectSettings.globalize_path("res://")
+   24: 	# FIX (this session): project_dir = res:// resolves to godot_project/,
+   25: 	# but forensic_hub_server.py lives one directory up, at the outer
+   26: 	# project root — confirmed via find: only one copy exists, and it's
+   27: 	# not inside godot_project/. The cd+exec was silently failing every
+   28: 	# run. Fixed by cd-ing up one level before invoking the script.
+   29: 	# FIX (this session): script requires <project_root> positional arg.
+   30: 	# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"
+   31: 	# After the cd, "." is the outer project root the script needs.
+   32: 	var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir
+   33: 	OS.execute("/bin/sh", ["-c", start_cmd])
+   34: 	# Wait a moment and re-check
+   35: 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+   36: 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+   37: 	# always fired before the server was listening. Confirmed via
+   38: 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+   39: 	await get_tree().create_timer(5.0).timeout
+   40: 	var output2 = []
+   41: 	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+   42: 	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
+   43: 		print("[HubManager] Hub started successfully.")
+   44: 	else:
+   45: 		print("[HubManager] Failed to start hub after 2 seconds.")
+   46: 
+
+########## PART 6: POST-FIX WINDOWED RUN ##########
+launching godot line-buffered. Sampling per second.
+godot pid=496411
+t= 1s  physics_frames=0  delta=0
+t= 2s  physics_frames=0  delta=0
+t= 3s  physics_frames=0  delta=0
+t= 4s  physics_frames=0  delta=0
+t= 5s  physics_frames=0  delta=0
+t= 6s  physics_frames=0  delta=0
+t= 7s  physics_frames=0  delta=0
+t= 8s  physics_frames=1  delta=1
+t= 9s  physics_frames=1  delta=0
+t=10s  physics_frames=1  delta=0
+t=11s  physics_frames=1  delta=0
+t=12s  physics_frames=1  delta=0
+t=13s  physics_frames=1  delta=0
+t=14s  physics_frames=1  delta=0
+t=15s  physics_frames=1  delta=0
+t=16s  physics_frames=1  delta=0
+t=17s  physics_frames=1  delta=0
+t=18s  physics_frames=1  delta=0
+t=19s  physics_frames=1  delta=0
+t=20s  physics_frames=1  delta=0
+
+FINAL: physics_frames=1   HubManager-spawn-print=0
+port 8765 listener:
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python3",pid=496557,fd=3))                                                           
+
+########## PART 7: VERDICT ##########
+FAIL: 1 frames. Hub was not the only blocker; tail above shows the next stop.
+
+=== END ===
