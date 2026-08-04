@@ -1,0 +1,51 @@
+=== FIX TERRAIN STALL — 20260804220201 UTC ===
+
+Backup created: godot_project/scripts/build_terrain.gd.bak.20260804220201
+Patch applied: added yields in terrain loops.
+
+=== VERIFICATION (Godot headless, 15 second timeout) ===
+SCRIPT ERROR: Parse Error: Used space character for indentation instead of tab as used before in the file.
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== MODIFIED TERRAIN LOOP SECTION (lines 270-310) ===
+ 270: ^I^I^Iprint("[VERBATIM] BAKE FALLBACK")$
+ 271: $
+ 272: ^I^Ivar verts := []$
+ 273: ^I^Ivar uvs := []$
+ 274: ^I^Iconst W = 1024$
+ 275: ^I^Iconst H = 1024$
+ 276: ^I^Iconst MAX_ELEV = 80.0$
+ 277: ^I^Iconst SCALE_XZ = 4000.0$
+ 278: ^I^Ifor z in range(H):$
+ 279:     var _loop_counter := 0$
+ 280: ^I^I^Ifor x in range(W):$
+ 281:         _loop_counter += 1$
+ 282:         if _loop_counter % 100 == 0:$
+ 283:             await get_tree().process_frame$
+ 284: ^I^I^I^Ivar px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ$
+ 285: ^I^I^I^Ivar pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ$
+ 286: ^I^I^I^Ivar idx = (z * W + x) * 2$
+ 287: ^I^I^I^Ivar raw = data.decode_u16(idx) if idx + 1 < data.size() else 0$
+ 288: ^I^I^I^Ivar py = (float(raw) / 65535.0) * MAX_ELEV$
+ 289: ^I^I^I^Iverts.push_back(Vector3(px, py, pz))$
+ 290: ^I^I^I^Iuvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))$
+ 291: ^I^Ivar indices := []$
+ 292: ^I^Ifor z in range(H - 1):$
+ 293: ^I^I^Ifor x in range(W - 1):$
+ 294: ^I^I^I^Ivar a = z * W + x$
+ 295: ^I^I^I^Ivar b = a + 1$
+ 296: ^I^I^I^Ivar c = a + W$
+ 297: ^I^I^I^Ivar d = c + 1$
+ 298: ^I^I^I^Iindices.append_array([a, c, b, b, c, d])$
+ 299: ^I^Ivar st := SurfaceTool.new()$
+ 300: ^I^Ist.begin(Mesh.PRIMITIVE_TRIANGLES)$
+ 301: ^I^Ist.set_color(Color(1.0, 1.0, 1.0, 1.0))$
+ 302: ^I^Ifor i in range(verts.size()):$
+ 303: ^I^I^Ivar ci = i * 3$
+ 304: ^I^I^Ivar cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5$
+ 305: ^I^I^Ivar cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5$
+ 306: ^I^I^Ivar cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5$
+ 307: ^I^I^Ist.set_color(Color(cr, cg, cb, 1.0))$
+ 308: ^I^I^Ist.set_uv(uvs[i])$
+ 309: ^I^I^Ist.add_vertex(verts[i])$
+ 310: ^I^Ifor idx in indices:$
