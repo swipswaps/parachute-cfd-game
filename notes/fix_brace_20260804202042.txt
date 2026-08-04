@@ -1,0 +1,51 @@
+=== FIX CLASS BRACE ===
+Applied: Tue Aug  4 08:20:42 PM UTC 2026
+
+--- Diff (patched vs backup) ---
+--- godot_project/scripts/build_terrain.gd	2026-08-04 16:20:42.899722752 -0400
++++ godot_project/scripts/build_terrain.gd.bak.20260804202042	2026-08-04 16:20:42.867722754 -0400
+@@ -3766,6 +3766,7 @@
+ 	else:
+ 		print("[TIMER] WARNING: _on_opening_anim_timeout called but state is ", _game_state)
+ 
++}
+ 
+ var _controls_ready := false
+ 
+@@ -3826,4 +3827,3 @@
+ 				"  state=", _game_state,
+ 				"  deployed=", _canopy_deployed,
+ 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+-}
+
+--- Last 30 lines of corrected file ---
+     1		print("[CONTROLS] ---- ", added, " binding(s) added ----")
+     2	
+     3	
+     4	func _key_event(keycode: int) -> InputEventKey:
+     5		var ev := InputEventKey.new()
+     6		ev.physical_keycode = keycode
+     7		ev.keycode = keycode
+     8		return ev
+     9	
+    10	
+    11	func _log_control_presses() -> void:
+    12		# One line per press: which control, in which state, canopy or not.
+    13		# This is what the autostall log needs so an attempted control is
+    14		# visible even when its handler does nothing.
+    15		for action in CONTROL_KEYS:
+    16			if not InputMap.has_action(action):
+    17				continue
+    18			if Input.is_action_just_pressed(action):
+    19				# DB: persist confirmed keypress to control_events
+    20				var _cdb = get_node_or_null('/root/SqliteDb')
+    21				if _cdb != null:
+    22					var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+    23					if _cdb.has_method('execute'): _cdb.execute(_sql)
+    24					elif _cdb.has_method('_query'): _cdb._query(_sql)
+    25				print("[CTRL] pressed=", action,
+    26					"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    27					"  state=", _game_state,
+    28					"  deployed=", _canopy_deployed,
+    29					"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+    30	}

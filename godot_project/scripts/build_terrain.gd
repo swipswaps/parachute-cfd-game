@@ -3766,7 +3766,6 @@ func _on_opening_anim_timeout() -> void:
 	else:
 		print("[TIMER] WARNING: _on_opening_anim_timeout called but state is ", _game_state)
 
-}
 
 var _controls_ready := false
 
@@ -3827,3 +3826,4 @@ func _log_control_presses() -> void:
 				"  state=", _game_state,
 				"  deployed=", _canopy_deployed,
 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+}
