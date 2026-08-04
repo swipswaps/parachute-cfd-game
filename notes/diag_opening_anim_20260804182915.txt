@@ -1,0 +1,563 @@
+=== OPENING_ANIM -> DIAGNOSIS transition locator 20260804182915 UTC ===
+target: godot_project/scripts/build_terrain.gd
+lines : 3796
+
+########## PART A: _deployment_timer references ##########
+--- _deployment_timer @ godot_project/scripts/build_terrain.gd:131 (+/-4) ---
+     127: var _canopy_material: StandardMaterial3D
+     128: var _canopy_deployed: bool = false
+     129: var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+     130: var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+>>   131: var _deployment_timer
+     132: var _screenshot_save_timer: float = 0.0
+     133: const DEPLOY_TIME: float = 1.2
+     134: 
+     135: # ------------------------------------------------------------------
+--- _deployment_timer @ godot_project/scripts/build_terrain.gd:874 (+/-4) ---
+     870: 		return
+     871: 	_canopy_deployed = true
+     872: 	_canopy_instance.visible = true
+     873: 	_canopy_instance.scale = Vector3.ZERO
+>>   874: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+     875: 	_game_state = GameState.OPENING_ANIM
+     876: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+     877: 
+     878: 	if not _replay_playing:
+--- _deployment_timer @ godot_project/scripts/build_terrain.gd:1843 (+/-4) ---
+    1839: 	_flare_done = false
+    1840: 	_safe_landing = false
+    1841: 	_decision_altitude_warning_shown = false
+    1842: 	_canopy_deployed = false
+>>  1843: 	_deployment_timer = 0.0
+    1844: 	_score = 0
+    1845: 	_cam_angle_idx = 0
+    1846: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+    1847: 	_camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
+
+########## PART B: GameState.OPENING_ANIM references ##########
+--- GameState\.OPENING_ANIM @ godot_project/scripts/build_terrain.gd:875 (+/-4) ---
+     871: 	_canopy_deployed = true
+     872: 	_canopy_instance.visible = true
+     873: 	_canopy_instance.scale = Vector3.ZERO
+     874: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+>>   875: 	_game_state = GameState.OPENING_ANIM
+     876: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+     877: 
+     878: 	if not _replay_playing:
+     879: 		_replay_recording.clear()
+--- GameState\.OPENING_ANIM @ godot_project/scripts/build_terrain.gd:1027 (+/-4) ---
+    1023: # ------------------------------------------------------------------
+    1024: func _flight_control_check() -> void:
+    1025: 	print("[DIAG] _flight_control_check: ENTER, state=", _game_state)
+    1026: 	print("[VERBATIM] ENTER _flight_control_check gate=_game_state=", _game_state)
+>>  1027: 	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+    1028: 		print("[DIAG] _flight_control_check: early exit – not deployed")
+    1029: 		print("[VERBATIM] EXIT _flight_control_check early=not_deployed")
+    1030: 		return
+    1031: 	if _flight_control_checked:
+--- GameState\.OPENING_ANIM @ godot_project/scripts/build_terrain.gd:1496 (+/-4) ---
+    1492: 
+    1493: func _get_current_descent_rate() -> float:
+    1494: 	if _game_state == GameState.FREEFALL:
+    1495: 		return 1.2
+>>  1496: 	if _game_state == GameState.OPENING_ANIM:
+    1497: 		return 0.3
+    1498: 	if _game_state != GameState.DIAGNOSIS:
+    1499: 		return 0.0
+    1500: 	if _reserve_done or _flare_done:
+--- GameState\.OPENING_ANIM @ godot_project/scripts/build_terrain.gd:1531 (+/-4) ---
+    1527: 	elif _game_state == GameState.FREEFALL:
+    1528: 		# Body drifts ~30% of canopy drift — smaller cross-section in freefall.
+    1529: 		# Ref: USPA BSR body-position standards (general knowledge).
+    1530: 		_character.position += wind_vec * delta * 0.3
+>>  1531: 	elif _game_state == GameState.OPENING_ANIM:
+    1532: 		# Canopy rides the air mass fully — primary landing-spot offset driver.
+    1533: 		# wind_vec already in m/s (kts * 0.514444 applied above).
+    1534: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+    1535: 		# (general knowledge — not retrieved this session)
+--- GameState\.OPENING_ANIM @ godot_project/scripts/build_terrain.gd:1673 (+/-4) ---
+    1669: 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+    1670: 		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
+    1671: 		_deploy_canopy()
+    1672: 
+>>  1673: 	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+    1674: 		var turn_input := 0.0
+    1675: 		if Input.is_action_pressed("turnleft"):
+    1676: 			turn_input -= 1.0
+    1677: 		if Input.is_action_pressed("turnright"):
+--- GameState\.OPENING_ANIM @ godot_project/scripts/build_terrain.gd:2171 (+/-4) ---
+    2167: 			_screenshot_save_timer -= delta
+    2168: 		if _screenshot_save_timer <= 0.0:
+    2169: 			ScreenshotLibrary.save_flight_screenshot()
+    2170: 			_screenshot_save_timer = 5.0
+>>  2171: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+    2172: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+    2173: 		print("[DIAG] _turn_input = ", _turn_input)
+    2174: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+    2175: 		_velocity_vec += turn_dir * delta
+
+########## PART C: _canopy_instance.scale (opening animation) ##########
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:533 (+/-4) ---
+     529: 			_canopy_instance = scene.instantiate()
+     530: 			if _canopy_instance:
+     531: 				_character.add_child(_canopy_instance)
+     532: 				_canopy_instance.position = Vector3(0, 3.2, 0)
+>>   533: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+     534: 				_canopy_material = StandardMaterial3D.new()
+     535: 				var _mesh_child := _find_first_mesh(_canopy_instance)
+     536: 				if _mesh_child:
+     537: 					_mesh_child.material_override = _canopy_material
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:873 (+/-4) ---
+     869: 		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+     870: 		return
+     871: 	_canopy_deployed = true
+     872: 	_canopy_instance.visible = true
+>>   873: 	_canopy_instance.scale = Vector3.ZERO
+     874: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+     875: 	_game_state = GameState.OPENING_ANIM
+     876: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+     877: 
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:897 (+/-4) ---
+     893: 	sphere_mesh.height = 1.0
+     894: 	sphere_mesh.radial_segments = 32
+     895: 	sphere_mesh.rings = 16
+     896: 	_canopy_instance.mesh = sphere_mesh
+>>   897: 	_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+     898: 	_character.add_child(_canopy_instance)
+     899: 	_canopy_instance.position = Vector3(0, 3.2, 0)
+     900: 	_canopy_material = StandardMaterial3D.new()
+     901: 	_canopy_material.albedo_color = Color(0.0, 0.6, 1.0)
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:1002 (+/-4) ---
+     998: 	match _malfunction:
+     999: 		MalfunctionType.GOOD:
+    1000: 			_canopy_material.albedo_color = Color(0.2, 0.8, 0.2)
+    1001: 			if _canopy_instance:
+>>  1002: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+    1003: 				_canopy_instance.rotation_degrees = Vector3.ZERO
+    1004: 		MalfunctionType.LINE_TWISTS:
+    1005: 			_canopy_material.albedo_color = Color(0.9, 0.5, 0.1)
+    1006: 			if _canopy_instance:
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:1011 (+/-4) ---
+    1007: 				_canopy_instance.rotation_degrees.z = 15
+    1008: 		MalfunctionType.BAG_LOCK:
+    1009: 			_canopy_material.albedo_color = Color(0.9, 0.2, 0.2)
+    1010: 			if _canopy_instance:
+>>  1011: 				_canopy_instance.scale = Vector3(0.5, 0.5, 0.5)
+    1012: 		MalfunctionType.LINE_OVER:
+    1013: 			_canopy_material.albedo_color = Color(0.9, 0.6, 0.0)
+    1014: 		MalfunctionType.PILOT_IN_TOW:
+    1015: 			_canopy_material.albedo_color = Color(0.7, 0.2, 0.7)
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:1106 (+/-4) ---
+    1102: 	# Show reserve canopy: reuse _canopy_instance mesh as reserve.
+    1103: 	# USPA SIM: reserve is white, round, smaller than main ram-air.
+    1104: 	if _canopy_instance:
+    1105: 		_canopy_instance.visible = true
+>>  1106: 		_canopy_instance.scale = Vector3(0.12, 0.09, 0.12)
+    1107: 		_canopy_instance.rotation_degrees = Vector3.ZERO
+    1108: 		if _canopy_material:
+    1109: 			_canopy_material.albedo_color = Color(0.95, 0.95, 0.95)
+    1110: 			var mesh_child = _find_first_mesh(_canopy_instance)
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:1707 (+/-4) ---
+    1703: 				_show_notification("Canopy closed – safe to jump")
+    1704: 			else:
+    1705: 				_canopy_deployed = true
+    1706: 				_canopy_instance.visible = true
+>>  1707: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+    1708: 				_show_notification("WARNING: Canopy deployed inside aircraft! DO NOT jump (J)")
+    1709: 		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+    1710: 			_deploy_canopy()
+    1711: 	_last_frame_keys["SPACE"] = Input.is_key_pressed(KEY_SPACE)
+--- _canopy_instance\.scale @ godot_project/scripts/build_terrain.gd:1850 (+/-4) ---
+    1846: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+    1847: 	_camera.rotation = Vector3(deg_to_rad(-10.0), 0.0, 0.0)
+    1848: 	if _canopy_instance:
+    1849: 		_canopy_instance.visible = false
+>>  1850: 		_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+    1851: 	_randomize_malfunction()
+    1852: 	_update_canopy_visuals()
+    1853: 	_left_arm_angle = 0.0
+    1854: 	_right_arm_angle = 0.0
+
+########## PART D: _canopy_deployed references ##########
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:128 (+/-4) ---
+     124: # 3D Canopy model (repaired GLB) and attachment
+     125: # ------------------------------------------------------------------
+     126: var _canopy_instance: Node3D
+     127: var _canopy_material: StandardMaterial3D
+>>   128: var _canopy_deployed: bool = false
+     129: var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+     130: var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+     131: var _deployment_timer
+     132: var _screenshot_save_timer: float = 0.0
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:868 (+/-4) ---
+     864: 
+     865: 
+     866: func _deploy_canopy() -> void:
+     867: 	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+>>   868: 	if _canopy_deployed or not _canopy_instance:
+     869: 		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+     870: 		return
+     871: 	_canopy_deployed = true
+     872: 	_canopy_instance.visible = true
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1051 (+/-4) ---
+    1047: 	# Guard removed: is_action_just_pressed fires false by the time _do_cutaway
+    1048: 	# is called from _poll_controls which already verified the press.
+    1049: 	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    1050: 	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+>>  1051: 	if not _canopy_deployed:
+    1052: 		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+    1053: 		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+    1054: 		return
+    1055: 	if _cutaway_done:
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1071 (+/-4) ---
+    1067: 	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
+    1068: 	# returns to brief freefall until reserve deployed.
+    1069: 	if _canopy_instance:
+    1070: 		_canopy_instance.visible = false
+>>  1071: 	_canopy_deployed = false
+    1072: 	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+    1073: 	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+    1074: 	if not _replay_playing:
+    1075: 		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1085 (+/-4) ---
+    1081: 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+    1082: 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+    1083: 	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
+    1084: 	# USPA SIM: reserve is deployed after cutaway clears main canopy.
+>>  1085: 	if not _cutaway_done and not _canopy_deployed:
+    1086: 		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
+    1087: 		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+    1088: 		return
+    1089: 	if _reserve_done:
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1115 (+/-4) ---
+    1111: 			if mesh_child:
+    1112: 				mesh_child.material_override = _canopy_material
+    1113: 	# USPA SIM: reserve glides and steers until touchdown.
+    1114: 	# Stay in DIAGNOSIS so _update_canopy_glide and arm-pull steering run.
+>>  1115: 	# _canopy_deployed must be true for glide physics to engage.
+    1116: 	_canopy_deployed = true
+    1117: 	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
+    1118: 	call_deferred("_recreate_hud_if_needed")
+    1119: 	# Land is deferred — player steers reserve first, then SPACE or altitude trigger landing.
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1142 (+/-4) ---
+    1138: 
+    1139: func _do_flare() -> void:
+    1140: 	print("[DIAG] _do_flare: ENTER, state=", _game_state)
+    1141: 	print("[VERBATIM] ENTER _do_flare gate=_game_state=", _game_state)
+>>  1142: 	if not _canopy_deployed:
+    1143: 		print("[DIAG] _do_flare: early exit – not in DIAGNOSIS")
+    1144: 		print("[VERBATIM] EXIT _do_flare early=not_in_diagnosis")
+    1145: 		return
+    1146: 	if _flare_done:
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1555 (+/-4) ---
+    1551: 	# Allow tilt on main canopy (deployed) or reserve canopy (_reserve_done).
+    1552: 	# USPA SIM: reserve glides and steers via toggle inputs until touchdown.
+    1553: 	if not _canopy_instance:
+    1554: 		return
+>>  1555: 	if not _canopy_deployed and not _reserve_done:
+    1556: 		return
+    1557: 	var tilt = _turn_input * 15.0
+    1558: 	_canopy_instance.rotation_degrees.z = tilt
+    1559: 
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1659 (+/-4) ---
+    1655: 			_reset_game()
+    1656: 		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
+    1657: 		return
+    1658: 
+>>  1659: 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
+    1660: 	# Headless auto-deploy: fired when _headless_auto_deploy set in IN_PLANE frame 1.
+    1661: 	# _deploy_canopy() requires state==FREEFALL; this flag is consumed only here,
+    1662: 	# so it fires on the first FREEFALL _poll_controls() call.
+    1663: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1665 (+/-4) ---
+    1661: 	# _deploy_canopy() requires state==FREEFALL; this flag is consumed only here,
+    1662: 	# so it fires on the first FREEFALL _poll_controls() call.
+    1663: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+    1664: 	# (general knowledge — not retrieved this session)
+>>  1665: 	if _headless_auto_deploy and _game_state == GameState.FREEFALL and not _canopy_deployed:
+    1666: 		_headless_auto_deploy = false
+    1667: 		print("[VERBATIM] Headless auto-deploy triggered (FREEFALL).")
+    1668: 		_deploy_canopy()
+    1669: 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1700 (+/-4) ---
+    1696: 	# Deploy (SPACE)
+    1697: 	# SPACE: toggle canopy in plane, deploy in freefall
+    1698: 	if Input.is_key_pressed(KEY_SPACE) and not _last_frame_keys.get("SPACE", false):
+    1699: 		if _game_state == GameState.IN_PLANE:
+>>  1700: 			if _canopy_deployed:
+    1701: 				_canopy_deployed = false
+    1702: 				_canopy_instance.visible = false
+    1703: 				_show_notification("Canopy closed – safe to jump")
+    1704: 			else:
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1705 (+/-4) ---
+    1701: 				_canopy_deployed = false
+    1702: 				_canopy_instance.visible = false
+    1703: 				_show_notification("Canopy closed – safe to jump")
+    1704: 			else:
+>>  1705: 				_canopy_deployed = true
+    1706: 				_canopy_instance.visible = true
+    1707: 				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+    1708: 				_show_notification("WARNING: Canopy deployed inside aircraft! DO NOT jump (J)")
+    1709: 		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:1842 (+/-4) ---
+    1838: 	_reserve_done = false
+    1839: 	_flare_done = false
+    1840: 	_safe_landing = false
+    1841: 	_decision_altitude_warning_shown = false
+>>  1842: 	_canopy_deployed = false
+    1843: 	_deployment_timer = 0.0
+    1844: 	_score = 0
+    1845: 	_cam_angle_idx = 0
+    1846: 	_camera.position = Vector3(0.0, 2.0, 3.0)
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:2110 (+/-4) ---
+    2106: 		# achieve 4-6 m/s rate of descent when fully inflated (USPA SIM,
+    2107: 		# general knowledge - not retrieved this session); 8 m/s allows
+    2108: 		# margin for a hard but survivable arrival.
+    2109: 		if _game_state != GameState.LANDED and _game_state != GameState.GAME_OVER:
+>>  2110: 			var safe := _safe_landing or (_canopy_deployed and _descent_rate < 8.0)
+    2111: 			if safe:
+    2112: 				_safe_landing = true
+    2113: 				_game_state = GameState.LANDED
+    2114: 				print("[VERBATIM] Ground contact - SAFE LANDING (state=LANDED)")
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:3480 (+/-4) ---
+    3476: #
+    3477: # _main_canopy_node is instantiated in _setup_pip_overlay and parented to the
+    3478: # character, but the audit found ZERO .visible writes for it anywhere in the
+    3479: # project - so it was on from startup, through freefall, regardless of
+>>  3480: # _canopy_deployed. _canopy_instance by contrast has six .visible writes and
+    3481: # is correctly hidden at line 522.
+    3482: #
+    3483: # Rather than patch each of those six sites, the unmanaged node simply
+    3484: # follows the managed one. Deploy, cutaway, reserve and any future
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:3503 (+/-4) ---
+    3499: 	var want: bool = _canopy_instance.visible
+    3500: 	if _main_canopy_node.visible != want:
+    3501: 		_main_canopy_node.visible = want
+    3502: 		print("[CANOPYSYNC] main canopy visible -> ", want,
+>>  3503: 			"  state=", _game_state, "  deployed=", _canopy_deployed)
+    3504: 	var w: int = 1 if want else 0
+    3505: 	if _canopy_sync_last != w:
+    3506: 		_canopy_sync_last = w
+    3507: 		print("[CANOPYSYNC] transition at state=", _game_state,
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:3508 (+/-4) ---
+    3504: 	var w: int = 1 if want else 0
+    3505: 	if _canopy_sync_last != w:
+    3506: 		_canopy_sync_last = w
+    3507: 		print("[CANOPYSYNC] transition at state=", _game_state,
+>>  3508: 			" deployed=", _canopy_deployed, " visible=", want)
+    3509: 
+    3510: # ===========================================================================
+    3511: # CANOPY GLIDE  (fix_canopy_glide_v11)
+    3512: #
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:3555 (+/-4) ---
+    3551: 
+    3552: func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+    3553: 	# Stop glide physics on landing — otherwise canopy keeps flying underground.
+    3554: 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+>>  3555: 		_canopy_deployed = false
+    3556: 		return
+    3557: 	if not _canopy_deployed:
+    3558: 		return
+    3559: 	if _character == null or not is_instance_valid(_character):
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:3696 (+/-4) ---
+    3692: 
+    3693: 	_pip_log_t += delta
+    3694: 	if _pip_log_t > 2.0:
+    3695: 		_pip_log_t = 0.0
+>>  3696: 		var what := "canopy" if _canopy_deployed else "aircraft/sky"
+    3697: 		print("[PIPLIVE] eye=", eye, " state=", _game_state,
+    3698: 			" deployed=", _canopy_deployed, " framing=", what)
+    3699: 
+    3700: # ===========================================================================
+--- _canopy_deployed @ godot_project/scripts/build_terrain.gd:3795 (+/-4) ---
+    3791: 				elif _cdb.has_method('_query'): _cdb._query(_sql)
+    3792: 			print("[CTRL] pressed=", action,
+    3793: 				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    3794: 				"  state=", _game_state,
+>>  3795: 				"  deployed=", _canopy_deployed,
+    3796: 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+    3797: 
+
+########## PART E: full _deploy_canopy() function ##########
+--- func _deploy_canopy @ godot_project/scripts/build_terrain.gd:866..887 (22 lines) ---
+  866: func _deploy_canopy() -> void:
+  867: 	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+  868: 	if _canopy_deployed or not _canopy_instance:
+  869: 		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+  870: 		return
+  871: 	_canopy_deployed = true
+  872: 	_canopy_instance.visible = true
+  873: 	_canopy_instance.scale = Vector3.ZERO
+  874: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+  875: 	_game_state = GameState.OPENING_ANIM
+  876: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+  877: 
+  878: 	if not _replay_playing:
+  879: 		_replay_recording.clear()
+  880: 		_replay_recording.append({"action": "deploy", "time": Time.get_ticks_msec()})
+  881: 	print("[VERBATIM] EXIT _deploy_canopy ok=true")
+  882: 
+  883: 
+  884: # ------------------------------------------------------------------
+  885: # Procedural fallback canopy (blue dome)
+  886: # Ref: https://docs.godotengine.org/en/stable/classes/class_spheremesh.html
+  887: # ------------------------------------------------------------------
+
+########## PART F: OPENING_ANIM branch inside _physics_process ##########
+F1: state-check hits mentioning OPENING_ANIM inside _physics_process:
+  (_physics_process spans @ 1993..2183, 2 hits)
+--- OPENING_ANIM @ godot_project/scripts/build_terrain.gd:2160 (+/-5) ---
+    2155: 		if _velocity_vec.length() > 0.5:
+    2156: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+    2157: 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
+    2158: 		# p2: the three _hud_labels writes that used to live here ran ONLY in
+    2159: 		# FREEFALL, so the HUD froze the instant _deploy_canopy() moved state
+>>  2160: 		# to OPENING_ANIM. Screenshots 11:24:47-11:25:57 showed the altimeter
+    2161: 		# panel falling 5142->4175 ft while HUD Label0 stayed at 6044 ft.
+    2162: 		# They are now in _update_hud_readouts(), called unconditionally from
+    2163: 		# the common path below.
+    2164: 		_check_decision_altitude()
+    2165: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+--- OPENING_ANIM @ godot_project/scripts/build_terrain.gd:2171 (+/-5) ---
+    2166: 		if _screenshot_save_timer > 0:
+    2167: 			_screenshot_save_timer -= delta
+    2168: 		if _screenshot_save_timer <= 0.0:
+    2169: 			ScreenshotLibrary.save_flight_screenshot()
+    2170: 			_screenshot_save_timer = 5.0
+>>  2171: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+    2172: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+    2173: 		print("[DIAG] _turn_input = ", _turn_input)
+    2174: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+    2175: 		_velocity_vec += turn_dir * delta
+    2176: 		if _velocity_vec.length() > 0.5:
+
+F2: any "state == GameState." or "_game_state ==" hits inside _physics_process:
+  (_physics_process spans @ 1993..2183, 3 hits)
+--- _game_state\s*== @ godot_project/scripts/build_terrain.gd:2019 (+/-3) ---
+    2016: 	_pip_live_view(delta)
+    2017: 
+    2018: 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
+>>  2019: 	if _game_state == GameState.IN_PLANE:
+    2020: 		print("[DIAG] _physics_process: IN_PLANE branch entered")
+    2021: 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+    2022: 		if _plane_node:
+--- _game_state\s*== @ godot_project/scripts/build_terrain.gd:2137 (+/-3) ---
+    2134: 	_update_cfd_wind(delta)
+    2135: 	_update_canopy_tilt()
+    2136: 
+>>  2137: 	if _game_state == GameState.FREEFALL:
+    2138: 		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+    2139: 		if abs(_turn_input) > 0.001:
+    2140: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+--- _game_state\s*== @ godot_project/scripts/build_terrain.gd:2171 (+/-3) ---
+    2168: 		if _screenshot_save_timer <= 0.0:
+    2169: 			ScreenshotLibrary.save_flight_screenshot()
+    2170: 			_screenshot_save_timer = 5.0
+>>  2171: 	if _game_state == GameState.OPENING_ANIM or _game_state == GameState.DIAGNOSIS:
+    2172: 		print("[VERBATIM] DIAGNOSIS turning block executed")
+    2173: 		print("[DIAG] _turn_input = ", _turn_input)
+    2174: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+
+########## PART G: _physics_process opening lines (branch structure) ##########
+  _physics_process starts at line 1993
+  first 60 lines of _physics_process:
+ 1993: func _physics_process(delta) -> void:
+ 1994: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+ 1995: 	# ForensicHUD._input()/ForensicPanel._process() automatically.
+ 1996: 	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+ 1997: 		ForensicHUD.poll_forensic_hud()
+ 1998: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+ 1999: 		ForensicPanel.poll_forensic_panel()
+ 2000: 	if _character and is_instance_valid(_character):
+ 2001: 		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+ 2002: 	# --- Q/E turn input (checked first so it's available for all states) ---
+ 2003: 	if Input.is_key_pressed(KEY_Q):
+ 2004: 		_turn_input = -1.0
+ 2005: 	elif Input.is_key_pressed(KEY_E):
+ 2006: 		_turn_input = 1.0
+ 2007: 	else:
+ 2008: 		_turn_input = 0.0
+ 2009: 	# fix_arm_spring_v4: step the toggle spring-damper every physics frame.
+ 2010: 	# Held state is read directly from the keys here, so release is handled
+ 2011: 	# (the old edge-triggered path executed nothing on key-up).
+ 2012: 	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+ 2013: 	_ensure_controls()
+ 2014: 	_log_control_presses()
+ 2015: 	_sync_main_canopy()
+ 2016: 	_pip_live_view(delta)
+ 2017: 
+ 2018: 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
+ 2019: 	if _game_state == GameState.IN_PLANE:
+ 2020: 		print("[DIAG] _physics_process: IN_PLANE branch entered")
+ 2021: 		_plane_angle += _PLANE_ORBIT_SPEED * delta
+ 2022: 		if _plane_node:
+ 2023: 			_plane_node.position = Vector3(
+ 2024: 				cos(_plane_angle) * _PLANE_ORBIT_RADIUS,
+ 2025: 				_PLANE_ALTITUDE,
+ 2026: 				sin(_plane_angle) * _PLANE_ORBIT_RADIUS
+ 2027: 			)
+ 2028: 			_plane_node.rotation.y = _plane_angle + PI / 2.0
+ 2029: 			# Headless auto-start: fire SPACE on first IN_PLANE frame
+ 2030: 			# (Rule #1 grounded: this is the first rendered frame, confirmed
+ 2031: 			#  by _0283.txt showing plane position update before stall)
+ 2032: 			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+ 2033: 				if not ProjectSettings.has_setting("_headless_space_fired"):
+ 2034: 					ProjectSettings.set_setting("_headless_space_fired", true)
+ 2035: 					Input.action_press("deploy")
+ 2036: 					Input.action_release("deploy")
+ 2037: 					_headless_auto_deploy = true
+ 2038: 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+ 2039: 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+ 2040: 		else:
+ 2041: 			print("[DIAG] _physics_process: plane_node is NULL")
+ 2042: 		if _hud_labels.size() > 0:
+ 2043: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+ 2044: 		if _hud_labels.size() > 7:
+ 2045: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+ 2046: 		# --- CAMERA FOLLOW ---
+ 2047: 		print("[DIAG] _physics_process: checking camera follow")
+ 2048: 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+ 2049: 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+ 2050: 			var old_pos = _camera.global_position
+ 2051: 			var target = _plane_node.global_position
+ 2052: 			var offset = Vector3(0, 0, -_cam_distance)
+
+########## PART H: any existing "if X_timer > 0: X_timer -= delta" pattern ##########
+  (no hits)
+(single-line search fallback below)
+--- timer\s*-=\s*delta @ godot_project/scripts/build_terrain.gd:1538 (+/-3) ---
+    1535: 		# (general knowledge — not retrieved this session)
+    1536: 		_character.position += wind_vec * delta
+    1537: 	# Throttle: was ~60 lines/s; now 1 line per 5 seconds.
+>>  1538: 	_wind_log_timer -= delta
+    1539: 	if _wind_log_timer <= 0.0:
+    1540: 		_wind_log_timer = 5.0
+    1541: 		print("[WIND] speed ", final_speed, " kts  dir ",
+--- timer\s*-=\s*delta @ godot_project/scripts/build_terrain.gd:2167 (+/-3) ---
+    2164: 		_check_decision_altitude()
+    2165: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+    2166: 		if _screenshot_save_timer > 0:
+>>  2167: 			_screenshot_save_timer -= delta
+    2168: 		if _screenshot_save_timer <= 0.0:
+    2169: 			ScreenshotLibrary.save_flight_screenshot()
+    2170: 			_screenshot_save_timer = 5.0
+
+########## PART I: are there any -1 sentinel / DEPLOY_TIME constants? ##########
+--- (DEPLOY_TIME|CANOPY_OPEN|_CANOPY_TIME|OPEN_DURATION) @ godot_project/scripts/build_terrain.gd:133 (+/-3) ---
+     130: var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+     131: var _deployment_timer
+     132: var _screenshot_save_timer: float = 0.0
+>>   133: const DEPLOY_TIME: float = 1.2
+     134: 
+     135: # ------------------------------------------------------------------
+     136: # Scoring, leaderboard, achievements, missions, etc.
+--- (DEPLOY_TIME|CANOPY_OPEN|_CANOPY_TIME|OPEN_DURATION) @ godot_project/scripts/build_terrain.gd:874 (+/-3) ---
+     871: 	_canopy_deployed = true
+     872: 	_canopy_instance.visible = true
+     873: 	_canopy_instance.scale = Vector3.ZERO
+>>   874: 	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+     875: 	_game_state = GameState.OPENING_ANIM
+     876: 	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+     877: 
+
+=== END DIAGNOSTIC ===
