@@ -2658,7 +2658,7 @@ func _create_plane() -> void:
 	trigger_collision.position = Vector3(1.5, 0, -2)
 	exit_trigger.add_child(trigger_collision)
 
-	plane.global_position = Vector3(0, _PLANE_ALTITUDE, 0)
+	plane.global_position = Vector3(0, 1828.8, 0)
 	_log("[VERBATIM] Plane created at altitude 6000")
 
 
@@ -2807,7 +2807,7 @@ func _update_camera_position() -> void:
 			target = _plane_node.global_position
 		else:
 			return
-	var offset := Vector3(0, 0, -_cam_distance)
+	var offset := Vector3(0, 0, _cam_distance)
 	var rot = Quaternion(Vector3.UP, _cam_azimuth) * Quaternion(Vector3.RIGHT, _cam_elevation)
 	_camera.global_position = target + rot * offset
 	_camera.look_at(target, Vector3.UP)
