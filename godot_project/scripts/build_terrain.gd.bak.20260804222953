@@ -2573,7 +2573,6 @@ func _create_plane() -> void:
 	add_child(plane)
 	_plane_node = plane
 	print("[PLANE_DEBUG] _plane_node assigned: ", _plane_node)
-	print("[PLANE_DEBUG] _plane_node assigned: ", _plane_node)
 	print('[PLANE_DEBUG] _plane_node assigned: ', _plane_node)
 	plane.add_to_group("plane")
 
