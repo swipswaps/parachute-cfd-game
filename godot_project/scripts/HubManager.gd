@@ -5,41 +5,23 @@ func _ready():
 	call_deferred("_ensure_hub")
 
 func _ensure_hub():
-	var port = 8765
-	var endpoint = "/api/gamification"
-	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
-	var output = []
-	var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
-	if exit_code == 0 and output.size() > 0 and output[0] == "200":
-		print("[HubManager] Hub already running.")
-		return
-
-	# Added by autostall_patched.py – skip if hub already running
+	# Non-blocking hub startup. Prior versions used OS.<execute-call>()
+	# which blocks the main thread on the child process stdout pipe.
+	# See:
+	#   https://straydragon.github.io/godot-csharp-api-doc/4.3-stable/main/Godot.OS.html
+	#   https://docs.godotengine.org/en/stable/classes/class_os.html
+	#   https://github.com/godotengine/godot-proposals/discussions/8871
+	# Root cause confirmed by live gdb backtrace:
+	#   notes/hubmanager_hang_20260804111857.txt
 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
-		print("[HubManager] Hub already running – skipping startup")
+		print("[HubManager] Hub already running (env) - skipping startup")
 		return
-	# Original startup block follows
-	print("[HubManager] Hub not responding; starting it...")
 	var project_dir = ProjectSettings.globalize_path("res://")
-	# FIX (this session): project_dir = res:// resolves to godot_project/,
-	# but forensic_hub_server.py lives one directory up, at the outer
-	# project root — confirmed via find: only one copy exists, and it's
-	# not inside godot_project/. The cd+exec was silently failing every
-	# run. Fixed by cd-ing up one level before invoking the script.
-	# FIX (this session): script requires <project_root> positional arg.
-	# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"
-	# After the cd, "." is the outer project root the script needs.
-	var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir
-	OS.execute("/bin/sh", ["-c", start_cmd])
-	# Wait a moment and re-check
-	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
-	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
-	# always fired before the server was listening. Confirmed via
-	# "[HubManager] Failed to start hub after 2 seconds." on every run.
-	await get_tree().create_timer(5.0).timeout
-	var output2 = []
-	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
-	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
-		print("[HubManager] Hub started successfully.")
+	# exec + < /dev/null closes inherited stdin so python3 cannot
+	# hold the parent pipe fd open (which was the observed hang).
+	var start_cmd = "cd %s/.. && exec python3 forensic_hub_server.py . < /dev/null > /tmp/hub_server.log 2>&1" % project_dir
+	var pid = OS.create_process("/bin/sh", ["-c", start_cmd])
+	if pid > 0:
+		print("[HubManager] Hub spawn requested pid=", pid, " non-blocking")
 	else:
-		print("[HubManager] Failed to start hub after 2 seconds.")
+		print("[HubManager] Hub spawn failed (create_process returned ", pid, ")")

@@ -1,0 +1,183 @@
+=== HubManager v3 20260804120838 UTC ===
+
+########## PART 1: PRE-STATE (grounded enumeration) ##########
+file: godot_project/scripts/HubManager.gd
+func definitions BEFORE:
+3:func _ready():
+7:func _ensure_hub():
+_ensure_hub count BEFORE: 1
+OS.execute occurrences BEFORE: 3
+OS.create_process occurrences BEFORE: 0
+
+########## PART 2: APPLY PATCH ##########
+[DIAG] func defs in file: 2
+  line 3: func _ready():
+  line 7: func _ensure_hub():
+[DIAG] _ensure_hub count: 1
+[2026-08-04T12:08:38.890505+00:00] [SUCCESS] backup: godot_project/scripts/HubManager.gd.bak.20260804120838
+[2026-08-04T12:08:38.890559+00:00] [SUCCESS] extract: _ensure_hub spans lines 7..46
+[2026-08-04T12:08:38.890889+00:00] [SUCCESS] write: read-back match
+[2026-08-04T12:08:38.890932+00:00] [SUCCESS] tabs_only: clean
+[2026-08-04T12:08:38.891594+00:00] [SUCCESS] no_blocking_in_code: OS.execute()/create_timer() absent in code
+[2026-08-04T12:08:38.891792+00:00] [SUCCESS] create_process_call_present: verified in code (not just comment)
+
+PATCH APPLIED: godot_project/scripts/HubManager.gd
+Backup: godot_project/scripts/HubManager.gd.bak.20260804120838
+
+########## PART 3: POST-STATE ##########
+func definitions AFTER:
+3:func _ready():
+7:func _ensure_hub():
+_ensure_hub count AFTER: 1
+OS.execute() CALLS in code (Rule #14 comment-stripped) AFTER: 0
+OS.create_process() CALLS in code AFTER: 1
+
+########## PART 4: DIFF ##########
+8,17c8,15
+< 	var port = 8765
+< 	var endpoint = "/api/gamification"
+< 	var check_cmd = "curl -s -o /dev/null -w %%{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:%d%s" % [port, endpoint]
+< 	var output = []
+< 	var exit_code = OS.execute("/bin/sh", ["-c", check_cmd], output, true)
+< 	if exit_code == 0 and output.size() > 0 and output[0] == "200":
+< 		print("[HubManager] Hub already running.")
+< 		return
+< 
+< 	# Added by autostall_patched.py – skip if hub already running
+---
+> 	# Non-blocking hub startup. Prior versions used OS.<execute-call>()
+> 	# which blocks the main thread on the child process stdout pipe.
+> 	# See:
+> 	#   https://straydragon.github.io/godot-csharp-api-doc/4.3-stable/main/Godot.OS.html
+> 	#   https://docs.godotengine.org/en/stable/classes/class_os.html
+> 	#   https://github.com/godotengine/godot-proposals/discussions/8871
+> 	# Root cause confirmed by live gdb backtrace:
+> 	#   notes/hubmanager_hang_20260804111857.txt
+19c17
+< 		print("[HubManager] Hub already running – skipping startup")
+---
+> 		print("[HubManager] Hub already running (env) - skipping startup")
+21,22d18
+< 	# Original startup block follows
+< 	print("[HubManager] Hub not responding; starting it...")
+24,43c20,25
+< 	# FIX (this session): project_dir = res:// resolves to godot_project/,
+< 	# but forensic_hub_server.py lives one directory up, at the outer
+< 	# project root — confirmed via find: only one copy exists, and it's
+< 	# not inside godot_project/. The cd+exec was silently failing every
+< 	# run. Fixed by cd-ing up one level before invoking the script.
+< 	# FIX (this session): script requires <project_root> positional arg.
+< 	# Confirmed via /tmp/hub_server.log: "usage: forensic_hub_server.py <project_root>"
+< 	# After the cd, "." is the outer project root the script needs.
+< 	var start_cmd = "cd %s/.. && python3 forensic_hub_server.py . > /tmp/hub_server.log 2>&1 &" % project_dir
+< 	OS.execute("/bin/sh", ["-c", start_cmd])
+< 	# Wait a moment and re-check
+< 	# FIX (this session): was 2.0s, shorter than forensic_hub_server.py's
+< 	# own STARTUP_DELAY_SEC=3 before it binds the socket — the recheck
+< 	# always fired before the server was listening. Confirmed via
+< 	# "[HubManager] Failed to start hub after 2 seconds." on every run.
+< 	await get_tree().create_timer(5.0).timeout
+< 	var output2 = []
+< 	var exit_code2 = OS.execute("/bin/sh", ["-c", check_cmd], output2, true)
+< 	if exit_code2 == 0 and output2.size() > 0 and output2[0] == "200":
+< 		print("[HubManager] Hub started successfully.")
+---
+> 	# exec + < /dev/null closes inherited stdin so python3 cannot
+> 	# hold the parent pipe fd open (which was the observed hang).
+> 	var start_cmd = "cd %s/.. && exec python3 forensic_hub_server.py . < /dev/null > /tmp/hub_server.log 2>&1" % project_dir
+> 	var pid = OS.create_process("/bin/sh", ["-c", start_cmd])
+> 	if pid > 0:
+> 		print("[HubManager] Hub spawn requested pid=", pid, " non-blocking")
+45c27
+< 		print("[HubManager] Failed to start hub after 2 seconds.")
+---
+> 		print("[HubManager] Hub spawn failed (create_process returned ", pid, ")")
+
+########## PART 5: NEW _ensure_hub, numbered ##########
+    7: func _ensure_hub():
+    8: 	# Non-blocking hub startup. Prior versions used OS.<execute-call>()
+    9: 	# which blocks the main thread on the child process stdout pipe.
+   10: 	# See:
+   11: 	#   https://straydragon.github.io/godot-csharp-api-doc/4.3-stable/main/Godot.OS.html
+   12: 	#   https://docs.godotengine.org/en/stable/classes/class_os.html
+   13: 	#   https://github.com/godotengine/godot-proposals/discussions/8871
+   14: 	# Root cause confirmed by live gdb backtrace:
+   15: 	#   notes/hubmanager_hang_20260804111857.txt
+   16: 	if OS.get_environment("GODOT_HUB_ALREADY_RUNNING") == "1":
+   17: 		print("[HubManager] Hub already running (env) - skipping startup")
+   18: 		return
+   19: 	var project_dir = ProjectSettings.globalize_path("res://")
+   20: 	# exec + < /dev/null closes inherited stdin so python3 cannot
+   21: 	# hold the parent pipe fd open (which was the observed hang).
+   22: 	var start_cmd = "cd %s/.. && exec python3 forensic_hub_server.py . < /dev/null > /tmp/hub_server.log 2>&1" % project_dir
+   23: 	var pid = OS.create_process("/bin/sh", ["-c", start_cmd])
+   24: 	if pid > 0:
+   25: 		print("[HubManager] Hub spawn requested pid=", pid, " non-blocking")
+   26: 	else:
+   27: 		print("[HubManager] Hub spawn failed (create_process returned ", pid, ")")
+   28: 
+
+########## PART 6: POST-FIX WINDOWED RUN ##########
+launching godot line-buffered. Sampling per second.
+godot pid=497603
+t= 1s  physics_frames=0  delta=0
+t= 2s  physics_frames=0  delta=0
+t= 3s  physics_frames=0  delta=0
+t= 4s  physics_frames=0  delta=0
+t= 5s  physics_frames=0  delta=0
+t= 6s  physics_frames=8  delta=8
+t= 7s  physics_frames=72  delta=64
+t= 8s  physics_frames=133  delta=61
+t= 9s  physics_frames=193  delta=60
+steady-state (>20 frames/s x 3 consecutive)
+
+FINAL: physics_frames=193  HubManager-spawn-print=1
+port 8765 listener:
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python3",pid=497684,fd=3))                                                           
+
+--- last 40 lines of run log (what runs after HubManager) ---
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (658.9104, 1853.8, 453.6927)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (660.2685, 1905.516, 284.5301) to (658.9104, 1905.516, 286.5089)
+[DIAG] _physics_process: IN_PLANE returning
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (657.5463, 1853.8, 455.6674)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (658.9104, 1905.516, 286.5089) to (657.5463, 1905.516, 288.4836)
+[DIAG] _physics_process: IN_PLANE returning
+[DIAG] _poll_controls: ENTER, state=0
+[VERBATIM] POLL: _poll_controls() entered, game_state=0
+[DIAG] _poll_controls: EXIT (IN_PLANE branch)
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (656.1764, 1853.8, 457.638)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (657.5463, 1905.516, 288.4836) to (656.1764, 1905.516, 290.4542)
+[DIAG] _physics_process: IN_PLANE returning
+[DIAG] _poll_controls: ENTER, state=0
+[VERBATIM] POLL: _poll_controls() entered, game_state=0
+[DIAG] _poll_controls: EXIT (IN_PLANE branch)
+[AUDIT] poll_forensic_hud: ENTER
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (654.8005, 1853.8, 459.6045)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (656.1764, 1905.516, 290.4542) to (654.8005, 1905.516, 292.4206)
+[DIAG] _physics_process: IN_PLANE returning
+[DIAG] _poll_controls: ENTER, state=0
+[VERBATIM] POLL: _poll_controls() entered, game_state=0
+[DIAG] _poll_controls: EXIT (IN_PLANE branch)
+
+########## PART 7: VERDICT ##########
+PASS: main thread unblocked. physics_frames=204 (was 1).
+
+=== END ===
