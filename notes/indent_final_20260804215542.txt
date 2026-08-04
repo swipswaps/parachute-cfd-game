@@ -1,0 +1,37 @@
+=== INDENT DIAGNOSTIC — 20260804215542 UTC ===
+
+=== 1. Lines 2995–3010 with visible whitespace ===
+2995: ^I^I# stay quiet and a pull/release cycle produces a dense readable curve.$
+2996: ^I^Iif held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:$
+2997: ^I^I^Iprint("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,$
+2998: ^I^I^I^I",", force, ",", tension, ",", damping, ",", accel,$
+2999: ^I^I^I^I",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,$
+3000: ^I^I^I^I",", elbow_deg, ",", _arm_hold_t[side])$
+3001: $
+3002: func _apply_arm_bone_overrides() -> void:$
+3003: ^Iif not _skeleton:$
+3004: ^I^Ireturn$
+3005: ^Ifor side in ["L", "R"]:$
+3006: ^I^Ivar idx: int = _left_arm_idx if side == "L" else _right_arm_idx$
+3007: ^I^Iif idx != -1:$
+3008: ^I^I^I_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])$
+3009: ^I^Ivar f_idx: int = _arm_fore_idx.get(side, -1)$
+3010: ^I^Iif f_idx != -1 and _arm_elbow_ok.get(side, false):$
+
+=== 2. Any line that starts with tab/space but is not a function/class/comment ===
+
+=== 3. Any function definition with leading whitespace (invalid) ===
+
+=== 4. Full Godot parse error with context (headless run) ===
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Unexpected "Indent" in class body.
+          at: GDScript::reload (res://scripts/build_terrain.gd:2867)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+
+=== END DIAGNOSTIC ===
