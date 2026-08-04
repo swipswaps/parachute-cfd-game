@@ -1,0 +1,163 @@
+=== FIX BRACE CORRECT ===
+Applied: Tue Aug  4 08:26:13 PM UTC 2026
+
+--- Running fix_brace_correct.py ---
+[2026-08-04T20:26:13.385880+00:00] [SUCCESS] locate: Last closing brace at line 3829
+[2026-08-04T20:26:13.388394+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260804202613
+[2026-08-04T20:26:13.391985+00:00] [SUCCESS] read_after_write: bytes match
+[2026-08-04T20:26:13.392300+00:00] [SUCCESS] structural_check: File ends with '}'
+
+=== AFFECTED LINES (around removed brace) ===
+File: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+    3825: \t\t\t\t"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    3826: \t\t\t\t"  state=", _game_state,
+    3827: \t\t\t\t"  deployed=", _canopy_deployed,
+    3828: \t\t\t\t"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+>>> 3829: }
+
+=== LAST 30 LINES OF CORRECTED FILE ===
+3801: 
+3802: 
+3803: func _key_event(keycode: int) -> InputEventKey:
+3804: \tvar ev := InputEventKey.new()
+3805: \tev.physical_keycode = keycode
+3806: \tev.keycode = keycode
+3807: \treturn ev
+3808: 
+3809: 
+3810: func _log_control_presses() -> void:
+3811: \t# One line per press: which control, in which state, canopy or not.
+3812: \t# This is what the autostall log needs so an attempted control is
+3813: \t# visible even when its handler does nothing.
+3814: \tfor action in CONTROL_KEYS:
+3815: \t\tif not InputMap.has_action(action):
+3816: \t\t\tcontinue
+3817: \t\tif Input.is_action_just_pressed(action):
+3818: \t\t\t# DB: persist confirmed keypress to control_events
+3819: \t\t\tvar _cdb = get_node_or_null('/root/SqliteDb')
+3820: \t\t\tif _cdb != null:
+3821: \t\t\t\tvar _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+3822: \t\t\t\tif _cdb.has_method('execute'): _cdb.execute(_sql)
+3823: \t\t\t\telif _cdb.has_method('_query'): _cdb._query(_sql)
+3824: \t\t\tprint("[CTRL] pressed=", action,
+3825: \t\t\t\t"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+3826: \t\t\t\t"  state=", _game_state,
+3827: \t\t\t\t"  deployed=", _canopy_deployed,
+3828: \t\t\t\t"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+3829: }
+3830: 
+
+PATCH SUCCESS: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+Backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260804202613
+
+--- Last 50 lines of corrected file ---
+     1			var want: int = CONTROL_KEYS[action]
+     2			var existed: bool = InputMap.has_action(action)
+     3			if not existed:
+     4				InputMap.add_action(action)
+     5			var had: Array = []
+     6			for ev in InputMap.action_get_events(action):
+     7				if ev is InputEventKey:
+     8					var kc: int = ev.physical_keycode
+     9					if kc == 0:
+    10						kc = ev.keycode
+    11					had.append(OS.get_keycode_string(kc))
+    12			var need: bool = not InputMap.action_has_event(action, _key_event(want))
+    13			if need:
+    14				InputMap.action_add_event(action, _key_event(want))
+    15				added += 1
+    16			print("[CONTROLS] ", action,
+    17				"  action_existed=", existed,
+    18				"  keys_before=", had,
+    19				"  wanted=", OS.get_keycode_string(want),
+    20				"  added=", need)
+    21		print("[CONTROLS] ---- ", added, " binding(s) added ----")
+    22	
+    23	
+    24	func _key_event(keycode: int) -> InputEventKey:
+    25		var ev := InputEventKey.new()
+    26		ev.physical_keycode = keycode
+    27		ev.keycode = keycode
+    28		return ev
+    29	
+    30	
+    31	func _log_control_presses() -> void:
+    32		# One line per press: which control, in which state, canopy or not.
+    33		# This is what the autostall log needs so an attempted control is
+    34		# visible even when its handler does nothing.
+    35		for action in CONTROL_KEYS:
+    36			if not InputMap.has_action(action):
+    37				continue
+    38			if Input.is_action_just_pressed(action):
+    39				# DB: persist confirmed keypress to control_events
+    40				var _cdb = get_node_or_null('/root/SqliteDb')
+    41				if _cdb != null:
+    42					var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+    43					if _cdb.has_method('execute'): _cdb.execute(_sql)
+    44					elif _cdb.has_method('_query'): _cdb._query(_sql)
+    45				print("[CTRL] pressed=", action,
+    46					"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    47					"  state=", _game_state,
+    48					"  deployed=", _canopy_deployed,
+    49					"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+    50	}
+
+--- Callback function location ---
+3761:func _on_opening_anim_timeout() -> void:
+
+--- All closing braces ---
+35:}
+85:}
+109:}
+146:}
+155:}
+171:}
+244:}
+3829:}
+[2026-08-04T20:26:13.463188+00:00] [SUCCESS] locate: Last closing brace at line 3829
+[2026-08-04T20:26:13.466476+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260804202613
+[2026-08-04T20:26:13.469346+00:00] [SUCCESS] read_after_write: bytes match
+[2026-08-04T20:26:13.469641+00:00] [SUCCESS] structural_check: File ends with '}'
+
+=== AFFECTED LINES (around removed brace) ===
+File: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+    3825: \t\t\t\t"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+    3826: \t\t\t\t"  state=", _game_state,
+    3827: \t\t\t\t"  deployed=", _canopy_deployed,
+    3828: \t\t\t\t"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+>>> 3829: }
+
+=== LAST 30 LINES OF CORRECTED FILE ===
+3801: 
+3802: 
+3803: func _key_event(keycode: int) -> InputEventKey:
+3804: \tvar ev := InputEventKey.new()
+3805: \tev.physical_keycode = keycode
+3806: \tev.keycode = keycode
+3807: \treturn ev
+3808: 
+3809: 
+3810: func _log_control_presses() -> void:
+3811: \t# One line per press: which control, in which state, canopy or not.
+3812: \t# This is what the autostall log needs so an attempted control is
+3813: \t# visible even when its handler does nothing.
+3814: \tfor action in CONTROL_KEYS:
+3815: \t\tif not InputMap.has_action(action):
+3816: \t\t\tcontinue
+3817: \t\tif Input.is_action_just_pressed(action):
+3818: \t\t\t# DB: persist confirmed keypress to control_events
+3819: \t\t\tvar _cdb = get_node_or_null('/root/SqliteDb')
+3820: \t\t\tif _cdb != null:
+3821: \t\t\t\tvar _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+3822: \t\t\t\tif _cdb.has_method('execute'): _cdb.execute(_sql)
+3823: \t\t\t\telif _cdb.has_method('_query'): _cdb._query(_sql)
+3824: \t\t\tprint("[CTRL] pressed=", action,
+3825: \t\t\t\t"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+3826: \t\t\t\t"  state=", _game_state,
+3827: \t\t\t\t"  deployed=", _canopy_deployed,
+3828: \t\t\t\t"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+3829: }
+3830: 
+
+PATCH SUCCESS: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+Backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260804202613
