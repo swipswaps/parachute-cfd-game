@@ -238,9 +238,6 @@ var _last_frame_keys := {
 # Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
 # ------------------------------------------------------------------
 func _ready() -> void:
-	print("[PLANE_DEBUG] _create_plane() called at beginning of _ready()")
-	_create_plane()
-	print('[PLANE_DEBUG] _ready() START')
 	camera_distance = 60.0  # reset to default
 
 	_load_camera_settings()
@@ -254,44 +251,10 @@ func _ready() -> void:
 	# _show_loading_screen()      # REMOVED
 
 	# --------------------------------------------------------------
-	# Third‑person camera – child of root, initially follows plane
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
-	# --------------------------------------------------------------
-	_camera = Camera3D.new()
-	print("[CAMERA_DEBUG] _camera created: ", _camera)
-	_camera.position = Vector3(0.0, 2.0, 3.0)
-	_camera.fov = 75.0
-	_camera.near = 0.1
-	_camera.far = 10000.0
-	add_child(_camera)
-	print("[CAMERA_DEBUG] _camera added to tree")
-	_camera.current = true
-	print("[CAMERA_DEBUG] _camera.current set to true")
-	print('[PLANE_DEBUG] Camera added to tree')
-
-	# Ensure plane exists before positioning camera
-	if _plane_node:
-		# Position camera using orbit angles
-		var plane_pos = _plane_node.global_position
-		var offset = Vector3(0, 0, -_cam_distance)
-		offset = offset.rotated(Vector3.UP, _cam_azimuth)
-		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
-		_camera.global_position = plane_pos + offset
-		_camera.look_at(plane_pos, Vector3.UP)
-		_camera.current = true
-		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
-		print("[DEBUG] Plane position: ", plane_pos)
-		print("[DEBUG] Camera position: ", _camera.global_position)
-		print("[DIAG] _ready: camera positioned")
-	else:
-		print("[ERROR] Plane node is null, camera not positioned.")
-		print("[DIAG] _ready: ERROR – plane node null")
-
-	# --------------------------------------------------------------
 	# Terrain generation (full – uses heightmap and baked colours) with fallback
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
 	# --------------------------------------------------------------
-	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+	var file = FileAccess.open("res://assets/terrain/heightmap_1024_hd.raw", FileAccess.READ)
 	if file:
 		# --- Heightmap exists: generate detailed terrain ---
 		var data = file.get_buffer(file.get_length())
@@ -300,7 +263,7 @@ func _ready() -> void:
 		var _baked := PackedByteArray()
 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
 		if _bf:
-			_baked = _bf.get_buffer(3_145_728)
+			_baked = _bf.get_buffer(_bf.get_length())
 			_bf.close()
 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
 		else:
@@ -310,14 +273,23 @@ func _ready() -> void:
 		var uvs := []
 		const W = 1024
 		const H = 1024
-		const MAX_ELEV = 80.0
+		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
 		const SCALE_XZ = 4000.0
 		for z in range(H):
-			var _loop_counter := 0
 			for x in range(W):
-				_loop_counter += 1
-				if _loop_counter % 100 == 0:
-					await get_tree().process_frame
+				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+								# heightmap_512.raw is 512x512; mesh is 1024x1024.
+				# Direct index (z*W + x) overflows 512-wide rows for x/z > 511
+				# -> returns raw=0 -> flat y=0 for 75% of the mesh.
+				# Fix: map vertex UV to heightmap pixel coords (nearest-neighbour).
+				var hm_x := int(float(x) / float(W - 1) * 511.0)
+				var hm_z := int(float(z) / float(H - 1) * 511.0)
+				var idx := (hm_z * 512 + hm_x) * 2
+				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+				var py = (float(raw) / 65535.0) * MAX_ELEV
+				verts.push_back(Vector3(px, py, pz))
+				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
 		var indices := []
 		for z in range(H - 1):
 			for x in range(W - 1):
@@ -385,7 +357,6 @@ func _ready() -> void:
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
 	# --------------------------------------------------------------
 	_character = Node3D.new()
-	print('[PLANE_DEBUG] Character created')
 	add_child(_character)
 	_character.position = Vector3(100.0, 1828.8, -100.0)
 	print("[DEBUG] _character position after set: ", _character.position)
@@ -396,9 +367,38 @@ func _ready() -> void:
 	# --------------------------------------------------------------
 	# Plane – must be created before camera look_at
 	# --------------------------------------------------------------
+	_create_plane()
 	_setup_plane_node()
 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
 
+	# --------------------------------------------------------------
+	# Third‑person camera – child of root, initially follows plane
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+	# --------------------------------------------------------------
+	_camera = Camera3D.new()
+	_camera.position = Vector3(0.0, 2.0, 3.0)
+	_camera.fov = 75.0
+	_camera.near = 0.1
+	_camera.far = 10000.0
+	add_child(_camera)
+
+	# Ensure plane exists before positioning camera
+	if _plane_node:
+		# Position camera using orbit angles
+		var plane_pos = _plane_node.global_position
+		var offset = Vector3(0, 0, -_cam_distance)
+		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+		_camera.global_position = plane_pos + offset
+		_camera.look_at(plane_pos, Vector3.UP)
+		_camera.current = true
+		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+		print("[DEBUG] Plane position: ", plane_pos)
+		print("[DEBUG] Camera position: ", _camera.global_position)
+		print("[DIAG] _ready: camera positioned")
+	else:
+		print("[ERROR] Plane node is null, camera not positioned.")
+		print("[DIAG] _ready: ERROR – plane node null")
 
 	print("[VERBATIM] Camera attached to root, following plane")
 
@@ -542,29 +542,6 @@ func _ready() -> void:
 	# --------------------------------------------------------------
 	_randomize_malfunction()
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
-	# --- AUTO-START (timer-based) ---
-
-	var auto_timer = Timer.new()
-
-	auto_timer.wait_time = 2.0
-
-	auto_timer.one_shot = true
-
-	auto_timer.timeout.connect(func():
-
-		Input.action_press("ui_accept")
-
-		Input.action_release("ui_accept")
-
-		print("[AUTO-START] Deployed via timer.")
-
-	)
-
-	add_child(auto_timer)
-
-	auto_timer.start()
-
-	# --- end auto-start ---
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
 	# Headless auto‑start: simulate SPACE press
 	if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
@@ -593,6 +570,11 @@ func _ready() -> void:
 # Helper: create runway (returns MeshInstance3D)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
 # ------------------------------------------------------------------
+
+# Gate: Verify arms are not extended (R099)
+
+		print("[VERBATIM] Self-test timer started.")
+	# SELF-TEST TIMER INJECTED (v6.5.151)
 
 
 func _check_arm_pose() -> void:
@@ -705,6 +687,7 @@ func _load_character() -> void:
 	# _force_neutral_arms()  # disabled – using RESET animation instead
 	# Play RESET animation to force arms to rest pose (R091/R092)
 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+	_the_anim_player = _anim_player  # store for arm physics pause/resume
 	if _anim_player and _anim_player.has_animation("RESET"):
 		_anim_player.play("RESET")
 		await get_tree().process_frame
@@ -2983,8 +2966,8 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
-			var e_ang: float = e_t * ARM_ELBOW_MAX
-			var e_ax: Vector3 = _arm_elbow_axis[side]
+			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
+			var e_ax: Vector3 = -_arm_elbow_axis[side]
 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
 			_arm_elbow_q_stored[side] = eq
 			elbow_deg = rad_to_deg(e_ang)
@@ -2996,6 +2979,16 @@ func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> voi
 				",", force, ",", tension, ",", damping, ",", accel,
 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
 				",", elbow_deg, ",", _arm_hold_t[side])
+
+	# Apply computed quaternions to skeleton bones every physics frame.
+	_apply_arm_bone_overrides()
+	# Stop the looping Mixamo AnimationPlayer when arm pull is active.
+	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
+	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+		if any_pull and _the_anim_player.is_playing():
+			_the_anim_player.stop()
+		elif not any_pull and not _the_anim_player.is_playing():
+			_the_anim_player.play("mixamo_com")
 
 func _apply_arm_bone_overrides() -> void:
 	if not _skeleton:

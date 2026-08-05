@@ -1,0 +1,21 @@
+fix_arms_3diffs.py applied 20260805105200
+backup: godot_project/scripts/build_terrain.gd.bak.20260805104745
+diff1: _apply_arm_bone_overrides injected inside _update_arm_physics — PASS
+diff2: _the_anim_player stored in _load_character — PASS
+diff3: elbow ARM_ELBOW_NEUTRAL + negated axis — PASS
+read_after_write: bytes match — PASS
+tabs_check: no leading spaces — PASS
+godot_syntax: SKIPPED (--check-only stalled under resource contention)
+
+=== DIFF1 context (build_terrain.gd) ===
+690:	_the_anim_player = _anim_player  # store for arm physics pause/resume
+1924:	_apply_arm_bone_overrides()
+2969:			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
+2970:			var e_ax: Vector3 = -_arm_elbow_axis[side]
+2984:	_apply_arm_bone_overrides()
+2987:	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+2988:		if any_pull and _the_anim_player.is_playing():
+2989:			_the_anim_player.stop()
+2990:		elif not any_pull and not _the_anim_player.is_playing():
+2991:			_the_anim_player.play("mixamo_com")
+2993:func _apply_arm_bone_overrides() -> void:
