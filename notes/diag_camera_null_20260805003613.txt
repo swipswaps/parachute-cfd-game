@@ -1,0 +1,146 @@
+=== diag_camera_null.sh — 20260805003613 UTC ===
+
+=== A. CLASS-SCOPE var _camera DECLARATION ===
+  Class-scope '_camera' declarations: 2
+    line 47: 'var _camera: Camera3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html'
+    line 131: 'var _camera_save_timer := 0.0'
+
+=== B. ALL _camera ASSIGNMENTS IN _ready() (lines 240-602) ===
+  line 246: '\t_load_camera_settings()'
+  line 370: '\t# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html'
+  line 372: '\t_camera = Camera3D.new()'
+  line 373: '\tprint("[CAMERA_DEBUG] _camera created: ", _camera)'
+  line 374: '\t_camera.position = Vector3(0.0, 2.0, 3.0)'
+  line 375: '\t_camera.fov = 75.0'
+  line 376: '\t_camera.near = 0.1'
+  line 377: '\t_camera.far = 10000.0'
+  line 378: '\tadd_child(_camera)'
+  line 379: '\tprint("[CAMERA_DEBUG] _camera added to tree")'
+  line 380: '\t_camera.current = true'
+  line 381: '\tprint("[CAMERA_DEBUG] _camera.current set to true")'
+  line 391: '\t\t_camera.global_position = plane_pos + offset'
+  line 392: '\t\t_camera.look_at(plane_pos, Vector3.UP)'
+  line 393: '\t\t_camera.current = true'
+  line 394: '\t\t_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause'
+  line 396: '\t\tprint("[DEBUG] Camera position: ", _camera.global_position)'
+  line 591: '\tif is_instance_valid(_camera):'
+  line 592: '\t\tremove_child(_camera)'
+  line 593: '\t\t_camera.free()'
+  line 594: '\t_camera = Camera3D.new()'
+  line 595: '\t_camera.position = Vector3(0.0, 2.0, 3.0)'
+  line 596: '\t_camera.fov = 75.0'
+  line 597: '\t_camera.near = 0.1'
+  line 598: '\t_camera.far = 10000.0'
+  line 599: '\tadd_child(_camera)'
+  line 600: '\t_camera.current = true'
+
+=== C. _physics_process CAMERA-FOLLOW BLOCK (grep context) ===
+  --- _camera reference at line 2007 ---
+        2005: '\t\t# --- CAMERA FOLLOW ---'
+        2006: '\t\tprint("[DIAG] _physics_process: checking camera follow")'
+    >>> 2007: '\t\tif is_instance_valid(_plane_node) and is_instance_valid(_camera):'
+        2008: '\t\t\tprint("[DIAG] _physics_process: plane and camera valid, updating camera")'
+        2009: '\t\t\tvar old_pos = _camera.global_position'
+  --- _camera reference at line 2009 ---
+        2007: '\t\tif is_instance_valid(_plane_node) and is_instance_valid(_camera):'
+        2008: '\t\t\tprint("[DIAG] _physics_process: plane and camera valid, updating camera")'
+    >>> 2009: '\t\t\tvar old_pos = _camera.global_position'
+        2010: '\t\t\tvar target = _plane_node.global_position'
+        2011: '\t\t\tvar offset = Vector3(0, 0, -_cam_distance)'
+  --- _camera reference at line 2014 ---
+        2012: '\t\t\toffset = offset.rotated(Vector3.UP, _cam_azimuth)'
+        2013: '\t\t\toffset = offset.rotated(Vector3.RIGHT, _cam_elevation)'
+    >>> 2014: '\t\t\t_camera.global_position = target + offset'
+        2015: '\t\t\t_camera.look_at(target, Vector3.UP)'
+        2016: '\t\t\tprint('
+  --- _camera reference at line 2015 ---
+        2013: '\t\t\toffset = offset.rotated(Vector3.RIGHT, _cam_elevation)'
+        2014: '\t\t\t_camera.global_position = target + offset'
+    >>> 2015: '\t\t\t_camera.look_at(target, Vector3.UP)'
+        2016: '\t\t\tprint('
+        2017: '\t\t\t\t"[DIAG] _physics_process: camera moved from ",'
+  --- _camera reference at line 2020 ---
+        2018: '\t\t\t\told_pos,'
+        2019: '\t\t\t\t" to ",'
+    >>> 2020: '\t\t\t\t_camera.global_position'
+        2021: '\t\t\t)'
+        2022: '\t\telse:'
+  --- _camera reference at line 2027 ---
+        2025: '\t\t\t\t_plane_node,'
+        2026: '\t\t\t\t" camera=",'
+    >>> 2027: '\t\t\t\t_camera'
+        2028: '\t\t\t)'
+        2029: '\t\tprint("[DIAG] _physics_process: IN_PLANE returning")'
+  --- _camera reference at line 2033 ---
+        2031: ''
+        2032: '\t# Camera follows character using orbit (same as IN_PLANE)'
+    >>> 2033: '\tif _character and _camera:'
+        2034: '\t\tvar target = _character.global_position'
+        2035: '\t\tvar offset = Vector3(0, 0, -_cam_distance)'
+  --- _camera reference at line 2038 ---
+        2036: '\t\toffset = offset.rotated(Vector3.UP, _cam_azimuth)'
+        2037: '\t\toffset = offset.rotated(Vector3.RIGHT, _cam_elevation)'
+    >>> 2038: '\t\t_camera.global_position = target + offset'
+        2039: '\t\t_camera.look_at(target, Vector3.UP)'
+        2040: '\t\tprint("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")'
+  --- _camera reference at line 2039 ---
+        2037: '\t\toffset = offset.rotated(Vector3.RIGHT, _cam_elevation)'
+        2038: '\t\t_camera.global_position = target + offset'
+    >>> 2039: '\t\t_camera.look_at(target, Vector3.UP)'
+        2040: '\t\tprint("[DIAG] _physics_process: camera target set to character (state: ", _game_state, ")")'
+        2041: '\t_prev_descent_rate = _descent_rate'
+  --- _camera reference at line 2091 ---
+        2089: '\t\tif _screenshot_save_timer > 0:'
+        2090: '\t\t\t_screenshot_save_timer -= delta'
+    >>> 2091: '\tif _camera_save_timer > 0.0:'
+        2092: '\t\t_camera_save_timer -= delta'
+        2093: '\t\tif _screenshot_save_timer <= 0.0:'
+  --- _camera reference at line 2092 ---
+        2090: '\t\t\t_screenshot_save_timer -= delta'
+        2091: '\tif _camera_save_timer > 0.0:'
+    >>> 2092: '\t\t_camera_save_timer -= delta'
+        2093: '\t\tif _screenshot_save_timer <= 0.0:'
+        2094: '\t\t\tScreenshotLibrary.save_flight_screenshot()'
+
+=== D. ORIGINAL CAMERA SETUP BLOCK (lines 368-385, cat -A) ===
+ 368: ^I# --------------------------------------------------------------$
+ 369: ^I# ThirdM-bM-^@M-^Qperson camera M-bM-^@M-^S child of root, initially follows plane$
+ 370: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html$
+ 371: ^I# --------------------------------------------------------------$
+ 372: ^I_camera = Camera3D.new()$
+ 373: ^Iprint("[CAMERA_DEBUG] _camera created: ", _camera)$
+ 374: ^I_camera.position = Vector3(0.0, 2.0, 3.0)$
+ 375: ^I_camera.fov = 75.0$
+ 376: ^I_camera.near = 0.1$
+ 377: ^I_camera.far = 10000.0$
+ 378: ^Iadd_child(_camera)$
+ 379: ^Iprint("[CAMERA_DEBUG] _camera added to tree")$
+ 380: ^I_camera.current = true$
+ 381: ^Iprint("[CAMERA_DEBUG] _camera.current set to true")$
+ 382: ^Iprint('[PLANE_DEBUG] Camera added to tree')$
+ 383: $
+ 384: ^I# Ensure plane exists before positioning camera$
+ 385: ^Iif _plane_node:$
+
+=== E. CAMERA RECREATION BLOCK (lines 588-605, cat -A) ===
+ 588: ^I^Iprint("[VERBATIM] Self-test timer started.")$
+ 589: ^I^I# SELF-TEST TIMER INJECTED (v6.5.154)$
+ 590: ^I# Unconditional camera recreation$
+ 591: ^Iif is_instance_valid(_camera):$
+ 592: ^I^Iremove_child(_camera)$
+ 593: ^I^I_camera.free()$
+ 594: ^I_camera = Camera3D.new()$
+ 595: ^I_camera.position = Vector3(0.0, 2.0, 3.0)$
+ 596: ^I_camera.fov = 75.0$
+ 597: ^I_camera.near = 0.1$
+ 598: ^I_camera.far = 10000.0$
+ 599: ^Iadd_child(_camera)$
+ 600: ^I_camera.current = true$
+ 601: ^Iprint("[CAMERA_DEBUG] Camera recreated unconditionally")$
+ 602: $
+ 603: # ------------------------------------------------------------------$
+ 604: # Helper: create runway (returns MeshInstance3D)$
+ 605: # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html$
+
+=== END DIAGNOSTIC ===
+Timestamp: 20260805003613 UTC
