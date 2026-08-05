@@ -1,0 +1,67 @@
+=== verify_build_terrain.sh — 20260805174932 UTC ===
+
+=== Lines around line 1981 ===
+1976-			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+1977-		else:
+1978-			print("[DIAG] _physics_process: plane_node is NULL")
+1979-		if _hud_labels.size() > 0:
+1980-			if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+1981:				if _hud_labels.size() > 7:
+1982-				pass
+1983-				if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+1984-				# --- CAMERA FOLLOW ---
+1985-		print("[DIAG] _physics_process: checking camera follow")
+1986-		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+
+=== gdparse output (errors only) ===
+No errors found
+
+=== Full gdparse output (last 50 lines) ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+bels[0].text = "ALT: 6000 ft (IN PLANE)"
+                                        ^
+
+Unexpected token Token('_INDENT', '\t\t\t\t') at line 1980, column 81.
+Expected one of: 
+	* VAR
+	* TILDE
+	* REGULAR_STRING
+	* PLUS
+	* LONG_RSTRING
+	* CONST
+	* CONTINUE
+	* AWAIT
+	* CIRCUMFLEX
+	* BIN
+	* WHILE
+	* MATCH
+	* MINUS
+	* GET
+	* AT
+	* HEX
+	* _DEDENT
+	* BREAK
+	* LSQB
+	* PERCENT
+	* REGULAR_RSTRING
+	* NOT
+	* _NL
+	* BREAKPOINT
+	* LPAR
+	* LONG_STRING
+	* PASS
+	* FOR
+	* NUMBER
+	* IF
+	* FUNC
+	* AMPERSAND
+	* LBRACE
+	* NAME
+	* DOLLAR
+	* BANG
+	* SET
+	* RETURN
+
+
+=== End of diagnostic ===
