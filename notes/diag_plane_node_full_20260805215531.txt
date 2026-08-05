@@ -1,0 +1,37 @@
+=== diag_plane_node_full.sh — 20260805215531 UTC ===
+
+Lines 1620–1650 with visible whitespace (cat -A):
+
+^I^I# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html$
+^I^Ivar _exit_pressed = ($
+^I^I^IInput.is_key_just_pressed(KEY_J)$
+^I^I^Ior _headless_auto_jump$
+^I^I)$
+^I^Iif _exit_pressed:$
+^I^I^Iprint("[DIAG] _poll_controls: exit aircraft triggered")$
+^I^I^Iprint("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")$
+^I^I^I_game_state = GameState.FREEFALL$
+^I^I^I_cam_distance = 5.0$
+^I^I^Iif _plane_node:$
+^I^I^I_plane_node.queue_free()$
+^I^I^I_plane_node = null$
+func _reset_game() -> void:$
+^Iprint("[DIAG] _reset_game: ENTER")$
+^Iprint("[VERBATIM] === RESETTING GAME ===")$
+^I_game_state = GameState.IN_PLANE$
+^Iif _plane_node:$
+^I^I_plane_node.visible = true$
+^I^I_plane_angle = 0.0$
+^I_character.visible = false$
+^I_character.position = Vector3(100.0, 1828.8, -100.0)$
+^I_velocity_vec = Vector3.ZERO$
+^I_forward_speed = 0.0$
+^I_descent_rate = 0.0$
+^I_current_altitude = 3000.0$
+^I# Ensure altitude is nonM-bM-^@M-^Qzero and game state is correct (R088)$
+^Iif _current_altitude <= 0.0:$
+^I^I_current_altitude = 3000.0$
+^I_flight_control_checked = false$
+^I_cutaway_done = false$
+
+=== END OF CONTEXT ===
