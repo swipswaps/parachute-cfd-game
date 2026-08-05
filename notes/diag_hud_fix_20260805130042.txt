@@ -1,0 +1,49 @@
+=== diag_and_fix_hud.sh — 20260805130042 UTC ===
+
+./diag_and_fix_hud.sh: line 13: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+
+
+--- 2. files_to_fix table contents (all rows) ---
+Error: in prepare, no such table: files_to_fix
+Table not found or empty
+
+
+--- 3. Last attempt for build_terrain.gd (if any) ---
+Error: in prepare, no such table: files_to_fix
+No record
+
+
+--- 4. Exact _hud_labels declaration (including var) ---
+49:var _hud_labels := []  # Array of Label nodes
+
+--- ±3 context around line 49 ---
+  46: # ------------------------------------------------------------------
+  47: var _camera: Camera3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+  48: var _character: Node3D  # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  49: var _hud_labels := []  # Array of Label nodes
+  50: var _hud_layer: CanvasLayer  # Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+  51: var _focus_label: Label  # Ref: https://docs.godotengine.org/en/stable/classes/class_label.html
+  52: var _frame_count := 0
+
+
+--- 5. _mklabel function definition (±3) ---
+func _mklabel not found
+
+
+--- 6. Calls to _mklabel with context ---
+
+
+--- 7. Indexed assignments to _hud_labels (with size checks) ---
+490:	var heading_text = _hud_labels[2].text
+1980:			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+1982:			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+2062:		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2063:		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2064:		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2127:	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+2131:	_hud_labels[3].text = "BRG: %.0f°" % bearing
+2166:		_hud_labels[5].text = "LEG: " + leg_name
+
+
+=== END DIAGNOSTIC ===
