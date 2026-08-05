@@ -1,0 +1,62 @@
+=== show_build_terrain_lines.sh — 20260805175156 UTC ===
+
+=== File size (lines) ===
+3618 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+
+=== Lines 1975-1990 ===
+					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+		else:
+			print("[DIAG] _physics_process: plane_node is NULL")
+		if _hud_labels.size() > 0:
+			if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+				if _hud_labels.size() > 7:
+				pass
+				if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+				# --- CAMERA FOLLOW ---
+		print("[DIAG] _physics_process: checking camera follow")
+		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+			var old_pos = _camera.global_position
+			var target = _plane_node.global_position
+			var offset = Vector3(0, 0, -_cam_distance)
+					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+		else:
+			print("[DIAG] _physics_process: plane_node is NULL")
+		if _hud_labels.size() > 0:
+			if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+				if _hud_labels.size() > 7:
+				pass
+				if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+				# --- CAMERA FOLLOW ---
+		print("[DIAG] _physics_process: checking camera follow")
+		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+			var old_pos = _camera.global_position
+			var target = _plane_node.global_position
+			var offset = Vector3(0, 0, -_cam_distance)
+
+=== gdparse errors (first 20 lines) ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+bels[0].text = "ALT: 6000 ft (IN PLANE)"
+                                        ^
+
+Unexpected token Token('_INDENT', '\t\t\t\t') at line 1980, column 81.
+Expected one of: 
+	* PASS
+	* AMPERSAND
+	* TILDE
+	* REGULAR_RSTRING
+	* LONG_RSTRING
+	* REGULAR_STRING
+	* NUMBER
+	* MATCH
+	* MINUS
+	* FOR
+	* BREAK
+	* AWAIT
+	* CIRCUMFLEX
+
+=== End of diagnostic ===
