@@ -2850,6 +2850,7 @@ const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
 
 # v8: elbow stays straight on a shallow pull, flexes on a deep one.
 const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
 const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
 
 var _arm_vel       := {"L": 0.0, "R": 0.0}
@@ -2858,6 +2859,7 @@ var _arm_rest_ok   := false
 var _arm_tel_header := false
 var _arm_tel_t     := 0.0
 var _arm_anim_ref  = null
+var _the_anim_player = null  # stored so arm physics can pause/resume it
 
 
 func _arm_capture_rest() -> void:
