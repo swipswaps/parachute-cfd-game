@@ -1979,8 +1979,9 @@ func _physics_process(delta) -> void:
 		if _hud_labels.size() > 0:
 			if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
 				if _hud_labels.size() > 7:
-					if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
-						# --- CAMERA FOLLOW ---
+				pass
+				if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+				# --- CAMERA FOLLOW ---
 		print("[DIAG] _physics_process: checking camera follow")
 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
