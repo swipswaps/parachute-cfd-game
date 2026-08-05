@@ -1,0 +1,9 @@
+=== fix_hud_indent.sh — 20260805140146 UTC ===
+
+[2026-08-05T14:01:47.014922+00:00] [FAILURE] locate: Could not find the nested if line
+
+--- Recording fix in files_to_fix ---
+godot_project/scripts/build_terrain.gd|0|Invalid assignment to Nil _hud_labels|applied|1|2026-08-05 13:02:30
+godot_project/scripts/build_terrain.gd|1980|Parse Error: Expected indented block after if|fixed|2|2026-08-05 14:01:47
+
+=== END ===
