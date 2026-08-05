@@ -1,0 +1,42 @@
+=== show_local_context.sh — 20260805182753 UTC ===
+
+=== Total lines ===
+3624 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+
+=== Lines 2050-2080 (with line numbers) ===
+2050: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+2051: 		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+2052: 		# 1.5 rad/s at full differential ≈ 86 deg/s.
+2053: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+2054: 		# (general knowledge — not retrieved this session)
+2055: 		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+2056: 		if absf(ff_diff) > 0.002:
+2057: 			_character.rotate_y(-ff_diff * 1.5 * delta)
+2058: 		var target_dir = -_character.global_position.normalized()
+2059: 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
+2060: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+2061: 		_velocity_vec += turn_dir * delta
+2062: 		var forward_vec = target_dir * _forward_speed
+2063: 		_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)
+2064: 		_character.position += _velocity_vec * delta
+2065: 		if _velocity_vec.length() > 0.5:
+2066: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+2067: 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
+2068: 		var speed_kts = _forward_speed * 1.94384
+2069: if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2070: 	if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2071: 		if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2072: 			_check_decision_altitude()
+2073: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+2074: 		if _screenshot_save_timer > 0:
+2075: 			_screenshot_save_timer -= delta
+2076: 	if _camera_save_timer > 0.0:
+2077: 		_camera_save_timer -= delta
+2078: 		if _screenshot_save_timer <= 0.0:
+2079: 			ScreenshotLibrary.save_flight_screenshot()
+2080: 			_screenshot_save_timer = 5.0
+
+=== gdparse error context ===
+No error at 2064
+
+=== End of diagnostic ===
