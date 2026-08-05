@@ -1,0 +1,47 @@
+=== diag_final_block.sh — 20260805215053 UTC ===
+
+Context around line 1630 (numbered):
+
+1610: # ------------------------------------------------------------------
+1611: # Polling controls (continuous key detection, called every physics frame)
+1612: # ------------------------------------------------------------------
+1613: func _poll_controls() -> void:
+1614: 	print("[DIAG] _poll_controls: ENTER, state=", _game_state)
+1615: 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+1616: 
+1617: 	if _game_state == GameState.IN_PLANE:
+1618: 		# Also check headless auto-jump flag (set in _physics_process;
+1619: 		# reliable across _physics_process/_process frame boundary).
+1620: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1621: 		var _exit_pressed = (
+1622: 			Input.is_key_just_pressed(KEY_J)
+1623: 			or _headless_auto_jump
+1624: 		)
+1625: 		if _exit_pressed:
+1626: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+1627: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+1628: 			_game_state = GameState.FREEFALL
+1629: 			_cam_distance = 5.0
+1630: 			if _plane_node:
+1631: 			_plane_node.queue_free()
+1632: 			_plane_node = null
+1633: func _reset_game() -> void:
+1634: 	print("[DIAG] _reset_game: ENTER")
+1635: 	print("[VERBATIM] === RESETTING GAME ===")
+1636: 	_game_state = GameState.IN_PLANE
+1637: 	if _plane_node:
+1638: 		_plane_node.visible = true
+1639: 		_plane_angle = 0.0
+1640: 	_character.visible = false
+1641: 	_character.position = Vector3(100.0, 1828.8, -100.0)
+1642: 	_velocity_vec = Vector3.ZERO
+1643: 	_forward_speed = 0.0
+1644: 	_descent_rate = 0.0
+1645: 	_current_altitude = 3000.0
+1646: 	# Ensure altitude is non‑zero and game state is correct (R088)
+1647: 	if _current_altitude <= 0.0:
+1648: 		_current_altitude = 3000.0
+1649: 	_flight_control_checked = false
+1650: 	_cutaway_done = false
+
+=== END OF CONTEXT ===
