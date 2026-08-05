@@ -1,0 +1,74 @@
+=== full_diagnostic.sh — 20260805140903 UTC ===
+
+./full_diagnostic.sh: line 11: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+CREATE TABLE files_to_fix (
+    file_path TEXT,
+    line_number INTEGER,
+    error_text TEXT,
+    status TEXT,
+    attempt_count INTEGER DEFAULT 0,
+    fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number)
+);
+
+
+--- 2. files_to_fix table contents ---
+godot_project/scripts/build_terrain.gd|1980|Parse Error: Expected indented block after if|fixed|2|2026-08-05 14:01:47
+godot_project/scripts/build_terrain.gd|0|Indentation audit: malformed if blocks checked|audited|1|2026-08-05 14:04:15
+
+
+--- 3. Godot --check-only (syntax and dependency check) ---
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+
+MESA-INTEL: warning: Ivy Bridge Vulkan support is incomplete
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "deadzone". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+ERROR: Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.
+   at: operator[] (core/variant/dictionary.cpp:136)
+
+
+=== END ===
