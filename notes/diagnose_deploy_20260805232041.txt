@@ -1,0 +1,174 @@
+=== diagnose_deploy.sh — 20260805232041 UTC ===
+
+--- _deploy_canopy() definition (exact ±5 lines) ---
+859-		if found:
+860-			return found
+861-	return null
+862-
+863-
+864:func _deploy_canopy() -> void:
+865-	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+866-	if _canopy_deployed or not _canopy_instance:
+867-		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+868-		return
+869-	_canopy_deployed = true
+870-	_canopy_instance.visible = true
+871-	_canopy_instance.scale = Vector3.ZERO
+872-	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+873-	_game_state = GameState.OPENING_ANIM
+874-	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+
+--- Code that handles 'deploy' action ---
+124-# ------------------------------------------------------------------
+125-var _canopy_instance: Node3D
+126-var _canopy_material: StandardMaterial3D
+127:var _canopy_deployed: bool = false
+128-var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+129:var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+130:var _deployment_timer
+131-var _screenshot_save_timer: float = 0.0
+132-const DEPLOY_TIME: float = 1.2
+133-
+134-# ------------------------------------------------------------------
+135-# Scoring, leaderboard, achievements, missions, etc.
+--
+548-	# --------------------------------------------------------------
+549-	_randomize_malfunction()
+550-	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
+551:	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+552-	# Headless auto‑start: simulate SPACE press
+553-	if OS.get_environment("GODOT_HEADLESS") == "1":
+554-		Input.action_press("ui_accept")
+555-		Input.action_release("ui_accept")
+556-		print("[VERBATIM] Headless auto‑start triggered.")
+557:	# Headless auto-start: simulate SPACE/deploy press
+558-	# Ref: OS.get_environment (general knowledge, not retrieved this session)
+559-	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+560-		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+561:		# Input.action_release("deploy") removed — flag-based now
+562-		print("[VERBATIM] Headless auto‑start triggered.")
+563-	_check_arm_pose_safe()
+564-
+565-	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
+566-	# Deferred ~2 s so every autoload and CanvasLayer has finished building.
+--
+861-	return null
+862-
+863-
+864:func _deploy_canopy() -> void:
+865:	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+866:	if _canopy_deployed or not _canopy_instance:
+867:		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+868-		return
+869:	_canopy_deployed = true
+870-	_canopy_instance.visible = true
+871-	_canopy_instance.scale = Vector3.ZERO
+872:	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+873-	_game_state = GameState.OPENING_ANIM
+874:	print("[VERBATIM] Parachute deployment started — state=OPENING_ANIM")
+875-
+876-	if not _replay_playing:
+877-		_replay_recording.clear()
+878:		_replay_recording.append({"action": "deploy", "time": Time.get_ticks_msec()})
+879:	print("[VERBATIM] EXIT _deploy_canopy ok=true")
+880-
+881-
+882-# ------------------------------------------------------------------
+883-# Procedural fallback canopy (blue dome)
+884-# Ref: https://docs.godotengine.org/en/stable/classes/class_spheremesh.html
+--
+987-
+988-
+
+--- State machine transitions (enter_*) ---
+NOT FOUND
+
+--- Canopy visibility and deployment conditions ---
+124-# ------------------------------------------------------------------
+125-var _canopy_instance: Node3D
+126-var _canopy_material: StandardMaterial3D
+127:var _canopy_deployed: bool = false
+128-var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+129-var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+130-var _deployment_timer
+--
+533-				var _mesh_child := _find_first_mesh(_canopy_instance)
+534-				if _mesh_child:
+535-					_mesh_child.material_override = _canopy_material
+536:				_canopy_instance.visible = false
+537-				print("[VERBATIM] Clean GLB loaded from: ", canopy_path)
+538-			else:
+539-				_create_procedural_canopy()
+--
+863-
+864-func _deploy_canopy() -> void:
+865-	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+866:	if _canopy_deployed or not _canopy_instance:
+867:		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+868-		return
+869:	_canopy_deployed = true
+870:	_canopy_instance.visible = true
+871-	_canopy_instance.scale = Vector3.ZERO
+872-	_deployment_timer = 2.0  # changed from DEPLOY_TIME to give canopy time to open
+873-	_game_state = GameState.OPENING_ANIM
+--
+898-	_canopy_material = StandardMaterial3D.new()
+899-	_canopy_material.albedo_color = Color(0.0, 0.6, 1.0)
+900-	_canopy_instance.material_override = _canopy_material
+901:	_canopy_instance.visible = false
+902-	print("[VERBATIM] Procedural dome canopy created")
+903-	print("[VERBATIM] EXIT _create_procedural_canopy ok=true")
+904-
+--
+987-
+988-
+989-func _update_canopy_visuals() -> void:
+990:	# Skip when reserve is deployed — reserve appearance is set in _do_reserve.
+991-	if _reserve_done:
+992-		return
+993-	if not _canopy_material:
+--
+1023-	print("[DIAG] _flight_control_check: ENTER, state=", _game_state)
+1024-	print("[VERBATIM] ENTER _flight_control_check gate=_game_state=", _game_state)
+1025-	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+1026:		print("[DIAG] _flight_control_check: early exit – not deployed")
+1027:		print("[VERBATIM] EXIT _flight_control_check early=not_deployed")
+1028-		return
+1029-	if _flight_control_checked:
+1030-		print("[DIAG] _flight_control_check: already checked")
+--
+1046-	# is called from _poll_controls which already verified the press.
+1047-	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+1048-	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+1049:	if not _canopy_deployed:
+1050-		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+1051-		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+1052-		return
+--
+1063-		# fall through to execute cutaway
+1064-	_cutaway_done = true
+1065-	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
+1066:	# returns to brief freefall until reserve deployed.
+1067-	if _canopy_instance:
+1068:		_canopy_instance.visible = false
+1069:	_canopy_deployed = false
+1070-	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+1071-	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+1072-	if not _replay_playing:
+--
+1078-func _do_reserve() -> void:
+1079-	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+1080-	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+1081:	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
+1082:	# USPA SIM: reserve is deployed after cutaway clears main canopy.
+1083:	if not _cutaway_done and not _canopy_deployed:
+1084:		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
+1085-		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+
+--- From the attached autostall log: ---
+SPACE pressed multiple times, action 'deploy' received, but deployed=false remained.
+Game eventually hit ground impact (alt_m ~0.6) and auto-exited.
+Plane was hidden after exit aircraft – that's likely normal.
+
+
+=== END DIAGNOSTIC ===
