@@ -1,0 +1,38 @@
+=== run_final_all.sh — 20260805183443 UTC ===
+
+[2026-08-05T18:34:44.020539+00:00] [SUCCESS] fix_pass_indent: fixed pass indentation
+[2026-08-05T18:34:44.020902+00:00] [SUCCESS] split_line: split malformed line at index 1988: if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Pre...
+[2026-08-05T18:34:44.021128+00:00] [SUCCESS] split_line: split malformed line at index 2068: if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0...
+[2026-08-05T18:34:44.021173+00:00] [SUCCESS] split_line: split malformed line at index 2069: if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d...
+[2026-08-05T18:34:44.021205+00:00] [SUCCESS] split_line: split malformed line at index 2070: if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0...
+[2026-08-05T18:34:44.021390+00:00] [SUCCESS] split_line: split malformed line at index 2133: if _hud_labels.size() > 0: 	_hud_labels[2].text = "HDG: %.0f...
+[2026-08-05T18:34:44.021436+00:00] [SUCCESS] split_line: split malformed line at index 2137: if _hud_labels.size() > 0: 	_hud_labels[3].text = "BRG: %.0f...
+[2026-08-05T18:34:44.021535+00:00] [SUCCESS] split_line: split malformed line at index 2172: if _hud_labels.size() > 0: 		_hud_labels[5].text = "LEG: " +...
+[2026-08-05T18:34:44.023743+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260805183444
+[2026-08-05T18:34:45.174161+00:00] [FAILURE] main: gdparse still has errors: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+if _hud_labels.size() > 0:
+^
+
+Unexpected token Token('IF', 'if') at line 2070, column 1.
+Expected one of: 
+	* CLASS_NAME
+	* EXTENDS
+	* _INDENT
+	* AT
+	* $END
+	* CLASS
+	* LONG_STRING
+	* CONST
+	* _NL
+	* FUNC
+	* ENUM
+	* VAR
+	* PASS
+	* SIGNAL
+	* STATIC
+	* REGULAR_STRING
+
+
+
+=== End of fix ===
