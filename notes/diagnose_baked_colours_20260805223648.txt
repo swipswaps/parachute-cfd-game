@@ -1,0 +1,155 @@
+=== diagnose_baked_colours.sh — Wed Aug  5 10:36:48 PM UTC 2026 ===
+
+=== Lines with 'baked' (case‑insensitive) ===
+ 261: 	# _show_loading_screen()      # REMOVED
+ 262: 
+ 263: 	# --------------------------------------------------------------
+ 264: 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 265: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 266: 	# --------------------------------------------------------------
+ 267: 	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+---
+ 270: 		var data = file.get_buffer(file.get_length())
+ 271: 		file.close()
+ 272: 
+ 273: 		var _baked := PackedByteArray()
+ 274: 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 275: 		if _bf:
+ 276: 			_baked = _bf.get_buffer(_bf.get_length())
+---
+ 271: 		file.close()
+ 272: 
+ 273: 		var _baked := PackedByteArray()
+ 274: 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 275: 		if _bf:
+ 276: 			_baked = _bf.get_buffer(_bf.get_length())
+ 277: 			_bf.close()
+---
+ 273: 		var _baked := PackedByteArray()
+ 274: 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 275: 		if _bf:
+ 276: 			_baked = _bf.get_buffer(_bf.get_length())
+ 277: 			_bf.close()
+ 278: 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 279: 		else:
+---
+ 275: 		if _bf:
+ 276: 			_baked = _bf.get_buffer(_bf.get_length())
+ 277: 			_bf.close()
+ 278: 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 279: 		else:
+ 280: 			print("[VERBATIM] BAKE FALLBACK")
+ 281: 
+---
+ 280: 			print("[VERBATIM] BAKE FALLBACK")
+ 281: 
+ 282: 		# 1024 vertex-colour mesh with NED 1024 elevation.
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: 		const W = 1024
+ 286: 		const H = 1024
+---
+ 313: 		st.set_color(Color(1.0, 1.0, 1.0, 1.0))
+ 314: 		for i in range(verts.size()):
+ 315: 			var ci = i * 3
+ 316: 			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
+ 317: 			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
+ 318: 			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+ 319: 			st.set_color(Color(cr, cg, cb, 1.0))
+---
+ 314: 		for i in range(verts.size()):
+ 315: 			var ci = i * 3
+ 316: 			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
+ 317: 			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
+ 318: 			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+ 319: 			st.set_color(Color(cr, cg, cb, 1.0))
+ 320: 			st.set_uv(uvs[i])
+---
+ 315: 			var ci = i * 3
+ 316: 			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
+ 317: 			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
+ 318: 			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+ 319: 			st.set_color(Color(cr, cg, cb, 1.0))
+ 320: 			st.set_uv(uvs[i])
+ 321: 			st.add_vertex(verts[i])
+---
+ 332: 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 333: 		terrain_inst.material_override = terrain_mat
+ 334: 		add_child(terrain_inst)
+ 335: 		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+ 336: 	else:
+ 337: 		# --- Heightmap missing: flat terrain fallback ---
+ 338: 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
+---
+
+=== Lines with '4096' (context ±3) ===
+ 264: 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 265: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 266: 	# --------------------------------------------------------------
+ 267: 	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+ 268: 	if file:
+ 269: 		# --- Heightmap exists: generate detailed terrain ---
+ 270: 		var data = file.get_buffer(file.get_length())
+---
+ 271: 		file.close()
+ 272: 
+ 273: 		var _baked := PackedByteArray()
+ 274: 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 275: 		if _bf:
+ 276: 			_baked = _bf.get_buffer(_bf.get_length())
+ 277: 			_bf.close()
+---
+ 280: 			print("[VERBATIM] BAKE FALLBACK")
+ 281: 
+ 282: 		# 1024 vertex-colour mesh with NED 1024 elevation.
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: 		const W = 1024
+ 286: 		const H = 1024
+---
+ 281: 
+ 282: 		# 1024 vertex-colour mesh with NED 1024 elevation.
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: 		const W = 1024
+ 286: 		const H = 1024
+ 287: 		const HM_SRC = 1024
+---
+ 332: 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 333: 		terrain_inst.material_override = terrain_mat
+ 334: 		add_child(terrain_inst)
+ 335: 		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+ 336: 	else:
+ 337: 		# --- Heightmap missing: flat terrain fallback ---
+ 338: 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
+---
+
+=== Lines with 'const W' or 'const H' (context ±3) ===
+ 282: 		# 1024 vertex-colour mesh with NED 1024 elevation.
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: 		const W = 1024
+ 286: 		const H = 1024
+ 287: 		const HM_SRC = 1024
+ 288: 		const MAX_ELEV = 20.0
+---
+ 283: 		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+ 284: 		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
+ 285: 		const W = 1024
+ 286: 		const H = 1024
+ 287: 		const HM_SRC = 1024
+ 288: 		const MAX_ELEV = 20.0
+ 289: 		const SCALE_XZ = 4000.0
+---
+
+=== Full line where 'Baked colours loaded' is printed ===
+ 275: 		if _bf:
+ 276: 			_baked = _bf.get_buffer(_bf.get_length())
+ 277: 			_bf.close()
+ 278: 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 279: 		else:
+ 280: 			print("[VERBATIM] BAKE FALLBACK")
+ 281: 
+---
+
+=== Diagnostic complete. No files modified. ===
