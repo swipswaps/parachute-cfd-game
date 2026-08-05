@@ -1,0 +1,4 @@
+fix_forensic_hud_prints.py 20260805110835
+backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260805110835
+fix_a: print removed from _panel_rect (called every physics frame) — PASS
+fix_b: print removed from poll_forensic_hud (called every physics frame) — PASS

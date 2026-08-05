@@ -98,7 +98,6 @@ func _mkbutton(txt: String) -> Button:
 	return b
 
 func _panel_rect() -> Rect2:
-	print("[AUDIT] _panel_rect: ENTER")
 	var sz := _panel.size
 	if sz == Vector2.ZERO:
 		sz = PANEL_MIN_SIZE
@@ -118,7 +117,6 @@ func _panel_rect() -> Rect2:
 # at _ready() — root cause undetermined after exhaustive audit. Called
 # explicitly from build_terrain.gd's _physics_process() instead.
 func poll_forensic_hud() -> void:
-	print("[AUDIT] poll_forensic_hud: ENTER")
 	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
 	if backtick_pressed and not _toggle_latch:
 		_toggle_latch = true
