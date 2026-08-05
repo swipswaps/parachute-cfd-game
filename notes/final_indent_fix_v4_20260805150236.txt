@@ -1,0 +1,43 @@
+=== final_indent_fix_v4.sh — 20260805150236 UTC ===
+
+./final_indent_fix_v4.sh: line 27: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+CREATE TABLE files_to_fix (
+    file_path TEXT,
+    line_number INTEGER,
+    error_text TEXT,
+    status TEXT,
+    attempt_count INTEGER DEFAULT 0,
+    fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number)
+);
+
+--- Current row for build_terrain.gd (before fix) ---
+godot_project/scripts/build_terrain.gd|0|All if blocks indentation fixed|verified|3|2026-08-05 14:53:52
+godot_project/scripts/build_terrain.gd|1980|Parse Error: Expected indented block after if|fixed|2|2026-08-05 14:01:47
+
+--- Exact indentation of lines 1980-1985 (cat -A, awk) ---
+1980: ^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"$
+1981: ^I^I^I^Iif _hud_labels.size() > 7:$
+1982: ^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"$
+1983: ^I^I^I^I# --- CAMERA FOLLOW ---$
+1984: ^I^Iprint("[DIAG] _physics_process: checking camera follow")$
+1985: ^I^Iif is_instance_valid(_plane_node) and is_instance_valid(_camera):$
+
+--- Applying Python patch (no sed) ---
+[2026-08-05T15:02:36.305384+00:00] [SUCCESS] fix_indent: Indented line 1982: 'if _hud_labels.size() > 0: \t\t\t_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"'
+[2026-08-05T15:02:36.305423+00:00] [SUCCESS] fix_indent: Indented line 1983: '# --- CAMERA FOLLOW ---'
+[2026-08-05T15:02:36.306890+00:00] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260805150236
+[2026-08-05T15:02:36.310784+00:00] [SUCCESS] patch: Fixed 2 malformed if block(s), backup: godot_project/scripts/build_terrain.gd.bak.20260805150236
+FIXED 2 blocks. Backup: godot_project/scripts/build_terrain.gd.bak.20260805150236
+
+--- Static verification ---
+❌ Malformed if blocks still found:
+  Line 1981: if _hud_labels.size() > 7: -> next line 1982: if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+
+--- Godot --check-only (quick) ---
+✅ No 'Expected indented' found in first 200 lines.
+
+❌ Static check FAILED. Database NOT updated.
+
+=== END ===
