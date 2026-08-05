@@ -1977,7 +1977,13 @@ func _physics_process(delta) -> void:
 		else:
 			print("[DIAG] _physics_process: plane_node is NULL")
 		if _hud_labels.size() > 0:
-			if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+			if _hud_labels.size() > 0:
+				_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+			if _hud_labels.size() > 7:
+				pass
+			if _hud_labels.size() > 0:
+				_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+			# --- CAMERA FOLLOW ---
 				if _hud_labels.size() > 7:
 				pass
 				if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
