@@ -1,0 +1,91 @@
+=== extract_problematic_lines.sh — 20260805155409 UTC ===
+
+Extracting exact old lines from addon files (line numbers from log):
+
+./extract_problematic_lines.sh: line 47: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+   368: 		return
+   369: 	
+   370: 	var pre_time : int = Time.get_ticks_usec
+   371: 	integrator(state)
+   372: 	var post_time : int = Time.get_ticks_usec
+   373: 	_integrate_forces_time = float(post_time - pre_time) * 0.001
+   374: 
+
+--- math_utils.gd (lines 92-96 and 145-149) ---
+    92: 	var am := a.duplicate(true)
+    93: 	var idx := identity_matrix(n)
+    94: 	var im = I.duplicate(true)
+    95: 
+    96: 	for fd in range(n):
+   145: 
+   146: # warning-ignore:unused_variable
+   147: 	var x := multiply(inverse(M), b)
+   148: 	var p := Vector3(x[0][0], x[0][1], x[0][2])
+   149: 	var n = n1.cross(n2)
+
+--- node_utils.gd (lines 107-111) ---
+   107: 		if class_script == null:
+   108: 			# Assume it is a class name and try to find it
+   109: 			for x in ProjectSettings.get_global_class_list:
+   110: 				
+   111: 				if str(x["class"]) == given_class_name:
+
+--- aero_influencer_control_config.gd (lines 12-16) ---
+    12: 		# an AeroInfluencerControlAxisConfig, for convenience
+    13: 		if x.size() > 0 and x[-1] == null:
+    14: 			x[-1] = AeroInfluencerControlAxisConfig.new
+    15: 		axis_configs = x
+    16: #X = pitch, Y = yaw, Z = roll
+
+--- vector_3d.gd (lines 8-12, 28-36, 78-82) ---
+     8: 	set(x):
+     9: 		value = x
+    10: 		material.set_shader_parameter("_length", value.length())
+    11: 
+    12: 		#prevent error when value is 0
+    28: 	set(x):
+    29: 		color = x
+    30: 		material.set_shader_parameter("_color", color)
+    31: @export var width := 0.1:
+    32: 	set(x):
+    33: 		width = x
+    34: 		material.set_shader_parameter("_width", width)
+    35: @export var checker := false:
+    36: 	set(x):
+    78: 	_color: Color = Color(), _width: float = 0.1, _checker: bool = false, render_priority: int = 0
+    79: ) -> void:
+    80: 	material.shader = preload("./vector_3d.gdshader")
+    81: 	material.render_priority = render_priority
+    82: 
+
+--- point_3d.gd (lines 8-20) ---
+     8: 	set(x):
+     9: 		color = x
+    10: 		material.set_shader_parameter("_color", color)
+    11: @export var width := 0.1:
+    12: 	set(x):
+    13: 		width = x
+    14: 		material.set_shader_parameter("_width", width)
+    15: @export var checker := true:
+    16: 	set(x):
+    17: 		checker = x
+    18: 		material.set_shader_parameter("checker_pattern", checker)
+    19: 
+    20: var material := ShaderMaterial.new
+
+--- aero_control_component.gd (lines 13-17) ---
+    13: @export var flight_assist : FlightAssist
+    14: ## Control configuration resource used to define control axes and key bindings.
+    15: @export var control_config : AeroControlConfig = AeroControlConfig.new
+    16: 
+    17: func _ready() -> void:
+
+--- aero_control_config.gd (lines 10-14) ---
+    10: 		# an AeroControlConfigAxis, for convenience
+    11: 		if x.size() > 0 and x[-1] == null:
+    12: 			x[-1] = AeroControlConfigAxis.new
+    13: 		axis_configs = x
+    14: 
+
+=== End of extraction ===
