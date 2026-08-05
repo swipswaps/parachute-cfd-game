@@ -254,6 +254,40 @@ func _ready() -> void:
 	# _show_loading_screen()      # REMOVED
 
 	# --------------------------------------------------------------
+	# Third‑person camera – child of root, initially follows plane
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+	# --------------------------------------------------------------
+	_camera = Camera3D.new()
+	print("[CAMERA_DEBUG] _camera created: ", _camera)
+	_camera.position = Vector3(0.0, 2.0, 3.0)
+	_camera.fov = 75.0
+	_camera.near = 0.1
+	_camera.far = 10000.0
+	add_child(_camera)
+	print("[CAMERA_DEBUG] _camera added to tree")
+	_camera.current = true
+	print("[CAMERA_DEBUG] _camera.current set to true")
+	print('[PLANE_DEBUG] Camera added to tree')
+
+	# Ensure plane exists before positioning camera
+	if _plane_node:
+		# Position camera using orbit angles
+		var plane_pos = _plane_node.global_position
+		var offset = Vector3(0, 0, -_cam_distance)
+		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+		_camera.global_position = plane_pos + offset
+		_camera.look_at(plane_pos, Vector3.UP)
+		_camera.current = true
+		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
+		print("[DEBUG] Plane position: ", plane_pos)
+		print("[DEBUG] Camera position: ", _camera.global_position)
+		print("[DIAG] _ready: camera positioned")
+	else:
+		print("[ERROR] Plane node is null, camera not positioned.")
+		print("[DIAG] _ready: ERROR – plane node null")
+
+	# --------------------------------------------------------------
 	# Terrain generation (full – uses heightmap and baked colours) with fallback
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
 	# --------------------------------------------------------------
@@ -365,39 +399,6 @@ func _ready() -> void:
 	_setup_plane_node()
 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
 
-	# --------------------------------------------------------------
-	# Third‑person camera – child of root, initially follows plane
-	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
-	# --------------------------------------------------------------
-	_camera = Camera3D.new()
-	print("[CAMERA_DEBUG] _camera created: ", _camera)
-	_camera.position = Vector3(0.0, 2.0, 3.0)
-	_camera.fov = 75.0
-	_camera.near = 0.1
-	_camera.far = 10000.0
-	add_child(_camera)
-	print("[CAMERA_DEBUG] _camera added to tree")
-	_camera.current = true
-	print("[CAMERA_DEBUG] _camera.current set to true")
-	print('[PLANE_DEBUG] Camera added to tree')
-
-	# Ensure plane exists before positioning camera
-	if _plane_node:
-		# Position camera using orbit angles
-		var plane_pos = _plane_node.global_position
-		var offset = Vector3(0, 0, -_cam_distance)
-		offset = offset.rotated(Vector3.UP, _cam_azimuth)
-		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
-		_camera.global_position = plane_pos + offset
-		_camera.look_at(plane_pos, Vector3.UP)
-		_camera.current = true
-		_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause
-		print("[DEBUG] Plane position: ", plane_pos)
-		print("[DEBUG] Camera position: ", _camera.global_position)
-		print("[DIAG] _ready: camera positioned")
-	else:
-		print("[ERROR] Plane node is null, camera not positioned.")
-		print("[DIAG] _ready: ERROR – plane node null")
 
 	print("[VERBATIM] Camera attached to root, following plane")
 
