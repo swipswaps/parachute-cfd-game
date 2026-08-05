@@ -2060,7 +2060,7 @@ if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exi
 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
 		var speed_kts = _forward_speed * 1.94384
 if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
-if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+	if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
 if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
 		_check_decision_altitude()
 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)

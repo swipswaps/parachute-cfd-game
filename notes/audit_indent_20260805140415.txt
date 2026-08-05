@@ -1,0 +1,44 @@
+=== audit_indent.sh — 20260805140415 UTC ===
+
+./audit_indent.sh: line 12: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+1979:		if _hud_labels.size() > 0:
+1980:if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+1982:if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+2062:if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2063:if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2064:if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2127:if _hud_labels.size() > 0: 	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+2131:if _hud_labels.size() > 0: 	_hud_labels[3].text = "BRG: %.0f°" % bearing
+2166:if _hud_labels.size() > 0: 		_hud_labels[5].text = "LEG: " + leg_name
+
+--- 2. Lines immediately after each if (checking indentation) ---
+1979:		if _hud_labels.size() > 0:
+1980:if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+1981-		if _hud_labels.size() > 7:
+1982:if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+1983-		# --- CAMERA FOLLOW ---
+--
+2062:if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2063:if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2064:if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2065-		_check_decision_altitude()
+--
+2127:if _hud_labels.size() > 0: 	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+2128-
+--
+2131:if _hud_labels.size() > 0: 	_hud_labels[3].text = "BRG: %.0f°" % bearing
+2132-
+--
+2166:if _hud_labels.size() > 0: 		_hud_labels[5].text = "LEG: " + leg_name
+2167-		print("[VERBATIM] Entering ", leg_name)
+
+--- 3. Applying Python patch (if needed) ---
+[2026-08-05T14:04:15.279634+00:00] [SUCCESS] fix_indent: Indented line 2063: 'if _hud_labels.size() > 0: \t\t_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)' -> 'if _hud_labels.size() > 0: \t\t_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)'
+[2026-08-05T14:04:15.282045+00:00] [SUCCESS] patch_applied: Fixed 1 indentation issue(s)
+
+--- 4. Recording audit in files_to_fix ---
+godot_project/scripts/build_terrain.gd|1980|Parse Error: Expected indented block after if|fixed|2|2026-08-05 14:01:47
+godot_project/scripts/build_terrain.gd|0|Indentation audit: malformed if blocks checked|audited|1|2026-08-05 14:04:15
+
+=== END ===
