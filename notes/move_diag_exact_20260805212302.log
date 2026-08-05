@@ -1,0 +1,27 @@
+=== Moving _diag_if_error before main() (exact line-based) ===
+ERROR: Could not find '_diag_if_error' definition
+Patch succeeded. Running autostall_fixed.py --no-timeout ...
+=== autostall_fixed.py started at 2026-08-05T21:23:02Z ===
+[2026-08-05T21:23:02.930915+00:00] [success] hub_preflight: Hub healthy before launch
+[HUB] Checking hub health...
+[HUB] Hub is already healthy.
+[DISPLAY] Using existing display: :0.0
+[ENV] Using DISPLAY=:0.0
+[PATCH] Auto‑start patch already applied.
+[SETUP] godot binary: /usr/bin/godot
+[SETUP] project dir:  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project
+[RUN] /usr/bin/godot --path godot_project --verbose
+[RUN] stall threshold: 30.0s   timeout: 0s
+[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)
+========================================================================
+[DB] Using table: files_to_fix
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Traceback (most recent call last):
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_fixed.py", line 851, in <module>
+    main()
+    ~~~~^^
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_fixed.py", line 773, in main
+    _diag_if_error(line)
+    ^^^^^^^^^^^^^^
+NameError: name '_diag_if_error' is not defined
+=== autostall_fixed.py finished with exit code 1 at 2026-08-05T21:23:03Z ===
