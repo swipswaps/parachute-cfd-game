@@ -1,0 +1,48 @@
+=== show_context_2069.sh — 20260805183700 UTC ===
+
+=== Lines 2060-2080 with cat -A (tabs as ^I, spaces visible) ===
+^I^Ivar turn_dir = Vector3.RIGHT * _turn_input * _turn_force$
+^I^I_velocity_vec += turn_dir * delta$
+^I^Ivar forward_vec = target_dir * _forward_speed$
+^I^I_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)$
+^I^I_character.position += _velocity_vec * delta$
+^I^Iif _velocity_vec.length() > 0.5:$
+^I^I^Ivar angle = atan2(_velocity_vec.x, _velocity_vec.z)$
+^I^I^I# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour$
+^I^Ivar speed_kts = _forward_speed * 1.94384$
+if _hud_labels.size() > 0: ^I^I_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]$
+^Iif _hud_labels.size() > 0: ^I^I_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)$
+^I^Iif _hud_labels.size() > 0: ^I^I_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)$
+^I^I^I_check_decision_altitude()$
+^I^I# Capture flight screenshot every 5 seconds (R085 ensures during flight)$
+^I^Iif _screenshot_save_timer > 0:$
+^I^I^I_screenshot_save_timer -= delta$
+^Iif _camera_save_timer > 0.0:$
+^I^I_camera_save_timer -= delta$
+^I^Iif _screenshot_save_timer <= 0.0:$
+^I^I^IScreenshotLibrary.save_flight_screenshot()$
+^I^I^I_screenshot_save_timer = 5.0$
+
+=== gdparse error (full) ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+if _hud_labels.size() > 0: 		_hud_labels
+^
+
+Unexpected token Token('IF', 'if') at line 2069, column 1.
+Expected one of: 
+	* CONST
+	* CLASS_NAME
+	* VAR
+	* REGULAR_STRING
+	* EXTENDS
+	* LONG_STRING
+	* SIGNAL
+	* PASS
+	* FUNC
+	* CLASS
+	* _INDENT
+	* ENUM
+	* $END
+
+=== End of diagnostic ===
