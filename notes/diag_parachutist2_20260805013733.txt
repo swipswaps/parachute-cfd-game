@@ -1,0 +1,169 @@
+=== diag_parachutist2.sh — 20260805013733 UTC ===
+
+=== A. AUTOSTALL RUN (full output -> notes/diag_parachutist2_gamelog_20260805013733.txt) ===
+  Captured 5895 lines to notes/diag_parachutist2_gamelog_20260805013733.txt
+
+=== B. CHARACTER + STATE EVIDENCE FROM GAME LOG ===
+  Total matching lines: 54
+     27: Shader 'SkeletonShaderGLES3' SHA256: 8bc0ec35c83978cd6d65ef8fc16df8e916ba1e2a9d5a98423fd53815bae40b65
+     76: [VERBATIM] SqliteDb.gd _ready() called
+     77: [VERBATIM] SqliteDb.gd _ready() called
+     78: [VERBATIM] SqliteDb.gd _ready() called
+     79: [VERBATIM] SqliteDb: _ready started
+     80: [VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+     81: [VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+     83: [VERBATIM] DatabaseGuard.gd _ready() called
+     84: [VERBATIM] DatabaseGuard: _ready ok=true
+     85: [VERBATIM] ResourceThrottle.gd _ready() called
+     86: [VERBATIM] ResourceThrottle: table ensured
+     87: [VERBATIM] ResourceThrottle: _ready ok=true
+     88: [VERBATIM] SqliteWatchdog.gd _ready() called
+     89: [VERBATIM] SqliteWatchdog.gd _ready() called
+     90: [VERBATIM] SqliteWatchdog.gd _ready() called
+     91: [VERBATIM] Watchdog: _ready started
+     92: [VERBATIM] Watchdog: started, polling user://screenshots/
+     93: [VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+     94: [VERBATIM] Watchdog: _ready completed
+     95: [StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+     97: [VERBATIM] 2026-08-04T21:37:34 GameIntegrity autoload initialized
+     98: [VERBATIM] 2026-08-04T21:37:34 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+    124: [PLANE_DEBUG] _create_plane() called at beginning of _ready()
+    125: [PLANE_DEBUG] _create_plane() START
+    126: [VERBATIM] [VERBATIM] Creating plane node...
+    128: [VERBATIM] [VERBATIM] Plane script attached
+    129: [PLANE_DEBUG] _plane_node assigned: FlyingPlane:<CharacterBody3D#38168168028>
+    130: [PLANE_DEBUG] _plane_node assigned: FlyingPlane:<CharacterBody3D#38168168028>
+    131: [PLANE_DEBUG] _plane_node assigned: FlyingPlane:<CharacterBody3D#38168168028>
+    140: [VERBATIM] Cessna model loaded. visible=true scale=(15.0, 15.0, 15.0)
+    141: [VERBATIM] [VERBATIM] Plane created at altitude 6000
+    142: [PLANE_DEBUG] _ready() START
+    145: [INIT] Press SPACE to start
+    147: [VERBATIM] 2026-08-04T21:37:35 ENTER _ready gate=none
+    151: [PLANE_DEBUG] Camera added to tree
+    155: [VERBATIM] Baked colours loaded: 3145728
+    159: [CONTROLS] deploy  action_existed=true  keys_before=[]  wanted=Space  added=true
+   1832: [CTRL] pressed=j  key=J  state=0  deployed=false  alt_m=n/a
+   2153: [DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=32 (Space), mods=none, physical=false, location=unspecified, pressed=true, echo=false
+   2154: [VERBATIM] INPUT: action=deploy (SPACE)
+   2158: 2026-08-04T21:37:39 [INFO] InputManager: key=Space code=32
+   2159: 2026-08-04T21:37:39 [INFO] InputManager: action 'deploy' pressed
+   2161: [CTRL] pressed=deploy  key=Space  state=0  deployed=false  alt_m=n/a
+   2225: [DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=32 (Space), mods=none, physical=false, location=unspecified, pressed=false, echo=false
+   4184: [VERBATIM] cam_orbit az=0.0 el=17.7616916490555
+   4255: [VERBATIM] cam_orbit az=1.14591559026165 el=74.484513367007
+   4302: [VERBATIM] cam_orbit az=1.14591559026165 el=74.484513367007
+   4333: [VERBATIM] cam_orbit az=1.14591559026165 el=74.484513367007
+   4364: [VERBATIM] cam_orbit az=1.14591559026165 el=74.484513367007
+   4881: [CTRL] pressed=j  key=J  state=0  deployed=false  alt_m=n/a
+   4965: [CTRL] pressed=j  key=J  state=0  deployed=false  alt_m=n/a
+   5033: [CTRL] pressed=j  key=J  state=0  deployed=false  alt_m=n/a
+   5876: [VERBATIM] DatabaseGuard: _exit_tree called
+   5877: [VERBATIM] DB CLOSED
+
+=== C. GAME LOG HEAD (60 lines) ===
+  Total lines: 5895
+     1: WorkerThreadPool: 4 threads, 1 max low-priority.
+     2: Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+     3: TextServer: Added interface "Dummy"
+     4: TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+     5: Unrecognized output string "misc2" in mapping:
+     6: 030000008a2e0000dd10000011010000,Hand Held Legend GC Ultimate,a:b0,b:b2,back:b17,dpdown:b5,dpleft:b6,dpright:b7,dpup:b4,guide:b18,leftshoulder:b10,leftstick:b8,lefttrigger:a3,leftx:a0,lefty:a1,misc1:b19,misc2:b24,paddle1:b13,paddle2:b12,rightshoulder:b11,rightstick:b9,righttrigger:a4,rightx:a2,righty:a5,start:b16,x:b1,y:b3,platform:Linux,
+     7: Unrecognized output string "misc2" in mapping:
+     8: 030000000d0f0000ab01000011010000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+     9: Unrecognized output string "misc2" in mapping:
+    10: 050000000d0f00009601000091000000,Horipad Steam,a:b0,b:b1,back:b10,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,dpup:h0.1,guide:b12,leftshoulder:b6,leftstick:b13,lefttrigger:a5,leftx:a0,lefty:a1,misc2:b2,paddle1:b19,paddle2:b18,paddle3:b15,paddle4:b5,rightshoulder:b7,rightstick:b14,righttrigger:a4,rightx:a2,righty:a3,start:b11,x:b3,y:b4,platform:Linux,
+    11: Unrecognized output string "misc2" in mapping:
+    12: 030000007e0500006920000011010000,Nintendo Switch 2 Pro Controller,a:b0,b:b1,back:b14,dpdown:b8,dpleft:b10,dpright:b9,dpup:b11,guide:b16,leftshoulder:b12,leftstick:b15,lefttrigger:b13,leftx:a0,lefty:a1~,misc1:b17,misc2:b20,paddle1:b18,paddle2:b19,rightshoulder:b4,rightstick:b7,righttrigger:b5,rightx:a2,righty:a3~,start:b6,x:b2,y:b3,platform:Linux,
+    13: SDL: Init OK!
+    14: Xshape 1.1 detected.
+    15: Xinerama 1.1 detected.
+    16: Xrandr 1.6 detected.
+    17: Xrender 0.11 detected.
+    18: Xinput 2.2 detected.
+    19: XInput: Refreshing devices.
+    20: XInput: No touch devices found.
+    21: Detecting GPUs, set DRI_PRIME in the environment to override GPU detection logic.
+    22: Only one GPU found, using default.
+    23: Failed loading custom cursor: crossed_circle
+    24: DBus 1.16.2 detected.
+    25: Using "default" pen tablet driver...
+    26: Shader 'CanvasSdfShaderGLES3' SHA256: 4178a370fca21ad6216db6f7823dc24d65f8d4ad71442bbaa5d6f9a230a081ea
+    27: Shader 'SkeletonShaderGLES3' SHA256: 8bc0ec35c83978cd6d65ef8fc16df8e916ba1e2a9d5a98423fd53815bae40b65
+    28: Shader 'ParticlesShaderGLES3' SHA256: 6afaaf25f8938f1e43e69699472011afc51b674c0df4cd381d188953d85ec5a3
+    29: Shader 'ParticlesCopyShaderGLES3' SHA256: 39392086598b90ead64d3323c81c8ade94c690b12d308ef31d5b9690c172fb22
+    30: Shader 'CopyShaderGLES3' SHA256: 997ec09347cd52d2f6dc09d2a1ab366d3ba8485a46f43f593451013172c4c0ad
+    31: Shader 'CubemapFilterShaderGLES3' SHA256: 32dcf4d8e16f18e32b807a2d1406cca20c37a1e6fcccf8420addb836c4d08aa5
+    32: Shader 'GlowShaderGLES3' SHA256: a6700f3ac665fc4867995c9fcc2052c36df9c7d4909f0d5b8d1092726671dbd0
+    33: Shader 'PostShaderGLES3' SHA256: 6eedbef0b87035bc14ebaf4f413c9e32fa64d5e88a36f1d51dbd0c2be5e54df3
+    34: Shader 'FeedShaderGLES3' SHA256: bddb9e1271cb1ff96bb0f53b92f2724c49e525ede46d8de0d776819eca048a2d
+    35: Shader 'CanvasShaderGLES3' SHA256: f4ec43ced4296bc56a0508da1fd428b360690cb08bcc44b1135a42a01b3844af
+    36: Shader 'CanvasOcclusionShaderGLES3' SHA256: 578a45ce760a0ed6361559f46e9aedf93aa4cc3580d835d6dbc5ae8e4265557c
+    37: Shader 'SceneShaderGLES3' SHA256: 23ab6aea89cc6db38dee15711362af8e7ad9c08bbe99cb758445c4ca6f910f83
+    38: Shader 'SkyShaderGLES3' SHA256: 5d5d48528e786bc9445620d0ef25bddc8d0c7ce6aa74df01c30eb96e7c51f67e
+    39: OpenGL API 4.2 (Core Profile) Mesa 25.3.6 - Compatibility - Using Device: Intel - Mesa Intel(R) HD Graphics 4000 (IVB GT2)
+    40: PulseAudio 17.0.0 detected.
+    41: PulseAudio: context other
+    42: PulseAudio: context other
+    43: PulseAudio: context other
+    44: PulseAudio: context ready
+    45: PulseAudio: Detecting channels for device: alsa_output.pci-0000_00_1b.0.analog-stereo
+    46: PulseAudio: detected 2 output channels
+    47: PulseAudio: audio buffer frames: 512 calculated output latency: 11ms
+    48: 
+    49: TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+    50: CORE API HASH: 2475187701
+    51: EDITOR API HASH: 3867286884
+    52: SceneTreeFTI: traversal method DEFAULT
+    53: Loading resource: res://TelemetryLogger.gd
+    54: Loading resource: res://scripts/SqliteDb.gd
+    55: Loading resource: res://autoloads/HealthChecker.gd
+    56: Loading resource: res://scripts/HubManager.gd
+    57: Loading resource: res://scripts/DatabaseGuard.gd
+    58: Loading resource: res://scripts/ResourceThrottle.gd
+    59: Loading resource: res://scripts/PerformanceMonitor.gd
+    60: Loading resource: res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+
+=== C2. GAME LOG TAIL (40 lines) ===
+  5856: [DIAG] _physics_process: camera moved from (-295.1801, 2022.389, 698.1284) to (-297.4136, 2022.389, 697.2499)
+  5857: [DIAG] _physics_process: IN_PLANE returning
+  5858: [AUDIT] poll_forensic_hud: ENTER
+  5859: [DIAG] _physics_process: ENTER, state=0
+  5860: [DIAG] _physics_process: IN_PLANE branch entered
+  5861: [DIAG] _physics_process: plane position updated to (-296.1447, 1853.8, 743.1678)
+  5862: [DIAG] _physics_process: checking camera follow
+  5863: [DIAG] _physics_process: plane and camera valid, updating camera
+  5864: [DIAG] _physics_process: camera moved from (-297.4136, 2022.389, 697.2499) to (-299.6444, 2022.389, 696.3649)
+  5865: [DIAG] _physics_process: IN_PLANE returning
+  5866: [AUDIT] poll_forensic_hud: ENTER
+  5867: [DIAG] _physics_process: ENTER, state=0
+  5868: [DIAG] _physics_process: IN_PLANE branch entered
+  5869: [DIAG] _physics_process: plane position updated to (-298.3728, 1853.8, 742.276)
+  5870: [DIAG] _physics_process: checking camera follow
+  5871: [DIAG] _physics_process: plane and camera valid, updating camera
+  5872: [DIAG] _physics_process: camera moved from (-299.6444, 2022.389, 696.3649) to (-301.8726, 2022.389, 695.4731)
+  5873: [DIAG] _physics_process: IN_PLANE returning
+  5874: [AUDIT] _exit_tree: ENTER
+  5875: [AUDIT] _save_position: ENTER
+  5876: [VERBATIM] DatabaseGuard: _exit_tree called
+  5877: [VERBATIM] DB CLOSED
+  5878: XR: Clearing primary interface
+  5879: XR: Removed interface "Native mobile"
+  5880: XR: Removed interface "OpenXR"
+  5881: PulseAudio: context terminated
+  5882: WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+  5883:    at: cleanup (core/object/object.cpp:2663)
+  5884: Leaked instance: FileAccess:9223372077304645291 - Reference count: 1
+  5885: Leaked instance: FileAccess:9223372077321422508 - Reference count: 1
+  5886: Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).
+  5887: Orphan StringName: process_frame (static: 1, total: 2)
+  5888: StringName: 1 unclaimed string names at exit.
+  5889: 
+  5890: === AUTOSTALL FINISHED ===
+  5891: Game completed: False
+  5892: Fix attempted:  False
+  5893: Runtime:        12.4s
+  5894: Detailed log:   autostall_summary.json
+  5895: ===========================
+
+=== END DIAGNOSTIC ===
+Timestamp: 20260805013733 UTC
