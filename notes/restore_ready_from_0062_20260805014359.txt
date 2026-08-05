@@ -1,0 +1,21 @@
+=== restore_ready_from_0062.sh — 20260805014359 UTC ===
+
+=== 1. CONFIRM REFERENCE EXISTS ===
+  _0062 build_terrain.gd: 3536 lines, 138665 bytes
+  func _ready():       line 239
+  Camera3D.new():      line 377
+  terrain FileAccess:  line 256
+  _load_character():   line 363
+  await process_frame: line 691 (PRESENT - remove it)
+
+=== 2. PYTHON: REPLACE _ready() WITH _0062 VERSION ===
+[2026-08-05T01:43:59.609942+00:00] [SUCCESS] backup: godot_project/scripts/build_terrain.gd.bak.20260805014359
+[2026-08-05T01:43:59.614091+00:00] [SUCCESS] read_after_write: bytes match
+[2026-08-05T01:43:59.615881+00:00] [SUCCESS] structural_check: tabs only
+[2026-08-05T01:43:59.616029+00:00] [SUCCESS] _load_character present: ok
+[2026-08-05T01:43:59.616060+00:00] [SUCCESS] Camera3D.new present: ok
+[2026-08-05T01:43:59.616081+00:00] [FAILURE] await absent: FAILED
+  Current _ready(): lines 240-597 (358 lines)
+  _0062   _ready(): lines 239-578 (340 lines)
+SEMANTIC CHECK FAILED: await absent
+PATCH FAILED
