@@ -1,0 +1,22 @@
+=== fix_db_lock_stalls.sh v3 — 20260805113659 UTC ===
+
+[2026-08-05T11:36:59Z] [SUCCESS] dep_check: all tools present
+[2026-08-05T11:36:59Z] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260805113659
+[2026-08-05T11:36:59.285463+00:00] [SUCCESS] read_target: 141608 bytes
+[2026-08-05T11:36:59.285562+00:00] [SUCCESS] patch_A_guard: anchor found exactly once
+[2026-08-05T11:36:59.285981+00:00] [SUCCESS] patch_A_verify: _save_camera_settings removed from SPACE-press block
+[2026-08-05T11:36:59.286046+00:00] [SUCCESS] patch_B_guard: db._query anchor found exactly once
+[2026-08-05T11:36:59.286556+00:00] [SUCCESS] patch_B_verify: guard line present once, anchor_B present once inside it
+[2026-08-05T11:36:59.290020+00:00] [SUCCESS] read_after_write: 141620 bytes
+[2026-08-05T11:36:59.291524+00:00] [SUCCESS] tabs_check: no leading-space indentation
+[2026-08-05T11:36:59.291619+00:00] [SUCCESS] semantic_A: _save_camera_settings absent from SPACE block
+[2026-08-05T11:36:59.291680+00:00] [SUCCESS] semantic_B: db._db_ok guard confirmed present
+PATCHES COMPLETE — all checks passed
+[2026-08-05T11:36:59Z] [SUCCESS] python_patches: A+B applied
+
+=== DIFF (new vs backup) ===
+1844a1845
+> 		_save_camera_settings()
+2707,2708d2707
+< 	if not db or not db._db_ok:
+< 		return

@@ -1842,7 +1842,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	):
 		get_tree().paused = false
 		_initial_paused = false
-		_save_camera_settings()
 		print("[INIT] Game started")
 		return
 	if event.is_action_pressed("pause"):
@@ -2705,6 +2704,8 @@ func _save_camera_settings() -> void:
 	var key = (
 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
 	)
+	if not db or not db._db_ok:
+		return
 	db._query(
 		(
 			"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"
