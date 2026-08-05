@@ -1,0 +1,251 @@
+=== audit_camera_state.sh — 20260805002111 UTC ===
+Script: audit_camera_state.sh
+Target: godot_project/scripts/build_terrain.gd
+
+=== A. TARGET FILE STATE ===
+  size:  141089 bytes
+  mtime: 2026-08-04T23:54:50.445935+00:00
+  lines: 3630
+
+=== B. BACKUP INVENTORY (build_terrain.gd.bak.*) ===
+  Total backups found: 121
+  Known-good backup (godot_project/scripts/build_terrain.gd.bak.20260804233720):
+    EXISTS — 140747 bytes, 3618 lines, mtime=2026-08-04T23:34:30.595010+00:00
+
+  Five most recent backups:
+    godot_project/scripts/build_terrain.gd.bak.20260804232736  (140567 bytes, mtime=2026-08-04T23:26:41.319038+00:00)
+    godot_project/scripts/build_terrain.gd.bak.20260804233430  (140571 bytes, mtime=2026-08-04T23:27:36.766035+00:00)
+    godot_project/scripts/build_terrain.gd.bak.20260804233720  (140747 bytes, mtime=2026-08-04T23:34:30.595010+00:00)
+    godot_project/scripts/build_terrain.gd.bak.20260804234834  (141099 bytes, mtime=2026-08-04T23:37:20.554947+00:00)
+    godot_project/scripts/build_terrain.gd.bak.20260804235450  (140747 bytes, mtime=2026-08-04T23:50:59.557949+00:00)
+
+=== C. CURRENT END OF _ready() — cat -A (lines 575-620) ===
+ 575: ^Iprint("[VERBATIM] ... EXIT _ready ok=true")$
+ 576: ^Iprint("[DIAG] _ready: EXIT")$
+ 577: $
+ 578: ^I# Self-test if --run-tests is passed (timer-based, robust in headless)$
+ 579: ^Ivar args = OS.get_cmdline_args()$
+ 580: ^Iif "--run-tests" in args:$
+ 581: ^I^Iprint("[VERBATIM] Running self-tests (timer-based)...")$
+ 582: ^I^Ivar timer := Timer.new()$
+ 583: ^I^Itimer.wait_time = 1.5$
+ 584: ^I^Itimer.one_shot = true$
+ 585: ^I^Iadd_child(timer)$
+ 586: ^I^Itimer.timeout.connect(_run_self_tests)$
+ 587: ^I^Itimer.start()$
+ 588: ^I^Iprint("[VERBATIM] Self-test timer started.")$
+ 589: ^I^I# SELF-TEST TIMER INJECTED (v6.5.154)$
+ 590: ^I# Unconditional camera recreation$
+ 591: ^Iif is_instance_valid(_camera):$
+ 592: ^I^Iremove_child(_camera)$
+ 593: ^I^I_camera.free()$
+ 594: ^I_camera = Camera3D.new()$
+ 595: ^I_camera.position = Vector3(0.0, 2.0, 3.0)$
+ 596: ^I_camera.fov = 75.0$
+ 597: ^I_camera.near = 0.1$
+ 598: ^I_camera.far = 10000.0$
+ 599: ^Iadd_child(_camera)$
+ 600: ^I_camera.current = true$
+ 601: ^Iprint("[CAMERA_DEBUG] Camera recreated unconditionally")$
+ 602: $
+ 603: # ------------------------------------------------------------------$
+ 604: # Helper: create runway (returns MeshInstance3D)$
+ 605: # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html$
+ 606: # ------------------------------------------------------------------$
+ 607: $
+ 608: # Gate: Verify arms are not extended (R099)$
+ 609: $
+ 610: ^I^Iprint("[VERBATIM] Self-test timer started.")$
+ 611: ^I# SELF-TEST TIMER INJECTED (v6.5.151)$
+ 612: $
+ 613: $
+ 614: func _check_arm_pose() -> void:$
+ 615: ^Ivar skeleton = _character.find_child("Skeleton3D", true, false)$
+ 616: ^Iif not skeleton:$
+ 617: ^I^Iprint("[VERBATIM] ARM GATE: No skeleton found")$
+ 618: ^I^Ireturn$
+ 619: ^I# Get left arm bone (index 8 from earlier log)$
+ 620: ^Ivar left_arm = skeleton.get_bone_global_pose(8)$
+
+=== D. GREP: stale duplicate print that caused L610 parse error ===
+  Occurrences of '[VERBATIM] Self-test timer started.': 2
+    line 588: '\t\tprint("[VERBATIM] Self-test timer started.")'
+    line 610: '\t\tprint("[VERBATIM] Self-test timer started.")'
+
+  Context (lines 585-591):
+         585: '\t\tadd_child(timer)'
+         586: '\t\ttimer.timeout.connect(_run_self_tests)'
+         587: '\t\ttimer.start()'
+    >>>  588: '\t\tprint("[VERBATIM] Self-test timer started.")'
+         589: '\t\t# SELF-TEST TIMER INJECTED (v6.5.154)'
+         590: '\t# Unconditional camera recreation'
+         591: '\tif is_instance_valid(_camera):'
+
+  Context (lines 607-613):
+         607: ''
+         608: '# Gate: Verify arms are not extended (R099)'
+         609: ''
+    >>>  610: '\t\tprint("[VERBATIM] Self-test timer started.")'
+         611: '\t# SELF-TEST TIMER INJECTED (v6.5.151)'
+         612: ''
+         613: ''
+
+=== E. GREP: CAMERA_DEBUG lines (prior insert presence check) ===
+  Occurrences of 'CAMERA_DEBUG': 8
+    line 373: '\tprint("[CAMERA_DEBUG] _camera created: ", _camera)'
+    line 379: '\tprint("[CAMERA_DEBUG] _camera added to tree")'
+    line 381: '\tprint("[CAMERA_DEBUG] _camera.current set to true")'
+    line 601: '\tprint("[CAMERA_DEBUG] Camera recreated unconditionally")'
+    line 2749: '\t\tprint("[CAMERA_DEBUG] SqliteDb not available – using default")'
+    line 2756: '\t\tprint("[CAMERA_DEBUG] Loaded camera distance from DB: ", _cam_distance)'
+    line 2759: '\t\tprint("[CAMERA_DEBUG] Using default 300.0")'
+    line 2760: '\tprint("[CAMERA_DEBUG] _load_camera_settings() END")'
+
+=== F. LEADING WHITESPACE AROUND _ready() CLOSING LINES ===
+  func _ready() found at line 240
+  _ready() ends at approx line 602
+  Last 15 lines of _ready() (lines 588-602) with whitespace repr:
+     588: ws='\t\t'       | '\t\tprint("[VERBATIM] Self-test timer started.")'
+     589: ws='\t\t'       | '\t\t# SELF-TEST TIMER INJECTED (v6.5.154)'
+     590: ws='\t'         | '\t# Unconditional camera recreation'
+     591: ws='\t'         | '\tif is_instance_valid(_camera):'
+     592: ws='\t\t'       | '\t\tremove_child(_camera)'
+     593: ws='\t\t'       | '\t\t_camera.free()'
+     594: ws='\t'         | '\t_camera = Camera3D.new()'
+     595: ws='\t'         | '\t_camera.position = Vector3(0.0, 2.0, 3.0)'
+     596: ws='\t'         | '\t_camera.fov = 75.0'
+     597: ws='\t'         | '\t_camera.near = 0.1'
+     598: ws='\t'         | '\t_camera.far = 10000.0'
+     599: ws='\t'         | '\tadd_child(_camera)'
+     600: ws='\t'         | '\t_camera.current = true'
+     601: ws='\t'         | '\tprint("[CAMERA_DEBUG] Camera recreated unconditionally")'
+     602: ws=''           | ''
+
+=== G. GODOT --check-only (streamed stdout+stderr) ===
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+          at: GDScript::reload (res://scripts/build_terrain.gd:610)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-04T20:21:12 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-04T20:21:12 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[HubManager] Hub spawn requested pid=661789 non-blocking
+[VERBATIM] 2026-08-04T20:21:12 Starting full integrity check and repair
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_hud_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_tool_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup.20260607_151124_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup.20260607_151237_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_hud_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/AirplaneController_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/CanopyReplay_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ComponentRegistry_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/DatabaseGuard_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/FlightTrack_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/GameIntegrity_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/GameIntegrity_2606150714_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HUDManager_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HubManager_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/InputManager_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/PerformanceMonitor_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ResourceThrottle_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/SqliteDb_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/SqliteWatchdog_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/StructuredLogger_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ViewPoseController_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/altimeter_hud_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/audit_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/auto_heal_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-205552_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-210153_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-210819_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-215820_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-222344_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-222819_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain_0100_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/chunked_lod_terrain_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/debug_components_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/draggable_control_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/flight_controller_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/forensic_hud_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/forensic_hud_0001_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/game_manager.backup_20260707-212959_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/game_manager_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/hud_data_bridge_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/hud_draggable_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/orbit_camera_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/parachute_controller.backup_20260707-212959_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/parachute_controller_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/pip_draggable_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/pip_draggable_v2_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/plane_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/rotor_visualizer_2026-08-04_20-21-12.gd.backup
+[VERBATIM] 2026-08-04T20:21:12 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/screenshot_library_2026-08-04_20-21-12.gd.backup
+
+  [godot --check-only] exit code: -9
+  Parse/error lines found: 2
+    SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+    ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+
+=== H. DATABASE LOGGING ===
+  Tables ensured: audit_findings, rule_compliance
+  Inserted 5 audit_findings rows
+  Read-back (5 rows):
+    id=1  key=known_good_backup_exists  value=True
+    id=2  key=stale_duplicate_print_count  value=2
+    id=3  key=camera_debug_lines_present  value=8
+    id=4  key=target_line_count  value=3630
+    id=5  key=target_size_bytes  value=141089
+Traceback (most recent call last):
+  File "<stdin>", line 92, in <module>
+sqlite3.OperationalError: table rule_compliance has no column named script_name
+
+=== END OF AUDIT REPORT ===
+Timestamp: 20260805002111 UTC
