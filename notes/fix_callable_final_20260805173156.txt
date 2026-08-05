@@ -1,0 +1,62 @@
+=== run_fix_final.sh — 20260805173156 UTC ===
+
+[2026-08-05T17:31:56.115941+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805173156
+[2026-08-05T17:31:56.116367+00:00] [SUCCESS] fix_line: line 24: var error := exp_x.parse(expression_x) -> var error := exp_x(expression_x)
+[2026-08-05T17:31:57.422427+00:00] [FAILURE] postcheck_gdlint: gdlint error: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing wh
+[2026-08-05T17:31:57.424111+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805173157
+[2026-08-05T17:31:57.424899+00:00] [SUCCESS] fix_line: line 36: var error := exp_y.parse(expression_y) -> var error := exp_y(expression_y)
+[2026-08-05T17:31:58.629767+00:00] [FAILURE] postcheck_gdlint: gdlint error: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing wh
+[2026-08-05T17:31:58.630824+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805173158
+[2026-08-05T17:31:58.631179+00:00] [SUCCESS] fix_line: line 48: var error := exp_z.parse(expression_z) -> var error := exp_z(expression_z)
+[2026-08-05T17:31:59.835878+00:00] [FAILURE] postcheck_gdlint: gdlint error: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing wh
+[2026-08-05T17:31:59.837401+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805173159
+[2026-08-05T17:31:59.838019+00:00] [SUCCESS] fix_line: line 63: running_contribution.x = exp_x.execute([], aero_influencer) -> running_contribution.x = exp_x([], aero_influencer)
+[2026-08-05T17:32:01.143000+00:00] [FAILURE] postcheck_gdlint: gdlint error: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing wh
+[2026-08-05T17:32:01.144326+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805173201
+[2026-08-05T17:32:01.144922+00:00] [SUCCESS] fix_line: line 65: running_contribution.y = exp_y.execute([], aero_influencer) -> running_contribution.y = exp_y([], aero_influencer)
+[2026-08-05T17:32:02.450636+00:00] [FAILURE] postcheck_gdlint: gdlint error: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing wh
+[2026-08-05T17:32:02.452026+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805173202
+[2026-08-05T17:32:02.453103+00:00] [SUCCESS] fix_line: line 67: running_contribution.z = exp_z.execute([], aero_influencer) -> running_contribution.z = exp_z([], aero_influencer)
+[2026-08-05T17:32:03.658722+00:00] [FAILURE] postcheck_gdlint: gdlint error: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing wh
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:35: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:47: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:68: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 4 problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:35: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:47: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:68: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 4 problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:35: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:47: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:68: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 4 problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:35: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:47: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:68: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 4 problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:35: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:47: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:68: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 4 problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:35: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:47: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:68: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 4 problems found
+
+=== Final Callable fixes: 0 fixed, 6 failed ===
+Some errors remain – please inspect manually.
+
+============================================================
+VERIFICATION INSTRUCTION:
+Open the Godot editor manually and verify that the addon loads without parse errors.
+  godot --path /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project --editor
+If the editor opens, the fixes are successful. Otherwise, check the error log.
+============================================================
+
+=== End of fix run ===
