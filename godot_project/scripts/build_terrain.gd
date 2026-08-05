@@ -202,6 +202,7 @@ var _trees: Array = []
 # Camera cycling and HUD visibility
 # ------------------------------------------------------------------
 var _cam_angle_idx: int = 0  # 0=behind,1=side,2=pilot-up,3=chase-close
+var _cam_save_timer: float = 0.0  # debounce: write DB at most once per 2s
 var _cam_cycle_held: bool = false
 var _hud_toggle_held: bool = false
 var _initial_paused: bool = true
@@ -1872,6 +1873,7 @@ func _input(event: InputEvent) -> void:
 		# Clamp elevation to avoid flipping
 		_cam_elevation = clamp(_cam_elevation, -1.3, 1.3)
 		_update_camera_position()
+		_cam_save_timer = 2.0  # debounce: save DB 2s after last drag
 		# Immediately update camera position if we have a target
 		var target: Vector3
 		if camera_target == "plane" and is_instance_valid(_plane_node):
@@ -1945,6 +1947,11 @@ func _physics_process(delta) -> void:
 	_ensure_controls()
 	_log_control_presses()
 	_sync_main_canopy()
+	# Camera save debounce: write DB at most once per 2 seconds
+	if _cam_save_timer > 0.0:
+		_cam_save_timer -= delta
+		if _cam_save_timer <= 0.0:
+			_save_camera_settings()
 	_pip_live_view(delta)
 
 	print("[DIAG] _physics_process: ENTER, state=", _game_state)
@@ -2743,7 +2750,7 @@ func _update_camera_position() -> void:
 	_camera.global_position = target + rot * offset
 	_camera.look_at(target, Vector3.UP)
 	print("[DEBUG] Camera updated: pos=", _camera.global_position, " target=", target)
-	_save_camera_settings()
+	# _save_camera_settings() moved to debounce timer — not called per mousemove
 
 
 # Added to fix deferred call and log warning via ErrorLogger
