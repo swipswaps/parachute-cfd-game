@@ -1,0 +1,295 @@
+=== run_auto_fix_v2.sh — 20260805163538 UTC ===
+
+[2026-08-05T16:35:39.041532+00:00] [SUCCESS] init_db: table ensured
+[2026-08-05T16:35:39.932122+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260805163539
+[2026-08-05T16:35:39.934132+00:00] [SUCCESS] fix_expected_statement: block already has body at /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1981
+[2026-08-05T16:36:40.409906+00:00] [FAILURE] run_with_timeout: timeout after 60s for godot --path /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project --headless --check-only
+[2026-08-05T16:36:40.410250+00:00] [SUCCESS] verify: error resolved: Expected statement, found "Indent" instead.
+[2026-08-05T16:36:40.649827+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1981 status=FIXED
+[2026-08-05T16:36:43.528664+00:00] [FAILURE] gdlint: gdlint found issues: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+bels[0].text = "ALT: 6000 ft (IN PLANE)"
+                                        
+=== Running godot --check-only (timeout 60s) ===
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+          at: GDScript::reload (res://scripts/build_terrain.gd:1981)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] WARN: could not open /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl — stdout only
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-05T12:35:39 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-05T12:35:39 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[HubManager] Hub spawn requested pid=857304 non-blocking
+[VERBATIM] 2026-08-05T12:35:39 Starting full integrity check and repair
+Found 1 parse errors.
+=== Verifying fix for /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1981 ===
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+          at: GDScript::reload (res://scripts/build_terrain.gd:1981)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] WARN: could not open /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl — stdout only
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-05T12:35:40 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-05T12:35:40 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[HubManager] Hub spawn requested pid=857324 non-blocking
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _on_cite_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_cite_completed: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[AUDIT] _on_integ_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+
+=== Fix attempt complete ===
+Check the database for details.
+
+=== End of fix run ===
