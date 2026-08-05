@@ -1,0 +1,204 @@
+=== diag_parachutist.sh — 20260805010042 UTC ===
+
+=== A. PARACHUTIST FBX ASSET ===
+          51  godot_project/assets/aircraft/Cessna.glb
+     4681916  godot_project/assets/aircraft/cesna_airplane.glb
+       72660  godot_project/assets/aircraft/cessna172.glb
+      100928  godot_project/assets/canopy/clean.glb
+        5760  godot_project/assets/canopy/fix_parachute.py
+        7137  godot_project/assets/canopy/fix_parachute_final.py
+      101116  godot_project/assets/canopy/parachute.glb
+      101116  godot_project/assets/canopy/parachute.glb
+        1046  godot_project/assets/canopy/parachute.glb.import
+        1047  godot_project/assets/canopy/parachute.glb.import.backup.20260609_081023
+         203  godot_project/assets/canopy/parachute.mtl
+      199493  godot_project/assets/canopy/parachute.obj
+         718  godot_project/assets/canopy/parachute.obj.import
+       31108  godot_project/assets/canopy/parachute_clean.glb
+       31108  godot_project/assets/canopy/parachute_clean.glb
+        1065  godot_project/assets/canopy/parachute_clean.glb.import
+       35524  godot_project/assets/canopy/parachute_cleaned.glb
+       35524  godot_project/assets/canopy/parachute_cleaned.glb
+        1071  godot_project/assets/canopy/parachute_cleaned.glb.import
+      250992  godot_project/assets/canopy/parachute_fixed.fbx
+      250992  godot_project/assets/canopy/parachute_fixed.fbx
+        1115  godot_project/assets/canopy/parachute_fixed.fbx.import
+      101252  godot_project/assets/canopy/parachute_fixed.glb
+      101252  godot_project/assets/canopy/parachute_fixed.glb
+        1065  godot_project/assets/canopy/parachute_fixed.glb.import
+       92720  godot_project/assets/canopy/parachute_fixed_0001.glb
+       92720  godot_project/assets/canopy/parachute_fixed_0001.glb
+        1080  godot_project/assets/canopy/parachute_fixed_0001.glb.import
+       35744  godot_project/assets/canopy/parachute_sanitized.glb
+       35744  godot_project/assets/canopy/parachute_sanitized.glb
+        1077  godot_project/assets/canopy/parachute_sanitized.glb.import
+     2388064  godot_project/assets/characters/Hanging under canopy.fbx
+     2388064  godot_project/assets/characters/parachutist.fbx
+     2388064  godot_project/assets/characters/parachutist.fbx
+        1107  godot_project/assets/characters/parachutist.fbx.import
+       93000  godot_project/assets/characters/parachutist.glb
+       93000  godot_project/assets/characters/parachutist.glb
+        1056  godot_project/assets/characters/parachutist.glb.import
+         429  godot_project/assets/characters/parachutist.mtl
+     4602505  godot_project/assets/characters/parachutist.obj
+         732  godot_project/assets/characters/parachutist.obj.import
+      129340  godot_project/assets/terrain/earth_mesh.glb
+
+=== B. _load_character() BODY (cat -A) ===
+  _load_character() at line 638, 104 lines:
+   638: 'func _load_character() -> void:'
+   639: '\tprint("[VERBATIM] ENTER _load_character gate=none")'
+   640: '\tvar fbx_path = "res://assets/characters/parachutist.fbx"'
+   641: '\tif not FileAccess.file_exists(fbx_path):'
+   642: '\t\tprint("[VERBATIM] FBX not found, using capsule")'
+   643: '\t\tvar capsule := MeshInstance3D.new()'
+   644: '\t\tcapsule.mesh = CapsuleMesh.new()'
+   645: '\t\t_character.add_child(capsule)'
+   646: '\t\treturn'
+   647: '\tvar fbx_scene = load(fbx_path)'
+   648: '\tif not fbx_scene:'
+   649: '\t\tprint("[VERBATIM] Failed to load FBX")'
+   650: '\t\treturn'
+   651: '\tvar inst = fbx_scene.instantiate()'
+   652: '\t_character.add_child(inst)'
+   653: '\tprint("[VERBATIM] FBX loaded")'
+   654: '\tprint("[DEBUG] FBX instance visible: ", inst.visible)'
+   655: '\tprint("[DEBUG] FBX instance added. Node: ", inst)'
+   656: '\tprint("[DEBUG] Instance position: ", inst.position)'
+   657: '\tprint("[DEBUG] Instance scale: ", inst.scale)'
+   658: '\tprint("[DEBUG] Instance visible: ", inst.visible)'
+   659: '\tprint("[DEBUG] _character position: ", _character.position)'
+   660: '\tif _camera:'
+   661: '\t\tprint('
+   662: '\t\t\t"[DEBUG] Camera position: ",'
+   663: '\t\t\t_camera.global_position,'
+   664: '\t\t\t" rotation: ",'
+   665: '\t\t\t_camera.rotation_degrees'
+   666: '\t\t)'
+   667: ''
+   668: '\t_skeleton = _character.find_child("Skeleton3D", true, false)'
+   669: '\tif _skeleton:'
+   670: '\t\tfor i in _skeleton.get_bone_count():'
+   671: '\t\t\tvar name = _skeleton.get_bone_name(i)'
+   672: '\t\t\tif name == "mixamorig_LeftArm" or name == "mixamorig:LeftArm":'
+   673: '\t\t\t\t_left_arm_idx = i'
+   674: '\t\t\t\tprint("[VERBATIM] Left arm bone found index ", i)'
+   675: '\t\t\telif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":'
+   676: '\t\t\t\t_right_arm_idx = i'
+   677: '\t\t\t\tprint("[VERBATIM] Right arm bone found index ", i)'
+   678: '\telse:'
+   679: '\t\tprint("[VERBATIM] No skeleton found")'
+   680: ''
+   681: '\tvar ap = _character.find_child("AnimationPlayer", true, false)'
+   682: '\tif ap:'
+   683: '\t\t_setup_anim_player(ap)'
+   684: ''
+   685: '\t# Reset to rest pose (R083)'
+   686: '\tvar anim_player = _character.find_child("AnimationPlayer", true, false)'
+   687: '\tif anim_player:'
+   688: '\t\tif anim_player.has_animation("RESET"):'
+   689: '\t\t\tanim_player.play("RESET")'
+   690: '\t\t\tanim_player.advance(0)'
+   691: '\t\t\tanim_player.stop()'
+   692: '\t\telse:'
+   693: '\t\t\tvar skeleton = _character.find_child("Skeleton3D", true, false)'
+   694: '\t\t\tif skeleton:'
+   695: '\t\t\t\tskeleton.reset_bone_poses()'
+   696: '\t# Reset to rest pose'
+   697: '\tif anim_player.has_animation("RESET"):'
+   698: '\t\tanim_player.play("RESET")'
+   699: '\t\tanim_player.advance(0)'
+   700: '\t\tanim_player.stop()'
+   701: '\telse:'
+   702: '\t\tvar skeleton = _character.find_child("Skeleton3D", true, false)'
+   703: '\t\tif skeleton:'
+   704: '\t\t\tskeleton.reset_bone_poses()'
+   705: '\t# _force_neutral_arms()  # disabled – using RESET animation instead'
+   706: '\t# Play RESET animation to force arms to rest pose (R091/R092)'
+   707: '\tvar _anim_player = _character.find_child("AnimationPlayer", true, false)'
+   708: '\tif _anim_player and _anim_player.has_animation("RESET"):'
+   709: '\t\t_anim_player.play("RESET")'
+   710: '\t\tawait get_tree().process_frame'
+   711: '\t\t_anim_player.stop()'
+   712: '\t\tprint("[VERBATIM] RESET animation played – arms at rest pose")'
+   713: '\telse:'
+   714: '\t\tprint("[VERBATIM] RESET animation not available – using fallback")'
+   715: ''
+   716: '\tprint("[VERBATIM] EXIT _load_character ok=true")'
+   717: ''
+   718: ''
+   719: '# ------------------------------------------------------------------'
+   720: '# Deploy parachute (called on SPACE at correct altitude)'
+   721: '# ------------------------------------------------------------------'
+   722: ''
+   723: '# ------------------------------------------------------------------'
+   724: '# Load and place FAA Digital Obstacle File obstacles'
+   725: '# WHY: replaces fabricated _create_trees() with real FAA DOF data.'
+   726: '#   R093: never add features not requested.'
+   727: '#   R094: real-world placement requires verified data source.'
+   728: '# SOURCE (Tier 2): Godot 4 FileAccess'
+   729: '#   URL: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html'
+   730: '#   VERBATIM: "Opens a file at path. Returns null if file does not exist."'
+   731: '# SOURCE (Tier 2): FAA Digital Obstacle File, updated daily'
+   732: '#   URL: https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dailydof/'
+   733: '#   VERBATIM: "DDOF CSV includes latitude and longitude in decimal degrees."'
+   734: '# MENTAL MODEL BEFORE: no obstacles in scene'
+   735: '# MENTAL MODEL AFTER: 41 FAA-verified obstacles at correct world XYZ positions'
+   736: '# FAILURE MODE: JSON missing or parse error -> logs error and returns, no crash'
+   737: '# VERIFIES WITH: "[VERBATIM] FAA obstacles loaded: 41" in game log'
+   738: '# ------------------------------------------------------------------'
+   739: ''
+   740: ''
+   741: '# Rule R092 / R083 – Force arms to neutral pose via bone override'
+
+=== C. CHARACTER LOAD EVIDENCE IN LAST AUTOSTALL RUN ===
+
+  From notes/diag_parachutist_20260805010042.txt (80 hits):
+        1: === diag_parachutist.sh — 20260805010042 UTC ===
+        3: === A. PARACHUTIST FBX ASSET ===
+        4:           51  godot_project/assets/aircraft/Cessna.glb
+        5:      4681916  godot_project/assets/aircraft/cesna_airplane.glb
+        6:        72660  godot_project/assets/aircraft/cessna172.glb
+        7:       100928  godot_project/assets/canopy/clean.glb
+        8:         5760  godot_project/assets/canopy/fix_parachute.py
+        9:         7137  godot_project/assets/canopy/fix_parachute_final.py
+       10:       101116  godot_project/assets/canopy/parachute.glb
+       11:       101116  godot_project/assets/canopy/parachute.glb
+       12:         1046  godot_project/assets/canopy/parachute.glb.import
+       13:         1047  godot_project/assets/canopy/parachute.glb.import.backup.20260609_081023
+       14:          203  godot_project/assets/canopy/parachute.mtl
+       15:       199493  godot_project/assets/canopy/parachute.obj
+       16:          718  godot_project/assets/canopy/parachute.obj.import
+       17:        31108  godot_project/assets/canopy/parachute_clean.glb
+       18:        31108  godot_project/assets/canopy/parachute_clean.glb
+       19:         1065  godot_project/assets/canopy/parachute_clean.glb.import
+       20:        35524  godot_project/assets/canopy/parachute_cleaned.glb
+       21:        35524  godot_project/assets/canopy/parachute_cleaned.glb
+       22:         1071  godot_project/assets/canopy/parachute_cleaned.glb.import
+       23:       250992  godot_project/assets/canopy/parachute_fixed.fbx
+       24:       250992  godot_project/assets/canopy/parachute_fixed.fbx
+       25:         1115  godot_project/assets/canopy/parachute_fixed.fbx.import
+       26:       101252  godot_project/assets/canopy/parachute_fixed.glb
+       27:       101252  godot_project/assets/canopy/parachute_fixed.glb
+       28:         1065  godot_project/assets/canopy/parachute_fixed.glb.import
+       29:        92720  godot_project/assets/canopy/parachute_fixed_0001.glb
+       30:        92720  godot_project/assets/canopy/parachute_fixed_0001.glb
+       31:         1080  godot_project/assets/canopy/parachute_fixed_0001.glb.import
+       32:        35744  godot_project/assets/canopy/parachute_sanitized.glb
+       33:        35744  godot_project/assets/canopy/parachute_sanitized.glb
+       34:         1077  godot_project/assets/canopy/parachute_sanitized.glb.import
+       35:      2388064  godot_project/assets/characters/Hanging under canopy.fbx
+       36:      2388064  godot_project/assets/characters/parachutist.fbx
+       37:      2388064  godot_project/assets/characters/parachutist.fbx
+       38:         1107  godot_project/assets/characters/parachutist.fbx.import
+       39:        93000  godot_project/assets/characters/parachutist.glb
+       40:        93000  godot_project/assets/characters/parachutist.glb
+       41:         1056  godot_project/assets/characters/parachutist.glb.import
+
+=== D. _load_character() DIFF vs _0062 ===
+  current: line 638
+  _0062:   line 619
+  IDENTICAL to _0062
+
+=== END DIAGNOSTIC ===
+Timestamp: 20260805010042 UTC
