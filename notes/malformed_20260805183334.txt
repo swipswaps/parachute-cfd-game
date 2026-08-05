@@ -1,0 +1,32 @@
+=== show_malformed.sh — 20260805183334 UTC ===
+
+=== Lines that contain multiple statements (if ... : ...) ===
+grep: warning: stray \ before d
+
+=== gdparse error (full output) ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+if _hud_labels.size() > 0: 		_hud_labels
+^
+
+Unexpected token Token('IF', 'if') at line 2069, column 1.
+Expected one of: 
+	* SIGNAL
+	* STATIC
+	* _INDENT
+	* _NL
+	* FUNC
+	* LONG_STRING
+	* CLASS_NAME
+	* ENUM
+	* REGULAR_STRING
+	* AT
+	* CLASS
+	* EXTENDS
+	* $END
+	* PASS
+	* CONST
+	* VAR
+
+
+=== End of diagnostic ===
