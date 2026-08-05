@@ -1,0 +1,72 @@
+=== fix_2069_verbose.sh — 20260805185756 UTC ===
+
+=== 1. Current lines 2060-2080 with cat -A (tabs as ^I, spaces visible) ===
+^I^I_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)$
+^I^Ivar turn_dir = Vector3.RIGHT * _turn_input * _turn_force$
+^I^I_velocity_vec += turn_dir * delta$
+^I^Ivar forward_vec = target_dir * _forward_speed$
+^I^I_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)$
+^I^I_character.position += _velocity_vec * delta$
+^I^Iif _velocity_vec.length() > 0.5:$
+^I^I^Ivar angle = atan2(_velocity_vec.x, _velocity_vec.z)$
+^I^I^I# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour$
+^I^Ivar speed_kts = _forward_speed * 1.94384$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^I_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]$
+^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)$
+^I^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I^I_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)$
+^I^I^I_check_decision_altitude()$
+^I^I# Capture flight screenshot every 5 seconds (R085 ensures during flight)$
+^I^Iif _screenshot_save_timer > 0:$
+^I^I^I_screenshot_save_timer -= delta$
+^Iif _camera_save_timer > 0.0:$
+
+=== 2. gdparse error (full) ===
+
+=== 3. Applying fix ===
+ERROR: Could not find malformed line
+
+=== 4. Diff of changes ===
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260805185302	2026-08-05 14:40:54.043791427 -0400
++++ /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd	2026-08-05 14:53:02.756746738 -0400
+@@ -1985,7 +1985,7 @@
+ 				_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+ 			# --- CAMERA FOLLOW ---
+ 				if _hud_labels.size() > 7:
+-				pass
++					pass
+ 				if _hud_labels.size() > 0:
+ 					_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+ 				# --- CAMERA FOLLOW ---
+
+=== 5. Lines after fix (2060-2080) ===
+^I^I_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)$
+^I^Ivar turn_dir = Vector3.RIGHT * _turn_input * _turn_force$
+^I^I_velocity_vec += turn_dir * delta$
+^I^Ivar forward_vec = target_dir * _forward_speed$
+^I^I_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)$
+^I^I_character.position += _velocity_vec * delta$
+^I^Iif _velocity_vec.length() > 0.5:$
+^I^I^Ivar angle = atan2(_velocity_vec.x, _velocity_vec.z)$
+^I^I^I# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour$
+^I^Ivar speed_kts = _forward_speed * 1.94384$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^I_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]$
+^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)$
+^I^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I^I_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)$
+^I^I^I_check_decision_altitude()$
+^I^I# Capture flight screenshot every 5 seconds (R085 ensures during flight)$
+^I^Iif _screenshot_save_timer > 0:$
+^I^I^I_screenshot_save_timer -= delta$
+^Iif _camera_save_timer > 0.0:$
+
+=== 6. gdparse after fix ===
+
+=== 7. Database record ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd|2069|FIXED|1|2026-08-05 18:57:59
+
+=== End of diagnostic ===
