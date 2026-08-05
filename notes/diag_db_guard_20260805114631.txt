@@ -1,0 +1,64 @@
+=== diag_db_guard.sh — 20260805114631 UTC ===
+
+=== 1. SqliteDb.gd: all var declarations (find _db_ok or equivalent) ===
+9:var _db = null
+10:var _db_ok = null
+
+=== 2. _save_camera_settings as currently on disk ===
+1698:		_save_camera_settings()
+1920:		_save_camera_settings()
+1953:			_save_camera_settings()
+2699:func _save_camera_settings() -> void:
+2701:	if not db:
+2707:	if not db or not db._db_ok:
+2723:	if not db:
+2754:	# _save_camera_settings() moved to debounce timer — not called per mousemove
+
+=== 3. Exact lines around the guard (lines 2700-2720) ===
+2700: 	var db = SqliteDb  # autoload singleton
+2701: 	if not db:
+2702: 		return
+2703: 	db._query("CREATE TABLE IF NOT EXISTS user_preferences (key TEXT PRIMARY KEY, value TEXT)")
+2704: 	var key = (
+2705: 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
+2706: 	)
+2707: 	if not db or not db._db_ok:
+2708: 		return
+2709: 	db._query(
+2710: 		(
+2711: 			"INSERT OR REPLACE INTO user_preferences (key, value) VALUES ('"
+2712: 			+ key
+2713: 			+ "', '"
+2714: 			+ str(_cam_distance)
+2715: 			+ "')"
+2716: 		)
+2717: 	)
+2718: 	print("[CAMERA] Saved camera distance to DB (", key, "): ", _cam_distance)
+2719: 
+2720: 
+
+=== 4. forensic_hud.gd visible= lines ===
+124:			_layer.visible = not _layer.visible
+125:			print("[FHUD_PROCESS] toggled visible=", _layer.visible)
+149:				_layer.visible = not _layer.visible
+294:		label.visible = true
+467:	body_box.visible = _card_expanded.get(cid, false)
+484:		body_box.visible = not cur
+
+=== 5. poll_forensic_hud call site in build_terrain.gd ===
+1929:	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+1930:		ForensicHUD.poll_forensic_hud()
+1931:	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+1932:		ForensicPanel.poll_forensic_panel()
+
+=== 6. _cam_save_timer in build_terrain.gd ===
+205:var _cam_save_timer: float = 0.0  # debounce: write DB at most once per 2s
+1875:		_cam_save_timer = 2.0  # debounce: save DB 2s after last drag
+1950:	if _cam_save_timer > 0.0:
+1951:		_cam_save_timer -= delta
+1952:		if _cam_save_timer <= 0.0:
+
+=== END DIAG ===
+
+=== RAW LINK ===
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/diag_db_guard_20260805114631.txt
