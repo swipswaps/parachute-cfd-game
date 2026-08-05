@@ -1,0 +1,1427 @@
+=== find_panel_rect.sh — 20260805110705 UTC ===
+
+=== Files emitting _panel_rect ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd:100:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd:101:	print("[AUDIT] _panel_rect: ENTER")
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd:137:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd:500:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.20260719_180215.bak:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.20260719_180215.bak:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup:383:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup.1784207053:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup.1784207053:379:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup.1784207413:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup.1784207413:379:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup.1784207427:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup.1784207427:379:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup_before_restore:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.backup_before_restore:382:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak:389:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260719205746:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260719205746:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260719211836:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260719211836:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721141756:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721141756:389:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721142118:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721142118:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721182849:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721182849:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721183500:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721183500:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721184139:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721184139:392:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721184435:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721184435:406:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721184822:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721184822:406:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721204131:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721204131:406:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721205829:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260721205829:411:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100530:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100530:411:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100531:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100531:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100532:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100532:412:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100635:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100635:409:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100636:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723100636:405:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723101430:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723101430:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723102552:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723102552:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723105840:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723105840:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723165823:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723165823:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723185525:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723185525:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723191637:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723191637:398:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723203503:89:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723203503:120:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260723203503:432:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724114933:89:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724114933:124:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724114933:436:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122059635615:89:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122059635615:124:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122059635615:436:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122215410095:92:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122215410095:127:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122215410095:439:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122631806406:92:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122631806406:127:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724122631806406:439:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123003502946:92:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123003502946:127:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123003502946:439:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123031519723:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123031519723:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123031519723:450:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123450716590:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123450716590:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724123450716590:450:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124148355005:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124148355005:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124148355005:450:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124543635716:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124543635716:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124543635716:456:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124900315326:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124900315326:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124900315326:456:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124908644151:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124908644151:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724124908644151:455:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724125811004930:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724125811004930:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724125811004930:455:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724135301252439:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724135301252439:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724135301252439:455:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724155144068318:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724155144068318:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724155144068318:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724182200292543:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724182200292543:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260724182200292543:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725140018022362:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725140018022362:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725140018022362:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725141312191390:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725141312191390:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725141312191390:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725141736619474:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725141736619474:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260725141736619474:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260726204820:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260726204820:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260726204820:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801142925:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801142925:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801142925:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801143534:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801143534:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801143534:462:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801191032:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801191032:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801191032:462:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801192217:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801192217:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.bak.20260801192217:462:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken.20260801185950:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken.20260801185950:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken.20260801185950:462:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734:100:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734:101:	print("[AUDIT] _panel_rect: ENTER")
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734:137:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3.20260801191734:481:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3c.20260801192217:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3c.20260801192217:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.broken_v3c.20260801192217:462:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558:100:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558:101:	print("[AUDIT] _panel_rect: ENTER")
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558:137:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_poll_fix.20260801193558:481:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_v2.20260801194217:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_v2.20260801194217:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_v2.20260801194217:473:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_v3.20260801194432:97:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_v3.20260801194432:132:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd.pre_v3.20260801194432:462:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.20260719_180215.bak:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.20260719_180215.bak:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup:383:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup.1784207053:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup.1784207053:379:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup.1784207413:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup.1784207413:379:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup.1784207427:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup.1784207427:379:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup_before_restore:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.backup_before_restore:382:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak:389:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260719205746:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260719205746:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260719211836:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260719211836:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721141756:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721141756:389:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721142118:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721142118:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721182849:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721182849:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721183500:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721183500:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721184139:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721184139:392:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721184435:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721184435:406:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721184822:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721184822:406:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721204131:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721204131:406:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721205829:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260721205829:411:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100530:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100530:411:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100531:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100531:403:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100532:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100532:412:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100635:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100635:409:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100636:90:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723100636:405:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723101430:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723101430:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723102552:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723102552:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723105840:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723105840:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723165823:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723165823:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723185525:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723185525:390:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723191637:88:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723191637:398:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723203503:89:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723203503:120:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260723203503:432:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724114933:89:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724114933:124:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724114933:436:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122059635615:89:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122059635615:124:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122059635615:436:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122215410095:92:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122215410095:127:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122215410095:439:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122631806406:92:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122631806406:127:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724122631806406:439:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123003502946:92:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123003502946:127:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123003502946:439:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123031519723:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123031519723:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123031519723:450:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123450716590:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123450716590:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724123450716590:450:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124148355005:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124148355005:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124148355005:450:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124543635716:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124543635716:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124543635716:456:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124900315326:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124900315326:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124900315326:456:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124908644151:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124908644151:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724124908644151:455:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724125811004930:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724125811004930:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724125811004930:455:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724135301252439:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724135301252439:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724135301252439:455:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724155144068318:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724155144068318:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724155144068318:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724182200292543:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724182200292543:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260724182200292543:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725140018022362:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725140018022362:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725140018022362:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725141312191390:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725141312191390:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725141312191390:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725141736619474:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725141736619474:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260725141736619474:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260726204820:94:func _panel_rect() -> Rect2:
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260726204820:129:	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd.bak.20260726204820:457:		if mb.pressed and _panel_rect().has_point(mb.position):
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd
+
+=== Full content of files containing _panel_rect ===
+
+--- FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/forensic_hud.gd ---
+extends Node
+var http_request: HTTPRequest = null
+
+var dragging: bool = false
+var drag_offset: Vector2 = Vector2.ZERO
+
+# ==========================================================================
+# forensic_hud.gd  (autoload as ForensicHUD)
+#
+# In-game overlay for the forensic HUB. Both this HUD and the browser view
+# are HTTP clients of the same forensic hub server; single source of truth.
+#
+# ARCHITECTURE (do not "simplify" -- each choice fixes a prior real bug):
+#   * extends Node, NOT CanvasLayer: get_global_mouse_position() is defined
+#     on CanvasItem, not CanvasLayer (prior gdparse failure).
+#   * extends Node, NOT Control: the visible panel lives inside a
+#     CanvasLayer child, and CanvasLayer ignores its parent's canvas
+#     transform -- dragging the root's global_position moves NOTHING on
+#     screen. Drag must move _panel.position directly.
+#   * Drag uses a rect hit-test on _panel with event.position (viewport
+#     coords == CanvasLayer coords, since _layer has no transform).
+#     Without the hit-test, every left-click in the game would be
+#     swallowed by set_input_as_handled(), breaking the PiP drag too.
+#   * backtick (`) toggles _layer.visible (toggling the root's visibility does not
+#     hide CanvasLayer children).
+#   * No per-mouse-event print() calls: those flooded the log and
+#     triggered autostall.py [STALL SOURCE] warnings previously.
+#
+# Controls: backtick (`) toggles the panel. Left-click + drag anywhere on the panel
+# to move it. Position persists to user://forensic_hud.cfg. Each citation
+# card has a [+]/[-] toggle; URL rows open via OS.shell_open.
+# ==========================================================================
+
+const DEFAULT_HUB_URL := "http://127.0.0.1:8765"
+const STATS_PATH      := "/api/gamification"
+const LEADER_PATH     := "/api/leaderboard"
+const CITE_PATH       := "/api/citations"
+const INTEG_PATH      := "/api/integrity"
+const CTRL_HEALTH_PATH := "/api/control_health"
+const POLL_FAST_SEC   := 2.0
+const POLL_SLOW_SEC   := 10.0
+const PANEL_START_POS := Vector2(24, 24)
+const PANEL_MIN_SIZE  := Vector2(360, 480)
+const POS_CFG_PATH    := "user://forensic_hud.cfg"
+
+var _hub_url: String = ""
+var _layer: CanvasLayer
+var _panel: PanelContainer
+var _vbox: VBoxContainer
+
+var _title_label: Label
+var _url_label: Label
+var _status_label: Label
+var _gam_label: Label
+var _leader_vbox: VBoxContainer
+var _cite_vbox: VBoxContainer
+var _time_label: Label
+
+var _stats_req: HTTPRequest
+var _leader_req: HTTPRequest
+var _cite_req: HTTPRequest
+var _integ_req: HTTPRequest
+var _ctrl_health_req: HTTPRequest
+var _ctrl_label: Label
+var _fast_timer: Timer
+var _slow_timer: Timer
+
+var _dragging: bool = false
+var _drag_offset: Vector2 = Vector2.ZERO
+var _toggle_latch: bool = false  # edge-detect for _process()-based backtick toggle
+var _citations_loaded: bool = false
+var _card_expanded: Dictionary = {}
+
+func _resolve_hub_url() -> String:
+	print("[AUDIT] _resolve_hub_url: ENTER")
+	var key := "application/forensic_hub/url"
+	if ProjectSettings.has_setting(key):
+		var v = ProjectSettings.get_setting(key)
+		if typeof(v) == TYPE_STRING and String(v) != "":
+			return String(v)
+	var env := OS.get_environment("FORENSIC_HUB_URL")
+	if env != "":
+		return env
+	return DEFAULT_HUB_URL
+
+func _mklabel(txt: String, color := Color(0.9, 0.95, 0.9, 1.0)) -> Label:
+	print("[AUDIT] _mklabel: ENTER")
+	var l := Label.new()
+	l.text = txt
+	l.add_theme_color_override("font_color", color)
+	return l
+
+func _mkbutton(txt: String) -> Button:
+	print("[AUDIT] _mkbutton: ENTER")
+	var b := Button.new()
+	b.text = txt
+	b.flat = true
+	return b
+
+func _panel_rect() -> Rect2:
+	print("[AUDIT] _panel_rect: ENTER")
+	var sz := _panel.size
+	if sz == Vector2.ZERO:
+		sz = PANEL_MIN_SIZE
+	return Rect2(_panel.position, sz)
+
+# WORKAROUND (this session): _input()/_gui_input() confirmed never firing
+# for this node across multiple captures despite is_processing_input()=true
+# at boot (session_20260723_185609.txt:118). Root cause undetermined after
+# exhaustive audit of every autoload, project.godot order, and input map.
+# Bypasses the broken path: polls in _process(), same pattern already
+# proven to fire reliably every frame for forensic_panel.gd's toggle and
+# build_terrain.gd's _physics_process() Q/E turn input on this system.
+# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-process
+# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html#class-input-method-is-key-pressed
+# Renamed from _process() (this session): Godot never invoked _process()
+# on this autoload despite is_processing_input()=true/is_inside_tree()=true
+# at _ready() — root cause undetermined after exhaustive audit. Called
+# explicitly from build_terrain.gd's _physics_process() instead.
+func poll_forensic_hud() -> void:
+	print("[AUDIT] poll_forensic_hud: ENTER")
+	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
+	if backtick_pressed and not _toggle_latch:
+		_toggle_latch = true
+		if _layer != null:
+			_layer.visible = not _layer.visible
+			print("[FHUD_PROCESS] toggled visible=", _layer.visible)
+	elif not backtick_pressed:
+		_toggle_latch = false
+
+	if _layer == null or not _layer.visible or _panel == null:
+		_dragging = false
+		return
+
+	var mouse_pos := get_viewport().get_mouse_position()
+	var mouse_down := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+		_dragging = true
+		_drag_offset = mouse_pos - _panel.position
+	elif not mouse_down:
+		_dragging = false
+	if _dragging:
+		_panel.position = mouse_pos - _drag_offset
+
+func _input(event: InputEvent) -> void:
+	print("[AUDIT] _input: ENTER")
+# backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_QUOTELEFT:
+			if _layer != null:
+				_layer.visible = not _layer.visible
+			get_viewport().set_input_as_handled()
+		return
+	# Do not process mouse events if panel is hidden
+	if _layer == null or not _layer.visible or _panel == null:
+		return
+	# Delegate mouse events to _gui_input (which handles dragging)
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		_gui_input(event)
+func _build_ui() -> void:
+	print("[AUDIT] _build_ui: ENTER")
+	_layer = CanvasLayer.new()
+	_layer.layer = 100
+	add_child(_layer)
+
+	_panel = PanelContainer.new()
+	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_panel.position = _load_saved_position()
+	_panel.custom_minimum_size = PANEL_MIN_SIZE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.05, 0.05, 0.07, 0.90)
+	sb.border_color = Color(0.35, 0.85, 0.35, 1.0)
+	sb.border_width_left = 2
+	sb.border_width_top = 2
+	sb.border_width_right = 2
+	sb.border_width_bottom = 2
+	sb.corner_radius_top_left = 4
+	sb.corner_radius_top_right = 4
+	sb.corner_radius_bottom_left = 4
+	sb.corner_radius_bottom_right = 4
+	_panel.add_theme_stylebox_override("panel", sb)
+	_layer.add_child(_panel)
+
+	_vbox = VBoxContainer.new()
+	_vbox.add_theme_constant_override("separation", 4)
+	_panel.add_child(_vbox)
+
+	_title_label = _mklabel("FORENSIC HUB", Color(0.55, 1.0, 0.55, 1.0))
+	_vbox.add_child(_title_label)
+	_url_label = _mklabel("hub: " + _hub_url, Color(0.65, 0.85, 0.65, 1.0))
+	_vbox.add_child(_url_label)
+	_vbox.add_child(HSeparator.new())
+
+	_status_label = _mklabel("status: (starting)")
+	_vbox.add_child(_status_label)
+	_gam_label = _mklabel("Level - / XP - / Streak -")
+	_gam_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_vbox.add_child(_gam_label)
+
+	_vbox.add_child(HSeparator.new())
+	_vbox.add_child(_mklabel("Top strategies (UCB1)"))
+	_leader_vbox = VBoxContainer.new()
+	_vbox.add_child(_leader_vbox)
+
+	_vbox.add_child(HSeparator.new())
+	_vbox.add_child(_mklabel("Citations"))
+	_cite_vbox = VBoxContainer.new()
+	_vbox.add_child(_cite_vbox)
+
+	_vbox.add_child(HSeparator.new())
+	_vbox.add_child(_mklabel("Controls", Color(0.55,1.0,0.55,1.0)))
+	_ctrl_label = _mklabel("control_health: (loading...)")
+	_ctrl_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_vbox.add_child(_ctrl_label)
+	_vbox.add_child(HSeparator.new())
+	_time_label = _mklabel("t: --:--:--", Color(0.6, 0.75, 0.6, 1.0))
+	_vbox.add_child(_time_label)
+
+func _load_saved_position() -> Vector2:
+	print("[AUDIT] _load_saved_position: ENTER")
+	var config := ConfigFile.new()
+	if config.load(POS_CFG_PATH) == OK:
+		var saved_pos = config.get_value("position", "panel", PANEL_START_POS)
+		if typeof(saved_pos) == TYPE_VECTOR2:
+			return saved_pos
+	return PANEL_START_POS
+
+func _save_position() -> void:
+	print("[AUDIT] _save_position: ENTER")
+	if _panel == null:
+		return
+	var config := ConfigFile.new()
+	config.set_value("position", "panel", _panel.position)
+	config.save(POS_CFG_PATH)
+
+func _exit_tree() -> void:
+	print("[AUDIT] _exit_tree: ENTER")
+	_save_position()
+
+func _ready() -> void:
+	print("[AUDIT] _ready: ENTER")
+	# Legacy http_request removed: competed with _stats_req → HTTPRequest busy forever.
+
+	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+
+	print("[HUD_DIAG] _ready called")
+	# DIAGNOSTIC (this session, not a fix): report actual engine-side
+	# input registration state directly, instead of inferring it from
+	# the absence of a print in _input().
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-is-processing-input
+	print("[HUD_DIAG] is_processing_input()=", is_processing_input(),
+		" is_inside_tree()=", is_inside_tree(),
+		" frame=", Engine.get_process_frames(),
+		" process_mode=", process_mode)
+	_hub_url = _resolve_hub_url()
+	_build_ui()
+
+	for child in get_tree().get_nodes_in_group("forensic_text"):
+		if child is RichTextLabel:
+			child.selection_enabled = true
+
+	_stats_req = HTTPRequest.new()
+	_leader_req = HTTPRequest.new()
+	_cite_req = HTTPRequest.new()
+	_integ_req = HTTPRequest.new()
+	add_child(_stats_req)
+	add_child(_leader_req)
+	add_child(_cite_req)
+	add_child(_integ_req)
+	_stats_req.request_completed.connect(_on_stats_completed)
+	_leader_req.request_completed.connect(_on_leader_completed)
+	_cite_req.request_completed.connect(_on_cite_completed)
+	_integ_req.request_completed.connect(_on_integ_completed)
+	_ctrl_health_req = HTTPRequest.new()
+	add_child(_ctrl_health_req)
+	_ctrl_health_req.request_completed.connect(_on_ctrl_health_completed)
+
+	_fast_timer = Timer.new()
+	_fast_timer.wait_time = POLL_FAST_SEC
+	_fast_timer.autostart = true
+	_fast_timer.timeout.connect(_poll_fast)
+	add_child(_fast_timer)
+
+	_slow_timer = Timer.new()
+	_slow_timer.wait_time = POLL_SLOW_SEC
+	_slow_timer.autostart = true
+	_slow_timer.timeout.connect(_poll_slow)
+	add_child(_slow_timer)
+
+	_poll_fast()
+	_poll_slow()
+	# Ensure HUD is visible and label is at a safe position
+	var label = find_child("HubDataLabel", true, false)
+	if label != null:
+		label.position = Vector2(10, 10)
+		label.visible = true
+
+	# _setup_hud_label() removed: created duplicate CanvasLayer + HTTPRequest.
+
+func _poll_fast() -> void:
+	print("[AUDIT] _poll_fast: ENTER")
+	# Guard: only fire a new request if the previous one completed.
+	# Without this, 2s timer fires ERR_BUSY (44) when hub is slow.
+	# Reset stuck error state so timer retries after hub becomes reachable.
+	# After failed request: STATUS_CONNECTION_ERROR(6)/CANT_RESOLVE(2)
+	# were not in original guard → every timer tick silently skipped.
+	var stats_status := _stats_req.get_http_client_status()
+	if stats_status not in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
+			HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
+		_stats_req.cancel_request()
+	if _stats_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		var err_a := _stats_req.request(_hub_url + STATS_PATH)
+		if err_a != OK:
+			_status_label.text = "stats err: %d" % err_a
+	if _leader_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		var err_b := _leader_req.request(_hub_url + LEADER_PATH)
+		if err_b != OK:
+			_status_label.text = "leader err: %d" % err_b
+
+func _poll_slow() -> void:
+	print("[AUDIT] _poll_slow: ENTER")
+	# Guard: reset any stuck error state before firing — same fix as _poll_fast.
+	# Without this, ERR_BUSY(44) blocks every subsequent slow-timer tick.
+	for req in [_cite_req, _integ_req, _ctrl_health_req]:
+		var s: int = req.get_http_client_status()
+		if s not in [HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED,
+				HTTPClient.STATUS_REQUESTING, HTTPClient.STATUS_BODY]:
+			req.cancel_request()
+	if not _citations_loaded:
+		var err_c := _cite_req.request(_hub_url + CITE_PATH)
+		if err_c != OK:
+			_status_label.text = "cite err: %d" % err_c
+	if _integ_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+		if err_i != OK:
+			_status_label.text = "integ err: %d" % err_i
+	if _ctrl_health_req.get_http_client_status() in [
+			HTTPClient.STATUS_DISCONNECTED, HTTPClient.STATUS_CONNECTED]:
+		_ctrl_health_req.request(_hub_url + CTRL_HEALTH_PATH)
+
+func _on_stats_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	print("[AUDIT] _on_stats_completed: ENTER")
+	_time_label.text = "t: " + Time.get_time_string_from_system()
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_status_label.text = "hub offline (%s) result=%d code=%d" % [_hub_url, result, response_code]
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		_status_label.text = "hub /api/stats: non-dict payload"
+		return
+	var d: Dictionary = parsed
+	if d.has("db_unavailable") and d["db_unavailable"]:
+		_status_label.text = "hub OK, DB unavailable"
+		_gam_label.text = "(no pipeline DB found)"
+		return
+	_status_label.text = "hub OK  (%s)" % _hub_url
+	var lv = d.get("level", "-")
+	var xp = d.get("xp", "-")
+	var st = d.get("streak", "-")
+	var sr = d.get("success_rate", 0.0)
+	var caught = d.get("pokedex_caught", "-")
+	var known = d.get("pokedex_known", "-")
+	var unresolved = d.get("unresolved_parse_errors", "-")
+	var ach = d.get("achievements", [])
+	var ach_lines := "achievements:"
+	if typeof(ach) == TYPE_ARRAY:
+		for a in ach:
+			ach_lines += "\n  * " + str(a)
+	_gam_label.text = ("Level %s   XP %s   Streak %s\n"
+		+ "success rate: %s\n"
+		+ "pokedex: %s / %s trained\n"
+		+ "unresolved parse errors: %s\n"
+		+ ach_lines) % [str(lv), str(xp), str(st), str(sr), str(caught), str(known), str(unresolved)]
+
+func _on_leader_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	print("[AUDIT] _on_leader_completed: ENTER")
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_ARRAY:
+		return
+	for c in _leader_vbox.get_children():
+		c.queue_free()
+	var rows: Array = parsed
+	if rows.is_empty():
+		_leader_vbox.add_child(_mklabel("  (no strategies yet)"))
+		return
+	var shown := 0
+	for row in rows:
+		if shown >= 6:
+			break
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var r: Dictionary = row
+		var txt := "  %s [%s] wins=%s/%s wr=%s ucb1=%s" % [
+			str(r.get("name", "?")),
+			str(r.get("error_class", "?")),
+			str(r.get("wins", 0)),
+			str(r.get("trials", 0)),
+			str(r.get("win_rate", 0)),
+			str(r.get("ucb1", 0)),
+		]
+		_leader_vbox.add_child(_mklabel(txt))
+		shown += 1
+
+func _on_cite_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	print("[AUDIT] _on_cite_completed: ENTER")
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	var d: Dictionary = parsed
+	var all_cites: Array = []
+	if d.has("principles") and typeof(d["principles"]) == TYPE_ARRAY:
+		all_cites += d["principles"]
+	if d.has("godot_docs") and typeof(d["godot_docs"]) == TYPE_ARRAY:
+		all_cites += d["godot_docs"]
+	if all_cites.is_empty():
+		return
+	_citations_loaded = true
+	for c in _cite_vbox.get_children():
+		c.queue_free()
+	for cite in all_cites:
+		if typeof(cite) != TYPE_DICTIONARY:
+			continue
+		_add_citation_card(cite as Dictionary)
+
+func _on_integ_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	print("[AUDIT] _on_integ_completed: ENTER")
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	var d: Dictionary = parsed
+	if d.has("quick_check"):
+		var qc := str(d["quick_check"])
+		var color := Color(0.55, 1.0, 0.55, 1.0) if qc == "ok" else Color(1.0, 0.5, 0.5, 1.0)
+		_status_label.add_theme_color_override("font_color", color)
+
+func _add_citation_card(cite: Dictionary) -> void:
+	print("[AUDIT] _add_citation_card: ENTER")
+	var cid := str(cite.get("id", "?"))
+	var label := str(cite.get("label", "(unlabeled)"))
+	var url := str(cite.get("url", ""))
+	var verbatim := str(cite.get("verbatim", ""))
+	var applies := str(cite.get("applies_to", ""))
+	var header_row := HBoxContainer.new()
+	var toggle := _mkbutton("+")
+	toggle.custom_minimum_size = Vector2(22, 22)
+	header_row.add_child(toggle)
+	header_row.add_child(_mklabel(" [%s] %s" % [cid, label], Color(0.85, 0.95, 0.85, 1.0)))
+	_cite_vbox.add_child(header_row)
+
+	var body_box := VBoxContainer.new()
+	body_box.visible = _card_expanded.get(cid, false)
+	var quote_label := _mklabel("  \"" + verbatim + "\"", Color(0.85, 0.85, 0.85, 1.0))
+	quote_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	body_box.add_child(quote_label)
+	if applies != "":
+		var applies_label := _mklabel("  applies: " + applies, Color(0.7, 0.9, 0.7, 1.0))
+		applies_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		body_box.add_child(applies_label)
+	if url != "":
+		var url_btn := _mkbutton("  open: " + url)
+		url_btn.pressed.connect(func(): OS.shell_open(url))
+		body_box.add_child(url_btn)
+	_cite_vbox.add_child(body_box)
+
+	toggle.pressed.connect(func():
+		var cur = _card_expanded.get(cid, false)
+		_card_expanded[cid] = not cur
+		body_box.visible = not cur
+		toggle.text = "-" if not cur else "+"
+	)
+
+
+func _gui_input(event: InputEvent) -> void:
+	print("[AUDIT] _gui_input: ENTER")
+	# Only process if panel is visible
+	if _layer == null or not _layer.visible or _panel == null:
+		return
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed and _panel_rect().has_point(mb.position):
+			_dragging = true
+			_drag_offset = mb.position - _panel.position
+			get_viewport().set_input_as_handled()
+		elif not mb.pressed and _dragging:
+			_dragging = false
+			get_viewport().set_input_as_handled()
+	if event is InputEventMouseMotion and _dragging:
+		_panel.position = event.position - _drag_offset
+		get_viewport().set_input_as_handled()
+
+func _fetch_hub_data():
+	print("[AUDIT] _fetch_hub_data: ENTER")
+	# Fetch gamification data from the hub
+	if http_request == null:
+		print("[HUD] HTTPRequest not initialized")
+		return
+	var url = "http://127.0.0.1:8765/api/gamification"
+	# Guard against ERR_BUSY (44) — Godot HTTPRequest.request() fails
+	# if a prior request is still processing. Check status first.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+	if http_request.get_http_client_status() == HTTPClient.STATUS_DISCONNECTED:
+		var error = http_request.request(url)
+		if error != OK:
+			print("[HUD] Failed to request hub data: ", error)
+	else:
+		print("[HUD] HTTPRequest busy, skipping poll")
+
+func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+	print("[AUDIT] _on_hub_data_received: ENTER")
+	# Handle the HTTP response
+	if response_code != 200:
+		print("[HUD] Hub request failed with code: ", response_code)
+		return
+	var json = JSON.new()
+	var parse_result = json.parse(body.get_string_from_utf8())
+	if parse_result != OK:
+		print("[HUD] Failed to parse JSON: ", json.get_error_message())
+		return
+	var data = json.data
+	# Update a label (assume we have a label with text "Hub Data:" or a specific name)
+	# Try to find a label by name or by text
+	var label = find_child("HubDataLabel", true, false) if has_method("find_child") else null
+	if label == null:
+		# Try to find any Label that contains 'Hub' in text
+		var children = get_children()
+		for child in children:
+			if child is Label and "Hub" in child.text:
+				label = child
+				break
+	if label != null:
+		label.text = "Hub Data: Level %d | XP: %d | Streak: %d" % [data.get("level", 0), data.get("xp", 0), data.get("streak", 0)]
+	else:
+		print("[HUD] No label found to display hub data")
+		# As fallback, print to console
+		print("[HUD] Hub data: ", data)
+
+
+func _setup_hud_label():
+	print("[AUDIT] _setup_hud_label: ENTER")
+	# CanvasLayer draws its children on top of the scene tree
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+	var layer = CanvasLayer.new()
+	add_child(layer)
+	var label = Label.new()
+	label.name = "HubDataLabel"
+	label.text = "Hub Data: loading..."
+	label.position = Vector2(10, 10)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(label)
+	# Ensure HTTPRequest node exists for subsequent _fetch_hub_data calls
+	if not has_node("HTTPRequest"):
+		var http = HTTPRequest.new()
+		http.name = "HTTPRequest"
+		add_child(http)
+		http.request_completed.connect(_on_hub_data_received)
+	_fetch_hub_data()
+
+
+func _on_ctrl_health_completed(
+	result: int, response_code: int, _h: PackedStringArray, body: PackedByteArray
+) -> void:
+	print("[AUDIT] _on_ctrl_health_completed: ENTER")
+	# Handler for /api/control_health — updates _ctrl_label with per-action status.
+	# Ref: HTTPRequest.request_completed signal:
+	# https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+	# (general knowledge — not retrieved this session)
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		if _ctrl_label != null:
+			_ctrl_label.text = "control_health: hub unreachable (result=%d code=%d)" % [result, response_code]
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY or _ctrl_label == null:
+		return
+	var d: Dictionary = parsed
+	var baseline: Array = d.get("baseline", [])
+	var recent: Array = d.get("recent_events", [])
+	var out := PackedStringArray()
+	out.append("=== controls ===")
+	for row in baseline:
+		if typeof(row) != TYPE_DICTIONARY: continue
+		var st := str(row.get("status", "?"))
+		var mark := " OK" if ("CONFIRMED" in st or "FIXED" in st) else " !"
+		out.append("  %-14s%s  %s" % [str(row.get("action", "?")), mark, st])
+	if not recent.is_empty():
+		out.append("--- recent presses ---")
+		for ev in recent.slice(0, 8):
+			if typeof(ev) != TYPE_DICTIONARY: continue
+			out.append("  %s -> %s" % [str(ev.get("action", "?")), str(ev.get("result", "?"))])
+	_ctrl_label.text = "\n".join(out)
+
+--- FILE: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/scripts/forensic_hud.gd ---
+extends Node
+var http_request: HTTPRequest = null
+
+var dragging: bool = false
+var drag_offset: Vector2 = Vector2.ZERO
+
+# ==========================================================================
+# forensic_hud.gd  (autoload as ForensicHUD)
+#
+# In-game overlay for the forensic HUB. Both this HUD and the browser view
+# are HTTP clients of the same forensic hub server; single source of truth.
+#
+# ARCHITECTURE (do not "simplify" -- each choice fixes a prior real bug):
+#   * extends Node, NOT CanvasLayer: get_global_mouse_position() is defined
+#     on CanvasItem, not CanvasLayer (prior gdparse failure).
+#   * extends Node, NOT Control: the visible panel lives inside a
+#     CanvasLayer child, and CanvasLayer ignores its parent's canvas
+#     transform -- dragging the root's global_position moves NOTHING on
+#     screen. Drag must move _panel.position directly.
+#   * Drag uses a rect hit-test on _panel with event.position (viewport
+#     coords == CanvasLayer coords, since _layer has no transform).
+#     Without the hit-test, every left-click in the game would be
+#     swallowed by set_input_as_handled(), breaking the PiP drag too.
+#   * backtick (`) toggles _layer.visible (toggling the root's visibility does not
+#     hide CanvasLayer children).
+#   * No per-mouse-event print() calls: those flooded the log and
+#     triggered autostall.py [STALL SOURCE] warnings previously.
+#
+# Controls: backtick (`) toggles the panel. Left-click + drag anywhere on the panel
+# to move it. Position persists to user://forensic_hud.cfg. Each citation
+# card has a [+]/[-] toggle; URL rows open via OS.shell_open.
+# ==========================================================================
+
+const DEFAULT_HUB_URL := "http://127.0.0.1:8765"
+const STATS_PATH      := "/api/gamification"
+const LEADER_PATH     := "/api/leaderboard"
+const CITE_PATH       := "/api/citations"
+const INTEG_PATH      := "/api/integrity"
+const POLL_FAST_SEC   := 2.0
+const POLL_SLOW_SEC   := 10.0
+const PANEL_START_POS := Vector2(24, 24)
+const PANEL_MIN_SIZE  := Vector2(360, 480)
+const POS_CFG_PATH    := "user://forensic_hud.cfg"
+
+var _hub_url: String = ""
+var _layer: CanvasLayer
+var _panel: PanelContainer
+var _vbox: VBoxContainer
+
+var _title_label: Label
+var _url_label: Label
+var _status_label: Label
+var _gam_label: Label
+var _leader_vbox: VBoxContainer
+var _cite_vbox: VBoxContainer
+var _time_label: Label
+
+var _stats_req: HTTPRequest
+var _leader_req: HTTPRequest
+var _cite_req: HTTPRequest
+var _integ_req: HTTPRequest
+var _fast_timer: Timer
+var _slow_timer: Timer
+
+var _dragging: bool = false
+var _drag_offset: Vector2 = Vector2.ZERO
+var _toggle_latch: bool = false  # edge-detect for _process()-based backtick toggle
+var _citations_loaded: bool = false
+var _card_expanded: Dictionary = {}
+
+func _resolve_hub_url() -> String:
+	var key := "application/forensic_hub/url"
+	if ProjectSettings.has_setting(key):
+		var v = ProjectSettings.get_setting(key)
+		if typeof(v) == TYPE_STRING and String(v) != "":
+			return String(v)
+	var env := OS.get_environment("FORENSIC_HUB_URL")
+	if env != "":
+		return env
+	return DEFAULT_HUB_URL
+
+func _mklabel(txt: String, color := Color(0.9, 0.95, 0.9, 1.0)) -> Label:
+	var l := Label.new()
+	l.text = txt
+	l.add_theme_color_override("font_color", color)
+	return l
+
+func _mkbutton(txt: String) -> Button:
+	var b := Button.new()
+	b.text = txt
+	b.flat = true
+	return b
+
+func _panel_rect() -> Rect2:
+	var sz := _panel.size
+	if sz == Vector2.ZERO:
+		sz = PANEL_MIN_SIZE
+	return Rect2(_panel.position, sz)
+
+# WORKAROUND (this session): _input()/_gui_input() confirmed never firing
+# for this node across multiple captures despite is_processing_input()=true
+# at boot (session_20260723_185609.txt:118). Root cause undetermined after
+# exhaustive audit of every autoload, project.godot order, and input map.
+# Bypasses the broken path: polls in _process(), same pattern already
+# proven to fire reliably every frame for forensic_panel.gd's toggle and
+# build_terrain.gd's _physics_process() Q/E turn input on this system.
+# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-process
+# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html#class-input-method-is-key-pressed
+# Renamed from _process() (this session): Godot never invoked _process()
+# on this autoload despite is_processing_input()=true/is_inside_tree()=true
+# at _ready() — root cause undetermined after exhaustive audit. Called
+# explicitly from build_terrain.gd's _physics_process() instead.
+func poll_forensic_hud() -> void:
+	var backtick_pressed := Input.is_key_pressed(KEY_QUOTELEFT)
+	if backtick_pressed and not _toggle_latch:
+		_toggle_latch = true
+		if _layer != null:
+			_layer.visible = not _layer.visible
+			print("[FHUD_PROCESS] toggled visible=", _layer.visible)
+	elif not backtick_pressed:
+		_toggle_latch = false
+
+	if _layer == null or not _layer.visible or _panel == null:
+		_dragging = false
+		return
+
+	var mouse_pos := get_viewport().get_mouse_position()
+	var mouse_down := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	if mouse_down and not _dragging and _panel_rect().has_point(mouse_pos):
+		_dragging = true
+		_drag_offset = mouse_pos - _panel.position
+	elif not mouse_down:
+		_dragging = false
+	if _dragging:
+		_panel.position = mouse_pos - _drag_offset
+
+func _input(event: InputEvent) -> void:
+	print("[FHUD DEBUG] _input called with event: %s" % event)
+
+	print("[HUD_DIAG] _input called")
+# backtick (`) toggle (KEY_QUOTELEFT) – safe with null check
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_QUOTELEFT:
+			if _layer != null:
+				_layer.visible = not _layer.visible
+			get_viewport().set_input_as_handled()
+		return
+	# Do not process mouse events if panel is hidden
+	if _layer == null or not _layer.visible or _panel == null:
+		return
+	# Delegate mouse events to _gui_input (which handles dragging)
+	if event is InputEventMouseButton or event is InputEventMouseMotion:
+		_gui_input(event)
+func _build_ui() -> void:
+	_layer = CanvasLayer.new()
+	_layer.layer = 100
+	add_child(_layer)
+
+	_panel = PanelContainer.new()
+	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_panel.position = _load_saved_position()
+	_panel.custom_minimum_size = PANEL_MIN_SIZE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.05, 0.05, 0.07, 0.90)
+	sb.border_color = Color(0.35, 0.85, 0.35, 1.0)
+	sb.border_width_left = 2
+	sb.border_width_top = 2
+	sb.border_width_right = 2
+	sb.border_width_bottom = 2
+	sb.corner_radius_top_left = 4
+	sb.corner_radius_top_right = 4
+	sb.corner_radius_bottom_left = 4
+	sb.corner_radius_bottom_right = 4
+	_panel.add_theme_stylebox_override("panel", sb)
+	_layer.add_child(_panel)
+
+	_vbox = VBoxContainer.new()
+	_vbox.add_theme_constant_override("separation", 4)
+	_panel.add_child(_vbox)
+
+	_title_label = _mklabel("FORENSIC HUB", Color(0.55, 1.0, 0.55, 1.0))
+	_vbox.add_child(_title_label)
+	_url_label = _mklabel("hub: " + _hub_url, Color(0.65, 0.85, 0.65, 1.0))
+	_vbox.add_child(_url_label)
+	_vbox.add_child(HSeparator.new())
+
+	_status_label = _mklabel("status: (starting)")
+	_vbox.add_child(_status_label)
+	_gam_label = _mklabel("Level - / XP - / Streak -")
+	_gam_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_vbox.add_child(_gam_label)
+
+	_vbox.add_child(HSeparator.new())
+	_vbox.add_child(_mklabel("Top strategies (UCB1)"))
+	_leader_vbox = VBoxContainer.new()
+	_vbox.add_child(_leader_vbox)
+
+	_vbox.add_child(HSeparator.new())
+	_vbox.add_child(_mklabel("Citations"))
+	_cite_vbox = VBoxContainer.new()
+	_vbox.add_child(_cite_vbox)
+
+	_vbox.add_child(HSeparator.new())
+	_time_label = _mklabel("t: --:--:--", Color(0.6, 0.75, 0.6, 1.0))
+	_vbox.add_child(_time_label)
+
+func _load_saved_position() -> Vector2:
+	var config := ConfigFile.new()
+	if config.load(POS_CFG_PATH) == OK:
+		var saved_pos = config.get_value("position", "panel", PANEL_START_POS)
+		if typeof(saved_pos) == TYPE_VECTOR2:
+			return saved_pos
+	return PANEL_START_POS
+
+func _save_position() -> void:
+	if _panel == null:
+		return
+	var config := ConfigFile.new()
+	config.set_value("position", "panel", _panel.position)
+	config.save(POS_CFG_PATH)
+
+func _exit_tree() -> void:
+	_save_position()
+
+func _ready() -> void:
+	# Initialize HTTP request node for hub data
+	if http_request == null:
+		http_request = HTTPRequest.new()
+		add_child(http_request)
+		http_request.request_completed.connect(_on_hub_data_received)
+	# Fetch data after a short delay to allow hub to be ready
+	await get_tree().create_timer(0.5).timeout
+	_fetch_hub_data()
+
+	# set_as_top_level(true)  # REMOVED: Godot 3 API, not available in Godot 4. HUD is already on CanvasLayer (layer=1) which provides equivalent isolation. Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+
+	print("[HUD_DIAG] _ready called")
+	# DIAGNOSTIC (this session, not a fix): report actual engine-side
+	# input registration state directly, instead of inferring it from
+	# the absence of a print in _input().
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-is-processing-input
+	print("[HUD_DIAG] is_processing_input()=", is_processing_input(),
+		" is_inside_tree()=", is_inside_tree(),
+		" frame=", Engine.get_process_frames(),
+		" process_mode=", process_mode)
+	_hub_url = _resolve_hub_url()
+	_build_ui()
+
+	for child in get_tree().get_nodes_in_group("forensic_text"):
+		if child is RichTextLabel:
+			child.selection_enabled = true
+
+	_stats_req = HTTPRequest.new()
+	_leader_req = HTTPRequest.new()
+	_cite_req = HTTPRequest.new()
+	_integ_req = HTTPRequest.new()
+	add_child(_stats_req)
+	add_child(_leader_req)
+	add_child(_cite_req)
+	add_child(_integ_req)
+	_stats_req.request_completed.connect(_on_stats_completed)
+	_leader_req.request_completed.connect(_on_leader_completed)
+	_cite_req.request_completed.connect(_on_cite_completed)
+	_integ_req.request_completed.connect(_on_integ_completed)
+
+	_fast_timer = Timer.new()
+	_fast_timer.wait_time = POLL_FAST_SEC
+	_fast_timer.autostart = true
+	_fast_timer.timeout.connect(_poll_fast)
+	add_child(_fast_timer)
+
+	_slow_timer = Timer.new()
+	_slow_timer.wait_time = POLL_SLOW_SEC
+	_slow_timer.autostart = true
+	_slow_timer.timeout.connect(_poll_slow)
+	add_child(_slow_timer)
+
+	_poll_fast()
+	_poll_slow()
+	# Ensure HUD is visible and label is at a safe position
+	var label = find_child("HubDataLabel", true, false)
+	if label != null:
+		label.position = Vector2(10, 10)
+		label.visible = true
+
+	_setup_hud_label()
+
+func _poll_fast() -> void:
+	var err_a := _stats_req.request(_hub_url + STATS_PATH)
+	if err_a != OK:
+		_status_label.text = "hub request err: %d (%s)" % [err_a, _hub_url + STATS_PATH]
+	var err_b := _leader_req.request(_hub_url + LEADER_PATH)
+	if err_b != OK:
+		_status_label.text = "leader err: %d" % err_b
+
+func _poll_slow() -> void:
+	if not _citations_loaded:
+		var err_c := _cite_req.request(_hub_url + CITE_PATH)
+		if err_c != OK:
+			_status_label.text = "cite err: %d" % err_c
+	var err_i := _integ_req.request(_hub_url + INTEG_PATH)
+	if err_i != OK:
+		_status_label.text = "integ err: %d" % err_i
+
+func _on_stats_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	_time_label.text = "t: " + Time.get_time_string_from_system()
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_status_label.text = "hub offline (%s) result=%d code=%d" % [_hub_url, result, response_code]
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		_status_label.text = "hub /api/stats: non-dict payload"
+		return
+	var d: Dictionary = parsed
+	if d.has("db_unavailable") and d["db_unavailable"]:
+		_status_label.text = "hub OK, DB unavailable"
+		_gam_label.text = "(no pipeline DB found)"
+		return
+	_status_label.text = "hub OK  (%s)" % _hub_url
+	var lv = d.get("level", "-")
+	var xp = d.get("xp", "-")
+	var st = d.get("streak", "-")
+	var sr = d.get("success_rate", 0.0)
+	var caught = d.get("pokedex_caught", "-")
+	var known = d.get("pokedex_known", "-")
+	var unresolved = d.get("unresolved_parse_errors", "-")
+	var ach = d.get("achievements", [])
+	var ach_lines := "achievements:"
+	if typeof(ach) == TYPE_ARRAY:
+		for a in ach:
+			ach_lines += "\n  * " + str(a)
+	_gam_label.text = ("Level %s   XP %s   Streak %s\n"
+		+ "success rate: %s\n"
+		+ "pokedex: %s / %s trained\n"
+		+ "unresolved parse errors: %s\n"
+		+ ach_lines) % [str(lv), str(xp), str(st), str(sr), str(caught), str(known), str(unresolved)]
+
+func _on_leader_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_ARRAY:
+		return
+	for c in _leader_vbox.get_children():
+		c.queue_free()
+	var rows: Array = parsed
+	if rows.is_empty():
+		_leader_vbox.add_child(_mklabel("  (no strategies yet)"))
+		return
+	var shown := 0
+	for row in rows:
+		if shown >= 6:
+			break
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var r: Dictionary = row
+		var txt := "  %s [%s] wins=%s/%s wr=%s ucb1=%s" % [
+			str(r.get("name", "?")),
+			str(r.get("error_class", "?")),
+			str(r.get("wins", 0)),
+			str(r.get("trials", 0)),
+			str(r.get("win_rate", 0)),
+			str(r.get("ucb1", 0)),
+		]
+		_leader_vbox.add_child(_mklabel(txt))
+		shown += 1
+
+func _on_cite_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	var d: Dictionary = parsed
+	var all_cites: Array = []
+	if d.has("principles") and typeof(d["principles"]) == TYPE_ARRAY:
+		all_cites += d["principles"]
+	if d.has("godot_docs") and typeof(d["godot_docs"]) == TYPE_ARRAY:
+		all_cites += d["godot_docs"]
+	if all_cites.is_empty():
+		return
+	_citations_loaded = true
+	for c in _cite_vbox.get_children():
+		c.queue_free()
+	for cite in all_cites:
+		if typeof(cite) != TYPE_DICTIONARY:
+			continue
+		_add_citation_card(cite as Dictionary)
+
+func _on_integ_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+) -> void:
+	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		return
+	var parsed = JSON.parse_string(body.get_string_from_utf8())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	var d: Dictionary = parsed
+	if d.has("quick_check"):
+		var qc := str(d["quick_check"])
+		var color := Color(0.55, 1.0, 0.55, 1.0) if qc == "ok" else Color(1.0, 0.5, 0.5, 1.0)
+		_status_label.add_theme_color_override("font_color", color)
+
+func _add_citation_card(cite: Dictionary) -> void:
+	var cid := str(cite.get("id", "?"))
+	var label := str(cite.get("label", "(unlabeled)"))
+	var url := str(cite.get("url", ""))
+	var verbatim := str(cite.get("verbatim", ""))
+	var applies := str(cite.get("applies_to", ""))
+	var header_row := HBoxContainer.new()
+	var toggle := _mkbutton("+")
+	toggle.custom_minimum_size = Vector2(22, 22)
+	header_row.add_child(toggle)
+	header_row.add_child(_mklabel(" [%s] %s" % [cid, label], Color(0.85, 0.95, 0.85, 1.0)))
+	_cite_vbox.add_child(header_row)
+
+	var body_box := VBoxContainer.new()
+	body_box.visible = _card_expanded.get(cid, false)
+	var quote_label := _mklabel("  \"" + verbatim + "\"", Color(0.85, 0.85, 0.85, 1.0))
+	quote_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	body_box.add_child(quote_label)
+	if applies != "":
+		var applies_label := _mklabel("  applies: " + applies, Color(0.7, 0.9, 0.7, 1.0))
+		applies_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		body_box.add_child(applies_label)
+	if url != "":
+		var url_btn := _mkbutton("  open: " + url)
+		url_btn.pressed.connect(func(): OS.shell_open(url))
+		body_box.add_child(url_btn)
+	_cite_vbox.add_child(body_box)
+
+	toggle.pressed.connect(func():
+		var cur = _card_expanded.get(cid, false)
+		_card_expanded[cid] = not cur
+		body_box.visible = not cur
+		toggle.text = "-" if not cur else "+"
+	)
+
+
+func _gui_input(event: InputEvent) -> void:
+
+	print("[HUD_DIAG] _gui_input called")
+	print("[HUD] _gui_input called: ", event)
+	# Only process if panel is visible
+	if _layer == null or not _layer.visible or _panel == null:
+		return
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed and _panel_rect().has_point(mb.position):
+			_dragging = true
+			_drag_offset = mb.position - _panel.position
+			get_viewport().set_input_as_handled()
+		elif not mb.pressed and _dragging:
+			_dragging = false
+			get_viewport().set_input_as_handled()
+	if event is InputEventMouseMotion and _dragging:
+		_panel.position = event.position - _drag_offset
+		get_viewport().set_input_as_handled()
+
+func _fetch_hub_data():
+	# Fetch gamification data from the hub
+	if http_request == null:
+		print("[HUD] HTTPRequest not initialized")
+		return
+	var url = "http://127.0.0.1:8765/api/gamification"
+	# Guard against ERR_BUSY (44) — Godot HTTPRequest.request() fails
+	# if a prior request is still processing. Check status first.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_httprequest.html
+	if http_request.get_http_client_status() == HTTPClient.STATUS_DISCONNECTED:
+		var error = http_request.request(url)
+		if error != OK:
+			print("[HUD] Failed to request hub data: ", error)
+	else:
+		print("[HUD] HTTPRequest busy, skipping poll")
+
+func _on_hub_data_received(_result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+	# Handle the HTTP response
+	if response_code != 200:
+		print("[HUD] Hub request failed with code: ", response_code)
+		return
+	var json = JSON.new()
+	var parse_result = json.parse(body.get_string_from_utf8())
+	if parse_result != OK:
+		print("[HUD] Failed to parse JSON: ", json.get_error_message())
+		return
+	var data = json.data
+	# Update a label (assume we have a label with text "Hub Data:" or a specific name)
+	# Try to find a label by name or by text
+	var label = find_child("HubDataLabel", true, false) if has_method("find_child") else null
+	if label == null:
+		# Try to find any Label that contains 'Hub' in text
+		var children = get_children()
+		for child in children:
+			if child is Label and "Hub" in child.text:
+				label = child
+				break
+	if label != null:
+		label.text = "Hub Data: Level %d | XP: %d | Streak: %d" % [data.get("level", 0), data.get("xp", 0), data.get("streak", 0)]
+	else:
+		print("[HUD] No label found to display hub data")
+		# As fallback, print to console
+		print("[HUD] Hub data: ", data)
+
+
+func _setup_hud_label():
+	# CanvasLayer draws its children on top of the scene tree
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html
+	var layer = CanvasLayer.new()
+	add_child(layer)
+	var label = Label.new()
+	label.name = "HubDataLabel"
+	label.text = "Hub Data: loading..."
+	label.position = Vector2(10, 10)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(label)
+	# Ensure HTTPRequest node exists for subsequent _fetch_hub_data calls
+	if not has_node("HTTPRequest"):
+		var http = HTTPRequest.new()
+		http.name = "HTTPRequest"
+		add_child(http)
+		http.request_completed.connect(_on_hub_data_received)
+	_fetch_hub_data()
+
+=== END ===
