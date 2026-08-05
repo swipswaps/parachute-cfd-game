@@ -370,11 +370,15 @@ func _ready() -> void:
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
 	# --------------------------------------------------------------
 	_camera = Camera3D.new()
+	print("[CAMERA_DEBUG] _camera created: ", _camera)
 	_camera.position = Vector3(0.0, 2.0, 3.0)
 	_camera.fov = 75.0
 	_camera.near = 0.1
 	_camera.far = 10000.0
 	add_child(_camera)
+	print("[CAMERA_DEBUG] _camera added to tree")
+	_camera.current = true
+	print("[CAMERA_DEBUG] _camera.current set to true")
 	print('[PLANE_DEBUG] Camera added to tree')
 
 	# Ensure plane exists before positioning camera
@@ -588,11 +592,6 @@ func _ready() -> void:
 # Helper: create runway (returns MeshInstance3D)
 # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
 # ------------------------------------------------------------------
-
-# Gate: Verify arms are not extended (R099)
-
-		print("[VERBATIM] Self-test timer started.")
-	# SELF-TEST TIMER INJECTED (v6.5.151)
 
 
 func _check_arm_pose() -> void:
