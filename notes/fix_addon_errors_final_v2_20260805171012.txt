@@ -1,0 +1,128 @@
+=== run_fix_addon_errors_final_v2.sh — 20260805171012 UTC ===
+
+[2026-08-05T17:10:12.958067+00:00] [SUCCESS] init_db: table ensured
+[2026-08-05T17:10:12.960041+00:00] [SUCCESS] main: already fixed: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:1981
+[2026-08-05T17:10:12.962408+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd.bak.20260805171012
+[2026-08-05T17:10:13.665132+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:13.910074+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd:370 status=FAILED
+[2026-08-05T17:10:13.916763+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd.bak.20260805171013
+[2026-08-05T17:10:14.720386+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:15.006347+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd:372 status=FAILED
+[2026-08-05T17:10:15.013174+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd.bak.20260805171015
+[2026-08-05T17:10:15.516056+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:16.899431+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd:94 status=FIXED
+[2026-08-05T17:10:16.899568+00:00] [SUCCESS] main: fix applied and verified: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd:94
+[2026-08-05T17:10:16.904026+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd.bak.20260805171016
+[2026-08-05T17:10:17.507676+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:18.858761+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd:147 status=FIXED
+[2026-08-05T17:10:18.858923+00:00] [SUCCESS] main: fix applied and verified: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/math_utils.gd:147
+[2026-08-05T17:10:18.863654+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805171018
+[2026-08-05T17:10:19.467659+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:19.755158+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:24 status=FAILED
+[2026-08-05T17:10:19.760062+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805171019
+[2026-08-05T17:10:20.362959+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:20.641149+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:36 status=FAILED
+[2026-08-05T17:10:20.645865+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805171020
+[2026-08-05T17:10:21.249734+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:21.537800+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:48 status=FAILED
+[2026-08-05T17:10:21.542558+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805171021
+[2026-08-05T17:10:22.245437+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:22.556214+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:63 status=FAILED
+[2026-08-05T17:10:22.562840+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805171022
+[2026-08-05T17:10:23.165549+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:23.419703+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:65 status=FAILED
+[2026-08-05T17:10:23.426503+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd.bak.20260805171023
+[2026-08-05T17:10:24.029394+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:24.316342+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_axis_config.gd:67 status=FAILED
+[2026-08-05T17:10:24.322852+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd.bak.20260805171024
+[2026-08-05T17:10:24.926419+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:25.168757+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_influencer_control_config.gd:14 status=FAILED
+[2026-08-05T17:10:25.169111+00:00] [FAILURE] main: file not found: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_surface_3d/aero_surface_3d.gd
+[2026-08-05T17:10:25.175895+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd.bak.20260805171025
+[2026-08-05T17:10:25.778823+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:27.087149+00:00] [FAILURE] postcheck_gdlint: gdlint errors: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:23: Error: Trailing whitespace(s) (
+[2026-08-05T17:10:27.413529+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:15 status=VERIFY_FAILED
+[2026-08-05T17:10:27.419840+00:00] [SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd.bak.20260805171027
+[2026-08-05T17:10:28.231833+00:00] [SUCCESS] precheck: gdparse OK – no parse error
+[2026-08-05T17:10:28.735190+00:00] [FAILURE] postcheck_gdparse: gdparse still has errors: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd:
+
+No terminal matches '\' in the curre
+[2026-08-05T17:10:29.009834+00:00] [SUCCESS] record_fix: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd:12 status=VERIFY_FAILED
+[STDOUT] Success: no problems found
+[STDOUT] Success: no problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:23: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:30: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:38: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:53: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:70: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd:75: Error: Trailing whitespace(s) (trailing-whitespace)
+[STDERR] Failure: 6 problems found
+[STDERR] /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_config.gd:
+[STDERR] 
+[STDERR] No terminal matches '\' in the current parser context, at line 12 col 33
+[STDERR] 
+[STDERR] 			x[-1] = AeroControlConfigAxis\.new()
+[STDERR]                                                      ^
+[STDERR] Expected one of:
+[STDERR] 	* IF
+[STDERR] 	* "*="
+[STDERR] 	* "||"
+[STDERR] 	* "/="
+[STDERR] 	* SEMICOLON
+[STDERR] 	* NOT
+[STDERR] 	* COLON
+[STDERR] 	* "&&"
+[STDERR] 	* AND
+[STDERR] 	* "=="
+[STDERR] 	* "<="
+[STDERR] 	* MINUS
+[STDERR] 	* AS
+[STDERR] 	* LSQB
+[STDERR] 	* ">="
+[STDERR] 	* CIRCUMFLEX
+[STDERR] 	* "<<="
+[STDERR] 	* "%="
+[STDERR] 	* ">>"
+[STDERR] 	* "!="
+[STDERR] 	* PERCENT
+[STDERR] 	* "<<"
+[STDERR] 	* "is not"
+[STDERR] 	* "**"
+[STDERR] 	* RBRACE
+[STDERR] 	* VBAR
+[STDERR] 	* ELSE
+[STDERR] 	* "**="
+[STDERR] 	* COMMA
+[STDERR] 	* RSQB
+[STDERR] 	* "^="
+[STDERR] 	* PLUS
+[STDERR] 	* "&="
+[STDERR] 	* _NL
+[STDERR] 	* EQUAL
+[STDERR] 	* ">>="
+[STDERR] 	* "-="
+[STDERR] 	* SLASH
+[STDERR] 	* LPAR
+[STDERR] 	* OR
+[STDERR] 	* "+="
+[STDERR] 	* "|="
+[STDERR] 	* STAR
+[STDERR] 	* IS
+[STDERR] 	* IN
+[STDERR] 	* MORETHAN
+[STDERR] 	* RPAR
+[STDERR] 	* LESSTHAN
+[STDERR] 	* DOT
+[STDERR] 	* AMPERSAND
+[STDERR] 
+[STDERR] Previous tokens: Token('NAME', 'AeroControlConfigAxis')
+
+=== Fix attempt complete: 2 fixed, 11 failed, 0 skipped ===
+
+=== Skipping final godot --check-only (SKIP_FINAL_GODOT=True) ===
+Please manually verify the editor by running:
+  godot --path ./godot_project/ --editor
+
+Check the database for detailed records.
+
+=== End of fix run ===
