@@ -1,0 +1,699 @@
+=== arm_tail_0070 — 20260805060934 UTC ===
+
+=== Total lines: 3766 ===
+
+=== GREP: _update_arm_physics / _apply_arm_bone_overrides / _arm_pull ===
+731:	_the_anim_player = _anim_player  # store for arm physics pause/resume
+925:	# was dead code). Arm motion is now driven by _update_arm_physics(),
+1688:		# ParachuteController removed — steering via _turn_input + _arm_pull directly.
+2000:	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+2115:		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+2190:	call_deferred("_apply_arm_bone_overrides")
+3003:var _arm_pull      := {"L": 0.0, "R": 0.0}
+3010:var _the_anim_player = null  # stored so arm physics can pause/resume it
+3049:func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+3072:		var pull: float = _arm_pull[side]
+3100:		_arm_pull[side] = pull
+3140:	_apply_arm_bone_overrides()
+3145:	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
+3146:	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+3147:		if any_pull and _the_anim_player.is_playing():
+3148:			_the_anim_player.stop()
+3149:		elif not any_pull and not _the_anim_player.is_playing():
+3150:			_the_anim_player.play("mixamo_com")
+3152:func _apply_arm_bone_overrides() -> void:
+3175:# _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+3491:# _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+3534:	var bl: float = _arm_pull["L"]
+3535:	var br: float = _arm_pull["R"]
+
+=== LINES 3100-END ===
+		_arm_pull[side] = pull
+		_arm_vel[side] = vel
+
+		# Absolute pose recomputed from rest every frame - never compounding.
+		# Mirror the sweep axis so both arms move outward-down, not into the chest.
+		# Axis lifted to constants so the probe result can be applied as a
+		# one-line change. Current values are v4's, kept identical until the
+		# [AXISPROBE] measurement selects a replacement.
+		var axis: Vector3 = _arm_axis_use(side)
+		var angle: float = pull * ARM_MAX_ANGLE
+		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
+		_arm_q_stored[side] = q
+
+		# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
+		# pull keeps the arm straight and a deep pull draws the hand inward.
+		var elbow_deg := 0.0
+		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+			# ARM_ELBOW_NEUTRAL: 20deg resting bend ("let it fly" posture).
+			# Negated axis: solved axis bends forward; negated bends elbow
+			# downward/rearward (USPA SIM toggle grip toward hip).
+			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
+			var e_ax: Vector3 = -_arm_elbow_axis[side]
+			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+			_arm_elbow_q_stored[side] = eq
+			elbow_deg = rad_to_deg(e_ang)
+
+		# Telemetry only while the system is doing something, so idle frames
+		# stay quiet and a pull/release cycle produces a dense readable curve.
+		if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+				",", force, ",", tension, ",", damping, ",", accel,
+				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+				",", elbow_deg, ",", _arm_hold_t[side])
+
+	# Apply computed quaternions to skeleton bones every physics frame.
+	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
+	# computed above but were never written to the skeleton — root cause
+	# of arms not pulling down despite spring-damper running correctly.
+	_apply_arm_bone_overrides()
+	# Stop the looping Mixamo AnimationPlayer when arm pull is active so
+	# it cannot overwrite the bone poses we just set. Resume when at rest.
+	# Root cause of regression ffdd7d6: AnimationPlayer.play(mixamo_com)
+	# runs every frame and overwrites set_bone_pose_rotation every frame.
+	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
+	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+		if any_pull and _the_anim_player.is_playing():
+			_the_anim_player.stop()
+		elif not any_pull and not _the_anim_player.is_playing():
+			_the_anim_player.play("mixamo_com")
+
+func _apply_arm_bone_overrides() -> void:
+	if not _skeleton:
+		return
+	for side in ["L", "R"]:
+		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+		if idx != -1:
+			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+		var f_idx: int = _arm_fore_idx.get(side, -1)
+		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+
+
+# ===========================================================================
+# ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+#
+# v6 could not run: it looked up "mixamorig:Hips" and friends, but Godot's
+# FBX importer stores the separator as '_', so every lookup returned -1
+# (0716.txt: six MISSING BONE lines, then ABORT). build_terrain.gd L649
+# already hedged by testing both forms - that is why bone indices 8 and 32
+# resolved while v6's did not. _arm_find_bone() below tries both.
+#
+# v6 also only PRINTED the answer for manual transcription. It is now
+# applied directly: the solve runs at startup, is stored, and is read by
+# _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+# only as fallbacks should the solve fail.
+#
+# Refs (general knowledge - not retrieved this session):
+#   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+#   https://docs.godotengine.org/en/stable/classes/class_vector3.html
+# ===========================================================================
+
+const ARM_AXIS_L := Vector3(0, 0, -1)
+const ARM_AXIS_R := Vector3(0, 0, 1)
+
+var _arm_probe_done := false
+var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+var _arm_axis_solved := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+var _arm_axis_ok := {"L": false, "R": false}
+var _arm_solve_tries := 0
+
+
+func _arm_find_bone(base: String) -> int:
+	# Godot's FBX importer replaces ':' with '_' in bone names. Try both.
+	var i := _skeleton.find_bone("mixamorig_" + base)
+	if i == -1:
+		i = _skeleton.find_bone("mixamorig:" + base)
+	return i
+
+
+func _arm_axis_use(side: String) -> Vector3:
+	if _arm_axis_ok[side]:
+		return _arm_axis_solved[side]
+	return ARM_AXIS_L if side == "L" else ARM_AXIS_R
+
+
+func _arm_axis_probe() -> void:
+	if _arm_probe_done:
+		return
+	if not _skeleton:
+		return
+	_arm_solve_tries += 1
+	if _arm_solve_tries > 120:
+		_arm_probe_done = true
+		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+		return
+
+	var b_hips := _arm_find_bone("Hips")
+	var b_head := _arm_find_bone("Head")
+	var b_foot := _arm_find_bone("LeftFoot")
+	var b_toe  := _arm_find_bone("LeftToe_End")
+	var b_hl   := _arm_find_bone("LeftHand")
+	var b_hr   := _arm_find_bone("RightHand")
+	if b_hips == -1 or b_head == -1 or b_foot == -1 or b_toe == -1 \
+			or b_hl == -1 or b_hr == -1:
+		if _arm_solve_tries == 1:
+			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+				" foot=", b_foot, " toe=", b_toe, " hl=", b_hl, " hr=", b_hr)
+		return
+
+	_arm_probe_done = true
+	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+		"  hips=", b_hips, " head=", b_head, " foot=", b_foot,
+		" toe=", b_toe, " handL=", b_hl, " handR=", b_hr)
+
+	# ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then
+	#      0716.txt showed it cleared entirely - the clip does not loop) -----
+	var ap = null
+	if _character and is_instance_valid(_character):
+		ap = _character.find_child("AnimationPlayer", true, false)
+	if ap == null:
+		print("[ANIMDIAG] no AnimationPlayer found")
+	else:
+		var cur: String = ap.current_animation
+		print("[ANIMDIAG] current='", cur, "' is_playing=", ap.is_playing(),
+			" speed_scale=", ap.speed_scale, " active=", ap.active,
+			" process_mode=", ap.callback_mode_process,
+			" list=", ap.get_animation_list())
+		if cur != "":
+			var a = ap.get_animation(cur)
+			if a != null:
+				print("[ANIMDIAG] length=", a.length, " loop_mode=", a.loop_mode,
+					" tracks=", a.get_track_count())
+
+	# ---- Save pose, go to rest for a clean measurement --------------------
+	var saved_l: Quaternion = _skeleton.get_bone_pose_rotation(_left_arm_idx)
+	var saved_r: Quaternion = _skeleton.get_bone_pose_rotation(_right_arm_idx)
+	_skeleton.set_bone_pose_rotation(_left_arm_idx, _arm_rest_q["L"])
+	_skeleton.set_bone_pose_rotation(_right_arm_idx, _arm_rest_q["R"])
+	_skeleton.force_update_all_bone_transforms()
+
+	# ---- Anatomical frame, derived from the rig ---------------------------
+	var p_hips: Vector3 = _skeleton.get_bone_global_pose(b_hips).origin
+	var p_head: Vector3 = _skeleton.get_bone_global_pose(b_head).origin
+	var p_foot: Vector3 = _skeleton.get_bone_global_pose(b_foot).origin
+	var p_toe:  Vector3 = _skeleton.get_bone_global_pose(b_toe).origin
+
+	var up: Vector3 = (p_head - p_hips).normalized()
+	var fwd_raw: Vector3 = p_toe - p_foot
+	var fwd: Vector3 = (fwd_raw - up * fwd_raw.dot(up)).normalized()
+	var right: Vector3 = fwd.cross(up).normalized()
+	var d_want: Vector3 = (fwd - up).normalized()
+	# v9: publish for the elbow solve. Using the same direction there makes
+	# the forearm carry the hand further forward and down, which is the
+	# mechanical advantage the elbow bend exists to provide.
+	_arm_d_want = d_want
+	_arm_body_up = up
+
+	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+		" (want ~0); desired hand dir (fwd+down)=", d_want)
+
+	print("[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,d_right")
+
+	for side in ["L", "R"]:
+		var arm_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+		var hand_idx: int = b_hl if side == "L" else b_hr
+		var rest: Quaternion = _arm_rest_q[side]
+
+		var arm_pose: Transform3D = _skeleton.get_bone_global_pose(arm_idx)
+		var p_hand0: Vector3 = _skeleton.get_bone_global_pose(hand_idx).origin
+		var r_lever: Vector3 = p_hand0 - arm_pose.origin
+
+		var w_global: Vector3 = r_lever.cross(d_want)
+		if w_global.length() < 0.000001:
+			print("[AXISSOLVE] ", side, " DEGENERATE lever - keeping fallback")
+			continue
+		w_global = w_global.normalized()
+		var w_local: Vector3 = (arm_pose.basis.inverse() * w_global).normalized()
+		_arm_axis_solved[side] = w_local
+		_arm_axis_ok[side] = true
+
+		print("[AXISSOLVE] ", side, " lever=", r_lever, " len=", r_lever.length(),
+			" axis_global=", w_global, " AXIS_LOCAL_APPLIED=", w_local)
+
+		# ---- verify the solve, and log the six primaries for comparison ---
+		var tests := [
+			["SOLVED", w_local],
+			["+X", Vector3(1, 0, 0)], ["-X", Vector3(-1, 0, 0)],
+			["+Y", Vector3(0, 1, 0)], ["-Y", Vector3(0, -1, 0)],
+			["+Z", Vector3(0, 0, 1)], ["-Z", Vector3(0, 0, -1)],
+		]
+		for ang_deg in [15.0, 60.0]:
+			var ang := deg_to_rad(ang_deg)
+			for t in tests:
+				var label: String = t[0]
+				var ax: Vector3 = t[1]
+				_skeleton.set_bone_pose_rotation(arm_idx, rest * Quaternion(ax, ang))
+				_skeleton.force_update_all_bone_transforms()
+				var d: Vector3 = _skeleton.get_bone_global_pose(hand_idx).origin - p_hand0
+				print("[AXISSOLVE],", side, ",", label, ",", ang_deg,
+					",", d.dot(fwd), ",", d.dot(up), ",", d.dot(right))
+				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+				_skeleton.force_update_all_bone_transforms()
+
+	_arm_solve_elbow()
+
+	_skeleton.set_bone_pose_rotation(_left_arm_idx, saved_l)
+	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+	_skeleton.force_update_all_bone_transforms()
+	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+		" - axes now APPLIED live, pose restored")
+
+# ===========================================================================
+# ELBOW FLEXION  (fix_arm_deep_elbow_v8)
+#
+# Solved exactly as the shoulder axis was in v7: for a rotation about w the
+# hand moves d = w x r, with r the hand taken relative to the forearm bone.
+# Elbow flexion draws the hand toward the shoulder, so d_want is the
+# shoulder-ward direction orthogonalized against r, giving
+#   w = r.cross(d_want),  w_local = forearm_global_basis.inverse() * w
+#
+# Verified below by measuring hand-to-shoulder distance at 30 and 75 deg:
+# flexion must DECREASE it. A positive delta means the sign is inverted.
+#
+# Refs (general knowledge - not retrieved this session):
+#   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+#   https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+# ===========================================================================
+
+var _arm_hold_t      := {"L": 0.0, "R": 0.0}
+var _arm_fore_idx    := {"L": -1, "R": -1}
+var _arm_fore_rest_q := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+var _arm_elbow_axis  := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+var _arm_elbow_ok    := {"L": false, "R": false}
+
+
+func _arm_solve_elbow() -> void:
+	if not _skeleton:
+		return
+	for side in ["L", "R"]:
+		var fname: String = "LeftForeArm" if side == "L" else "RightForeArm"
+		var hname: String = "LeftHand" if side == "L" else "RightHand"
+		var f_idx := _arm_find_bone(fname)
+		var h_idx := _arm_find_bone(hname)
+		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+		if f_idx == -1 or h_idx == -1 or a_idx == -1:
+			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+				" hand=", h_idx, " arm=", a_idx)
+			continue
+
+		_arm_fore_idx[side] = f_idx
+		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+
+		var p_f: Vector3 = _skeleton.get_bone_global_pose(f_idx).origin
+		var p_h: Vector3 = _skeleton.get_bone_global_pose(h_idx).origin
+		var p_a: Vector3 = _skeleton.get_bone_global_pose(a_idx).origin
+
+		var r_lever: Vector3 = p_h - p_f
+		if r_lever.length() < 0.000001:
+			print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm lever")
+			continue
+
+		# v9: primary reference is the anatomical pull direction solved for
+		# the shoulder (forward+down). v8 used the shoulder-ward vector, which
+		# is parallel to the forearm when the arm is straight - the exact pose
+		# this rig rests in - so it collapsed to zero and the solve bailed
+		# (elbow_v8.txt reported the bail on both sides at rest).
+		var d_want := Vector3.ZERO
+		var src := ""
+		var cands := [
+			["pull_dir", _arm_d_want],
+			["shoulderward", p_a - p_h],
+			["body_up", -_arm_body_up],
+		]
+		for c in cands:
+			var v: Vector3 = c[1]
+			if v.length() < 0.000001:
+				continue
+			var rej: Vector3 = v - r_lever * (v.dot(r_lever) / r_lever.length_squared())
+			if rej.length() > 0.001:
+				d_want = rej.normalized()
+				src = c[0]
+				break
+		if d_want == Vector3.ZERO:
+			print("[ELBOWSOLVE] ", side,
+				" DEGENERATE: no usable reference. lever=", r_lever,
+				" pull_dir=", _arm_d_want, " up=", _arm_body_up)
+			continue
+		print("[ELBOWSOLVE] ", side, " reference=", src)
+
+		var w_global: Vector3 = r_lever.cross(d_want).normalized()
+		var f_basis: Basis = _skeleton.get_bone_global_pose(f_idx).basis
+		var w_local: Vector3 = (f_basis.inverse() * w_global).normalized()
+		_arm_elbow_axis[side] = w_local
+		_arm_elbow_ok[side] = true
+
+		print("[ELBOWSOLVE] ", side, " fore_idx=", f_idx,
+			" lever=", r_lever, " len=", r_lever.length(),
+			" d_want=", d_want, " ELBOW_AXIS_LOCAL=", w_local)
+
+		# verify: hand-to-shoulder distance must shrink under flexion
+		var rest_f: Quaternion = _arm_fore_rest_q[side]
+		var d0: float = (p_h - p_a).length()
+		print("[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive")
+		for ang_deg in [30.0, 75.0]:
+			_skeleton.set_bone_pose_rotation(f_idx,
+				rest_f * Quaternion(w_local, deg_to_rad(ang_deg)))
+			_skeleton.force_update_all_bone_transforms()
+			var p1: Vector3 = _skeleton.get_bone_global_pose(h_idx).origin
+			var d1: float = (p1 - p_a).length()
+			var along: float = (p1 - p_h).dot(_arm_d_want)
+			print("[ELBOWSOLVE],", side, ",", ang_deg, ",", d0, ",", d1,
+				",", d1 - d0, ",", along)
+			_skeleton.set_bone_pose_rotation(f_idx, rest_f)
+			_skeleton.force_update_all_bone_transforms()
+
+# v9: anatomical pull direction and body up, published by
+# _arm_axis_probe() so _arm_solve_elbow() can reuse them.
+var _arm_d_want := Vector3.ZERO
+var _arm_body_up := Vector3.UP
+
+# ===========================================================================
+# MAIN CANOPY VISIBILITY  (fix_canopy_visibility_v10)
+#
+# _main_canopy_node is instantiated in _setup_pip_overlay and parented to the
+# character, but the audit found ZERO .visible writes for it anywhere in the
+# project - so it was on from startup, through freefall, regardless of
+# _canopy_deployed. _canopy_instance by contrast has six .visible writes and
+# is correctly hidden at line 522.
+#
+# Rather than patch each of those six sites, the unmanaged node simply
+# follows the managed one. Deploy, cutaway, reserve and any future
+# transition are then all covered. Logged only on change.
+#
+# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+#      (general knowledge - not retrieved this session)
+# ===========================================================================
+
+var _canopy_sync_last := -1
+
+
+func _sync_main_canopy() -> void:
+	if _main_canopy_node == null or not is_instance_valid(_main_canopy_node):
+		return
+	if _canopy_instance == null or not is_instance_valid(_canopy_instance):
+		return
+	var want: bool = _canopy_instance.visible
+	if _main_canopy_node.visible != want:
+		_main_canopy_node.visible = want
+		print("[CANOPYSYNC] main canopy visible -> ", want,
+			"  state=", _game_state, "  deployed=", _canopy_deployed)
+	var w: int = 1 if want else 0
+	if _canopy_sync_last != w:
+		_canopy_sync_last = w
+		print("[CANOPYSYNC] transition at state=", _game_state,
+			" deployed=", _canopy_deployed, " visible=", want)
+
+# ===========================================================================
+# CANOPY GLIDE  (fix_canopy_glide_v11)
+#
+# A ram-air canopy is a wing with no thrust: it trades height for forward
+# speed and is steered by asymmetric brake. Before this, _physics_process
+# wrote only _character.position.y, so there was no forward flight to steer -
+# which is why turning appeared to do nothing after deployment, and why
+# 0778.txt shows the turning block executing every frame against a null
+# controller (has_pc=false).
+#
+# Control input is the toggle deflection already solved by the arm spring:
+# _arm_pull["L"] / _arm_pull["R"], 0..1, verified in arm_curve_v8.
+#
+#   sym  = (L+R)/2   symmetric brake -> slows the wing
+#   diff = R - L     differential    -> turn rate
+#
+# GLIDE_TURN_SIGN exists so the turn direction can be reversed with a single
+# constant if right-toggle-turns-right comes out backwards. That is a
+# convention question the telemetry below answers directly - do not guess it.
+#
+# Descent is intentionally left to _get_current_descent_rate(), which already
+# carries the malfunction model. The achieved glide ratio is logged so the
+# coupling can be tuned from measurement.
+#
+# Refs (general knowledge - not retrieved this session):
+#   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+#   https://github.com/addmix/godot_aerodynamic_physics
+# ===========================================================================
+
+const GLIDE_FULL_SPEED := 11.0     # m/s forward, brakes off (typical 9-cell)
+const GLIDE_MIN_SPEED  := 2.5      # m/s at full brakes, before stall
+const GLIDE_BRAKE_SLOW := 0.72     # fraction of speed removed at full brake
+const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+const GLIDE_TARGET_RATIO := 2.6    # reference glide ratio, for the log only
+
+var _canopy_heading := 0.0
+var _glide_tel_t := 0.0
+var _glide_tel_hdr := false
+var _glide_last_log := 0.0
+
+
+func _update_canopy_glide(delta: float, descent_this_frame: float) -> void:
+	# Stop glide physics on landing — otherwise canopy keeps flying underground.
+	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
+		_canopy_deployed = false
+		return
+	if not _canopy_deployed:
+		return
+	if _character == null or not is_instance_valid(_character):
+		return
+	if delta <= 0.0:
+		return
+
+	var bl: float = _arm_pull["L"]
+	var br: float = _arm_pull["R"]
+	var sym: float = (bl + br) * 0.5
+	var diff: float = br - bl
+
+	# Forward airspeed: symmetric brake slows the wing.
+	var fwd_speed: float = GLIDE_FULL_SPEED * (1.0 - GLIDE_BRAKE_SLOW * sym)
+	fwd_speed = maxf(fwd_speed, GLIDE_MIN_SPEED)
+
+	# Turn rate: differential brake, less authority when both brakes are deep.
+	var turn_rate: float = GLIDE_TURN_RATE * GLIDE_TURN_SIGN * diff \
+		* (1.0 - 0.35 * sym)
+	_canopy_heading += turn_rate * delta
+	_canopy_heading = wrapf(_canopy_heading, -PI, PI)
+
+	# Horizontal travel along the heading.
+	var fwd := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+	var before := _character.position
+	_character.position += fwd * fwd_speed * delta
+	_character.rotation.y = _canopy_heading
+
+	# v12: the caller already subtracted descent_this_frame, which measured
+	# 18.0 m/s flat across all 1541 rows of glide_v11.txt - 3543 ft/min, and
+	# a glide ratio near 0.5. Undo it and apply a wing-consistent sink while
+	# deployed. _get_current_descent_rate() is left alone so the malfunction
+	# model still governs freefall and any non-deployed state.
+	var ratio: float = GLIDE_RATIO_BEST - GLIDE_RATIO_BRAKE_LOSS * sym * sym
+	ratio = maxf(ratio, 0.6)
+	var sink: float = fwd_speed / ratio + GLIDE_STALL_SINK * sym * sym * sym
+	_character.position.y += descent_this_frame - sink * delta
+
+	# ---- telemetry -------------------------------------------------------
+	_glide_tel_t += delta
+	if not _glide_tel_hdr:
+		print("[GLIDE_HDR] t,brake_L,brake_R,sym,diff,fwd_speed,turn_rate_deg_s,"
+			+ "heading_deg,descent_m_s,glide_ratio,x,z,raw_descent")
+		_glide_tel_hdr = true
+
+	# log on change or twice a second, so a straight glide stays readable
+	var moving: bool = absf(diff) > 0.002 or sym > 0.002
+	if moving or _glide_tel_t - _glide_last_log > 0.5:
+		_glide_last_log = _glide_tel_t
+		var desc_rate: float = sink
+		var raw_rate: float = descent_this_frame / delta
+		var log_ratio: float = 0.0
+		if absf(desc_rate) > 0.0001:
+			log_ratio = fwd_speed / desc_rate
+		print("[GLIDE],", _glide_tel_t, ",", bl, ",", br, ",", sym, ",", diff,
+			",", fwd_speed, ",", rad_to_deg(turn_rate), ",",
+			rad_to_deg(_canopy_heading), ",", desc_rate, ",", log_ratio,
+			",", _character.position.x, ",", _character.position.z,
+			",", raw_rate)
+		if before.distance_to(_character.position) < 0.0001 and fwd_speed > 0.1:
+			print("[GLIDE] WARNING: position did not change despite fwd_speed=",
+				fwd_speed, " - something downstream is overwriting position")
+
+# ===========================================================================
+# GLIDE TUNING + LIVE PiP  (fix_altitude_pip_v12)
+#
+# glide_v11.txt measured descent 18.0 m/s flat and glide ratio 0.39-0.61.
+# A ram-air canopy sits near 2.6 at full flight, degrading under brake, with
+# sink rising sharply as it approaches stall.
+#   brakes off: 11.00 / 2.6           = 4.23 m/s
+#   full brake:  3.08 / 1.2 + 3.0     = 5.57 m/s
+#
+# PiP: _setup_pip_overlay builds a standalone SubViewport mini-scene with its
+# own canopy model and light (build_terrain.gd 2180-2226), so it shows a prop,
+# not the real canopy. Sharing the main World3D into that SubViewport and
+# driving its camera from the character makes it a genuine overhead view:
+# the aircraft receding before deploy, the real canopy after.
+#
+# The mini-scene props are hidden rather than freed, so nothing that
+# _setup_pip_overlay still holds a reference to is invalidated.
+#
+# Refs (general knowledge - not retrieved this session):
+#   https://docs.godotengine.org/en/stable/classes/class_subviewport.html
+#   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+# ===========================================================================
+
+const GLIDE_RATIO_BEST       := 2.6    # full flight, brakes off
+const GLIDE_RATIO_BRAKE_LOSS := 1.4    # ratio lost at full brake (-> 1.2)
+const GLIDE_STALL_SINK       := 3.0    # m/s extra sink approaching stall
+
+var _pip_ready := false
+var _pip_log_t := 0.0
+
+
+func _pip_live_view(delta: float) -> void:
+	if _pip_viewport == null or not is_instance_valid(_pip_viewport):
+		return
+	if _pip_camera == null or not is_instance_valid(_pip_camera):
+		return
+
+	# --- one-time: point the SubViewport at the real world ----------------
+	if not _pip_ready:
+		_pip_ready = true
+		var main_world = get_viewport().world_3d
+		if main_world != null:
+			_pip_viewport.world_3d = main_world
+			print("[PIPLIVE] SubViewport now shares the main World3D")
+		else:
+			print("[PIPLIVE] WARNING: main world_3d is null, PiP stays standalone")
+		# Hide the standalone props so they do not leak into the real world.
+		# Walk children generically - build_terrain.gd 2195-2219 is unread.
+		var hidden := 0
+		for child in _pip_viewport.get_children():
+			if child == _pip_camera:
+				continue
+			if child is Node3D:
+				child.visible = false
+				hidden += 1
+		print("[PIPLIVE] hid ", hidden, " standalone PiP prop(s); camera kept")
+		_pip_camera.current = true
+		_pip_camera.fov = 95.0
+		_pip_camera.near = 0.05
+
+	if _character == null or not is_instance_valid(_character):
+		return
+
+	# --- follow the jumper, look UP ---------------------------------------
+	var eye: Vector3 = _character.global_position + Vector3(0.0, 1.7, 0.0)
+	_pip_camera.global_position = eye
+	# Straight up is degenerate for look_at unless the up-hint is horizontal,
+	# so the current heading is used as that hint.
+	var up_hint := Vector3(sin(_canopy_heading), 0.0, cos(_canopy_heading))
+	if up_hint.length() < 0.001:
+		up_hint = Vector3.FORWARD
+	_pip_camera.look_at(eye + Vector3(0.0, 30.0, 0.0), up_hint)
+
+	_pip_log_t += delta
+	if _pip_log_t > 2.0:
+		_pip_log_t = 0.0
+		var what := "canopy" if _canopy_deployed else "aircraft/sky"
+		print("[PIPLIVE] eye=", eye, " state=", _game_state,
+			" deployed=", _canopy_deployed, " framing=", what)
+
+# ===========================================================================
+# CONTROL BINDINGS + PRESS TELEMETRY  (fix_controls_v13)
+#
+# Every action below already has a handler in this file - see the
+# Input.is_action_just_pressed call sites around lines 997, 1566-1582,
+# 1688-1733 and 1836. What was never verified is whether those actions are
+# bound to any key, and no InputMap dump appears in any run so far.
+#
+# That matches the observed behaviour: deploy (SPACE) and turn (Q/E) work,
+# and turn works because _physics_process also reads KEY_Q / KEY_E directly,
+# bypassing the action system. Controls with no such fallback would silently
+# do nothing no matter how correct their handler is.
+#
+# _ensure_controls() only ADDS a missing binding; it never removes an
+# existing one, so a working configuration is left intact. It reports what it
+# found for each action on the first pass, so the binding state stops being
+# an assumption.
+#
+# Refs (general knowledge - not retrieved this session):
+#   https://docs.godotengine.org/en/stable/classes/class_inputmap.html
+#   https://docs.godotengine.org/en/stable/classes/class_inputeventkey.html
+# ===========================================================================
+
+const CONTROL_KEYS := {
+	"deploy":       KEY_SPACE,
+	"turnleft":     KEY_Q,
+	"turnright":    KEY_E,
+	"camera_cycle": KEY_C,
+	"cutaway":      KEY_X,
+	"reserve":      KEY_V,
+	"flare":        KEY_F,
+	"togglehud":    KEY_H,
+	"flightcheck":  KEY_G,
+	"restart":      KEY_R,
+	"j":            KEY_J,
+	"pause":        KEY_ESCAPE,
+}
+
+var _controls_ready := false
+
+
+func _ensure_controls() -> void:
+	if _controls_ready:
+		return
+	_controls_ready = true
+	print("[CONTROLS] ---- InputMap audit and repair ----")
+	var added := 0
+	for action in CONTROL_KEYS:
+		var want: int = CONTROL_KEYS[action]
+		var existed: bool = InputMap.has_action(action)
+		if not existed:
+			InputMap.add_action(action)
+		var had: Array = []
+		for ev in InputMap.action_get_events(action):
+			if ev is InputEventKey:
+				var kc: int = ev.physical_keycode
+				if kc == 0:
+					kc = ev.keycode
+				had.append(OS.get_keycode_string(kc))
+		var need: bool = not InputMap.action_has_event(action, _key_event(want))
+		if need:
+			InputMap.action_add_event(action, _key_event(want))
+			added += 1
+		print("[CONTROLS] ", action,
+			"  action_existed=", existed,
+			"  keys_before=", had,
+			"  wanted=", OS.get_keycode_string(want),
+			"  added=", need)
+	print("[CONTROLS] ---- ", added, " binding(s) added ----")
+
+
+func _key_event(keycode: int) -> InputEventKey:
+	var ev := InputEventKey.new()
+	ev.physical_keycode = keycode
+	ev.keycode = keycode
+	return ev
+
+
+func _log_control_presses() -> void:
+	# One line per press: which control, in which state, canopy or not.
+	# This is what the autostall log needs so an attempted control is
+	# visible even when its handler does nothing.
+	for action in CONTROL_KEYS:
+		if not InputMap.has_action(action):
+			continue
+		if Input.is_action_just_pressed(action):
+			# DB: persist confirmed keypress to control_events
+			var _cdb = get_node_or_null('/root/SqliteDb')
+			if _cdb != null:
+				var _sql = ('INSERT INTO control_events(ts,action,key,state_num,result,reason)' + " VALUES(datetime('now'),'" + action + "','" + action + "'," + str(_game_state) + ",'pressed','')")
+				if _cdb.has_method('execute'): _cdb.execute(_sql)
+				elif _cdb.has_method('_query'): _cdb._query(_sql)
+			print("[CTRL] pressed=", action,
+				"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+				"  state=", _game_state,
+				"  deployed=", _canopy_deployed,
+				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+=== END ===
