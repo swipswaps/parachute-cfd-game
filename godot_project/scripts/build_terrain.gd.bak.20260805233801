@@ -1614,14 +1614,6 @@ func _poll_controls() -> void:
 	print("[DIAG] _poll_controls: ENTER, state=", _game_state)
 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
 
-		if _game_state == GameState.FREEFALL:
-		if Input.is_action_just_pressed("deploy"):
-			print("[VERBATIM] Deploy triggered from _poll_controls")
-			_deploy_canopy()
-		if Input.is_action_just_pressed("turnleft"):
-			_turn_left()
-		if Input.is_action_just_pressed("turnright"):
-			_turn_right()
 	if _game_state == GameState.IN_PLANE:
 		# Also check headless auto-jump flag (set in _physics_process;
 		# reliable across _physics_process/_process frame boundary).
