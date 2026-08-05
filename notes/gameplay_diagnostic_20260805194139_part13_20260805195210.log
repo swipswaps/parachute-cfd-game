@@ -1,0 +1,1574 @@
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((835.0, 416.0)), relative=((-6.0, 7.0)), velocity=((-99.69693, 99.69693)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((832.0, 419.0)), relative=((-3.0, 3.0)), velocity=((-99.69693, 99.69693)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((831.0, 420.0)), relative=((-1.0, 1.0)), velocity=((-89.07981, 98.97757)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((830.0, 421.0)), relative=((-1.0, 1.0)), velocity=((-89.07981, 98.97757)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[WIND] speed 7.88509379776687 kts  dir 0°  gust 1.8010752089127  vec_ms (0.0, 0.0, 4.056439)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],15.116666666667,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,622.5361328125,634.73193359375,26.4
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=86 (V), mods=none, physical=false, location=unspecified, pressed=true, echo=false
+[VERBATIM] INPUT: action=reserve (V)
+[AUDIT] _input: ENTER
+2026-08-05T15:42:14 [INFO] InputManager ready
+2026-08-05T15:42:14 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+2026-08-05T15:42:14 [INFO] InputManager: key=V code=86
+2026-08-05T15:42:14 [INFO] InputManager: action 'reserve' pressed
+[CTRL] pressed=reserve  key=V  state=3  deployed=true  alt_m=1787.7
+[PIPLIVE] eye=(623.2275, 1789.434, 634.4875) state=3 deployed=true framing=canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.5
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@47 @MeshInstance3D@48 @MeshInstance3D@49 @MeshInstance3D@50 @Node3D@51 FlyingPlane @Camera3D@55 @MeshInstance3D@56 @MeshInstance3D@57 @MeshInstance3D@58 @MeshInstance3D@59 @MeshInstance3D@60 @MeshInstance3D@61 @MeshInstance3D@62 @MeshInstance3D@63 @MeshInstance3D@64 @MeshInstance3D@65 @MeshInstance3D@66 @MeshInstance3D@67 @MeshInstance3D@68 @MeshInstance3D@69 @MeshInstance3D@70 @MeshInstance3D@71 @MeshInstance3D@72 @MeshInstance3D@73 @MeshInstance3D@74 @MeshInstance3D@75 @MeshInstance3D@76 @MeshInstance3D@77 @MeshInstance3D@78 @MeshInstance3D@79 @MeshInstance3D@80 @MeshInstance3D@81 @MeshInstance3D@82 @MeshInstance3D@83 @MeshInstance3D@84 @MeshInstance3D@85 @MeshInstance3D@86 @MeshInstance3D@87 @MeshInstance3D@88 @MeshInstance3D@89 @MeshInstance3D@90 @MeshInstance3D@91 @MeshInstance3D@92 @MeshInstance3D@93 @MeshInstance3D@94 @MeshInstance3D@95 @MeshInstance3D@96 @MeshInstance3D@97 @CanvasLayer@99 @HTTPRequest@113 PiPLayer @HTTPRequest@122 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _do_reserve: ENTER, state=3
+[VERBATIM] ENTER _do_reserve gate=_game_state=3
+[VERBATIM] 3D screenshot saved: user://screenshots/2026-08-05T15-42-15_landing_3d.png
+[VERBATIM] RESERVE deployed – SAFE LANDING!
+[VERBATIM] Canopy visuals updated for LINE OVER
+[VERBATIM] ENTER _calculate_score gate=none
+[VERBATIM] Final score: 0 (distance: 1996.685546875m, landing speed: 0.5 m/s)
+[VERBATIM] ENTER _update_leaderboard gate=none
+[VERBATIM] Leaderboard updated
+[VERBATIM] EXIT _update_leaderboard ok=true
+[VERBATIM] EXIT _calculate_score ok=true
+[DIAG] _do_reserve: EXIT, reserve_done=true
+[VERBATIM] EXIT _do_reserve ok=true
+[VERBATIM] POLL: reserve pressed - calling _do_reserve
+[DIAG] _do_reserve: ENTER, state=4
+[VERBATIM] ENTER _do_reserve gate=_game_state=4
+[DIAG] _do_reserve: already deployed
+[VERBATIM] EXIT _do_reserve early=already_deployed
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=86 (V), mods=none, physical=false, location=unspecified, pressed=false, echo=false
+[AUDIT] _input: ENTER
+2026-08-05T15:42:15 [INFO] InputManager ready
+2026-08-05T15:42:15 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],15.616666666667,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,627.7216796875,632.899047851562,0.0
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((830.0, 420.0)), relative=((0.0, -1.0)), velocity=((-2.25424, 2.25424)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[AUDIT] _poll_fast: ENTER
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((827.0, 420.0)), relative=((-3.0, 0.0)), velocity=((0.0, -3.736041)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((812.0, 420.0)), relative=((-15.0, 0.0)), velocity=((0.0, -3.736041)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((768.0, 415.0)), relative=((-44.0, -5.0)), velocity=((0.0, -3.736041)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((719.0, 400.0)), relative=((-49.0, -15.0)), velocity=((-610.5426, -49.23731)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((673.0, 374.0)), relative=((-46.0, -26.0)), velocity=((-610.5426, -49.23731)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((633.0, 342.0)), relative=((-40.0, -32.0)), velocity=((-610.5426, -49.23731)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],16.116666666667,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,632.9072265625,631.066162109375,0.0
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((622.0, 316.0)), relative=((-11.0, -26.0)), velocity=((-1333.636, -721.1515)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((620.0, 285.0)), relative=((-2.0, -31.0)), velocity=((-1333.636, -721.1515)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((617.0, 273.0)), relative=((-3.0, -12.0)), velocity=((-1333.636, -721.1515)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((616.0, 270.0)), relative=((-1.0, -3.0)), velocity=((-159.2008, -686.5534)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((614.0, 261.0)), relative=((-2.0, -9.0)), velocity=((-159.2008, -686.5534)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((612.0, 255.0)), relative=((-2.0, -6.0)), velocity=((-159.2008, -686.5534)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((610.0, 248.0)), relative=((-2.0, -7.0)), velocity=((-49.22422, -177.2072)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((604.0, 238.0)), relative=((-6.0, -10.0)), velocity=((-49.22422, -177.2072)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((595.0, 233.0)), relative=((-9.0, -5.0)), velocity=((-49.22422, -177.2072)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((590.0, 232.0)), relative=((-5.0, -1.0)), velocity=((-168.1703, -217.6322)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((585.0, 230.0)), relative=((-5.0, -2.0)), velocity=((-168.1703, -217.6322)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((579.0, 232.0)), relative=((-6.0, 2.0)), velocity=((-168.1703, -217.6322)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((577.0, 236.0)), relative=((-2.0, 4.0)), velocity=((-117.7414, -7.35884)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],16.6333333333337,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,638.265625,629.172180175781,0.0
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((578.0, 239.0)), relative=((1.0, 3.0)), velocity=((-117.7414, -7.35884)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((579.0, 240.0)), relative=((1.0, 1.0)), velocity=((-9.928022, 69.49615)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((580.0, 241.0)), relative=((1.0, 1.0)), velocity=((-9.928022, 69.49615)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((580.0, 241.0)), relative=((0.0, 0.0)), velocity=((14.91402, 14.91402)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((581.0, 241.0)), relative=((1.0, 0.0)), velocity=((0.0, 0.0)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],17.1500000000003,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,643.6240234375,627.278198242188,0.0
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[PIPLIVE] eye=(644.1426, 1780.897, 627.0949) state=4 deployed=true framing=canopy
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((581.0, 241.0)), relative=((0.0, 0.0)), velocity=((1.858315, 0.0)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],17.6666666666669,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,648.982421875,625.384216308594,0.0
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((581.0, 241.0)), relative=((0.0, 0.0)), velocity=((0.0, 0.0)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((582.0, 242.0)), relative=((1.0, 1.0)), velocity=((0.0, 0.0)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[AUDIT] _poll_fast: ENTER
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],18.1833333333336,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,654.3408203125,623.490234375,0.0
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],18.7000000000002,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,659.69921875,621.596252441406,0.0
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],19.2166666666669,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,665.0576171875,619.702270507812,0.0
+[PIPLIVE] eye=(665.0576, 1772.36, 619.7023) state=4 deployed=true framing=canopy
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],19.7333333333335,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,670.416015625,617.808288574219,0.0
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=67 (C), mods=none, physical=false, location=unspecified, pressed=true, echo=false
+[VERBATIM] INPUT: action=cycle_camera (C)
+[AUDIT] _input: ENTER
+2026-08-05T15:42:19 [INFO] InputManager ready
+2026-08-05T15:42:19 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+2026-08-05T15:42:19 [INFO] InputManager: key=C code=67
+2026-08-05T15:42:19 [INFO] InputManager: action 'cycle_camera' pressed
+[CTRL] pressed=camera_cycle  key=C  state=4  deployed=true  alt_m=1768.5
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[WIND] speed 4.10631574122956 kts  dir 0°  gust -1.97253528483242  vec_ms (0.0, 0.0, 2.112469)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=67 (C), mods=none, physical=false, location=unspecified, pressed=false, echo=false
+[AUDIT] _input: ENTER
+2026-08-05T15:42:19 [INFO] InputManager ready
+2026-08-05T15:42:19 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[GLIDE],20.2500000000001,0.0,0.0,0.0,0.0,11.0,0.0,109.457504384259,4.23076923076923,2.6,675.7744140625,615.914306640625,0.0
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[AUDIT] _on_integ_completed: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((581.0, 242.0)), relative=((-1.0, 0.0)), velocity=((0.389601, 0.389601)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((579.0, 243.0)), relative=((-2.0, 1.0)), velocity=((0.389601, 0.389601)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((575.0, 246.0)), relative=((-4.0, 3.0)), velocity=((-29.5517, 9.850566)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((570.0, 251.0)), relative=((-5.0, 5.0)), velocity=((-29.5517, 9.850566)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((556.0, 264.0)), relative=((-14.0, 13.0)), velocity=((-29.5517, 9.850566)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((546.0, 273.0)), relative=((-10.0, 9.0)), velocity=((-228.3558, 208.4988)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((537.0, 281.0)), relative=((-9.0, 8.0)), velocity=((-228.3558, 208.4988)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((536.0, 282.0)), relative=((-1.0, 1.0)), velocity=((-228.3558, 208.4988)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)
+[AUDIT] _input: ENTER
+[AUDIT] _gui_input: ENTER
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _physics_process: ENTER, state=4
+[DIAG] _physics_process: camera target set to character (state: 4)
+[DIAG] _poll_controls: ENTER, state=4
+[VERBATIM] POLL: _poll_controls() entered, game_state=4
+[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)
+[DEBUG] _input (build_terrain) called, event=InputEventMouseMotion: button_mask=0, position=((535.0, 283.0)), relative=((-1.0, 1.0)), velocity=((-197.0637, 177.3574)), pressure=0.00, tilt=((0.0, 0.0)), pen_inverted=(false)

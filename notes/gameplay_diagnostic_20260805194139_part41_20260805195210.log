@@ -1,0 +1,799 @@
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.1499999999981,R,false,0.01666666666667,0.0,2.80819133163335,-3.01154857897504,0.20335724734169,-0.85705316368003,0.3367396970595,31.9902752840231,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.1333333333328,0.0,0.3367396970595,0.16836984852975,0.3367396970595,9.66651079964437,-20.8803115204418,-143.941812061037,3.78983934820845,2.55063867132362,444.847442626953,243.06916809082,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.1666666666648,R,false,0.01666666666667,0.0,2.69391757647601,-2.99968607288011,0.3057684964041,-0.8519570220733,0.32254041335828,30.6413431610672,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.1499999999995,0.0,0.32254041335828,0.16127020667914,0.32254041335828,9.72273996310121,-20.0526617493191,-144.276023090192,3.80521165688593,2.55511147336756,444.752838134766,242.937606811523,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.1833333333314,R,false,0.01666666666667,0.0,2.58032330686624,-2.98184957725654,0.4015262703903,-0.84526491756679,0.30845266473217,29.3030068715924,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.1666666666662,0.0,0.30845266473217,0.15422633236608,0.30845266473217,9.77852744766062,-19.2269181287424,-144.596471725671,3.82077168184331,2.55930693114408,444.658416748047,242.804763793945,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.1999999999981,R,false,0.01666666666667,0.0,2.46762131785733,-2.95842721148377,0.49080589362644,-0.83708481933968,0.29450125107651,27.9776224059556,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.1833333333328,0.0,0.29450125107651,0.14725062553825,0.29450125107651,9.83377504573704,-18.4046550105202,-144.903215975847,3.83647988474186,2.56322862133258,444.564178466797,242.670669555664,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.2166666666648,R,false,0.01666666666667,0.0,2.35601000861204,-2.92979686768889,0.57378685907685,-0.82752170502174,0.28070922265948,26.6673795399122,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.1999999999995,0.0,0.28070922265948,0.14035461132974,0.28070922265948,9.88839147826847,-17.5873735620842,-145.196338868548,3.85229699017132,2.56688191577584,444.470123291016,242.535339355469,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.2333333333314,R,false,0.01666666666667,0.0,2.24567378127581,-2.89632596757608,0.65065218630027,-0.81667750191673,0.26709793096086,25.3743066642993,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.2166666666662,0.0,0.26709793096086,0.13354896548043,0.26709793096086,9.94229219339498,-16.7765012071387,-145.475947222,3.86818421734577,2.57027370847842,444.376220703125,242.398818969727,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.2499999999981,R,false,0.01666666666667,0.0,2.13678344768691,-2.85837125670856,0.72158780902165,-0.80465103843304,0.25368708032031,24.100275691621,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.2333333333328,0.0,0.25368708032031,0.12684354016016,0.25368708032031,9.99539916193156,-15.9733911917827,-145.74217040853,3.88410349339091,2.57341216034523,444.282440185547,242.261123657227,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.2666666666648,R,false,0.01666666666667,0.0,2.02949664256251,-2.81627863451563,0.78678199195312,-0.79153800523382,0.24049478023308,22.8470070241453,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.2499999999995,0.0,0.24049478023308,0.12024739011654,0.24049478023308,10.047640670277,-15.1793222927593,-145.995159113409,3.90001764733351,2.57630646290708,444.188781738281,242.122299194336,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.2833333333314,R,false,0.01666666666667,0.0,1.92395824186466,-2.77038301831837,0.8464247764537,-0.77743092562626,0.22753759813931,21.6160745688853,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.2666666666662,0.0,0.22753759813931,0.11376879906966,0.22753759813931,10.0989511113683,-14.3954986809225,-146.235084091425,3.9158905843247,2.57896662174229,444.095245361328,241.982376098633,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.2999999999981,R,false,0.01666666666667,0.0,1.8203007851145,-2.7210082396919,0.9007074545774,-0.76241913471663,0.2148306125607,20.4089107855846,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.2833333333328,0.0,0.2148306125607,0.10741530628035,0.2148306125607,10.1492707742596,-13.6230499497078,-146.46213492392,3.93168743999057,2.58140325983898,444.001800537109,241.841384887695,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.3166666666648,R,false,0.01666666666667,0.0,1.71864490048561,-2.66846697150822,0.94982207102261,-0.74658876686626,0.20238746644626,19.2268117545641,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.2999999999995,0.0,0.20238746644626,0.10119373322313,0.20238746644626,10.1985456328728,-12.8630313153548,-146.676518779176,3.94737471510723,2.58362744074976,443.908416748047,241.699356079102,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.3333333333314,R,false,0.01666666666667,0.0,1.61909973157011,-2.6130606840319,0.99396095246179,-0.73002275099189,0.1902204205964,18.0709422520096,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.3166666666662,0.0,0.1902204205964,0.0951102102982,0.1902204205964,10.2467271344383,-12.1164239928557,-146.878459179057,3.96292039104895,2.58565051106819,443.815093994141,241.55632019043,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.3499999999981,R,false,0.01666666666667,0.0,1.52176336477119,-2.55507962847163,1.03331626370044,-0.71280081326355,0.17834040704201,16.9423408209886,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.3333333333328,0.0,0.17834040704201,0.089170203521,0.17834040704201,10.2937719881137,-11.3841357490862,-147.068194774875,3.97829402666193,2.58748396149866,443.721832275391,241.412322998047,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.3666666666647,R,false,0.01666666666667,0.0,1.42672325633605,-2.49480284642244,1.06807959008638,-0.69499948676211,0.16675708226264,15.8419248271749,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.3499999999995,0.0,0.16675708226264,0.08337854113132,0.16675708226264,10.33964195424,-10.6670016323134,-147.245978135413,3.9934668373758,2.58913930559503,443.628601074219,241.267395019531,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.3833333333314,R,false,0.01666666666667,0.0,1.3340566581011,-2.4324982036674,1.09844154556629,-0.67669212766934,0.15547888013482,14.77049548894,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.3666666666662,0.0,0.15547888013482,0.07773944006741,0.15547888013482,10.3843036346661,-9.96578487525961,-147.412074550001,4.00841175748744,2.59062797509985,443.535400390625,241.121566772461,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.3999999999981,R,false,0.01666666666667,0.0,1.24383104107852,-2.3684224468427,1.12459140576417,-0.65794893757327,0.14451306450859,13.7287428721267,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.3833333333328,0.0,0.14451306450859,0.0722565322543,0.14451306450859,10.427728264546,-9.28117796712489,-147.566760849453,4.02310348663878,2.59196123072094,443.442199707031,240.974884033203,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.4166666666647,R,false,0.01666666666667,0.0,1.15610451606875,-2.30282128150645,1.1467167654377,-0.63883699148264,0.13386578131722,12.7172508404672,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.3999999999995,0.0,0.13386578131722,0.06693289065861,0.13386578131722,10.4698915059838,-8.61380388841925,-147.710324247594,4.03751852156914,2.59315008712698,443.348968505859,240.827377319336,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.4333333333314,R,false,0.01666666666667,0.0,1.07092625053774,-2.23592947018925,1.16500321965152,-0.61942027115512,0.1235421101313,11.7365019532312,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.4166666666662,0.0,0.1235421101313,0.06177105506565,0.1235421101313,10.5107732438801,-7.96421750112776,-147.843061205946,4.05163517425568,2.59420525092341,443.255737304688,240.679077148438,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.4499999999981,R,false,0.01666666666667,0.0,0.98833688105039,-2.16797094904292,1.17963406799253,-0.59975970335524,0.11354611507538,10.7868823022991,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.4333333333328,0.0,0.11354611507538,0.05677305753769,0.11354611507538,10.5503573843015,-7.33290708560513,-147.965276324039,4.0654335775673,2.5951370703773,443.162475585938,240.530014038086,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.4666666666647,R,false,0.01666666666667,0.0,0.90836892060302,-2.09915896174335,1.19079004114033,-0.57991320266957,0.10388089503088,9.86868628144401,-2.0,20.0000085715136,0.0
+[PIPLIVE] eye=(443.1625, 73.01283, 240.53) state=3 deployed=true framing=canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.4499999999995,0.0,0.10388089503088,0.05194044751544,0.10388089503088,10.5886316556777,-6.72029601466706,-148.077281257617,4.07889567955195,2.59595549568966,443.069152832031,240.380233764648,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.4833333333314,R,false,0.01666666666667,0.0,0.83104716024708,-2.0296962093435,1.19864904909642,-0.55993571851796,0.09454863305559,8.98212128118003,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.4666666666662,0.0,0.09454863305559,0.04727431652779,0.09454863305559,10.6255874130999,-6.12674455459816,-148.17939366686,4.09200522745682,2.59667004866064,442.975769042969,240.229751586914,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.4999999999981,R,false,0.01666666666667,0.0,0.75638906444468,-1.95977501481287,1.20338595036819,-0.53987928601183,0.08555064495539,8.12731230308438,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.4833333333328,0.0,0.08555064495539,0.04277532247769,0.08555064495539,10.6612194459767,-5.5525517822175,-148.271936196564,4.10474774254966,2.59728980065276,442.88232421875,240.07861328125,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.5166666666647,R,false,0.01666666666667,0.0,0.68440515964311,-1.8895775010414,1.20517234139829,-0.51979308032186,0.07688742695002,7.30430648803746,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.4999999999995,0.0,0.07688742695002,0.03844371347501,0.07688742695002,10.6955257892779,-4.99795760672228,-148.355235490009,4.11711048676911,2.59782335782569,442.788787841797,239.926864624023,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.5333333333314,R,false,0.01666666666667,0.0,0.61509941560019,-1.8192757811265,1.20417636552631,-0.49972347422975,0.06855870237953,6.5130775533393,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.5166666666662,0.0,0.06855870237953,0.03427935118976,0.06855870237953,10.7285075385771,-4.46314488475252,-148.429621238088,4.12908242218465,2.59827885269017,442.695159912109,239.774520874023,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.5499999999981,R,false,0.01666666666667,0.0,0.54846961903622,-1.74903215980413,1.2005625407679,-0.47971409855029,0.06056346740369,5.75353013415778,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.5333333333328,0.0,0.06056346740369,0.03028173370184,0.06056346740369,10.7601686690814,-3.94824161697462,-148.495425265038,4.1406541641957,2.59866394110494,442.601440429688,239.621612548828,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.5666666666647,R,false,0.01666666666667,0.0,0.48450773922952,-1.678999344926,1.19449160569648,-0.45980590512201,0.05290003565166,5.0255040252415,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.5499999999995,0.0,0.05290003565166,0.02645001782583,0.05290003565166,10.7905158588194,-3.45332321445538,-148.552980651946,4.15181792934453,2.59898580391819,442.507629394531,239.468185424805,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.5833333333314,R,false,0.01666666666667,0.0,0.42320028521325,-1.60932066792704,1.18612038271379,-0.44003723207678,0.04556608178371,4.32877831928924,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.5666666666662,0.0,0.04556608178371,0.02278304089186,0.04556608178371,10.8195583161365,-2.97841482317917,-148.602620898999,4.16256747856145,2.59925115253042,442.413696289062,239.314270019531,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.5999999999981,R,false,0.01666666666667,0.0,0.36452865426968,-1.54013031226874,1.17560165799905,-0.42044387111013,0.03855868393187,3.663075438808,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.5833333333328,0.0,0.03855868393187,0.01927934196594,0.03855868393187,10.8473076116298,-2.5234936952374,-148.644679127252,4.17289805660428,2.59946623772948,442.319610595703,239.159881591797,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[AUDIT] _poll_fast: ENTER
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.6166666666647,R,false,0.01666666666667,0.0,0.308469471455,-1.47155354888546,1.16308407743046,-0.40105913648629,0.03187436499044,3.02806505871304,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.5999999999995,0.0,0.03187436499044,0.01593718249522,0.03187436499044,10.8737775146379,-2.08849159548047,-148.67948732051,4.18280632839772,2.59963686121782,442.225402832031,239.005065917969,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.6333333333314,R,false,0.01666666666667,0.0,0.25499491992349,-1.40370697770201,1.14871205777852,-0.38191393552331,0.02550913273171,2.42336791732648,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.6166666666662,0.0,0.02550913273171,0.01275456636586,0.02550913273171,10.8989838343824,-1.6732972327565,-148.707375607723,4.19229031292304,2.59976838931824,442.131042480469,238.849838256836,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.6499999999981,R,false,0.01666666666667,0.0,0.20407306185372,-1.3366987743316,1.13262571247788,-0.36303684031535,0.01945851872646,1.84855951381562,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.6333333333328,0.0,0.01945851872646,0.00972925936323,0.01945851872646,10.9229442658432,-1.27775870525864,-148.728671586144,4.20134931525512,2.59986576840491,442.036529541016,238.694244384766,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.6666666666647,R,false,0.01666666666667,0.0,0.15566814981167,-1.27062894110372,1.11496079129205,-0.34445416046048,0.01371761605212,1.30317369047887,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.6499999999995,0.0,0.01371761605212,0.00685880802606,0.01371761605212,10.9456782404336,-0.9016859499538,-148.74369968531,4.20998385729246,2.5999335416628,441.941864013672,238.538299560547,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],56.6833333333314,R,false,0.01666666666667,0.0,0.10974092841694,-1.20558956161169,1.09584863319475,-0.3261900165739,0.00828111577589,0.7867060986357,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.6666666666661,0.0,0.00828111577589,0.00414055788794,0.00828111577589,10.9672067815275,-0.54485318656096,-148.752780571753,4.21819560767646,2.59997586683009,441.847045898438,238.382034301758,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[ARMTEL],56.6999999999981,R,false,0.01666666666667,0.0,0.06624892620708,-1.14166505800866,1.07541613180157,-0.30826641437721,0.00314334220293,0.29861754720863,-2.0,20.0000085715136,0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],31.6833333333328,0.0,0.00314334220293,0.00157167110147,0.00314334220293,10.9875523648764,-0.20700134707835,-148.756230594204,4.22598731134996,2.59999653462436,441.752075195312,238.225463867188,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[VERBATIM] Wind updated: 12.5 kts @ 240.0°
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.1999999999995,0.0,0.0,0.0,0.0,11.0,0.0,-148.756230594204,4.23076923076923,2.6,438.80419921875,233.366577148438,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = 0.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[STEER_TELEM] canopy=true has_pc=false turn=0.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[DEBUG] _input (build_terrain) called, event=InputEventKey: keycode=81 (Q), mods=none, physical=false, location=unspecified, pressed=true, echo=false
+[VERBATIM] INPUT: action=turn_left (Q)
+[AUDIT] _input: ENTER
+2026-08-05T15:43:44 [INFO] InputManager ready
+2026-08-05T15:43:44 [INFO] InputMap.has_action('restart') = true
+[INPUT] unhandled_input triggered
+2026-08-05T15:43:44 [INFO] InputManager: key=Q code=81
+[ARMTEL],57.249999999998,L,true,0.01666666666667,5.04791666666667,0.0,0.0,5.04791666666667,0.08413194444444,0.00140219907407,0.13320892895709,0.50046433333333,20.0000085715136,0.01666666666667
+[CTRL] pressed=turnleft  key=Q  state=3  deployed=true  alt_m=68.0
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.2666666666647,L,true,0.01666666666667,5.09583333333333,0.01121759259259,0.29446180555556,4.79015393518518,0.1639678433642,0.00413499646348,0.39282471392652,-2.0,20.0000085715136,0.03333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.2499999999995,0.00413499646348,0.0,0.00206749823174,-0.00413499646348,10.9836254140046,0.27225836704874,-148.750153480904,4.22448106299592,2.59999399931391,438.519073486328,232.896682739258,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[VERBATIM] ENTER _rotate_arm gate=left=true
+[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=8
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[VERBATIM] ENTER _rotate_arm gate=left=true
+[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=8
+[VERBATIM] ENTER _rotate_arm gate=left=true
+[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=8
+[ARMTEL],57.2833333333314,L,true,0.01666666666667,5.14375,0.03307997170782,0.57388745177469,4.53678257651749,0.23958088630616,0.00812801123525,0.77216116542751,-2.0,20.0000085715136,0.05
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.2666666666661,0.00812801123525,0.0,0.00406400561762,-0.00812801123525,10.9678130755084,0.5347940748619,-148.741240246323,4.21842736155939,2.59997675329274,438.424224853516,232.740417480469,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.299999999998,L,true,0.01666666666667,5.19166666666667,0.06502408988197,0.83853310207154,4.28810947471315,0.31104937755137,0.01331216752777,1.26465607577337,-2.0,20.0000085715136,0.06666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.2833333333328,0.01331216752777,0.0,0.00665608376388,-0.01331216752777,10.94728381659,0.8750972552239,-148.726655292069,4.21059510696521,2.5999374289114,438.329498291016,232.58447265625,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.3166666666647,L,true,0.01666666666667,5.23958333333333,0.10649734022216,1.08867282142981,4.04441317168136,0.37845626374606,0.01961977192354,1.8638785694839,-2.0,20.0000085715136,0.08333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.2999999999995,0.01961977192354,0.0,0.00980988596177,-0.01961977192354,10.9223057031828,1.28831104085349,-148.705183441388,4.20110733486103,2.59986351992221,438.234954833984,232.428924560547,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.3333333333314,L,true,0.01666666666667,5.2875,0.1569581753883,1.32459692311122,3.80594490150048,0.44188867877107,0.02698458323639,2.56353573307447,-2.0,20.0000085715136,0.1
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.3166666666661,0.02698458323639,0.0,0.01349229161819,-0.02698458323639,10.8931410503839,1.7696218023276,-148.675689744683,4.19008772573596,2.59974056950576,438.140563964844,232.273834228516,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.349999999998,L,true,0.01666666666667,5.33541666666667,0.21587666589111,1.54661037569875,3.57292962507681,0.50143750585569,0.03534187500065,3.35747855152507,-2.0,20.0000085715136,0.11666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.3333333333328,0.03534187500065,0.0,0.01767093750032,-0.03534187500065,10.8600461749974,2.3142788255408,-148.637118430924,4.17765982393676,2.59955253244234,438.046356201172,232.119277954102,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.3666666666647,L,true,0.01666666666667,5.38333333333333,0.2827350000052,1.7550312704949,3.34556706283323,0.55719695690291,0.04462849094903,4.23970717868108,-2.0,20.0000085715136,0.13333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.3499999999994,0.04462849094903,0.0,0.02231424547452,-0.04462849094903,10.8232711758418,2.91761193279529,-148.588491565377,4.1639463409578,2.59928209674101,437.952331542969,231.96533203125,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.3833333333314,L,true,0.01666666666667,5.43125,0.35702792759225,1.95018934916017,3.12403272324758,0.60926416895703,0.05478289376498,5.20437556872752,-2.0,20.0000085715136,0.15
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.3666666666661,0.05478289376498,0.0,0.02739144688249,-0.05478289376498,10.7830597406907,3.57504712716908,-148.528907446591,4.14906853559244,2.59891097199024,437.858520507812,231.812057495117,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.399999999998,L,true,0.01666666666667,5.47916666666667,0.43826315011986,2.13242459134961,2.9084789251972,0.65773881771032,0.06574520739349,6.24579549571557,-2.0,20.0000085715136,0.16666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.3833333333328,0.06574520739349,0.0,0.03287260369674,-0.06574520739349,10.7396489787218,4.28212034592897,-148.457538774159,4.13314566424382,2.59842015045135,437.764892578125,231.659515380859,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.4166666666647,L,true,0.01666666666667,5.52708333333333,0.5259616591479,2.30208586198612,2.69903581219932,0.70272274791364,0.07745725319205,7.35843998790575,-2.0,20.0000085715136,0.18333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.3999999999994,0.07745725319205,0.0,0.03872862659602,-0.07745725319205,10.6932692773595,5.03448941358484,-148.373630617266,4.11629449532017,2.59779014585004,437.671447753906,231.507766723633,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.4333333333314,L,true,0.01666666666667,5.575,0.61965802553639,2.45952961769774,2.49581235676587,0.74431962052641,0.08986258020082,8.53694620343182,-2.0,20.0000085715136,0.2
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.4166666666661,0.08986258020082,0.0,0.04493129010041,-0.08986258020082,10.6441441824047,5.82794428882093,-148.276498212452,4.0986288822087,2.59700121389589,437.578155517578,231.356872558594,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.449999999998,L,true,0.01666666666667,5.62291666666667,0.71890064160657,2.60511867184242,2.29889735321767,0.78263457641337,0.10290648980771,9.77611777348456,-2.0,20.0000085715136,0.21666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.4333333333328,0.10290648980771,0.0,0.05145324490386,-0.10290648980771,10.5924903003615,6.65841570208672,-148.165524617417,4.08025938984913,2.5960335577472,437.485046386719,231.206893920898,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.4666666666647,L,true,0.01666666666667,5.67083333333333,0.82325191846169,2.73922101744678,2.10836039742486,0.81777391637045,0.11653605508055,11.0709266388697,-2.0,20.0000085715136,0.23333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.4499999999994,0.11653605508055,0.0,0.05826802754028,-0.11653605508055,10.538517221881,7.5219822821801,-148.040158246048,4.06129297042131,2.59486752091853,437.39208984375,231.057876586914,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.4833333333314,L,true,0.01666666666667,5.71875,0.93228844064441,2.86220870729657,1.92425285205902,0.8498447972381,0.13070013503452,12.4165144054118,-2.0,20.0000085715136,0.25
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.4666666666661,0.13070013503452,0.0,0.06535006751726,-0.13070013503452,10.4824274652633,8.41487627080374,-147.899910308201,4.04183268412508,2.5934837694877,437.299255371094,230.909881591797,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.499999999998,L,true,0.01666666666667,5.76666666666667,1.04560108027616,2.97445679033334,1.74660879605716,0.87895494383905,0.1453493840985,13.8081932432598,-2.0,20.0000085715136,0.26666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.4833333333328,0.1453493840985,0.0,0.07267469204925,-0.1453493840985,10.4244164389699,9.33348792391203,-147.744352176136,4.02197746146368,2.59186346488781,437.20654296875,230.762954711914,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.5166666666647,L,true,0.01666666666667,5.81458333333333,1.16279507278803,3.07634230343668,1.57544595710862,0.90521237645753,0.16043625703946,15.2414463547012,-2.0,20.0000085715136,0.28333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.4999999999994,0.16043625703946,0.0,0.08021812851973,-0.16043625703946,10.3646724221237,10.2743686977798,-147.573112697839,4.00182190384296,2.58998842806336,437.113922119141,230.617141723633,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.5333333333313,L,true,0.01666666666667,5.8625,1.28349005631571,3.16824331760135,1.41076662608295,0.92872515355891,0.17591500959878,16.7119280346151,-2.0,20.0000085715136,0.3
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.5166666666661,0.17591500959878,0.0,0.08795750479939,-0.17591500959878,10.3033765619888,11.2342333161991,-147.385875475903,3.98145611966376,2.58784129532463,437.021362304688,230.472503662109,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.549999999998,L,true,0.01666666666667,5.91041666666667,1.40732007679023,3.25053803745619,1.25255855242025,0.94960112943258,0.19174169508932,18.2154633471942,-2.0,20.0000085715136,0.31666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.5333333333328,0.19174169508932,0.0,0.09587084754466,-0.19174169508932,10.2407028874463,12.2099608131258,-147.182376129017,3.96096559341114,2.58540566585106,436.928863525391,230.329071044922,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.5666666666647,L,true,0.01666666666667,5.95833333333333,1.53393356071457,3.32360395301403,1.10079581960473,0.96794772642599,0.20787415719642,19.7480474420359,-2.0,20.0000085715136,0.33333333333333
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.5499999999994,0.20787415719642,0.0,0.10393707859821,-0.20787415719642,10.1768183375022,13.1985946425351,-146.962399551642,3.94043108552947,2.58266624047169,436.836395263672,230.186874389648,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.5833333333313,L,true,0.01666666666667,6.00625,1.66299325757137,3.38781704249098,0.95543969993765,0.98387172142495,0.22427201922017,21.3058445321618,-2.0,20.0000085715136,0.35
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.5666666666661,0.22427201922017,0.0,0.11213600961009,-0.22427201922017,10.1118828038881,14.1973419442652,-146.725777185904,3.91992856111503,2.57960895109063,436.743927001953,230.045974731445,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[DIAG] _poll_controls: ENTER, state=3
+[VERBATIM] POLL: _poll_controls() entered, game_state=3
+[VERBATIM] POLL: checking deploy state=3 canopy=true
+[VERBATIM] POLL: turnleft pressed - left turn
+[STEER_TELEM] canopy=true has_pc=false turn=-1.0 state=3
+[STEER_TELEM] /root/Main children: WorldEnvironment DirectionalLight3D AnimationPlayer HUD @MeshInstance3D@165 @MeshInstance3D@166 @MeshInstance3D@167 @MeshInstance3D@168 @Node3D@169 FlyingPlane @Camera3D@173 @MeshInstance3D@174 @MeshInstance3D@175 @MeshInstance3D@176 @MeshInstance3D@177 @MeshInstance3D@178 @MeshInstance3D@179 @MeshInstance3D@180 @MeshInstance3D@181 @MeshInstance3D@182 @MeshInstance3D@183 @MeshInstance3D@184 @MeshInstance3D@185 @MeshInstance3D@186 @MeshInstance3D@187 @MeshInstance3D@188 @MeshInstance3D@189 @MeshInstance3D@190 @MeshInstance3D@191 @MeshInstance3D@192 @MeshInstance3D@193 @MeshInstance3D@194 @MeshInstance3D@195 @MeshInstance3D@196 @MeshInstance3D@197 @MeshInstance3D@198 @MeshInstance3D@199 @MeshInstance3D@200 @MeshInstance3D@201 @MeshInstance3D@202 @MeshInstance3D@203 @MeshInstance3D@204 @MeshInstance3D@205 @MeshInstance3D@206 @MeshInstance3D@207 @MeshInstance3D@208 @MeshInstance3D@209 @MeshInstance3D@210 @MeshInstance3D@211 @MeshInstance3D@212 @MeshInstance3D@213 @MeshInstance3D@214 @MeshInstance3D@215 @CanvasLayer@217 @HTTPRequest@231 PiPLayer @HTTPRequest@240 OpeningAnimTimer 
+[VERBATIM] ENTER _deploy_canopy gate=none
+[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy
+[ARMTEL],57.599999999998,L,true,0.01666666666667,6.05416666666667,1.79417615376136,3.44355102498734,0.81643948791796,0.99747904622359,0.24089666999056,22.8851865559554,-2.0,20.0000085715136,0.36666666666667
+[DIAG] _physics_process: ENTER, state=3
+[DIAG] _physics_process: camera target set to character (state: 3)
+[GLIDE],32.5833333333328,0.24089666999056,0.0,0.12044833499528,-0.24089666999056,10.0460491868374,15.2035720513144,-146.472384318382,3.89952914565818,2.57622107992778,436.651458740234,229.906402587891,58.8
+[VERBATIM] DIAGNOSIS turning block executed
+[DIAG] _turn_input = -1.0
+[ARMTEL],57.6166666666647,L,true,0.01666666666667,6.10208333333333,1.92717335992451,3.49117666178255,0.68373331162627,1.00887460141736,0.25771124668085,24.482571544431,-2.0,20.0000085715136,0.38333333333333
