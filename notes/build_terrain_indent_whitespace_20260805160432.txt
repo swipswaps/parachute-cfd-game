@@ -1,0 +1,37 @@
+=== show_indent_whitespace.sh — 20260805160432 UTC ===
+
+Lines 1975-1985 from build_terrain.gd with visible whitespace (cat -A):
+
+^I^I^I^I^Iprint("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")$
+^I^I^Iprint("[DIAG] _physics_process: plane position updated to ", _plane_node.position)$
+^I^Ielse:$
+^I^I^Iprint("[DIAG] _physics_process: plane_node is NULL")$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"$
+^I^I^I^Iif _hud_labels.size() > 7:$
+^I^I^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"$
+^I^I^I^I^I^I# --- CAMERA FOLLOW ---$
+^I^Iprint("[DIAG] _physics_process: checking camera follow")$
+^I^Iif is_instance_valid(_plane_node) and is_instance_valid(_camera):$
+
+=== Hex dump of lines 1979-1983 (to see exact bytes) ===
+0000000  \t  \t   i   f       _   h   u   d   _   l   a   b   e   l   s
+0000020   .   s   i   z   e   (   )       >       0   :  \n  \t  \t  \t
+0000040   i   f       _   h   u   d   _   l   a   b   e   l   s   .   s
+0000060   i   z   e   (   )       >       0   :      \t  \t  \t   _   h
+0000100   u   d   _   l   a   b   e   l   s   [   0   ]   .   t   e   x
+0000120   t       =       "   A   L   T   :       6   0   0   0       f
+0000140   t       (   I   N       P   L   A   N   E   )   "  \n  \t  \t
+0000160  \t  \t   i   f       _   h   u   d   _   l   a   b   e   l   s
+0000200   .   s   i   z   e   (   )       >       7   :  \n  \t  \t  \t
+0000220  \t  \t   i   f       _   h   u   d   _   l   a   b   e   l   s
+0000240   .   s   i   z   e   (   )       >       0   :      \t  \t  \t
+0000260   _   h   u   d   _   l   a   b   e   l   s   [   7   ]   .   t
+0000300   e   x   t       =       "   E   P   :       P   r   e   s   s
+0000320       J       o   r       S   P   A   C   E       t   o       e
+0000340   x   i   t       a   i   r   c   r   a   f   t   "  \n  \t  \t
+0000360  \t  \t  \t  \t   #       -   -   -       C   A   M   E   R   A
+0000400       F   O   L   L   O   W       -   -   -  \n
+0000414
+
+=== End of extraction ===
