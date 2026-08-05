@@ -1,0 +1,162 @@
+=== show_full_context_and_error.sh — 20260805162218 UTC ===
+
+Lines 1970‑1990 from build_terrain.gd with line numbers:
+
+  1970: 			if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+  1971: 				if not ProjectSettings.has_setting("_headless_space_fired"):
+  1972: 					ProjectSettings.set_setting("_headless_space_fired", true)
+  1973: 					Input.action_press("deploy")
+  1974: 					Input.action_release("deploy")
+  1975: 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
+  1976: 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
+  1977: 		else:
+  1978: 			print("[DIAG] _physics_process: plane_node is NULL")
+  1979: 		if _hud_labels.size() > 0:
+  1980: 			if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+  1981: 				if _hud_labels.size() > 7:
+  1982: 					if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+  1983: 						# --- CAMERA FOLLOW ---
+  1984: 		print("[DIAG] _physics_process: checking camera follow")
+  1985: 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+  1986: 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
+  1987: 			var old_pos = _camera.global_position
+  1988: 			var target = _plane_node.global_position
+  1989: 			var offset = Vector3(0, 0, -_cam_distance)
+  1990: 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
+
+=== Lines 1970‑1990 with visible whitespace (cat -A) ===
+^I^I^Iif "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var M-bM-^@M-^T set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html$
+^I^I^I^Iif not ProjectSettings.has_setting("_headless_space_fired"):$
+^I^I^I^I^IProjectSettings.set_setting("_headless_space_fired", true)$
+^I^I^I^I^IInput.action_press("deploy")$
+^I^I^I^I^IInput.action_release("deploy")$
+^I^I^I^I^Iprint("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")$
+^I^I^Iprint("[DIAG] _physics_process: plane position updated to ", _plane_node.position)$
+^I^Ielse:$
+^I^I^Iprint("[DIAG] _physics_process: plane_node is NULL")$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"$
+^I^I^I^Iif _hud_labels.size() > 7:$
+^I^I^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"$
+^I^I^I^I^I^I# --- CAMERA FOLLOW ---$
+^I^Iprint("[DIAG] _physics_process: checking camera follow")$
+^I^Iif is_instance_valid(_plane_node) and is_instance_valid(_camera):$
+^I^I^Iprint("[DIAG] _physics_process: plane and camera valid, updating camera")$
+^I^I^Ivar old_pos = _camera.global_position$
+^I^I^Ivar target = _plane_node.global_position$
+^I^I^Ivar offset = Vector3(0, 0, -_cam_distance)$
+^I^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+
+=== Hex dump of lines 1978‑1984 (to see exact bytes) ===
+0000000  \t  \t  \t   p   r   i   n   t   (   "   [   D   I   A   G   ]
+0000020       _   p   h   y   s   i   c   s   _   p   r   o   c   e   s
+0000040   s   :       p   l   a   n   e   _   n   o   d   e       i   s
+0000060       N   U   L   L   "   )  \n  \t  \t   i   f       _   h   u
+0000100   d   _   l   a   b   e   l   s   .   s   i   z   e   (   )    
+0000120   >       0   :  \n  \t  \t  \t   i   f       _   h   u   d   _
+0000140   l   a   b   e   l   s   .   s   i   z   e   (   )       >    
+0000160   0   :      \t  \t  \t   _   h   u   d   _   l   a   b   e   l
+0000200   s   [   0   ]   .   t   e   x   t       =       "   A   L   T
+0000220   :       6   0   0   0       f   t       (   I   N       P   L
+0000240   A   N   E   )   "  \n  \t  \t  \t  \t   i   f       _   h   u
+0000260   d   _   l   a   b   e   l   s   .   s   i   z   e   (   )    
+0000300   >       7   :  \n  \t  \t  \t  \t  \t   i   f       _   h   u
+0000320   d   _   l   a   b   e   l   s   .   s   i   z   e   (   )    
+0000340   >       0   :      \t  \t  \t   _   h   u   d   _   l   a   b
+0000360   e   l   s   [   7   ]   .   t   e   x   t       =       "   E
+0000400   P   :       P   r   e   s   s       J       o   r       S   P
+0000420   A   C   E       t   o       e   x   i   t       a   i   r   c
+0000440   r   a   f   t   "  \n  \t  \t  \t  \t  \t  \t   #       -   -
+0000460   -       C   A   M   E   R   A       F   O   L   L   O   W    
+0000500   -   -   -  \n  \t  \t   p   r   i   n   t   (   "   [   D   I
+0000520   A   G   ]       _   p   h   y   s   i   c   s   _   p   r   o
+0000540   c   e   s   s   :       c   h   e   c   k   i   n   g       c
+0000560   a   m   e   r   a       f   o   l   l   o   w   "   )  \n
+0000577
+
+=== Full error output from godot --check-only ===
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Expected statement, found "Indent" instead.
+          at: GDScript::reload (res://scripts/build_terrain.gd:1981)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 0ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] WARN: could not open /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl — stdout only
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-05T12:22:19 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-05T12:22:19 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[VERBATIM] PerformanceMonitor: PID tuning triggered
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[HubManager] Hub spawn requested pid=854243 non-blocking
+[FPANEL] No pip_container group found, creating one
+[FPANEL] Created new pip container
+[AUDIT] _on_stats_completed: ENTER
+[AUDIT] _on_leader_completed: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_cite_completed: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _add_citation_card: ENTER
+[AUDIT] _mkbutton: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _on_ctrl_health_completed: ENTER
+
+=== End of diagnostic ===
