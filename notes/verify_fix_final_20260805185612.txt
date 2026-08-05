@@ -1,0 +1,26 @@
+=== verify_fix_final.sh — 20260805185612 UTC ===
+
+=== File size (lines) ===
+3631 /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+
+=== Lines 1978-1990 (with line numbers) ===
+1978: 			print("[DIAG] _physics_process: plane_node is NULL")
+1979: 		if _hud_labels.size() > 0:
+1980: 			if _hud_labels.size() > 0:
+1981: 				_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+1982: 			if _hud_labels.size() > 7:
+1983: 				pass
+1984: 			if _hud_labels.size() > 0:
+1985: 				_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+1986: 			# --- CAMERA FOLLOW ---
+1987: 				if _hud_labels.size() > 7:
+1988: 					pass
+1989: 				if _hud_labels.size() > 0:
+1990: 					_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+
+=== gdparse full output (all errors) ===
+
+=== gdparse exit code ===
+Exit code: 0
+
+=== End of verification ===
