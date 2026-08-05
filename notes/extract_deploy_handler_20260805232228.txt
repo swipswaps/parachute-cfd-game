@@ -1,0 +1,29 @@
+=== extract_deploy_handler — 20260805232228 UTC ===
+
+--- Lines containing '[CTRL] pressed=deploy' with context ---
+
+--- Entire _poll_controls function (if we can locate it) ---
+func _poll_controls() -> void:
+	print("[DIAG] _poll_controls: ENTER, state=", _game_state)
+	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+
+	if _game_state == GameState.IN_PLANE:
+		# Also check headless auto-jump flag (set in _physics_process;
+		# reliable across _physics_process/_process frame boundary).
+		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+		var _exit_pressed = (
+			Input.is_key_pressed(KEY_J)
+			or _headless_auto_jump
+		)
+		if _exit_pressed:
+			print("[DIAG] _poll_controls: exit aircraft triggered")
+			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+			_game_state = GameState.FREEFALL
+			_cam_distance = 5.0
+			if _plane_node:
+				_plane_node.queue_free()
+				_plane_node = null
+
+--- All Input.is_action_just_pressed calls (for reference) ---
+3492:# Input.is_action_just_pressed call sites around lines 997, 1566-1582,
+3573:		if Input.is_action_just_pressed(action):
