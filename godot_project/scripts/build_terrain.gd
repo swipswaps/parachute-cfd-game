@@ -1977,10 +1977,10 @@ func _physics_process(delta) -> void:
 		else:
 			print("[DIAG] _physics_process: plane_node is NULL")
 		if _hud_labels.size() > 0:
-if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
-		if _hud_labels.size() > 7:
-if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
-		# --- CAMERA FOLLOW ---
+		if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+			if _hud_labels.size() > 7:
+		if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+			# --- CAMERA FOLLOW ---
 		print("[DIAG] _physics_process: checking camera follow")
 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
 			print("[DIAG] _physics_process: plane and camera valid, updating camera")
@@ -2061,8 +2061,8 @@ if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exi
 		var speed_kts = _forward_speed * 1.94384
 if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
 	if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
-if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
-		_check_decision_altitude()
+		if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+			_check_decision_altitude()
 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
 		if _screenshot_save_timer > 0:
 			_screenshot_save_timer -= delta
