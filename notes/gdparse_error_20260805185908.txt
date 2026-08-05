@@ -1,0 +1,58 @@
+=== show_gdparse_error.sh — 20260805185908 UTC ===
+
+=== Full gdparse output (stdout + stderr) ===
+
+=== Lines 2030-2080 with line numbers ===
+2030: 	_character.position.y -= descent
+2031: 	# v11: only .y was ever written here, so the canopy had no forward
+2032: 	# flight at all. Horizontal glide and turning are applied below.
+2033: 	_update_canopy_glide(delta, descent)
+2034: 	if _character.position.y < 25.0:
+2035: 		_character.position.y = 25.0
+2036: 		if not _safe_landing:
+2037: 			ScreenshotLibrary.save_flight_screenshot()
+2038: 			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+2039: 			_game_state = GameState.GAME_OVER
+2040: 			print("[VERBATIM] Ground impact – fatal")
+2041: 	_current_altitude = _character.position.y - 25.0
+2042: 
+2043: 	_vario_mps = _prev_descent_rate - _descent_rate
+2044: 
+2045: 	_update_cfd_wind(delta)
+2046: 	_update_canopy_tilt()
+2047: 
+2048: 	if _game_state == GameState.FREEFALL:
+2049: 		# Freefall body turning: keyboard (Q/E) + arm-deflection yaw.
+2050: 		if abs(_turn_input) > 0.001:
+2051: 			_character.rotate_y(-_turn_input * 2.0 * delta)
+2052: 		# Arm yaw: R-arm > L-arm → right turn; rotate_y(-diff) = CW = right.
+2053: 		# 1.5 rad/s at full differential ≈ 86 deg/s.
+2054: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+2055: 		# (general knowledge — not retrieved this session)
+2056: 		var ff_diff: float = _arm_pull.get("R", 0.0) - _arm_pull.get("L", 0.0)
+2057: 		if absf(ff_diff) > 0.002:
+2058: 			_character.rotate_y(-ff_diff * 1.5 * delta)
+2059: 		var target_dir = -_character.global_position.normalized()
+2060: 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
+2061: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+2062: 		_velocity_vec += turn_dir * delta
+2063: 		var forward_vec = target_dir * _forward_speed
+2064: 		_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)
+2065: 		_character.position += _velocity_vec * delta
+2066: 		if _velocity_vec.length() > 0.5:
+2067: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+2068: 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
+2069: 		var speed_kts = _forward_speed * 1.94384
+2070: 		if _hud_labels.size() > 0:
+2071: 			_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2072: 			if _hud_labels.size() > 0:
+2073: 				_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2074: 				if _hud_labels.size() > 0:
+2075: 					_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2076: 			_check_decision_altitude()
+2077: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+2078: 		if _screenshot_save_timer > 0:
+2079: 			_screenshot_save_timer -= delta
+2080: 	if _camera_save_timer > 0.0:
+
+=== End of diagnostic ===
