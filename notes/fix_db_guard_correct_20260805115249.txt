@@ -1,0 +1,21 @@
+=== fix_db_guard_correct.sh — 20260805115249 UTC ===
+
+Root cause: SqliteDb._db_ok initialised to null (line 10), not false.
+"not null" == true in GDScript, so guard always fires -> silently skips all DB writes.
+Fix: guard on db._db (the connection object, line 9) instead.
+
+[SUCCESS] backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260805115249
+[2026-08-05T11:52:49.649902+00:00] [SUCCESS] read_target: 141620 bytes
+[2026-08-05T11:52:49.650081+00:00] [SUCCESS] guard: anchor found exactly once
+[2026-08-05T11:52:49.650874+00:00] [SUCCESS] verify_old_gone: old anchor gone
+[2026-08-05T11:52:49.650933+00:00] [SUCCESS] verify_new_present: db._db guard present exactly once
+[2026-08-05T11:52:49.654858+00:00] [SUCCESS] read_after_write: 141617 bytes
+[2026-08-05T11:52:49.657541+00:00] [SUCCESS] tabs_check: no leading-space indentation
+[2026-08-05T11:52:49.658157+00:00] [SUCCESS] semantic: db._db guard confirmed, db._db_ok absent
+PATCH COMPLETE
+
+=== DIFF (new vs backup) ===
+2707c2707
+< 	if not db or not db._db:
+---
+> 	if not db or not db._db_ok:

@@ -2704,7 +2704,7 @@ func _save_camera_settings() -> void:
 	var key = (
 		"camera_distance_plane" if _game_state == GameState.IN_PLANE else "camera_distance_freefall"
 	)
-	if not db or not db._db_ok:
+	if not db or not db._db:
 		return
 	db._query(
 		(
