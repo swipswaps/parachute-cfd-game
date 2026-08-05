@@ -1,0 +1,49 @@
+=== show_line_1981_whitespace.sh — 20260805161636 UTC ===
+
+Lines 1978‑1984 from build_terrain.gd with visible whitespace (cat -A):
+
+^I^I^Iprint("[DIAG] _physics_process: plane_node is NULL")$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"$
+^I^I^I^Iif _hud_labels.size() > 7:$
+^I^I^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"$
+^I^I^I^I^I^I# --- CAMERA FOLLOW ---$
+^I^Iprint("[DIAG] _physics_process: checking camera follow")$
+
+=== Hex dump of lines 1978‑1984 (to see exact bytes) ===
+0000000  \t  \t  \t   p   r   i   n   t   (   "   [   D   I   A   G   ]
+0000020       _   p   h   y   s   i   c   s   _   p   r   o   c   e   s
+0000040   s   :       p   l   a   n   e   _   n   o   d   e       i   s
+0000060       N   U   L   L   "   )  \n  \t  \t   i   f       _   h   u
+0000100   d   _   l   a   b   e   l   s   .   s   i   z   e   (   )    
+0000120   >       0   :  \n  \t  \t  \t   i   f       _   h   u   d   _
+0000140   l   a   b   e   l   s   .   s   i   z   e   (   )       >    
+0000160   0   :      \t  \t  \t   _   h   u   d   _   l   a   b   e   l
+0000200   s   [   0   ]   .   t   e   x   t       =       "   A   L   T
+0000220   :       6   0   0   0       f   t       (   I   N       P   L
+0000240   A   N   E   )   "  \n  \t  \t  \t  \t   i   f       _   h   u
+0000260   d   _   l   a   b   e   l   s   .   s   i   z   e   (   )    
+0000300   >       7   :  \n  \t  \t  \t  \t  \t   i   f       _   h   u
+0000320   d   _   l   a   b   e   l   s   .   s   i   z   e   (   )    
+0000340   >       0   :      \t  \t  \t   _   h   u   d   _   l   a   b
+0000360   e   l   s   [   7   ]   .   t   e   x   t       =       "   E
+0000400   P   :       P   r   e   s   s       J       o   r       S   P
+0000420   A   C   E       t   o       e   x   i   t       a   i   r   c
+0000440   r   a   f   t   "  \n  \t  \t  \t  \t  \t  \t   #       -   -
+0000460   -       C   A   M   E   R   A       F   O   L   L   O   W    
+0000500   -   -   -  \n  \t  \t   p   r   i   n   t   (   "   [   D   I
+0000520   A   G   ]       _   p   h   y   s   i   c   s   _   p   r   o
+0000540   c   e   s   s   :       c   h   e   c   k   i   n   g       c
+0000560   a   m   e   r   a       f   o   l   l   o   w   "   )  \n
+0000577
+
+=== Indentation level (number of tabs/spaces) for each line ===
+  1978: tabs=3 spaces=0
+  1979: tabs=2 spaces=0
+  1980: tabs=3 spaces=0
+  1981: tabs=4 spaces=0
+  1982: tabs=5 spaces=0
+  1983: tabs=6 spaces=0
+  1984: tabs=2 spaces=0
+
+=== End of extraction ===
