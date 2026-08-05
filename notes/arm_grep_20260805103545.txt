@@ -1,0 +1,62 @@
+=== arm_grep_push.sh — 20260805103545 UTC ===
+
+build_terrain.gd total lines: 3596
+
+=== _arm_axis_probe call sites ===
+2904:	_arm_axis_probe()
+3039:func _arm_axis_probe() -> void:
+3271:# _arm_axis_probe() so _arm_solve_elbow() can reuse them.
+
+=== _update_arm_physics call sites ===
+883:	# was dead code). Arm motion is now driven by _update_arm_physics(),
+1943:	_update_arm_physics(delta, Input.is_key_pressed(KEY_Q), Input.is_key_pressed(KEY_E))
+2898:func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+3005:# _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+
+=== _arm_rest_q population ===
+2873:	_arm_rest_q["L"] = _skeleton.get_bone_rest(_left_arm_idx).basis.get_rotation_quaternion()
+2874:	_arm_rest_q["R"] = _skeleton.get_bone_rest(_right_arm_idx).basis.get_rotation_quaternion()
+2878:		" restL=", _arm_rest_q["L"], " restR=", _arm_rest_q["R"])
+2959:		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
+3120:		var rest: Quaternion = _arm_rest_q[side]
+
+=== ARM constants ===
+2840:const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+2841:const ARM_EPS          := 0.0005
+2851:const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+2852:const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+
+=== ARMTEL emit sites ===
+2876:	print("[ARMTEL] rest captured L_idx=", _left_arm_idx,
+2910:		print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t")
+2977:			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+
+=== AXISSOLVE emit sites ===
+3047:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+3059:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3064:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3111:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3112:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+3115:	print("[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,d_right")
+3128:			print("[AXISSOLVE] ", side, " DEGENERATE lever - keeping fallback")
+3135:		print("[AXISSOLVE] ", side, " lever=", r_lever, " len=", r_lever.length(),
+3153:				print("[AXISSOLVE],", side, ",", label, ",", ang_deg,
+3163:	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+
+=== _arm_axis_probe function definition ===
+3039:func _arm_axis_probe() -> void:
+
+=== LINE_OVER turn_input override ===
+106:	LINE_OVER,
+903:			_malfunction = MalfunctionType.LINE_OVER
+916:			_turn_input *= 0.5
+920:		MalfunctionType.LINE_OVER:
+921:			_turn_input = 0.5
+934:		MalfunctionType.LINE_OVER:
+965:		MalfunctionType.LINE_OVER:
+
+=== GODOT RUN — no timeout, stream arm/glide lines only ===
+Started: 20260805T10:35:45Z
+Ended: 20260805T10:35:45Z
+
+=== END ===
