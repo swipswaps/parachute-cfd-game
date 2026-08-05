@@ -1,0 +1,50 @@
+=== Locating and moving _diag_if_error and print_source_block ===
+print_source_block at line 640
+show_error_context at line NOT FOUND
+_diag_if_error at line NOT FOUND
+ERROR: Could not find required functions
+Line 16: def signal_handler(sig, frame):
+Line 59: def hub_is_healthy(port=HUB_PORT):
+Line 78: def ensure_hub_healthy(db_conn):
+Line 126: def log_event(conn, event_type, status, detail):
+Line 147: def run_cmd(cmd: List[str], timeout: float = TOOL_TIMEOUT) -> str:
+Line 165: def tool_available(name: str) -> bool:
+Line 171: def ensure_display() -> Tuple[bool, Optional[subprocess.Popen], str]:
+Line 214: def get_error_table() -> str:
+Line 226: def extract_last_gd_error(output_buffer: List[str]) -> Tuple[Optional[str], Optional[int]]:
+Line 276: def make_timestamped_backup(p) -> object:
+Line 282: def apply_auto_start_patch() -> Tuple[bool, str]:
+Line 322: def auto_fix_indent_error(file_path: str, line_num: int) -> Tuple[bool, str]:
+Line 361: def auto_fix_null_texture(file_path: str, line_num: int) -> Tuple[bool, str]:
+Line 406: def auto_fix_trailing_dot(file_path: str, line_num: int) -> Tuple[bool, str]:
+Line 427: def rollback_file(file_path: str) -> bool:
+Line 439: def store_error(file_path: str, line_num: int, message: str, status: str = "new"):
+Line 487: def run_diagnostics(pid: int) -> Dict[str, Any]:
+Line 578: def print_diagnostic_summary(results: Dict[str, Any]):
+Line 640: def print_source_block(filepath: str, lnum: int, context: int = CONTEXT_LINES):
+Line 662: def main():
+Patch succeeded. Running autostall_fixed.py --no-timeout ...
+=== autostall_fixed.py started at 2026-08-05T21:28:36Z ===
+[2026-08-05T21:28:36.292297+00:00] [success] hub_preflight: Hub healthy before launch
+[HUB] Checking hub health...
+[HUB] Hub is already healthy.
+[DISPLAY] Using existing display: :0.0
+[ENV] Using DISPLAY=:0.0
+[PATCH] Auto‑start patch already applied.
+[SETUP] godot binary: /usr/bin/godot
+[SETUP] project dir:  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project
+[RUN] /usr/bin/godot --path godot_project --verbose
+[RUN] stall threshold: 30.0s   timeout: 0s
+[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)
+========================================================================
+[DB] Using table: files_to_fix
+WorkerThreadPool: 4 threads, 1 max low-priority.
+Traceback (most recent call last):
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_fixed.py", line 852, in <module>
+    main()
+    ~~~~^^
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_fixed.py", line 774, in main
+    _diag_if_error(line)
+    ^^^^^^^^^^^^^^
+NameError: name '_diag_if_error' is not defined
+=== autostall_fixed.py finished with exit code 1 at 2026-08-05T21:28:36Z ===
