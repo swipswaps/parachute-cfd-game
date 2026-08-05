@@ -1,0 +1,489 @@
+=== diag_ready_diff.sh — 20260805004207 UTC ===
+
+=== A. REFERENCE FILE INVENTORY ===
+  EXISTS  3613  lines=godot_project/scripts/build_terrain.gd
+  EXISTS  3536  lines=/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062/godot_project/scripts/build_terrain.gd
+  EXISTS  3766  lines=/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0070/godot_project/scripts/build_terrain.gd
+
+=== B. CURRENT lines 246-372 (cat -A) — the unexecuted zone ===
+ 246: ^I_load_camera_settings()$
+ 247: ^Iget_tree().paused = true$
+ 248: ^Iprocess_mode = PROCESS_MODE_ALWAYS$
+ 249: ^Iprint("[INIT] Press SPACE to start")$
+ 250: ^Iprint("[DIAG] _ready: ENTER")$
+ 251: ^Iprint("[VERBATIM] ", Time.get_datetime_string_from_system(), " ENTER _ready gate=none")$
+ 252: ^I# Loading screen removed M-bM-^@M-^S it was blocking the view and useless.$
+ 253: ^I# _init_screenshot_library()  # optional, can keep$
+ 254: ^I# _show_loading_screen()      # REMOVED$
+ 255: $
+ 256: ^I# --------------------------------------------------------------$
+ 257: ^I# Terrain generation (full M-bM-^@M-^S uses heightmap and baked colours) with fallback$
+ 258: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html$
+ 259: ^I# --------------------------------------------------------------$
+ 260: ^Ivar file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)$
+ 261: ^Iif file:$
+ 262: ^I^I# --- Heightmap exists: generate detailed terrain ---$
+ 263: ^I^Ivar data = file.get_buffer(file.get_length())$
+ 264: ^I^Ifile.close()$
+ 265: $
+ 266: ^I^Ivar _baked := PackedByteArray()$
+ 267: ^I^Ivar _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)$
+ 268: ^I^Iif _bf:$
+ 269: ^I^I^I_baked = _bf.get_buffer(3_145_728)$
+ 270: ^I^I^I_bf.close()$
+ 271: ^I^I^Iprint("[VERBATIM] Baked colours loaded: ", _baked.size())$
+ 272: ^I^Ielse:$
+ 273: ^I^I^Iprint("[VERBATIM] BAKE FALLBACK")$
+ 274: $
+ 275: ^I^Ivar verts := []$
+ 276: ^I^Ivar uvs := []$
+ 277: ^I^Iconst W = 1024$
+ 278: ^I^Iconst H = 1024$
+ 279: ^I^Iconst MAX_ELEV = 80.0$
+ 280: ^I^Iconst SCALE_XZ = 4000.0$
+ 281: ^I^Ifor z in range(H):$
+ 282: ^I^I^Ivar _loop_counter := 0$
+ 283: ^I^I^Ifor x in range(W):$
+ 284: ^I^I^I^I_loop_counter += 1$
+ 285: ^I^I^I^Iif _loop_counter % 100 == 0:$
+ 286: ^I^I^I^I^Iawait get_tree().process_frame$
+ 287: ^I^Ivar indices := []$
+ 288: ^I^Ifor z in range(H - 1):$
+ 289: ^I^I^Ifor x in range(W - 1):$
+ 290: ^I^I^I^Ivar a = z * W + x$
+ 291: ^I^I^I^Ivar b = a + 1$
+ 292: ^I^I^I^Ivar c = a + W$
+ 293: ^I^I^I^Ivar d = c + 1$
+ 294: ^I^I^I^Iindices.append_array([a, c, b, b, c, d])$
+ 295: ^I^Ivar st := SurfaceTool.new()$
+ 296: ^I^Ist.begin(Mesh.PRIMITIVE_TRIANGLES)$
+ 297: ^I^Ist.set_color(Color(1.0, 1.0, 1.0, 1.0))$
+ 298: ^I^Ifor i in range(verts.size()):$
+ 299: ^I^I^Ivar ci = i * 3$
+ 300: ^I^I^Ivar cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5$
+ 301: ^I^I^Ivar cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5$
+ 302: ^I^I^Ivar cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5$
+ 303: ^I^I^Ist.set_color(Color(cr, cg, cb, 1.0))$
+ 304: ^I^I^Ist.set_uv(uvs[i])$
+ 305: ^I^I^Ist.add_vertex(verts[i])$
+ 306: ^I^Ifor idx in indices:$
+ 307: ^I^I^Ist.add_index(idx)$
+ 308: ^I^Ist.generate_normals()$
+ 309: ^I^Ist.generate_tangents()$
+ 310: ^I^Ivar terrain_mesh = st.commit()$
+ 311: ^I^Ivar terrain_inst := MeshInstance3D.new()$
+ 312: ^I^Iterrain_inst.mesh = terrain_mesh$
+ 313: ^I^Ivar terrain_mat := StandardMaterial3D.new()$
+ 314: ^I^Iterrain_mat.vertex_color_use_as_albedo = true$
+ 315: ^I^Iterrain_mat.cull_mode = BaseMaterial3D.CULL_DISABLED$
+ 316: ^I^Iterrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED$
+ 317: ^I^Iterrain_inst.material_override = terrain_mat$
+ 318: ^I^Iadd_child(terrain_inst)$
+ 319: ^I^Iprint("[VERBATIM] Terrain created: ", verts.size(), " vertices")$
+ 320: ^Ielse:$
+ 321: ^I^I# --- Heightmap missing: flat terrain fallback ---$
+ 322: ^I^Iprint("[VERBATIM] WARNING: heightmap_512.raw not found M-bM-^@M-^S using flat terrain fallback")$
+ 323: ^I^Ivar flat_mesh := PlaneMesh.new()$
+ 324: ^I^Iflat_mesh.size = Vector2(8000, 8000)$
+ 325: ^I^Iflat_mesh.subdivide_width = 64$
+ 326: ^I^Iflat_mesh.subdivide_depth = 64$
+ 327: ^I^Ivar flat_inst := MeshInstance3D.new()$
+ 328: ^I^Iflat_inst.mesh = flat_mesh$
+ 329: ^I^Ivar flat_mat := StandardMaterial3D.new()$
+ 330: ^I^Iflat_mat.albedo_color = Color(0.2, 0.5, 0.15)$
+ 331: ^I^Iflat_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED$
+ 332: ^I^Iflat_inst.material_override = flat_mat$
+ 333: ^I^Iadd_child(flat_inst)$
+ 334: ^I^Iprint("[VERBATIM] Flat terrain fallback created")$
+ 335: $
+ 336: ^I# --------------------------------------------------------------$
+ 337: ^I# Runways (three predefined) M-bM-^@M-^S always added$
+ 338: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html$
+ 339: ^I# --------------------------------------------------------------$
+ 340: ^Iadd_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))$
+ 341: ^Iadd_child($
+ 342: ^I^I_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))$
+ 343: ^I)$
+ 344: ^Iadd_child($
+ 345: ^I^I_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))$
+ 346: ^I)$
+ 347: ^Iprint("[VERBATIM] Runways added")$
+ 348: $
+ 349: ^I# --------------------------------------------------------------$
+ 350: ^I# Character (skydiver) M-bM-^@M-^S loads FBX with skeleton$
+ 351: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html$
+ 352: ^I# --------------------------------------------------------------$
+ 353: ^I_character = Node3D.new()$
+ 354: ^Iprint('[PLANE_DEBUG] Character created')$
+ 355: ^Iadd_child(_character)$
+ 356: ^I_character.position = Vector3(100.0, 1828.8, -100.0)$
+ 357: ^Iprint("[DEBUG] _character position after set: ", _character.position)$
+ 358: ^Iprint("[DEBUG] _character global_position: ", _character.global_position)$
+ 359: ^I_load_character()$
+ 360: ^Iprint("[DIAG] _ready: character loaded")$
+ 361: $
+ 362: ^I# --------------------------------------------------------------$
+ 363: ^I# Plane M-bM-^@M-^S must be created before camera look_at$
+ 364: ^I# --------------------------------------------------------------$
+ 365: ^I_setup_plane_node()$
+ 366: ^Iprint("[DIAG] _ready: plane created, _plane_node=", _plane_node)$
+ 367: $
+ 368: ^I# --------------------------------------------------------------$
+ 369: ^I# ThirdM-bM-^@M-^Qperson camera M-bM-^@M-^S child of root, initially follows plane$
+ 370: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html$
+ 371: ^I# --------------------------------------------------------------$
+ 372: ^I_camera = Camera3D.new()$
+
+=== C. _ready() DIFF: current vs _0062 ===
+  Current _ready(): lines 240-596
+  _0062   _ready(): lines 239-578
+  Diff lines: 130
+--- current/_ready()
++++ _0062/_ready()
+@@ -1,4 +1,7 @@
+ func _ready() -> void:
++	print("[PLANE_DEBUG] _create_plane() called at beginning of _ready()")
++	_create_plane()
++	print('[PLANE_DEBUG] _ready() START')
+ 	camera_distance = 60.0  # reset to default
+ 
+ 	_load_camera_settings()
+@@ -15,7 +18,7 @@
+ 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 	# --------------------------------------------------------------
+-	var file = FileAccess.open("res://assets/terrain/heightmap_1024_hd.raw", FileAccess.READ)
++	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+ 	if file:
+ 		# --- Heightmap exists: generate detailed terrain ---
+ 		var data = file.get_buffer(file.get_length())
+@@ -24,7 +27,7 @@
+ 		var _baked := PackedByteArray()
+ 		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+ 		if _bf:
+-			_baked = _bf.get_buffer(_bf.get_length())
++			_baked = _bf.get_buffer(3_145_728)
+ 			_bf.close()
+ 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 		else:
+@@ -34,23 +37,14 @@
+ 		var uvs := []
+ 		const W = 1024
+ 		const H = 1024
+-		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
++		const MAX_ELEV = 80.0
+ 		const SCALE_XZ = 4000.0
+ 		for z in range(H):
++			var _loop_counter := 0
+ 			for x in range(W):
+-				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+-				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+-								# heightmap_512.raw is 512x512; mesh is 1024x1024.
+-				# Direct index (z*W + x) overflows 512-wide rows for x/z > 511
+-				# -> returns raw=0 -> flat y=0 for 75% of the mesh.
+-				# Fix: map vertex UV to heightmap pixel coords (nearest-neighbour).
+-				var hm_x := int(float(x) / float(W - 1) * 511.0)
+-				var hm_z := int(float(z) / float(H - 1) * 511.0)
+-				var idx := (hm_z * 512 + hm_x) * 2
+-				var raw = data.decode_u16(idx) if idx + 1 < data.size() else 0
+-				var py = (float(raw) / 65535.0) * MAX_ELEV
+-				verts.push_back(Vector3(px, py, pz))
+-				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
++				_loop_counter += 1
++				if _loop_counter % 100 == 0:
++					await get_tree().process_frame
+ 		var indices := []
+ 		for z in range(H - 1):
+ 			for x in range(W - 1):
+@@ -118,6 +112,7 @@
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+ 	# --------------------------------------------------------------
+ 	_character = Node3D.new()
++	print('[PLANE_DEBUG] Character created')
+ 	add_child(_character)
+ 	_character.position = Vector3(100.0, 1828.8, -100.0)
+ 	print("[DEBUG] _character position after set: ", _character.position)
+@@ -128,7 +123,6 @@
+ 	# --------------------------------------------------------------
+ 	# Plane – must be created before camera look_at
+ 	# --------------------------------------------------------------
+-	_create_plane()
+ 	_setup_plane_node()
+ 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
+ 
+@@ -137,11 +131,16 @@
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+ 	# --------------------------------------------------------------
+ 	_camera = Camera3D.new()
++	print("[CAMERA_DEBUG] _camera created: ", _camera)
+ 	_camera.position = Vector3(0.0, 2.0, 3.0)
+ 	_camera.fov = 75.0
+ 	_camera.near = 0.1
+ 	_camera.far = 10000.0
+ 	add_child(_camera)
++	print("[CAMERA_DEBUG] _camera added to tree")
++	_camera.current = true
++	print("[CAMERA_DEBUG] _camera.current set to true")
++	print('[PLANE_DEBUG] Camera added to tree')
+ 
+ 	# Ensure plane exists before positioning camera
+ 	if _plane_node:
+@@ -303,6 +302,29 @@
+ 	# --------------------------------------------------------------
+ 	_randomize_malfunction()
+ 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
++	# --- AUTO-START (timer-based) ---
++
++	var auto_timer = Timer.new()
++
++	auto_timer.wait_time = 2.0
++
++	auto_timer.one_shot = true
++
++	auto_timer.timeout.connect(func():
++
++		Input.action_press("ui_accept")
++
++		Input.action_release("ui_accept")
++
++		print("[AUTO-START] Deployed via timer.")
++
++	)
++
++	add_child(auto_timer)
++
++	auto_timer.start()
++
++	# --- end auto-start ---
+ 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+ 	# Headless auto‑start: simulate SPACE press
+ 	if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+@@ -332,9 +354,4 @@
+ # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+ # ------------------------------------------------------------------
+ 
+-# Gate: Verify arms are not extended (R099)
+-
+-		print("[VERBATIM] Self-test timer started.")
+-	# SELF-TEST TIMER INJECTED (v6.5.151)
+-
+ 
+
+=== D. _ready() DIFF: current vs _0070 ===
+  Current _ready(): lines 240-596
+  _0070   _ready(): lines 250-620
+--- current/_ready()
++++ _0070/_ready()
+@@ -1,4 +1,7 @@
+ func _ready() -> void:
++	print("[PLANE_DEBUG] _create_plane() called at beginning of _ready()")
++	_create_plane()
++	print('[PLANE_DEBUG] _ready() START')
+ 	camera_distance = 60.0  # reset to default
+ 
+ 	_load_camera_settings()
+@@ -15,42 +18,33 @@
+ 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 	# --------------------------------------------------------------
+-	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
++	var file = FileAccess.open("res://assets/terrain/heightmap_512.raw", FileAccess.READ)
+ 	if file:
+ 		# --- Heightmap exists: generate detailed terrain ---
+ 		var data = file.get_buffer(file.get_length())
+ 		file.close()
+ 
+ 		var _baked := PackedByteArray()
+-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
++		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
+ 		if _bf:
+-			_baked = _bf.get_buffer(_bf.get_length())
++			_baked = _bf.get_buffer(3_145_728)
+ 			_bf.close()
+ 			print("[VERBATIM] Baked colours loaded: ", _baked.size())
+ 		else:
+ 			print("[VERBATIM] BAKE FALLBACK")
+ 
+-		# 1024 vertex-colour mesh with NED 4096 elevation.
+-		# Colour source: baked_colours_4096.bin -- NAIP 4096x4096 satellite colour (Pillow-baked)
+-		# Elevation: heightmap_4096.raw (NED 0.98m/px -- real elevation data).
++		var verts := []
++		var uvs := []
+ 		const W = 1024
+ 		const H = 1024
+-		const HM_SRC = 4096
+-		const MAX_ELEV = 20.0
++		const MAX_ELEV = 80.0
+ 		const SCALE_XZ = 4000.0
+-		var verts := []
+-		var uvs := []
+ 		for z in range(H):
++			var _loop_counter := 0
+ 			for x in range(W):
+-				var px = (float(x) / float(W - 1) - 0.5) * SCALE_XZ
+-				var pz = (float(z) / float(H - 1) - 0.5) * SCALE_XZ
+-				var hm_x := int(float(x) / float(W - 1) * float(HM_SRC - 1))
+-				var hm_z := int(float(z) / float(H - 1) * float(HM_SRC - 1))
+-				var hidx := (hm_z * HM_SRC + hm_x) * 2
+-				var raw = data.decode_u16(hidx) if hidx + 1 < data.size() else 0
+-				var py = (float(raw) / 65535.0) * MAX_ELEV
+-				verts.push_back(Vector3(px, py, pz))
+-				uvs.push_back(Vector2(float(x) / float(W - 1), float(z) / float(H - 1)))
++				_loop_counter += 1
++				if _loop_counter % 100 == 0:
++					await get_tree().process_frame
+ 		var indices := []
+ 		for z in range(H - 1):
+ 			for x in range(W - 1):
+@@ -83,7 +77,7 @@
+ 		terrain_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+ 		terrain_inst.material_override = terrain_mat
+ 		add_child(terrain_inst)
+-		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
++		print("[VERBATIM] Terrain created: ", verts.size(), " vertices")
+ 	else:
+ 		# --- Heightmap missing: flat terrain fallback ---
+ 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
+@@ -101,19 +95,24 @@
+ 		print("[VERBATIM] Flat terrain fallback created")
+ 
+ 	# --------------------------------------------------------------
+-	# Runways: placeholder positions removed (did not match KDED layout).
++	# Runways (three predefined) – always added
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+-	# TODO: re-add with georeferenced KDED runway 05/23 position/heading
+-	#   after naip_texture is replaced with a proper GeoTIFF source.
+-	#   KDED rwy 05/23: heading ~050deg, length ~1219m, width ~23m.
+ 	# --------------------------------------------------------------
+-	print("[VERBATIM] Runways: placeholder positions disabled pending georef")
++	add_child(_create_runway(Vector3(0.0, 24.5, 1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3)))
++	add_child(
++		_create_runway(Vector3(0.0, 24.5, -1300.0), 1830.0, 30.0, 150.0, Color(0.3, 0.3, 0.3))
++	)
++	add_child(
++		_create_runway(Vector3(-800.0, 24.5, 0.0), 1310.0, 23.0, 60.0, Color(0.35, 0.35, 0.35))
++	)
++	print("[VERBATIM] Runways added")
+ 
+ 	# --------------------------------------------------------------
+ 	# Character (skydiver) – loads FBX with skeleton
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+ 	# --------------------------------------------------------------
+ 	_character = Node3D.new()
++	print('[PLANE_DEBUG] Character created')
+ 	add_child(_character)
+ 	_character.position = Vector3(100.0, 1828.8, -100.0)
+ 	print("[DEBUG] _character position after set: ", _character.position)
+@@ -124,7 +123,6 @@
+ 	# --------------------------------------------------------------
+ 	# Plane – must be created before camera look_at
+ 	# --------------------------------------------------------------
+-	_create_plane()
+ 	_setup_plane_node()
+ 	print("[DIAG] _ready: plane created, _plane_node=", _plane_node)
+ 
+@@ -133,11 +131,16 @@
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html
+ 	# --------------------------------------------------------------
+ 	_camera = Camera3D.new()
++	print("[CAMERA_DEBUG] _camera created: ", _camera)
+ 	_camera.position = Vector3(0.0, 2.0, 3.0)
+ 	_camera.fov = 75.0
+ 	_camera.near = 0.1
+ 	_camera.far = 10000.0
+ 	add_child(_camera)
++	print("[CAMERA_DEBUG] _camera added to tree")
++	_camera.current = true
++	print("[CAMERA_DEBUG] _camera.current set to true")
++	print('[PLANE_DEBUG] Camera added to tree')
+ 
+ 	# Ensure plane exists before positioning camera
+ 	if _plane_node:
+@@ -299,49 +302,37 @@
+ 	# --------------------------------------------------------------
+ 	_randomize_malfunction()
+ 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
+-	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
+-	# Headless auto‑start: simulate SPACE press
+-	if OS.get_environment("GODOT_HEADLESS") == "1":
++	# --- AUTO-START (timer-based) ---
++
++	var auto_timer = Timer.new()
++
++	auto_timer.wait_time = 2.0
++
++	auto_timer.one_shot = true
++
++	auto_timer.timeout.connect(func():
++
+ 		Input.action_press("ui_accept")
++
+ 		Input.action_release("ui_accept")
+-		print("[VERBATIM] Headless auto‑start triggered.")
+-	# Headless auto-start: simulate SPACE/deploy press
+-	# Ref: OS.get_environment (general knowledge, not retrieved this session)
+-	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
++
++		print("[AUTO-START] Deployed via timer.")
++
++	)
++
++	add_child(auto_timer)
++
++	auto_timer.start()
++
++	# --- end auto-start ---
++	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
++	# Headless auto‑start: simulate SPACE press
++	if "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+ 		_headless_auto_jump = true  # timing-safe flag; checked in _poll_controls (_process)
+ 		# Input.action_release("deploy") removed — flag-based now
+ 		print("[VERBATIM] Headless auto‑start triggered.")
+ 	_check_arm_pose_safe()
+ 
+-	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
+-	# Deferred ~2 s so every autoload and CanvasLayer has finished building.
+-	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
+-	# (general knowledge - not retrieved this session)
+-	var _lbl_timer := Timer.new()
+-	_lbl_timer.wait_time = 2.0
+-	_lbl_timer.one_shot = true
+-	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+-	add_child(_lbl_timer)
+-	_lbl_timer.timeout.connect(_dump_all_labels)
+-	_lbl_timer.start()
+-
+-	# p3: headless pause self-test. p2 added [PAUSETEL] but nothing ever
+-	# pressed Escape, so the run produced no PAUSETEL line and P5 stayed
+-	# UNVERIFIED. This fires toggle_pause() twice back-to-back, so two
+-	# PAUSETEL lines are emitted and the tree is never LEFT paused --
+-	# autostall's 30 s stall detector cannot trip on it.
+-	# Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+-	# (general knowledge - not retrieved this session)
+-	if OS.get_environment("GODOT_HEADLESS") == "1" \
+-			or "--headless" in OS.get_cmdline_args():
+-		var _pause_timer := Timer.new()
+-		_pause_timer.wait_time = 8.0
+-		_pause_timer.one_shot = true
+-		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+-		add_child(_pause_timer)
+-		_pause_timer.timeout.connect(_p3_pause_selftest)
+-		_pause_timer.start()
+-
+ 	print("[VERBATIM] ... EXIT _ready ok=true")
+ 	print("[DIAG] _ready: EXIT")
+ 
+@@ -363,9 +354,4 @@
+ # Ref: https://docs.godotengine.org/en/stable/classes/class_boxmesh.html
+ # ------------------------------------------------------------------
+ 
+-# Gate: Verify arms are not extended (R099)
+-
+-		print("[VERBATIM] Self-test timer started.")
+-	# SELF-TEST TIMER INJECTED (v6.5.151)
+-
+ 
+
+
+=== END DIAGNOSTIC ===
+Timestamp: 20260805004207 UTC
