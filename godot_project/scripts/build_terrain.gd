@@ -1541,7 +1541,6 @@ func _toggle_hud() -> void:
 # Polling controls (continuous key detection, called every physics frame)
 # ------------------------------------------------------------------
 func _poll_controls() -> void:
-	print("[DIAG] _poll_controls: ENTER, state=", _game_state)
 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
 
 	if _game_state == GameState.IN_PLANE:
@@ -1573,21 +1572,18 @@ func _poll_controls() -> void:
 				_camera.look_at(_character.global_position, Vector3.UP)
 				print("[CAMERA] Switched to character after exit")
 				_camera.current = true  # ensure the camera becomes active
-		print("[DIAG] _poll_controls: EXIT (IN_PLANE branch)")
-		return
+			return
 
 	if _game_state == GameState.LANDED or _game_state == GameState.GAME_OVER:
 		if Input.is_action_just_pressed("restart"):
 			print("[DIAG] _poll_controls: restart pressed")
-			print("[VERBATIM] POLL: restart pressed in LANDED/GAME_OVER state")
-			_reset_game()
+					_reset_game()
 		print("[DIAG] _poll_controls: EXIT (LANDED/GAME_OVER)")
 		return
 
 	print("[VERBATIM] POLL: checking deploy state=", _game_state, " canopy=", _canopy_deployed)
 	if Input.is_action_just_pressed("deploy") and not _canopy_deployed:
-		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
-		_deploy_canopy()
+			_deploy_canopy()
 
 	if _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
 		var turn_input := 0.0
@@ -1597,12 +1593,10 @@ func _poll_controls() -> void:
 			turn_input += 1.0
 
 		if turn_input < 0.0:
-			print("[VERBATIM] POLL: turnleft pressed - left turn")
-			if not _last_frame_keys["Q"]:
+					if not _last_frame_keys["Q"]:
 				_rotate_arm(true)
 		elif turn_input > 0.0:
-			print("[VERBATIM] POLL: turnright pressed - right turn")
-			if not _last_frame_keys["E"]:
+					if not _last_frame_keys["E"]:
 				_rotate_arm(false)
 
 		_turn_input = turn_input
@@ -1699,28 +1693,22 @@ func _poll_controls() -> void:
 		print("[CAMERA] Settings saved manually (from _poll_controls)")
 	_last_frame_keys["S"] = Input.is_key_pressed(KEY_S)
 	if Input.is_action_just_pressed("camera_cycle"):
-		print("[VERBATIM] POLL: cyclecamera pressed - cycling camera")
-		_cycle_camera()
+			_cycle_camera()
 
 	if Input.is_action_just_pressed("togglehud"):
-		print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
-		_toggle_hud()
+			_toggle_hud()
 
 	if Input.is_action_just_pressed("flightcheck"):
-		print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
-		_flight_control_check()
+			_flight_control_check()
 
 	if Input.is_action_just_pressed("cutaway"):
-		print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
-		_do_cutaway()
+			_do_cutaway()
 
 	if Input.is_action_just_pressed("reserve"):
-		print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
-		_do_reserve()
+			_do_reserve()
 
 	if Input.is_action_just_pressed("flare"):
-		print("[VERBATIM] POLL: flare pressed - calling _do_flare")
-		_do_flare()
+			_do_flare()
 
 	_process_controller_input()
 
@@ -1863,7 +1851,6 @@ func _input(event: InputEvent) -> void:
 	# Ignore F3 – let forensic_hud handle it
 	if event is InputEventKey and event.keycode == KEY_F3:
 		return
-	print("[DEBUG] _input (build_terrain) called, event=", event)
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		var rel = (event as InputEventMouseMotion).relative
 		# Adjust azimuth and elevation based on mouse drag
@@ -1954,10 +1941,8 @@ func _physics_process(delta) -> void:
 			_save_camera_settings()
 	_pip_live_view(delta)
 
-	print("[DIAG] _physics_process: ENTER, state=", _game_state)
 	if _game_state == GameState.IN_PLANE:
-		print("[DIAG] _physics_process: IN_PLANE branch entered")
-		_plane_angle += _PLANE_ORBIT_SPEED * delta
+			_plane_angle += _PLANE_ORBIT_SPEED * delta
 		if _plane_node:
 			_plane_node.position = Vector3(
 				cos(_plane_angle) * _PLANE_ORBIT_RADIUS,
@@ -1974,18 +1959,14 @@ func _physics_process(delta) -> void:
 					Input.action_press("deploy")
 					Input.action_release("deploy")
 					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
-			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
-		else:
-			print("[DIAG] _physics_process: plane_node is NULL")
-		if _hud_labels.size() > 0:
+				else:
+				if _hud_labels.size() > 0:
 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
 		if _hud_labels.size() > 7:
 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
 		# --- CAMERA FOLLOW ---
-		print("[DIAG] _physics_process: checking camera follow")
-		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
-			print("[DIAG] _physics_process: plane and camera valid, updating camera")
-			var old_pos = _camera.global_position
+			if is_instance_valid(_plane_node) and is_instance_valid(_camera):
+					var old_pos = _camera.global_position
 			var target = _plane_node.global_position
 			var offset = Vector3(0, 0, -_cam_distance)
 			offset = offset.rotated(Vector3.UP, _cam_azimuth)
@@ -2005,8 +1986,7 @@ func _physics_process(delta) -> void:
 				" camera=",
 				_camera
 			)
-		print("[DIAG] _physics_process: IN_PLANE returning")
-		return
+			return
 
 	# Camera follows character using orbit (same as IN_PLANE)
 	if _character and _camera:
