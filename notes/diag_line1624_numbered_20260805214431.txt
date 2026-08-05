@@ -1,0 +1,27 @@
+=== diag_line1624_numbered.sh — 20260805214431 UTC ===
+
+Context around line 1624 (numbered):
+
+1615: 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+1616: 
+1617: 	if _game_state == GameState.IN_PLANE:
+1618: 		# Also check headless auto-jump flag (set in _physics_process;
+1619: 		# reliable across _physics_process/_process frame boundary).
+1620: 		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1621: 	var _exit_pressed = (
+1622: 		Input.is_key_just_pressed(KEY_J)
+1623: 		or _headless_auto_jump
+1624: 	)
+1625: 		)
+1626: 		_headless_auto_jump = false  # consume the flag
+1627: 		if _exit_pressed:
+1628: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+1629: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+1630: 			_game_state = GameState.FREEFALL
+1631: 			_cam_distance = 5.0
+1632: 			if _plane_node:
+1633: 				_plane_node.visible = false
+1634: 			_character.visible = true
+1635: 			if _plane_node:
+
+=== END OF CONTEXT ===
