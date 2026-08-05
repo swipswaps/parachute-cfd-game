@@ -1977,9 +1977,9 @@ func _physics_process(delta) -> void:
 		else:
 			print("[DIAG] _physics_process: plane_node is NULL")
 		if _hud_labels.size() > 0:
-			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
+if _hud_labels.size() > 0: 			_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"
 		if _hud_labels.size() > 7:
-			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
+if _hud_labels.size() > 0: 			_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"
 		# --- CAMERA FOLLOW ---
 		print("[DIAG] _physics_process: checking camera follow")
 		if is_instance_valid(_plane_node) and is_instance_valid(_camera):
@@ -2059,9 +2059,9 @@ func _physics_process(delta) -> void:
 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
 		var speed_kts = _forward_speed * 1.94384
-		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
-		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
-		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+if _hud_labels.size() > 0: 		_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+if _hud_labels.size() > 0: 		_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+if _hud_labels.size() > 0: 		_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
 		_check_decision_altitude()
 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
 		if _screenshot_save_timer > 0:
@@ -2124,11 +2124,11 @@ func _process(delta) -> void:
 	var step = 5.0 * delta
 	current_heading += clamp(diff, -step, step)
 	current_heading = fmod(current_heading + 360.0, 360.0)
-	_hud_labels[2].text = "HDG: %.0f°" % current_heading
+if _hud_labels.size() > 0: 	_hud_labels[2].text = "HDG: %.0f°" % current_heading
 
 	var target_dir = -_character.global_position.normalized()
 	var bearing := rad_to_deg(atan2(target_dir.x, target_dir.z))
-	_hud_labels[3].text = "BRG: %.0f°" % bearing
+if _hud_labels.size() > 0: 	_hud_labels[3].text = "BRG: %.0f°" % bearing
 
 	_check_mission_completion()
 	if _frame_count % 1800 == 0:
@@ -2163,7 +2163,7 @@ func _update_pattern(altitude: float, distance: float) -> void:  # gdlint:ignore
 	if new_state != _pattern_state:
 		_pattern_state = new_state
 		var leg_name = ["DOWNWIND", "BASE", "FINAL"][_pattern_state]
-		_hud_labels[5].text = "LEG: " + leg_name
+if _hud_labels.size() > 0: 		_hud_labels[5].text = "LEG: " + leg_name
 		print("[VERBATIM] Entering ", leg_name)
 
 

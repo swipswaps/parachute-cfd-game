@@ -1,0 +1,22 @@
+=== fix_hud_safe.sh — 20260805130230 UTC ===
+
+./fix_hud_safe.sh: line 13: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+CREATE TABLE files_to_fix (
+    file_path TEXT,
+    line_number INTEGER,
+    error_text TEXT,
+    status TEXT,
+    attempt_count INTEGER DEFAULT 0,
+    fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number)
+);
+
+--- 2. Applying Python patch (no sed) ---
+[2026-08-05T13:02:30.820416+00:00] [SUCCESS] patch: Patched 8 assignments, backup: godot_project/scripts/build_terrain.gd.bak.20260805130230
+PATCHED 8 lines. Backup: godot_project/scripts/build_terrain.gd.bak.20260805130230
+
+--- 3. Recording fix attempt in files_to_fix ---
+godot_project/scripts/build_terrain.gd|0|Invalid assignment to Nil _hud_labels|applied|1|2026-08-05 13:02:30
+
+=== END DIAGNOSTIC ===
