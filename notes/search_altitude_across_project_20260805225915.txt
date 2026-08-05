@@ -1,0 +1,762 @@
+=== search_altitude_across_project.sh — Wed Aug  5 10:59:15 PM UTC 2026 ===
+
+=== Files containing 'altitude' (excluding backups) ===
+godot_project/addons/godot_aerodynamic_physics/core/aero_influencer_3d/aero_influencer_3d.gd
+godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd
+godot_project/addons/godot_aerodynamic_physics/core/singletons/aero_units.gd
+godot_project/addons/godot_aerodynamic_physics/core/flight_assist.gd
+godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd
+godot_project/scripts/altimeter_hud.gd
+godot_project/scripts/build_terrain.backup_20260707-205552.gd
+godot_project/scripts/build_terrain.backup_20260707-210153.gd
+godot_project/scripts/build_terrain.backup_20260707-210819.gd
+godot_project/scripts/build_terrain.backup_20260707-215820.gd
+godot_project/scripts/build_terrain.backup_20260707-222344.gd
+godot_project/scripts/build_terrain.backup_20260707-222819.gd
+godot_project/scripts/game_manager.backup_20260707-212959.gd
+godot_project/scripts/game_manager.gd
+godot_project/scripts/hud_data_bridge.gd
+godot_project/scripts/test_runner.gd
+godot_project/scripts/validate_scene.gd
+godot_project/scripts/scripts/altimeter_hud.gd
+godot_project/scripts/scripts/build_terrain.backup_20260707-205552.gd
+godot_project/scripts/scripts/build_terrain.backup_20260707-210153.gd
+godot_project/scripts/scripts/build_terrain.backup_20260707-210819.gd
+godot_project/scripts/scripts/build_terrain.backup_20260707-215820.gd
+godot_project/scripts/scripts/build_terrain.backup_20260707-222344.gd
+godot_project/scripts/scripts/build_terrain.backup_20260707-222819.gd
+godot_project/scripts/scripts/build_terrain.gd
+godot_project/scripts/scripts/game_manager.backup_20260707-212959.gd
+godot_project/scripts/scripts/game_manager.gd
+godot_project/scripts/scripts/hud_data_bridge.gd
+godot_project/scripts/scripts/test_runner.gd
+godot_project/scripts/scripts/validate_scene.gd
+godot_project/scripts/build_terrain.gd
+
+=== Lines containing 'altitude' (with line numbers) ===
+113:var altitude := 0.0
+229:	altitude = aero_body.altitude
+235:		mach = _AeroUnits.speed_to_mach_at_altitude(world_air_velocity.length(), altitude)
+45:	flight_assist.altitude = aero_body.altitude
+14:@export var altitude_values : Dictionary[float, Dictionary] = {
+29:		altitude_values = x
+38:	if key == "altitude":
+39:		min = altitude_values.keys()[0]
+40:		max = altitude_values.keys()[0]
+41:		for altitude : float in altitude_values.keys():
+42:			if altitude < min:
+43:				min = altitude
+44:			if altitude > max:
+45:				max = altitude
+49:	min = altitude_values[altitude_values.keys()[0]][key]
+50:	max = altitude_values[altitude_values.keys()[0]][key]
+51:	for altitude : float in altitude_values.keys():
+52:		var value : float = altitude_values[altitude][key]
+62:var temperature_at_altitude_curve := Curve.new()
+63:func get_temp_at_altitude(altitude : float) -> float:
+64:	return temperature_at_altitude_curve.sample_baked(altitude)
+67:var pressure_at_altitude_curve := Curve.new()
+68:func get_pressure_at_altitude(altitude : float) -> float:
+69:	return pressure_at_altitude_curve.sample_baked(altitude)
+72:var density_at_altitude_curve := Curve.new()
+73:func get_density_at_altitude(altitude : float) -> float:
+74:	return density_at_altitude_curve.sample_baked(altitude)
+77:var mach_at_altitude_curve := Curve.new()
+78:func get_mach_at_altitude(altitude : float) -> float:
+79:	return mach_at_altitude_curve.sample_baked(altitude)
+84:	var altitude_bounds : Array = get_bounds("altitude")
+87:	for altitude : float in altitude_values.keys():
+88:		altitude_values[altitude]["mach"] = get_speed_of_sound_at_pressure_and_density(altitude_values[altitude]["pressure"], altitude_values[altitude]["density"])
+93:		var curve_name : String = key + "_at_altitude_curve"
+98:		curve.min_domain = altitude_bounds[0]
+99:		curve.max_domain = altitude_bounds[1]
+103:		for altitude : float in altitude_values.keys():
+105:			curve.add_point(Vector2(altitude, altitude_values[altitude][key]), 0.0, 0.0, Curve.TANGENT_LINEAR, Curve.TANGENT_LINEAR)
+119:func speed_to_mach_at_altitude(speed : float, altitude : float) -> float:
+120:	return speed / get_mach_at_altitude(altitude)
+122:func get_altitude(node : Node3D) -> float:
+124:		return $"/root/FloatingOriginHelper".get_altitude(node)
+13:var altitude: float = 0.0
+112:##If enabled, the flight assist resource will attempt to maintain altitude at [code]altitude_target[/code].
+113:@export var enable_altitude_hold: bool = false:
+115:		enable_altitude_hold = x
+116:		altitude_target = altitude
+117:##Target altitude that [code]altitude_pid[/code] will attempt to maintain.
+118:@export var altitude_target: float = 0.0
+120:@export var altitude_pid: aero_PID = aero_PID.new(0.001, 0, 0.01)
+150:	altitude_hold(delta)
+157:	if not enable_bank_angle_assist and not enable_altitude_hold and not enable_heading_hold:
+186:func altitude_hold(delta: float) -> void:
+187:	if not enable_altitude_hold:
+190:	altitude_pid.update(delta, altitude_target - altitude)
+191:	control_input.x += altitude_pid.output
+193:var altitude := 0.0
+403:		altitude = _AeroUnits.get_altitude(self)
+404:		mach = _AeroUnits.speed_to_mach_at_altitude(air_speed, altitude)
+405:		air_density = _AeroUnits.get_density_at_altitude(altitude)
+406:		air_pressure = _AeroUnits.get_pressure_at_altitude(altitude)
+18:var altitude_label: Label
+44:	altitude_label = Label.new()
+45:	altitude_label.text = "ALT: 0 ft"
+46:	vbox.add_child(altitude_label)
+79:func update_altitude(alt_ft: float, vario: float = 0.0) -> void:
+82:		print("[ALTIMETER] update_altitude FIRST CALL: alt_ft=", alt_ft)
+83:	altitude_label.text = "ALT: %d ft" % int(round(alt_ft))
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1944:	_current_altitude = _character.position.y - 25.0
+1965:		_check_decision_altitude()
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2035:	_update_pattern(_current_altitude, dist)
+2070:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2074:	if altitude > 1000.0:
+2076:	if altitude > 500.0:
+2502:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1944:	_current_altitude = _character.position.y - 25.0
+1965:		_check_decision_altitude()
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2035:	_update_pattern(_current_altitude, dist)
+2070:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2074:	if altitude > 1000.0:
+2076:	if altitude > 500.0:
+2502:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1753:	_current_altitude = 3000.0
+1754:	# Ensure altitude is non‑zero and game state is correct (R088)
+1755:	if _current_altitude <= 0.0:
+1756:		_current_altitude = 3000.0
+1762:	_decision_altitude_warning_shown = false
+1922:	_current_altitude = _character.position.y - 25.0
+1943:		_check_decision_altitude()
+1968:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2014:	_update_pattern(_current_altitude, dist)
+2049:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2053:	if altitude > 1000.0:
+2055:	if altitude > 500.0:
+2481:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1944:	_current_altitude = _character.position.y - 25.0
+1965:		_check_decision_altitude()
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2035:	_update_pattern(_current_altitude, dist)
+2070:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2074:	if altitude > 1000.0:
+2076:	if altitude > 500.0:
+2502:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1952:	_current_altitude = _character.position.y - 25.0
+1973:		_check_decision_altitude()
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2043:	_update_pattern(_current_altitude, dist)
+2078:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2082:	if altitude > 1000.0:
+2084:	if altitude > 500.0:
+2510:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1952:	_current_altitude = _character.position.y - 25.0
+1973:		_check_decision_altitude()
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2043:	_update_pattern(_current_altitude, dist)
+2078:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2082:	if altitude > 1000.0:
+2084:	if altitude > 500.0:
+2510:	_log("[VERBATIM] Plane created at altitude 6000")
+43:	MENTAL MODEL: Monitor parachute altitude, update HUD, check landing
+44:	FAILURE MODE: No altitude check → parachute falls through ground
+74:	Place parachute at starting altitude.
+80:	var start_altitude = 500.0  # meters AGL
+81:	parachute.global_transform.origin = target_position + Vector3.UP * start_altitude
+84:	print("Parachute deployed at altitude: %.0f m" % start_altitude)
+93:	VERIFIES WITH: HUD shows altitude, speed, distance
+98:	var altitude = parachute.global_transform.origin.y
+112:		hud.get_node("AltitudeLabel").text = "Altitude: %.0f m" % altitude
+127:	Source: Parachute landing is defined as < 1m altitude and < 5 m/s descent
+133:	var altitude = parachute.global_transform.origin.y
+136:	if altitude < 1.0:  # Landed
+43:	MENTAL MODEL: Monitor parachute altitude, update HUD, check landing
+44:	FAILURE MODE: No altitude check → parachute falls through ground
+74:	Place parachute at starting altitude.
+80:	var start_altitude := 500.0  # meters AGL
+81:	parachute.global_transform.origin = target_position + Vector3.UP * start_altitude
+84:	print("Parachute deployed at altitude: %.0f m" % start_altitude)
+93:	VERIFIES WITH: HUD shows altitude, speed, distance
+98:	var altitude = parachute.global_transform.origin.y
+112:		hud.get_node("AltitudeLabel").text = "Altitude: %.0f m" % altitude
+127:	Source: Parachute landing is defined as < 1m altitude and < 5 m/s descent
+133:	var altitude = parachute.global_transform.origin.y
+136:	if altitude < 1.0:  # Landed
+3:# Attach this script to any node that has access to altitude, speed, etc.
+47:	var altitude = (
+48:		main.get("altitude") if main.has_method("get") and main.get("altitude") != null else 0.0
+50:	print("[TEST] Initial state=", state, " altitude=", altitude)
+66:	file.store_line("initial_altitude=" + str(altitude))
+78:	altitude = (
+79:		main.get("altitude") if main.has_method("get") and main.get("altitude") != null else 0.0
+81:	print("[TEST] After deploy state=", state, " altitude=", altitude)
+87:		file.store_line("after_altitude=" + str(altitude))
+95:			file.store_line("after_altitude=" + str(altitude))
+114:				print("[WARN] Character y=%.1f -- lower than expected starting altitude (~6000 ft)." % pos.y)
+18:var altitude_label: Label
+44:	altitude_label = Label.new()
+45:	altitude_label.text = "ALT: 0 ft"
+46:	vbox.add_child(altitude_label)
+79:func update_altitude(alt_ft: float, vario: float = 0.0) -> void:
+82:		print("[ALTIMETER] update_altitude FIRST CALL: alt_ft=", alt_ft)
+83:	altitude_label.text = "ALT: %d ft" % int(round(alt_ft))
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1944:	_current_altitude = _character.position.y - 25.0
+1965:		_check_decision_altitude()
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2035:	_update_pattern(_current_altitude, dist)
+2070:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2074:	if altitude > 1000.0:
+2076:	if altitude > 500.0:
+2502:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1944:	_current_altitude = _character.position.y - 25.0
+1965:		_check_decision_altitude()
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2035:	_update_pattern(_current_altitude, dist)
+2070:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2074:	if altitude > 1000.0:
+2076:	if altitude > 500.0:
+2502:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1753:	_current_altitude = 3000.0
+1754:	# Ensure altitude is non‑zero and game state is correct (R088)
+1755:	if _current_altitude <= 0.0:
+1756:		_current_altitude = 3000.0
+1762:	_decision_altitude_warning_shown = false
+1922:	_current_altitude = _character.position.y - 25.0
+1943:		_check_decision_altitude()
+1968:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2014:	_update_pattern(_current_altitude, dist)
+2049:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2053:	if altitude > 1000.0:
+2055:	if altitude > 500.0:
+2481:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1944:	_current_altitude = _character.position.y - 25.0
+1965:		_check_decision_altitude()
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2035:	_update_pattern(_current_altitude, dist)
+2070:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2074:	if altitude > 1000.0:
+2076:	if altitude > 500.0:
+2502:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1952:	_current_altitude = _character.position.y - 25.0
+1973:		_check_decision_altitude()
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2043:	_update_pattern(_current_altitude, dist)
+2078:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2082:	if altitude > 1000.0:
+2084:	if altitude > 500.0:
+2510:	_log("[VERBATIM] Plane created at altitude 6000")
+85:var _current_altitude = 6000.0  # R064
+114:var _decision_altitude_warning_shown: bool = false
+686:# Deploy parachute (called on SPACE at correct altitude)
+759:		# WHY: cylinders are visible from altitude and represent towers/poles
+1384:# Decision altitude and descent rate
+1386:func _check_decision_altitude():
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390:		_decision_altitude_warning_shown = true
+1395:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1397:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1430:	var altitude_m = _current_altitude * 0.3048
+1431:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1752:	_current_altitude = 3000.0
+1753:	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755:		_current_altitude = 3000.0
+1761:	_decision_altitude_warning_shown = false
+1952:	_current_altitude = _character.position.y - 25.0
+1973:		_check_decision_altitude()
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+2043:	_update_pattern(_current_altitude, dist)
+2078:func _update_pattern(altitude: float, distance: float):  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2082:	if altitude > 1000.0:
+2084:	if altitude > 500.0:
+2510:	_log("[VERBATIM] Plane created at altitude 6000")
+86:var _current_altitude := 1828.8  # R064
+115:var _decision_altitude_warning_shown: bool = false
+701:# Deploy parachute (called on SPACE at correct altitude)
+774:		# WHY: cylinders are visible from altitude and represent towers/poles
+1399:# Decision altitude and descent rate
+1401:func _check_decision_altitude() -> void:
+1404:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1405:		_decision_altitude_warning_shown = true
+1410:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1412:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1414:	elif _current_altitude <= 0.0 and not _safe_landing:
+1445:	var altitude_m = _current_altitude * 0.3048
+1446:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1747:	_current_altitude = 3000.0
+1748:	# Ensure altitude is non‑zero and game state is correct (R088)
+1749:	if _current_altitude <= 0.0:
+1750:		_current_altitude = 3000.0
+1756:	_decision_altitude_warning_shown = false
+1895:		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+1989:	_current_altitude = _character.position.y - 25.0
+2021:		_check_decision_altitude()
+2059:	_update_pattern(_current_altitude, dist)
+2095:func _update_pattern(altitude: float, distance: float) -> void:  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2099:	if altitude > 1000.0:
+2101:	if altitude > 500.0:
+2537:	_log("[VERBATIM] Plane created at altitude 6000")
+3367:# GLIDE TUNING + LIVE PiP  (fix_altitude_pip_v12)
+43:	MENTAL MODEL: Monitor parachute altitude, update HUD, check landing
+44:	FAILURE MODE: No altitude check → parachute falls through ground
+74:	Place parachute at starting altitude.
+80:	var start_altitude = 500.0  # meters AGL
+81:	parachute.global_transform.origin = target_position + Vector3.UP * start_altitude
+84:	print("Parachute deployed at altitude: %.0f m" % start_altitude)
+93:	VERIFIES WITH: HUD shows altitude, speed, distance
+98:	var altitude = parachute.global_transform.origin.y
+112:		hud.get_node("AltitudeLabel").text = "Altitude: %.0f m" % altitude
+127:	Source: Parachute landing is defined as < 1m altitude and < 5 m/s descent
+133:	var altitude = parachute.global_transform.origin.y
+136:	if altitude < 1.0:  # Landed
+43:	MENTAL MODEL: Monitor parachute altitude, update HUD, check landing
+44:	FAILURE MODE: No altitude check → parachute falls through ground
+74:	Place parachute at starting altitude.
+80:	var start_altitude := 500.0  # meters AGL
+81:	parachute.global_transform.origin = target_position + Vector3.UP * start_altitude
+84:	print("Parachute deployed at altitude: %.0f m" % start_altitude)
+93:	VERIFIES WITH: HUD shows altitude, speed, distance
+98:	var altitude = parachute.global_transform.origin.y
+112:		hud.get_node("AltitudeLabel").text = "Altitude: %.0f m" % altitude
+127:	Source: Parachute landing is defined as < 1m altitude and < 5 m/s descent
+133:	var altitude = parachute.global_transform.origin.y
+136:	if altitude < 1.0:  # Landed
+3:# Attach this script to any node that has access to altitude, speed, etc.
+47:	var altitude = (
+48:		main.get("altitude") if main.has_method("get") and main.get("altitude") != null else 0.0
+50:	print("[TEST] Initial state=", state, " altitude=", altitude)
+66:	file.store_line("initial_altitude=" + str(altitude))
+78:	altitude = (
+79:		main.get("altitude") if main.has_method("get") and main.get("altitude") != null else 0.0
+81:	print("[TEST] After deploy state=", state, " altitude=", altitude)
+87:		file.store_line("after_altitude=" + str(altitude))
+95:			file.store_line("after_altitude=" + str(altitude))
+114:				print("[WARN] Character y=%.1f -- lower than expected starting altitude (~6000 ft)." % pos.y)
+86:var _current_altitude := 1828.8  # R064
+115:var _decision_altitude_warning_shown: bool = false
+744:# Deploy parachute (called on SPACE at correct altitude)
+817:		# WHY: cylinders are visible from altitude and represent towers/poles
+1117:	# Land is deferred — player steers reserve first, then SPACE or altitude trigger landing.
+1468:# Decision altitude and descent rate
+1470:func _check_decision_altitude() -> void:
+1473:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1474:		_decision_altitude_warning_shown = true
+1479:			print("[VERBATIM] FAILURE SCREENSHOT: decision altitude violation")
+1481:			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1483:	elif _current_altitude <= 0.0 and not _safe_landing:
+1514:	var altitude_m = _current_altitude * 0.3048
+1515:	var wind_speed_at_alt = _wind_base_speed * (1.0 + 0.1 * log(1.0 + altitude_m / 10.0))
+1645:	_current_altitude = 3000.0
+1646:	# Ensure altitude is non‑zero and game state is correct (R088)
+1647:	if _current_altitude <= 0.0:
+1648:		_current_altitude = 3000.0
+1654:	_decision_altitude_warning_shown = false
+1805:		AltimeterHUD.update_altitude(_character.global_position.y * 3.28084)
+1906:	_current_altitude = _character.position.y - 25.0
+1950:		_check_decision_altitude()
+1988:	_update_pattern(_current_altitude, dist)
+2024:func _update_pattern(altitude: float, distance: float) -> void:  # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument # gdlint:ignore=unused-argument
+2028:	if altitude > 1000.0:
+2030:	if altitude > 500.0:
+2466:	_log("[VERBATIM] Plane created at altitude 6000")
+3407:# GLIDE TUNING + LIVE PiP  (fix_altitude_pip_v12)
+
+=== Lines containing both 'altitude' and '25' (with context) ===
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1919-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1920-			_game_state = GameState.GAME_OVER
+1921-			print("[VERBATIM] Ground impact – fatal")
+1922:	_current_altitude = _character.position.y - 25.0
+1923-
+1924-	_vario_mps = _prev_descent_rate - _descent_rate
+1925-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1919-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1920-			_game_state = GameState.GAME_OVER
+1921-			print("[VERBATIM] Ground impact – fatal")
+1922:	_current_altitude = _character.position.y - 25.0
+1923-
+1924-	_vario_mps = _prev_descent_rate - _descent_rate
+1925-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1401-func _check_decision_altitude() -> void:
+1402-	if _game_state != GameState.DIAGNOSIS:
+1403-		return
+1404:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1405-		_decision_altitude_warning_shown = true
+1406-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1407-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1986-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1987-			_game_state = GameState.GAME_OVER
+1988-			print("[VERBATIM] Ground impact – fatal")
+1989:	_current_altitude = _character.position.y - 25.0
+1990-
+1991-	_vario_mps = _prev_descent_rate - _descent_rate
+1992-
+1470-func _check_decision_altitude() -> void:
+1471-	if _game_state != GameState.DIAGNOSIS:
+1472-		return
+1473:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1474-		_decision_altitude_warning_shown = true
+1475-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1476-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1903-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1904-			_game_state = GameState.GAME_OVER
+1905-			print("[VERBATIM] Ground impact – fatal")
+1906:	_current_altitude = _character.position.y - 25.0
+1907-
+1908-	# p3: vario and ground speed from REAL motion, not the constant table.
+1909-	var _p3_y: float = _character.global_position.y
+
+=== Search complete. ===
