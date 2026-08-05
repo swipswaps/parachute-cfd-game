@@ -1,0 +1,34 @@
+=== show_block_whitespace.sh — 20260805182408 UTC ===
+
+=== Lines 1978-1990 with cat -A (shows tabs as ^I, spaces as spaces) ===
+^I^I^Iprint("[DIAG] _physics_process: plane_node is NULL")$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I_hud_labels[0].text = "ALT: 6000 ft (IN PLANE)"$
+^I^I^Iif _hud_labels.size() > 7:$
+^I^I^I^Ipass$
+^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"$
+^I^I^I# --- CAMERA FOLLOW ---$
+^I^I^I^Iif _hud_labels.size() > 7:$
+^I^I^I^Ipass$
+^I^I^I^Iif _hud_labels.size() > 0: ^I^I^I_hud_labels[7].text = "EP: Press J or SPACE to exit aircraft"$
+^I^I^I^I# --- CAMERA FOLLOW ---$
+
+=== Line 2069 with cat -A ===
+if _hud_labels.size() > 0: ^I^I_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]$
+
+=== gdparse error context ===
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd:
+
+if _hud_labels.size() > 0: 		_hud_labels
+^
+
+Unexpected token Token('IF', 'if') at line 2069, column 1.
+Expected one of: 
+	* REGULAR_STRING
+	* CLASS
+	* _NL
+	* $END
+
+=== End of diagnostic ===
