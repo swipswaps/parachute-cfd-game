@@ -1,0 +1,654 @@
+=== push_and_diagnose.sh — Wed Aug  5 10:52:18 PM UTC 2026 ===
+Pushing existing log files...
+staged: 0
+Searching for altitude clamp patterns (25 meters)...
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1919-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1920-			_game_state = GameState.GAME_OVER
+1921-			print("[VERBATIM] Ground impact – fatal")
+1922:	_current_altitude = _character.position.y - 25.0
+1923-
+1924-	_vario_mps = _prev_descent_rate - _descent_rate
+1925-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1919-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1920-			_game_state = GameState.GAME_OVER
+1921-			print("[VERBATIM] Ground impact – fatal")
+1922:	_current_altitude = _character.position.y - 25.0
+1923-
+1924-	_vario_mps = _prev_descent_rate - _descent_rate
+1925-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1941-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1942-			_game_state = GameState.GAME_OVER
+1943-			print("[VERBATIM] Ground impact – fatal")
+1944:	_current_altitude = _character.position.y - 25.0
+1945-
+1946-	_vario_mps = _prev_descent_rate - _descent_rate
+1947-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1949-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1950-			_game_state = GameState.GAME_OVER
+1951-			print("[VERBATIM] Ground impact – fatal")
+1952:	_current_altitude = _character.position.y - 25.0
+1953-
+1954-	_vario_mps = _prev_descent_rate - _descent_rate
+1955-
+1401-func _check_decision_altitude() -> void:
+1402-	if _game_state != GameState.DIAGNOSIS:
+1403-		return
+1404:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1405-		_decision_altitude_warning_shown = true
+1406-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1407-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1986-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1987-			_game_state = GameState.GAME_OVER
+1988-			print("[VERBATIM] Ground impact – fatal")
+1989:	_current_altitude = _character.position.y - 25.0
+1990-
+1991-	_vario_mps = _prev_descent_rate - _descent_rate
+1992-
+1470-func _check_decision_altitude() -> void:
+1471-	if _game_state != GameState.DIAGNOSIS:
+1472-		return
+1473:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1474-		_decision_altitude_warning_shown = true
+1475-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1476-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1903-			print("[VERBATIM] FAILURE SCREENSHOT: ground impact (physics_process)")
+1904-			_game_state = GameState.GAME_OVER
+1905-			print("[VERBATIM] Ground impact – fatal")
+1906:	_current_altitude = _character.position.y - 25.0
+1907-
+1908-	# p3: vario and ground speed from REAL motion, not the constant table.
+1909-	var _p3_y: float = _character.global_position.y
+Searching for 'max.*altitude' patterns...
+1987-		_screenshot_save_timer = 5.0
+1988-
+1989-	if _hud_labels.size() > 0:
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1991-	else:
+1992-		print("[VERBATIM] HUD labels not ready yet")
+1993-	if _hud_labels.size() > 6:
+1987-		_screenshot_save_timer = 5.0
+1988-
+1989-	if _hud_labels.size() > 0:
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1991-	else:
+1992-		print("[VERBATIM] HUD labels not ready yet")
+1993-	if _hud_labels.size() > 6:
+1965-		_screenshot_save_timer = 5.0
+1966-
+1967-	if _hud_labels.size() > 0:
+1968:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1969-	else:
+1970-		print("[VERBATIM] HUD labels not ready yet")
+1971-	if _hud_labels.size() > 6:
+1987-		_screenshot_save_timer = 5.0
+1988-
+1989-	if _hud_labels.size() > 0:
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1991-	else:
+1992-		print("[VERBATIM] HUD labels not ready yet")
+1993-	if _hud_labels.size() > 6:
+1995-		_screenshot_save_timer = 5.0
+1996-
+1997-	if _hud_labels.size() > 0:
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1999-	else:
+2000-		print("[VERBATIM] HUD labels not ready yet")
+2001-	if _hud_labels.size() > 6:
+1995-		_screenshot_save_timer = 5.0
+1996-
+1997-	if _hud_labels.size() > 0:
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1999-	else:
+2000-		print("[VERBATIM] HUD labels not ready yet")
+2001-	if _hud_labels.size() > 6:
+1987-		_screenshot_save_timer = 5.0
+1988-
+1989-	if _hud_labels.size() > 0:
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1991-	else:
+1992-		print("[VERBATIM] HUD labels not ready yet")
+1993-	if _hud_labels.size() > 6:
+1987-		_screenshot_save_timer = 5.0
+1988-
+1989-	if _hud_labels.size() > 0:
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1991-	else:
+1992-		print("[VERBATIM] HUD labels not ready yet")
+1993-	if _hud_labels.size() > 6:
+1965-		_screenshot_save_timer = 5.0
+1966-
+1967-	if _hud_labels.size() > 0:
+1968:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1969-	else:
+1970-		print("[VERBATIM] HUD labels not ready yet")
+1971-	if _hud_labels.size() > 6:
+1987-		_screenshot_save_timer = 5.0
+1988-
+1989-	if _hud_labels.size() > 0:
+1990:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1991-	else:
+1992-		print("[VERBATIM] HUD labels not ready yet")
+1993-	if _hud_labels.size() > 6:
+1995-		_screenshot_save_timer = 5.0
+1996-
+1997-	if _hud_labels.size() > 0:
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1999-	else:
+2000-		print("[VERBATIM] HUD labels not ready yet")
+2001-	if _hud_labels.size() > 6:
+1995-		_screenshot_save_timer = 5.0
+1996-
+1997-	if _hud_labels.size() > 0:
+1998:		_hud_labels[0].text = "ALT: %.0f ft" % max(0, _current_altitude)
+1999-	else:
+2000-		print("[VERBATIM] HUD labels not ready yet")
+2001-	if _hud_labels.size() > 6:
+Searching for 'min.*altitude' patterns...
+Searching for 'if.*altitude.*<.*[0-9]' patterns...
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1752-	_descent_rate = 0.0
+1753-	_current_altitude = 3000.0
+1754-	# Ensure altitude is non‑zero and game state is correct (R088)
+1755:	if _current_altitude <= 0.0:
+1756-		_current_altitude = 3000.0
+1757-	_flight_control_checked = false
+1758-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+133-	var altitude = parachute.global_transform.origin.y
+134-	var descent_rate = parachute.get_descent_rate()
+135-
+136:	if altitude < 1.0:  # Landed
+137-		set_state(GameState.LANDED)
+138-
+139-
+133-	var altitude = parachute.global_transform.origin.y
+134-	var descent_rate = parachute.get_descent_rate()
+135-
+136:	if altitude < 1.0:  # Landed
+137-		set_state(GameState.LANDED)
+138-
+139-
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1752-	_descent_rate = 0.0
+1753-	_current_altitude = 3000.0
+1754-	# Ensure altitude is non‑zero and game state is correct (R088)
+1755:	if _current_altitude <= 0.0:
+1756-		_current_altitude = 3000.0
+1757-	_flight_control_checked = false
+1758-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1386-func _check_decision_altitude():
+1387-	if _game_state != GameState.DIAGNOSIS:
+1388-		return
+1389:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1390-		_decision_altitude_warning_shown = true
+1391-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1392-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1396-			_game_state = GameState.GAME_OVER
+1397-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1398-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1399:	elif _current_altitude <= 0.0 and not _safe_landing:
+1400-		ScreenshotLibrary.save_flight_screenshot()
+1401-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1402-		_game_state = GameState.GAME_OVER
+--
+1751-	_descent_rate = 0.0
+1752-	_current_altitude = 3000.0
+1753-	# Ensure altitude is non‑zero and game state is correct (R088)
+1754:	if _current_altitude <= 0.0:
+1755-		_current_altitude = 3000.0
+1756-	_flight_control_checked = false
+1757-	_cutaway_done = false
+1401-func _check_decision_altitude() -> void:
+1402-	if _game_state != GameState.DIAGNOSIS:
+1403-		return
+1404:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1405-		_decision_altitude_warning_shown = true
+1406-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1407-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1411-			_game_state = GameState.GAME_OVER
+1412-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1413-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1414:	elif _current_altitude <= 0.0 and not _safe_landing:
+1415-		ScreenshotLibrary.save_flight_screenshot()
+1416-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1417-		_game_state = GameState.GAME_OVER
+--
+1746-	_descent_rate = 0.0
+1747-	_current_altitude = 3000.0
+1748-	# Ensure altitude is non‑zero and game state is correct (R088)
+1749:	if _current_altitude <= 0.0:
+1750-		_current_altitude = 3000.0
+1751-	_flight_control_checked = false
+1752-	_cutaway_done = false
+133-	var altitude = parachute.global_transform.origin.y
+134-	var descent_rate = parachute.get_descent_rate()
+135-
+136:	if altitude < 1.0:  # Landed
+137-		set_state(GameState.LANDED)
+138-
+139-
+133-	var altitude = parachute.global_transform.origin.y
+134-	var descent_rate = parachute.get_descent_rate()
+135-
+136:	if altitude < 1.0:  # Landed
+137-		set_state(GameState.LANDED)
+138-
+139-
+1470-func _check_decision_altitude() -> void:
+1471-	if _game_state != GameState.DIAGNOSIS:
+1472-		return
+1473:	if _current_altitude <= 2500.0 and not _decision_altitude_warning_shown:
+1474-		_decision_altitude_warning_shown = true
+1475-		print("[VERBATIM] DECISION ALTITUDE WARNING – 2500 ft!")
+1476-		_show_notification("DECISION ALTITUDE! 2500 ft – act now!")
+--
+1480-			_game_state = GameState.GAME_OVER
+1481-			print("[VERBATIM] FATAL – decision altitude violation without reserve")
+1482-			_show_notification("FATAL – reserve not deployed by 2500 ft")
+1483:	elif _current_altitude <= 0.0 and not _safe_landing:
+1484-		ScreenshotLibrary.save_flight_screenshot()
+1485-		print("[VERBATIM] FAILURE SCREENSHOT: ground impact (check_decision)")
+1486-		_game_state = GameState.GAME_OVER
+--
+1644-	_descent_rate = 0.0
+1645-	_current_altitude = 3000.0
+1646-	# Ensure altitude is non‑zero and game state is correct (R088)
+1647:	if _current_altitude <= 0.0:
+1648-		_current_altitude = 3000.0
+1649-	_flight_control_checked = false
+1650-	_cutaway_done = false
+=== RAW LINKS TO EXISTING LOGS ===
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/restore_terrain_and_fix_altitude_final_20260805224605.txt
+https://raw.githubusercontent.com/swipswaps/parachute-cfd-game/main/notes/restore_terrain_and_fix_altitude_final_20260805224914.txt
