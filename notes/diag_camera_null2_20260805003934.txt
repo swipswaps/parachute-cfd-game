@@ -1,0 +1,97 @@
+=== diag_camera_null2.sh — 20260805003934 UTC ===
+
+=== A. GameIntegrity.gd — reload/set_script/free calls ===
+  334 lines
+
+  line 27 [build_terrain]: '\t\t"build_terrain.gd": _repair_build_terrain,'
+
+  line 184 [build_terrain]: 'func _repair_build_terrain(content: String) -> String:'
+
+=== B. build_terrain.gd lines 365-400 (cat -A) ===
+ 365: ^I_setup_plane_node()$
+ 366: ^Iprint("[DIAG] _ready: plane created, _plane_node=", _plane_node)$
+ 367: $
+ 368: ^I# --------------------------------------------------------------$
+ 369: ^I# ThirdM-bM-^@M-^Qperson camera M-bM-^@M-^S child of root, initially follows plane$
+ 370: ^I# Ref: https://docs.godotengine.org/en/stable/classes/class_camera3d.html$
+ 371: ^I# --------------------------------------------------------------$
+ 372: ^I_camera = Camera3D.new()$
+ 373: ^Iprint("[CAMERA_DEBUG] _camera created: ", _camera)$
+ 374: ^I_camera.position = Vector3(0.0, 2.0, 3.0)$
+ 375: ^I_camera.fov = 75.0$
+ 376: ^I_camera.near = 0.1$
+ 377: ^I_camera.far = 10000.0$
+ 378: ^Iadd_child(_camera)$
+ 379: ^Iprint("[CAMERA_DEBUG] _camera added to tree")$
+ 380: ^I_camera.current = true$
+ 381: ^Iprint("[CAMERA_DEBUG] _camera.current set to true")$
+ 382: ^Iprint('[PLANE_DEBUG] Camera added to tree')$
+ 383: $
+ 384: ^I# Ensure plane exists before positioning camera$
+ 385: ^Iif _plane_node:$
+ 386: ^I^I# Position camera using orbit angles$
+ 387: ^I^Ivar plane_pos = _plane_node.global_position$
+ 388: ^I^Ivar offset = Vector3(0, 0, -_cam_distance)$
+ 389: ^I^Ioffset = offset.rotated(Vector3.UP, _cam_azimuth)$
+ 390: ^I^Ioffset = offset.rotated(Vector3.RIGHT, _cam_elevation)$
+ 391: ^I^I_camera.global_position = plane_pos + offset$
+ 392: ^I^I_camera.look_at(plane_pos, Vector3.UP)$
+ 393: ^I^I_camera.current = true$
+ 394: ^I^I_camera.process_mode = PROCESS_MODE_ALWAYS  # allow orbit during pause$
+ 395: ^I^Iprint("[DEBUG] Plane position: ", plane_pos)$
+ 396: ^I^Iprint("[DEBUG] Camera position: ", _camera.global_position)$
+ 397: ^I^Iprint("[DIAG] _ready: camera positioned")$
+ 398: ^Ielse:$
+ 399: ^I^Iprint("[ERROR] Plane node is null, camera not positioned.")$
+ 400: ^I^Iprint("[DIAG] _ready: ERROR M-bM-^@M-^S plane node null")$
+
+=== C. CAMERA_DEBUG sequence in last autostall run ===
+  Searching: notes/fix_remove_recreation_block_20260805003821.txt
+     20:  601: ^Iprint("[CAMERA_DEBUG] Camera recreated unconditionally")$
+    122: [CAMERA_DEBUG] Loaded camera distance from DB: 175.0
+    123: [CAMERA_DEBUG] _load_camera_settings() END
+    148: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    158: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    165: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    172: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    179: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    186: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    193: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    200: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    207: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    214: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    221: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    228: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    235: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    242: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    249: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    256: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+    263: [DIAG] _physics_process: camera follow skipped – plane=FlyingPlane:<CharacterBody3D#37580965466> camera=<null>
+
+=== D. rule_compliance ACTUAL SCHEMA ===
+0|id|INTEGER|0||1
+1|run_id|TEXT|0||0
+2|rule_id|TEXT|0||0
+3|passed|INTEGER|0||0
+4|evidence|TEXT|0||0
+5|created_ts|TEXT|0|CURRENT_TIMESTAMP|0
+6|script_name|TEXT|0||0
+0|id|INTEGER|0||1
+1|script_name|TEXT|0||0
+2|run_ts|TEXT|0||0
+3|action|TEXT|0||0
+4|result|TEXT|0||0
+5|evidence|TEXT|0||0
+0|id|INTEGER|0||1
+1|script_name|TEXT|0||0
+2|run_ts|TEXT|0||0
+3|finding_key|TEXT|0||0
+4|finding_value|TEXT|0||0
+
+=== E. SCHEMA REPAIR ===
+  Existing columns: ['id', 'run_id', 'rule_id', 'passed', 'evidence', 'created_ts', 'script_name']
+  Added: run_ts TEXT
+  Final columns: ['id', 'run_id', 'rule_id', 'passed', 'evidence', 'created_ts', 'script_name', 'run_ts']
+
+=== END DIAGNOSTIC ===
+Timestamp: 20260805003934 UTC
