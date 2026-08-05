@@ -1,0 +1,27 @@
+=== diag_line1624.sh — 20260805214302 UTC ===
+
+Context around line 1624 from build_terrain.gd:
+
+	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+
+	if _game_state == GameState.IN_PLANE:
+		# Also check headless auto-jump flag (set in _physics_process;
+		# reliable across _physics_process/_process frame boundary).
+		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+	var _exit_pressed = (
+		Input.is_key_just_pressed(KEY_J)
+		or _headless_auto_jump
+	)
+		)
+		_headless_auto_jump = false  # consume the flag
+		if _exit_pressed:
+			print("[DIAG] _poll_controls: exit aircraft triggered")
+			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+			_game_state = GameState.FREEFALL
+			_cam_distance = 5.0
+			if _plane_node:
+				_plane_node.visible = false
+			_character.visible = true
+			if _plane_node:
+
+=== END OF CONTEXT ===
