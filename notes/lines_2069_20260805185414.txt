@@ -1,0 +1,28 @@
+=== show_lines_2069.sh — 20260805185414 UTC ===
+
+=== Lines 2060-2080 with line numbers ===
+2060: 		_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)
+2061: 		var turn_dir = Vector3.RIGHT * _turn_input * _turn_force
+2062: 		_velocity_vec += turn_dir * delta
+2063: 		var forward_vec = target_dir * _forward_speed
+2064: 		_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)
+2065: 		_character.position += _velocity_vec * delta
+2066: 		if _velocity_vec.length() > 0.5:
+2067: 			var angle = atan2(_velocity_vec.x, _velocity_vec.z)
+2068: 			# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour
+2069: 		var speed_kts = _forward_speed * 1.94384
+2070: 		if _hud_labels.size() > 0:
+2071: 			_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]
+2072: 			if _hud_labels.size() > 0:
+2073: 				_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)
+2074: 				if _hud_labels.size() > 0:
+2075: 					_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)
+2076: 			_check_decision_altitude()
+2077: 		# Capture flight screenshot every 5 seconds (R085 ensures during flight)
+2078: 		if _screenshot_save_timer > 0:
+2079: 			_screenshot_save_timer -= delta
+2080: 	if _camera_save_timer > 0.0:
+
+=== gdparse error (full) ===
+
+=== End of diagnostic ===
