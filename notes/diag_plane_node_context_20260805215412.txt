@@ -1,0 +1,27 @@
+=== diag_plane_node_context.sh — 20260805215412 UTC ===
+
+Lines 1625–1645 from build_terrain.gd (numbered):
+
+1625: 		if _exit_pressed:
+1626: 			print("[DIAG] _poll_controls: exit aircraft triggered")
+1627: 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+1628: 			_game_state = GameState.FREEFALL
+1629: 			_cam_distance = 5.0
+1630: 			if _plane_node:
+1631: 			_plane_node.queue_free()
+1632: 			_plane_node = null
+1633: func _reset_game() -> void:
+1634: 	print("[DIAG] _reset_game: ENTER")
+1635: 	print("[VERBATIM] === RESETTING GAME ===")
+1636: 	_game_state = GameState.IN_PLANE
+1637: 	if _plane_node:
+1638: 		_plane_node.visible = true
+1639: 		_plane_angle = 0.0
+1640: 	_character.visible = false
+1641: 	_character.position = Vector3(100.0, 1828.8, -100.0)
+1642: 	_velocity_vec = Vector3.ZERO
+1643: 	_forward_speed = 0.0
+1644: 	_descent_rate = 0.0
+1645: 	_current_altitude = 3000.0
+
+=== END OF CONTEXT ===
