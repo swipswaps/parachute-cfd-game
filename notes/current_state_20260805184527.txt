@@ -1,0 +1,44 @@
+=== diagnose_current_state.sh — 20260805184527 UTC ===
+
+=== Lines 2060-2080 with cat -A (tabs as ^I, spaces visible) ===
+^I^I_forward_speed = move_toward(_forward_speed, _max_speed, _accel * delta)$
+^I^Ivar turn_dir = Vector3.RIGHT * _turn_input * _turn_force$
+^I^I_velocity_vec += turn_dir * delta$
+^I^Ivar forward_vec = target_dir * _forward_speed$
+^I^I_velocity_vec = _velocity_vec.move_toward(forward_vec, _accel * delta)$
+^I^I_character.position += _velocity_vec * delta$
+^I^Iif _velocity_vec.length() > 0.5:$
+^I^I^Ivar angle = atan2(_velocity_vec.x, _velocity_vec.z)$
+^I^I^I# _character.rotation = Vector3(0, angle, 0)  # removed to match plane behaviour$
+^I^Ivar speed_kts = _forward_speed * 1.94384$
+^I^Iif _hud_labels.size() > 0:$
+^I^I^I_hud_labels[1].text = "SPD: %.0f kts | VARIO: %+.1f m/s" % [speed_kts, _vario_mps]$
+^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I_hud_labels[4].text = "TURN: %d" % (_turn_input * 100)$
+^I^I^I^Iif _hud_labels.size() > 0:$
+^I^I^I^I^I_hud_labels[0].text = "ALT: %.0f ft" % (_character.global_position.y * 3.28084)$
+^I^I^I_check_decision_altitude()$
+^I^I# Capture flight screenshot every 5 seconds (R085 ensures during flight)$
+^I^Iif _screenshot_save_timer > 0:$
+^I^I^I_screenshot_save_timer -= delta$
+^Iif _camera_save_timer > 0.0:$
+
+=== grep for 'if _hud_labels.size() > 0:' (with line numbers) ===
+1979:		if _hud_labels.size() > 0:
+1980:			if _hud_labels.size() > 0:
+1984:			if _hud_labels.size() > 0:
+1989:				if _hud_labels.size() > 0:
+2070:		if _hud_labels.size() > 0:
+2072:			if _hud_labels.size() > 0:
+2074:				if _hud_labels.size() > 0:
+2138:	if _hud_labels.size() > 0:
+2143:	if _hud_labels.size() > 0:
+2179:		if _hud_labels.size() > 0:
+
+=== grep for 'if _hud_labels.size() > 1:' (with line numbers) ===
+
+=== grep for '_hud_labels[1].text' (with line numbers) ===
+
+=== gdparse error (first 30 lines) ===
+
+=== End of diagnostic ===
