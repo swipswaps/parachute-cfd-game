@@ -1,0 +1,248 @@
+=== FULL _rotate_arm IMPLEMENTATION ===
+--- 0062 ---
+func _rotate_arm(left: bool) -> void:
+	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+	if not _skeleton:
+		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+		return
+	var idx = _left_arm_idx if left else _right_arm_idx
+	if idx == -1:
+		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+		return
+	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+	#   angle += _arm_rotation_step   clamped to [0, PI]
+	# which only ever increased, saturating at 180 deg and never returning.
+	# Proven by 0711.txt L6845-L9102: 45->90->135->180->180 per side, with
+	# no decrement path anywhere in the file (the elif angle < 0.0 branch
+	# was dead code). Arm motion is now driven by _update_arm_physics(),
+	# a spring-damper model stepped every physics frame. This shim only
+	# records that an edge-triggered call arrived.
+	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+
+
+# ------------------------------------------------------------------
+# Malfunction selection and visual update
+# ------------------------------------------------------------------
+func _randomize_malfunction() -> void:
+
+--- 0070 ---
+func _rotate_arm(left: bool) -> void:
+	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+	if not _skeleton:
+		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+		return
+	var idx = _left_arm_idx if left else _right_arm_idx
+	if idx == -1:
+		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+		return
+	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+	#   angle += _arm_rotation_step   clamped to [0, PI]
+	# which only ever increased, saturating at 180 deg and never returning.
+	# Proven by 0711.txt L6845-L9102: 45->90->135->180->180 per side, with
+	# no decrement path anywhere in the file (the elif angle < 0.0 branch
+	# was dead code). Arm motion is now driven by _update_arm_physics(),
+	# a spring-damper model stepped every physics frame. This shim only
+	# records that an edge-triggered call arrived.
+	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+
+
+# ------------------------------------------------------------------
+# Malfunction selection and visual update
+# ------------------------------------------------------------------
+func _randomize_malfunction() -> void:
+
+--- current ---
+func _rotate_arm(left: bool) -> void:
+	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+	if not _skeleton:
+		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+		return
+	var idx = _left_arm_idx if left else _right_arm_idx
+	if idx == -1:
+		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+		return
+	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+	#   angle += _arm_rotation_step   clamped to [0, PI]
+	# which only ever increased, saturating at 180 deg and never returning.
+	# Proven by 0711.txt L6845-L9102: 45->90->135->180->180 per side, with
+	# no decrement path anywhere in the file (the elif angle < 0.0 branch
+	# was dead code). Arm motion is now driven by _update_arm_physics(),
+	# a spring-damper model stepped every physics frame. This shim only
+	# records that an edge-triggered call arrived.
+	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+
+
+# ------------------------------------------------------------------
+# Malfunction selection and visual update
+# ------------------------------------------------------------------
+func _randomize_malfunction() -> void:
+
+=== CALL SITES FOR _rotate_arm ===
+--- 0062 ---
+866-# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+867-# ------------------------------------------------------------------
+868:func _rotate_arm(left: bool) -> void:
+869:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+870-	if not _skeleton:
+871:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+872-		return
+873-	var idx = _left_arm_idx if left else _right_arm_idx
+874-	if idx == -1:
+875:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+876-		return
+877-	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+--
+883-	# a spring-damper model stepped every physics frame. This shim only
+884-	# records that an edge-triggered call arrived.
+885:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+886-
+887-
+--
+1293-		_turn_input = -1.0
+1294-		if not _last_frame_keys["Q"]:
+1295:			_rotate_arm(true)
+1296-	elif _controller_input_map["turn_right"]:
+1297-		_turn_input = 1.0
+1298-		if not _last_frame_keys["E"]:
+1299:			_rotate_arm(false)
+1300-	else:
+1301-		pass
+--
+1597-			print("[VERBATIM] POLL: turnleft pressed - left turn")
+1598-			if not _last_frame_keys["Q"]:
+1599:				_rotate_arm(true)
+1600-		elif turn_input > 0.0:
+1601-			print("[VERBATIM] POLL: turnright pressed - right turn")
+1602-			if not _last_frame_keys["E"]:
+1603:				_rotate_arm(false)
+1604-
+1605-		_turn_input = turn_input
+--
+1630-		_turn_input = -1.0
+1631-		if not _last_frame_keys.get("Q", false):
+1632:			_rotate_arm(true)
+1633-	elif Input.is_key_pressed(KEY_E):
+1634-		_turn_input = 1.0
+1635-		if not _last_frame_keys.get("E", false):
+1636:			_rotate_arm(false)
+1637-	else:
+1638-		if _turn_input == 0.0:
+--
+2756-# TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+2757-#
+2758:# Replaces the monotonic ratchet at the old _rotate_arm L871
+2759-# (angle += _arm_rotation_step, clamped to PI, never decremented).
+2760-#
+
+--- 0070 ---
+909-# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+910-# ------------------------------------------------------------------
+911:func _rotate_arm(left: bool) -> void:
+912:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+913-	if not _skeleton:
+914:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+915-		return
+916-	var idx = _left_arm_idx if left else _right_arm_idx
+917-	if idx == -1:
+918:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+919-		return
+920-	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+--
+926-	# a spring-damper model stepped every physics frame. This shim only
+927-	# records that an edge-triggered call arrived.
+928:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+929-
+930-
+--
+1362-		_turn_input = -1.0
+1363-		if not _last_frame_keys["Q"]:
+1364:			_rotate_arm(true)
+1365-	elif _controller_input_map["turn_right"]:
+1366-		_turn_input = 1.0
+1367-		if not _last_frame_keys["E"]:
+1368:			_rotate_arm(false)
+1369-	else:
+1370-		pass
+--
+1679-			print("[VERBATIM] POLL: turnleft pressed - left turn")
+1680-			if not _last_frame_keys["Q"]:
+1681:				_rotate_arm(true)
+1682-		elif turn_input > 0.0:
+1683-			print("[VERBATIM] POLL: turnright pressed - right turn")
+1684-			if not _last_frame_keys["E"]:
+1685:				_rotate_arm(false)
+1686-
+1687-		_turn_input = turn_input
+--
+1712-		_turn_input = -1.0
+1713-		if not _last_frame_keys.get("Q", false):
+1714:			_rotate_arm(true)
+1715-	elif Input.is_key_pressed(KEY_E):
+1716-		_turn_input = 1.0
+1717-		if not _last_frame_keys.get("E", false):
+1718:			_rotate_arm(false)
+1719-	else:
+1720-		if _turn_input == 0.0:
+--
+2959-# TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+2960-#
+2961:# Replaces the monotonic ratchet at the old _rotate_arm L871
+2962-# (angle += _arm_rotation_step, clamped to PI, never decremented).
+2963-#
+
+--- current ---
+864-# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+865-# ------------------------------------------------------------------
+866:func _rotate_arm(left: bool) -> void:
+867:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+868-	if not _skeleton:
+869:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+870-		return
+871-	var idx = _left_arm_idx if left else _right_arm_idx
+872-	if idx == -1:
+873:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+874-		return
+875-	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+--
+881-	# a spring-damper model stepped every physics frame. This shim only
+882-	# records that an edge-triggered call arrived.
+883:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+884-
+885-
+--
+1291-		_turn_input = -1.0
+1292-		if not _last_frame_keys["Q"]:
+1293:			_rotate_arm(true)
+1294-	elif _controller_input_map["turn_right"]:
+1295-		_turn_input = 1.0
+1296-		if not _last_frame_keys["E"]:
+1297:			_rotate_arm(false)
+1298-	else:
+1299-		pass
+--
+1593-			print("[VERBATIM] POLL: turnleft pressed - left turn")
+1594-			if not _last_frame_keys["Q"]:
+1595:				_rotate_arm(true)
+1596-		elif turn_input > 0.0:
+1597-			print("[VERBATIM] POLL: turnright pressed - right turn")
+1598-			if not _last_frame_keys["E"]:
+1599:				_rotate_arm(false)
+1600-
+1601-		_turn_input = turn_input
+--
+1626-		_turn_input = -1.0
+1627-		if not _last_frame_keys.get("Q", false):
+1628:			_rotate_arm(true)
+1629-	elif Input.is_key_pressed(KEY_E):
+1630-		_turn_input = 1.0
+1631-		if not _last_frame_keys.get("E", false):
+1632:			_rotate_arm(false)
+1633-	else:
+1634-		if _turn_input == 0.0:
+--
+2752-# TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+2753-#
+2754:# Replaces the monotonic ratchet at the old _rotate_arm L871
+2755-# (angle += _arm_rotation_step, clamped to PI, never decremented).
+2756-#
+
