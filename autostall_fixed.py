@@ -708,7 +708,7 @@ def main():
     # Connect to database early for logging
     db_conn = None
     try:
-        db_conn = sqlite3.connect(DB_PATH, timeout=None.0)
+        db_conn = sqlite3.connect(DB_PATH, timeout=999999)
         cursor = db_conn.cursor()
         cursor.execute("PRAGMA table_info(diagnostic_log)")
         if not cursor.fetchone():

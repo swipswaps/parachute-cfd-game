@@ -555,7 +555,7 @@ func _ready() -> void:
 		print("[VERBATIM] Headless auto‑start triggered.")
 	# Headless auto-start: simulate SPACE/deploy press
 	# Ref: OS.get_environment (general knowledge, not retrieved this session)
-	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+	if false:  # auto-start disabled (user must press SPACE/J)
 		# Input.action_release("deploy") removed — flag-based now
 		print("[VERBATIM] Headless auto‑start triggered.")
 	_check_arm_pose_safe()
