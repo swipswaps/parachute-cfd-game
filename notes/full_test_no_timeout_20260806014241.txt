@@ -1,0 +1,12 @@
+Backup autostall_fixed.py.bak.20260806014241
+Backup godot_project/scripts/build_terrain.gd.bak.20260806014241
+=== FULL TEST WITH --no-timeout – 20260806014241 UTC ===
+Starting autostall_fixed.py --no-timeout (no timeouts in code).
+This will run until the game exits or you press Ctrl+C.
+
+  File "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/autostall_fixed.py", line 711
+    db_conn = sqlite3.connect(DB_PATH, timeout=None.0)
+                                               ^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+
+=== TEST FINISHED ===
