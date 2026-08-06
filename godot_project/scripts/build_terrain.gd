@@ -1527,7 +1527,7 @@ func _poll_controls() -> void:
 	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
 
 	if _game_state == GameState.IN_PLANE:
-		var _exit_pressed = Input.is_key_pressed(KEY_J)  # SPACE no longer exits the plane
+		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
 		if _exit_pressed:
 			print("[DIAG] _poll_controls: exit aircraft triggered")
 			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
