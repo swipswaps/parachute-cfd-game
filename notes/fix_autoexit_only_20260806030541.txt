@@ -1,0 +1,76 @@
+=== fix_autoexit_only.sh — 20260806030541 UTC ===
+Current HEAD: f7e25a6
+
+--- 1. Remove GODOT_HEADLESS override in autostall_fixed.py ---
+Patched autostall_fixed.py
+--- 2. Disable auto-start checks in build_terrain.gd ---
+Disabled _ready auto-start at line 1833
+Patched build_terrain.gd
+--- 3. Syntax check ---
+[PIPLIVE] hid 2 standalone PiP prop(s); camera kept
+[DIAG] _physics_process: ENTER, state=0
+[DIAG] _physics_process: IN_PLANE branch entered
+[DIAG] _physics_process: plane position updated to (799.9964, 1853.8, 2.399997)
+[DIAG] _physics_process: checking camera follow
+[DIAG] _physics_process: plane and camera valid, updating camera
+[DIAG] _physics_process: camera moved from (0.0, 1892.337, -205.3974) to (799.9964, 1917.337, -202.9974)
+[DIAG] _physics_process: IN_PLANE returning
+[HubManager] Hub spawn requested pid=1024877 non-blocking
+[VERBATIM] 2026-08-05T23:05:42 Starting full integrity check and repair
+--- 4. Quick test (10s) ---
+[HUB] Checking hub health...
+[HUB] Hub not responding. Attempting to start it...
+--- 5. Check auto-start did NOT trigger ---
+PASS: Auto-start did not trigger.
+Hub Guardian v4.1 – starting...
+[DB] Connecting to parachute_mutations.db (timeout 2s)...
+[DB] Connected.
+[INFO] Checking port status...
+[CMD] lsof -ti :8765
+[CMD] ss -ltnp sport = :8765
+[2026-08-06T03:05:43.179739+00:00] [info] hub_guardian_start: PID=None, healthy=False
+[INFO] Ensuring port is free before starting...
+[CMD] ss -ltnp sport = :8765
+[CMD] lsof -i :8765
+[2026-08-06T03:05:43.263066+00:00] [info] hub_guardian: Starting forensic hub server.
+[INFO] Waiting up to 10s for hub to become healthy...
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[WAIT] Hub not yet healthy...
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[WAIT] Hub not yet healthy...
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[WAIT] Hub not yet healthy...
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[WAIT] Hub not yet healthy...
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[CMD] curl -s -o /dev/null -w %{http_code} --connect-timeout 2 --max-time 3 http://127.0.0.1:8765/api/gamification
+[2026-08-06T03:05:53.476666+00:00] [error] hub_guardian: Hub failed to start or unhealthy.
+[ERROR] Hub failed to start within 10s.
+[ERROR] Last 5 lines of hub log:
+     16:   File "/usr/lib64/python3.14/socketserver.py", line 478, in server_bind
+     17:     self.socket.bind(self.server_address)
+     18:     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+     19: OSError: [Errno 98] Address already in use
+     20: usage: forensic_hub_server.py <project_root>
+[HUB LOG] /tmp/hub_server.log lines 14-20 (offending line 19):
+           14:     socketserver.TCPServer.server_bind(self)
+           15:     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+           16:   File "/usr/lib64/python3.14/socketserver.py", line 478, in server_bind
+           17:     self.socket.bind(self.server_address)
+           18:     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+      >>   19: OSError: [Errno 98] Address already in use
+           20: usage: forensic_hub_server.py <project_root>

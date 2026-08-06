@@ -1830,7 +1830,7 @@ func _physics_process(delta) -> void:
 			# Headless auto-start: fire SPACE on first IN_PLANE frame
 			# (Rule #1 grounded: this is the first rendered frame, confirmed
 			#  by _0283.txt showing plane position update before stall)
-			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+			if false:  # auto-start disabled (user must press SPACE/J)
 				if not ProjectSettings.has_setting("_headless_space_fired"):
 					ProjectSettings.set_setting("_headless_space_fired", true)
 					Input.action_press("deploy")

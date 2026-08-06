@@ -744,7 +744,7 @@ def main():
     else:
         print(f"[PATCH] Failed: {msg} (continuing anyway)")
 
-    os.environ["GODOT_HEADLESS"] = "1"   # Still used for auto‑start trigger
+# os.environ["GODOT_HEADLESS"] = "1"   # Still used for auto‑start trigger
 
     print("[SETUP] godot binary:", GODOT_BIN)
     print("[SETUP] project dir: ", os.path.abspath(PROJECT_DIR))
