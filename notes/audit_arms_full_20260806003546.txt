@@ -1,0 +1,684 @@
+=== ARM LOGIC COMPARISON: _0062 vs _0070 vs CURRENT ===
+Timestamp: Thu Aug  6 12:35:46 AM UTC 2026
+
+--- WORKING _0062 ---
+87-
+88-# ------------------------------------------------------------------
+89:# Arm bones (Skeleton3D)
+90:# Ref: https://docs.godotengine.org/en/stable/tutorials/animation/using_skeleton3d.html
+91-# ------------------------------------------------------------------
+92:var _skeleton: Skeleton3D
+93:var _left_arm_idx := -1
+94:var _right_arm_idx := -1
+95:var _left_arm_angle := 0.0
+96:var _right_arm_angle := 0.0
+97:var _arm_rotation_step := deg_to_rad(45.0)
+98-
+99-# ------------------------------------------------------------------
+--
+353-
+354-	# --------------------------------------------------------------
+355:	# Character (skydiver) – loads FBX with skeleton
+356:	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+357-	# --------------------------------------------------------------
+358-	_character = Node3D.new()
+--
+387-		var plane_pos = _plane_node.global_position
+388-		var offset = Vector3(0, 0, -_cam_distance)
+389:		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+390:		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+391-		_camera.global_position = plane_pos + offset
+392-		_camera.look_at(plane_pos, Vector3.UP)
+--
+548-		# Input.action_release("deploy") removed — flag-based now
+549-		print("[VERBATIM] Headless auto‑start triggered.")
+550:	_check_arm_pose_safe()
+551-
+552-	print("[VERBATIM] ... EXIT _ready ok=true")
+--
+571-# ------------------------------------------------------------------
+572-
+573:# Gate: Verify arms are not extended (R099)
+574-
+575-		print("[VERBATIM] Self-test timer started.")
+--
+577-
+578-
+579:func _check_arm_pose() -> void:
+580:	var skeleton = _character.find_child("Skeleton3D", true, false)
+581:	if not skeleton:
+582:		print("[VERBATIM] ARM GATE: No skeleton found")
+583-		return
+584:	# Get left arm bone (index 8 from earlier log)
+585:	var left_arm = skeleton.get_bone_global_pose(8)
+586:	var right_arm = skeleton.get_bone_global_pose(32)
+587:	# Log rotation angles (approx)
+588:	print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+589:	print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+590:	# If arms are extended (rotation around X near 0, Z near 0), suggest reset
+591:	if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+592-		print("[VERBATIM] ARM GATE WARNING: Arms appear extended, resetting to neutral")
+593-		# Force a reset
+594:		skeleton.reset_bone_poses()
+595-
+596-	# SELF-TEST INJECTED
+--
+609-	mi.material_override = mat
+610-	mi.position = pos
+611:	mi.rotation_degrees.y = heading
+612-	return mi
+613-
+614-
+615-# ------------------------------------------------------------------
+616:# Load FBX character and find arm bones
+617:# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+618-# ------------------------------------------------------------------
+619-func _load_character() -> void:
+--
+643-			"[DEBUG] Camera position: ",
+644-			_camera.global_position,
+645:			" rotation: ",
+646:			_camera.rotation_degrees
+647-		)
+648-
+649:	_skeleton = _character.find_child("Skeleton3D", true, false)
+650:	if _skeleton:
+651:		for i in _skeleton.get_bone_count():
+652:			var name = _skeleton.get_bone_name(i)
+653-			if name == "mixamorig_LeftArm" or name == "mixamorig:LeftArm":
+654:				_left_arm_idx = i
+655:				print("[VERBATIM] Left arm bone found index ", i)
+656-			elif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":
+657:				_right_arm_idx = i
+658:				print("[VERBATIM] Right arm bone found index ", i)
+659-	else:
+660:		print("[VERBATIM] No skeleton found")
+661-
+662-	var ap = _character.find_child("AnimationPlayer", true, false)
+--
+672-			anim_player.stop()
+673-		else:
+674:			var skeleton = _character.find_child("Skeleton3D", true, false)
+675:			if skeleton:
+676:				skeleton.reset_bone_poses()
+677-	# Reset to rest pose
+678-	if anim_player.has_animation("RESET"):
+--
+681-		anim_player.stop()
+682-	else:
+683:		var skeleton = _character.find_child("Skeleton3D", true, false)
+684:		if skeleton:
+685:			skeleton.reset_bone_poses()
+686:	# _force_neutral_arms()  # disabled – using RESET animation instead
+687:	# Play RESET animation to force arms to rest pose (R091/R092)
+688-	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+689-	if _anim_player and _anim_player.has_animation("RESET"):
+--
+691-		await get_tree().process_frame
+692-		_anim_player.stop()
+693:		print("[VERBATIM] RESET animation played – arms at rest pose")
+694-	else:
+695-		print("[VERBATIM] RESET animation not available – using fallback")
+--
+720-
+721-
+722:# Rule R092 / R083 – Force arms to neutral pose via bone override
+723:func _force_neutral_arms() -> void:
+724:	var skeleton = _character.find_child("Skeleton3D", true, false)
+725:	if not skeleton:
+726:		print("[VERBATIM] ARM FIX: No skeleton found")
+727-		return
+728-
+729:	var left_idx = skeleton.find_bone("mixamorig:LeftArm")
+730:	var right_idx = skeleton.find_bone("mixamorig:RightArm")
+731-	if left_idx == -1:
+732-		left_idx = 8
+--
+734-		right_idx = 32
+735-
+736:	# Rotate around Z axis (roll) by -90° to bring arm down
+737-	# Adjust this angle if needed (e.g., -75°, -105°)
+738-	var angle := deg_to_rad(-75)
+739-	var neutral_rot := Basis(Vector3(0, 0, 1), angle)
+740-
+741:	skeleton.set_bone_global_pose_override(
+742-		left_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
+743-	)
+744:	skeleton.set_bone_global_pose_override(
+745-		right_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
+746-	)
+747:	print("[VERBATIM] ARM FIX: Arms rotated around Z - adjust angle as needed (currently -90°)")
+748-
+749-
+--
+862-
+863-# ------------------------------------------------------------------
+864:# Arm animation (pull down) – gated with skeleton and bone index checks
+865-# Ref: https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+866:# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+867-# ------------------------------------------------------------------
+868:func _rotate_arm(left: bool) -> void:
+869:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+870:	if not _skeleton:
+871:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+872-		return
+873:	var idx = _left_arm_idx if left else _right_arm_idx
+874-	if idx == -1:
+875:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+876-		return
+877:	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+878:	#   angle += _arm_rotation_step   clamped to [0, PI]
+879-	# which only ever increased, saturating at 180 deg and never returning.
+880-	# Proven by 0711.txt L6845-L9102: 45->90->135->180->180 per side, with
+881-	# no decrement path anywhere in the file (the elif angle < 0.0 branch
+882:	# was dead code). Arm motion is now driven by _update_arm_physics(),
+883-	# a spring-damper model stepped every physics frame. This shim only
+884-	# records that an edge-triggered call arrived.
+885:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+886-
+887-
+--
+939-
+940-# ------------------------------------------------------------------
+941:# Update canopy colour, scale, rotation based on malfunction
+942-# Ref: https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html
+943-# ------------------------------------------------------------------
+--
+953-			if _canopy_instance:
+954-				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+955:				_canopy_instance.rotation_degrees = Vector3.ZERO
+956-		MalfunctionType.LINE_TWISTS:
+957-			_canopy_material.albedo_color = Color(0.9, 0.5, 0.1)
+958-			if _canopy_instance:
+959:				_canopy_instance.rotation_degrees.z = 15
+960-		MalfunctionType.BAG_LOCK:
+961-			_canopy_material.albedo_color = Color(0.9, 0.2, 0.2)
+--
+1293-		_turn_input = -1.0
+1294-		if not _last_frame_keys["Q"]:
+1295:			_rotate_arm(true)
+1296-	elif _controller_input_map["turn_right"]:
+1297-		_turn_input = 1.0
+1298-		if not _last_frame_keys["E"]:
+1299:			_rotate_arm(false)
+1300-	else:
+
+--- End of WORKING _0062 ---
+
+--- WORKING _0070 ---
+87-
+88-# ------------------------------------------------------------------
+89:# Arm bones (Skeleton3D)
+90:# Ref: https://docs.godotengine.org/en/stable/tutorials/animation/using_skeleton3d.html
+91-# ------------------------------------------------------------------
+92:var _skeleton: Skeleton3D
+93:var _left_arm_idx := -1
+94:var _right_arm_idx := -1
+95:var _left_arm_angle := 0.0
+96:var _right_arm_angle := 0.0
+97:var _arm_rotation_step := deg_to_rad(45.0)
+98-
+99-# ------------------------------------------------------------------
+--
+360-
+361-	# --------------------------------------------------------------
+362:	# Character (skydiver) – loads FBX with skeleton
+363:	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+364-	# --------------------------------------------------------------
+365-	_character = Node3D.new()
+--
+394-		var plane_pos = _plane_node.global_position
+395-		var offset = Vector3(0, 0, -_cam_distance)
+396:		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+397:		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+398-		_camera.global_position = plane_pos + offset
+399-		_camera.look_at(plane_pos, Vector3.UP)
+--
+561-		# Input.action_release("deploy") removed — flag-based now
+562-		print("[VERBATIM] Headless auto‑start triggered.")
+563:	_check_arm_pose_safe()
+564-
+565-	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
+--
+613-# ------------------------------------------------------------------
+614-
+615:# Gate: Verify arms are not extended (R099)
+616-
+617-		print("[VERBATIM] Self-test timer started.")
+--
+619-
+620-
+621:func _check_arm_pose() -> void:
+622:	var skeleton = _character.find_child("Skeleton3D", true, false)
+623:	if not skeleton:
+624:		print("[VERBATIM] ARM GATE: No skeleton found")
+625-		return
+626:	# Get left arm bone (index 8 from earlier log)
+627:	var left_arm = skeleton.get_bone_global_pose(8)
+628:	var right_arm = skeleton.get_bone_global_pose(32)
+629:	# Log rotation angles (approx)
+630:	print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+631:	print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+632:	# If arms are extended (rotation around X near 0, Z near 0), suggest reset
+633:	if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+634-		print("[VERBATIM] ARM GATE WARNING: Arms appear extended, resetting to neutral")
+635-		# Force a reset
+636:		skeleton.reset_bone_poses()
+637-
+638-	# SELF-TEST INJECTED
+--
+651-	mi.material_override = mat
+652-	mi.position = pos
+653:	mi.rotation_degrees.y = heading
+654-	return mi
+655-
+656-
+657-# ------------------------------------------------------------------
+658:# Load FBX character and find arm bones
+659:# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+660-# ------------------------------------------------------------------
+661-func _load_character() -> void:
+--
+685-			"[DEBUG] Camera position: ",
+686-			_camera.global_position,
+687:			" rotation: ",
+688:			_camera.rotation_degrees
+689-		)
+690-
+691:	_skeleton = _character.find_child("Skeleton3D", true, false)
+692:	if _skeleton:
+693:		for i in _skeleton.get_bone_count():
+694:			var name = _skeleton.get_bone_name(i)
+695-			if name == "mixamorig_LeftArm" or name == "mixamorig:LeftArm":
+696:				_left_arm_idx = i
+697:				print("[VERBATIM] Left arm bone found index ", i)
+698-			elif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":
+699:				_right_arm_idx = i
+700:				print("[VERBATIM] Right arm bone found index ", i)
+701-	else:
+702:		print("[VERBATIM] No skeleton found")
+703-
+704-	var ap = _character.find_child("AnimationPlayer", true, false)
+--
+714-			anim_player.stop()
+715-		else:
+716:			var skeleton = _character.find_child("Skeleton3D", true, false)
+717:			if skeleton:
+718:				skeleton.reset_bone_poses()
+719-	# Reset to rest pose
+720-	if anim_player.has_animation("RESET"):
+--
+723-		anim_player.stop()
+724-	else:
+725:		var skeleton = _character.find_child("Skeleton3D", true, false)
+726:		if skeleton:
+727:			skeleton.reset_bone_poses()
+728:	# _force_neutral_arms()  # disabled – using RESET animation instead
+729:	# Play RESET animation to force arms to rest pose (R091/R092)
+730-	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+731:	_the_anim_player = _anim_player  # store for arm physics pause/resume
+732-	if _anim_player and _anim_player.has_animation("RESET"):
+733-		_anim_player.play("RESET")
+734-		await get_tree().process_frame
+735-		_anim_player.stop()
+736:		print("[VERBATIM] RESET animation played – arms at rest pose")
+737-	else:
+738-		print("[VERBATIM] RESET animation not available – using fallback")
+--
+763-
+764-
+765:# Rule R092 / R083 – Force arms to neutral pose via bone override
+766:func _force_neutral_arms() -> void:
+767:	var skeleton = _character.find_child("Skeleton3D", true, false)
+768:	if not skeleton:
+769:		print("[VERBATIM] ARM FIX: No skeleton found")
+770-		return
+771-
+772:	var left_idx = skeleton.find_bone("mixamorig:LeftArm")
+773:	var right_idx = skeleton.find_bone("mixamorig:RightArm")
+774-	if left_idx == -1:
+775-		left_idx = 8
+--
+777-		right_idx = 32
+778-
+779:	# Rotate around Z axis (roll) by -90° to bring arm down
+780-	# Adjust this angle if needed (e.g., -75°, -105°)
+781-	var angle := deg_to_rad(-75)
+782-	var neutral_rot := Basis(Vector3(0, 0, 1), angle)
+783-
+784:	skeleton.set_bone_global_pose_override(
+785-		left_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
+786-	)
+787:	skeleton.set_bone_global_pose_override(
+788-		right_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
+789-	)
+790:	print("[VERBATIM] ARM FIX: Arms rotated around Z - adjust angle as needed (currently -90°)")
+791-
+792-
+--
+905-
+906-# ------------------------------------------------------------------
+907:# Arm animation (pull down) – gated with skeleton and bone index checks
+908-# Ref: https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+909:# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+910-# ------------------------------------------------------------------
+911:func _rotate_arm(left: bool) -> void:
+912:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+913:	if not _skeleton:
+914:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+915-		return
+916:	var idx = _left_arm_idx if left else _right_arm_idx
+917-	if idx == -1:
+918:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+919-		return
+920:	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+921:	#   angle += _arm_rotation_step   clamped to [0, PI]
+922-	# which only ever increased, saturating at 180 deg and never returning.
+923-	# Proven by 0711.txt L6845-L9102: 45->90->135->180->180 per side, with
+924-	# no decrement path anywhere in the file (the elif angle < 0.0 branch
+925:	# was dead code). Arm motion is now driven by _update_arm_physics(),
+926-	# a spring-damper model stepped every physics frame. This shim only
+927-	# records that an edge-triggered call arrived.
+928:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+929-
+930-
+--
+982-
+983-# ------------------------------------------------------------------
+984:# Update canopy colour, scale, rotation based on malfunction
+985-# Ref: https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html
+986-# ------------------------------------------------------------------
+--
+999-			if _canopy_instance:
+1000-				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+1001:				_canopy_instance.rotation_degrees = Vector3.ZERO
+1002-		MalfunctionType.LINE_TWISTS:
+1003-			_canopy_material.albedo_color = Color(0.9, 0.5, 0.1)
+1004-			if _canopy_instance:
+1005:				_canopy_instance.rotation_degrees.z = 15
+1006-		MalfunctionType.BAG_LOCK:
+1007-			_canopy_material.albedo_color = Color(0.9, 0.2, 0.2)
+--
+1103-		_canopy_instance.visible = true
+1104-		_canopy_instance.scale = Vector3(0.12, 0.09, 0.12)
+1105:		_canopy_instance.rotation_degrees = Vector3.ZERO
+1106-		if _canopy_material:
+1107-			_canopy_material.albedo_color = Color(0.95, 0.95, 0.95)
+--
+1110-				mesh_child.material_override = _canopy_material
+
+--- End of WORKING _0070 ---
+
+--- CURRENT (live) ---
+87-
+88-# ------------------------------------------------------------------
+89:# Arm bones (Skeleton3D)
+90:# Ref: https://docs.godotengine.org/en/stable/tutorials/animation/using_skeleton3d.html
+91-# ------------------------------------------------------------------
+92:var _skeleton: Skeleton3D
+93:var _left_arm_idx := -1
+94:var _right_arm_idx := -1
+95:var _left_arm_angle := 0.0
+96:var _right_arm_angle := 0.0
+97:var _arm_rotation_step := deg_to_rad(45.0)
+98-
+99-# ------------------------------------------------------------------
+--
+352-
+353-	# --------------------------------------------------------------
+354:	# Character (skydiver) – loads FBX with skeleton
+355:	# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+356-	# --------------------------------------------------------------
+357-	_character = Node3D.new()
+--
+386-		var plane_pos = _plane_node.global_position
+387-		var offset = Vector3(0, 0, -_cam_distance)
+388:		offset = offset.rotated(Vector3.UP, _cam_azimuth)
+389:		offset = offset.rotated(Vector3.RIGHT, _cam_elevation)
+390-		_camera.global_position = plane_pos + offset
+391-		_camera.look_at(plane_pos, Vector3.UP)
+--
+546-		# Input.action_release("deploy") removed — flag-based now
+547-		print("[VERBATIM] Headless auto‑start triggered.")
+548:	_check_arm_pose_safe()
+549-
+550-	print("[VERBATIM] ... EXIT _ready ok=true")
+--
+569-# ------------------------------------------------------------------
+570-
+571:# Gate: Verify arms are not extended (R099)
+572-
+573-		print("[VERBATIM] Self-test timer started.")
+--
+575-
+576-
+577:func _check_arm_pose() -> void:
+578:	var skeleton = _character.find_child("Skeleton3D", true, false)
+579:	if not skeleton:
+580:		print("[VERBATIM] ARM GATE: No skeleton found")
+581-		return
+582:	# Get left arm bone (index 8 from earlier log)
+583:	var left_arm = skeleton.get_bone_global_pose(8)
+584:	var right_arm = skeleton.get_bone_global_pose(32)
+585:	# Log rotation angles (approx)
+586:	print("[VERBATIM] ARM GATE: Left arm rotation = ", left_arm.basis.get_euler())
+587:	print("[VERBATIM] ARM GATE: Right arm rotation = ", right_arm.basis.get_euler())
+588:	# If arms are extended (rotation around X near 0, Z near 0), suggest reset
+589:	if left_arm.basis.get_euler().x < 0.5 and left_arm.basis.get_euler().z < 0.5:
+590-		print("[VERBATIM] ARM GATE WARNING: Arms appear extended, resetting to neutral")
+591-		# Force a reset
+592:		skeleton.reset_bone_poses()
+593-
+594-	# SELF-TEST INJECTED
+--
+607-	mi.material_override = mat
+608-	mi.position = pos
+609:	mi.rotation_degrees.y = heading
+610-	return mi
+611-
+612-
+613-# ------------------------------------------------------------------
+614:# Load FBX character and find arm bones
+615:# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+616-# ------------------------------------------------------------------
+617-func _load_character() -> void:
+--
+641-			"[DEBUG] Camera position: ",
+642-			_camera.global_position,
+643:			" rotation: ",
+644:			_camera.rotation_degrees
+645-		)
+646-
+647:	_skeleton = _character.find_child("Skeleton3D", true, false)
+648:	if _skeleton:
+649:		for i in _skeleton.get_bone_count():
+650:			var name = _skeleton.get_bone_name(i)
+651-			if name == "mixamorig_LeftArm" or name == "mixamorig:LeftArm":
+652:				_left_arm_idx = i
+653:				print("[VERBATIM] Left arm bone found index ", i)
+654-			elif name == "mixamorig_RightArm" or name == "mixamorig:RightArm":
+655:				_right_arm_idx = i
+656:				print("[VERBATIM] Right arm bone found index ", i)
+657-	else:
+658:		print("[VERBATIM] No skeleton found")
+659-
+660-	var ap = _character.find_child("AnimationPlayer", true, false)
+--
+670-			anim_player.stop()
+671-		else:
+672:			var skeleton = _character.find_child("Skeleton3D", true, false)
+673:			if skeleton:
+674:				skeleton.reset_bone_poses()
+675-	# Reset to rest pose
+676-	if anim_player.has_animation("RESET"):
+--
+679-		anim_player.stop()
+680-	else:
+681:		var skeleton = _character.find_child("Skeleton3D", true, false)
+682:		if skeleton:
+683:			skeleton.reset_bone_poses()
+684:	# _force_neutral_arms()  # disabled – using RESET animation instead
+685:	# Play RESET animation to force arms to rest pose (R091/R092)
+686-	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+687-	if _anim_player and _anim_player.has_animation("RESET"):
+--
+689-		await get_tree().process_frame
+690-		_anim_player.stop()
+691:		print("[VERBATIM] RESET animation played – arms at rest pose")
+692-	else:
+693-		print("[VERBATIM] RESET animation not available – using fallback")
+--
+718-
+719-
+720:# Rule R092 / R083 – Force arms to neutral pose via bone override
+721:func _force_neutral_arms() -> void:
+722:	var skeleton = _character.find_child("Skeleton3D", true, false)
+723:	if not skeleton:
+724:		print("[VERBATIM] ARM FIX: No skeleton found")
+725-		return
+726-
+727:	var left_idx = skeleton.find_bone("mixamorig:LeftArm")
+728:	var right_idx = skeleton.find_bone("mixamorig:RightArm")
+729-	if left_idx == -1:
+730-		left_idx = 8
+--
+732-		right_idx = 32
+733-
+734:	# Rotate around Z axis (roll) by -90° to bring arm down
+735-	# Adjust this angle if needed (e.g., -75°, -105°)
+736-	var angle := deg_to_rad(-75)
+737-	var neutral_rot := Basis(Vector3(0, 0, 1), angle)
+738-
+739:	skeleton.set_bone_global_pose_override(
+740-		left_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
+741-	)
+742:	skeleton.set_bone_global_pose_override(
+743-		right_idx, Transform3D(neutral_rot, Vector3.ZERO), 1.0, true
+744-	)
+745:	print("[VERBATIM] ARM FIX: Arms rotated around Z - adjust angle as needed (currently -90°)")
+746-
+747-
+--
+860-
+861-# ------------------------------------------------------------------
+862:# Arm animation (pull down) – gated with skeleton and bone index checks
+863-# Ref: https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+864:# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation
+865-# ------------------------------------------------------------------
+866:func _rotate_arm(left: bool) -> void:
+867:	print("[VERBATIM] ENTER _rotate_arm gate=left=", left)
+868:	if not _skeleton:
+869:		print("[VERBATIM] EXIT _rotate_arm early=no_skeleton")
+870-		return
+871:	var idx = _left_arm_idx if left else _right_arm_idx
+872-	if idx == -1:
+873:		print("[VERBATIM] EXIT _rotate_arm early=invalid_bone_index")
+874-		return
+875:	# NEUTRALIZED (fix_arm_spring_v4): the old body was
+876:	#   angle += _arm_rotation_step   clamped to [0, PI]
+877-	# which only ever increased, saturating at 180 deg and never returning.
+878-	# Proven by 0711.txt L6845-L9102: 45->90->135->180->180 per side, with
+879-	# no decrement path anywhere in the file (the elif angle < 0.0 branch
+880:	# was dead code). Arm motion is now driven by _update_arm_physics(),
+881-	# a spring-damper model stepped every physics frame. This shim only
+882-	# records that an edge-triggered call arrived.
+883:	print("[VERBATIM] EXIT _rotate_arm ok=true shim=physics_driven idx=", idx)
+884-
+885-
+--
+937-
+938-# ------------------------------------------------------------------
+939:# Update canopy colour, scale, rotation based on malfunction
+940-# Ref: https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html
+941-# ------------------------------------------------------------------
+--
+951-			if _canopy_instance:
+952-				_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+953:				_canopy_instance.rotation_degrees = Vector3.ZERO
+954-		MalfunctionType.LINE_TWISTS:
+955-			_canopy_material.albedo_color = Color(0.9, 0.5, 0.1)
+956-			if _canopy_instance:
+957:				_canopy_instance.rotation_degrees.z = 15
+958-		MalfunctionType.BAG_LOCK:
+959-			_canopy_material.albedo_color = Color(0.9, 0.2, 0.2)
+--
+1291-		_turn_input = -1.0
+1292-		if not _last_frame_keys["Q"]:
+1293:			_rotate_arm(true)
+1294-	elif _controller_input_map["turn_right"]:
+1295-		_turn_input = 1.0
+1296-		if not _last_frame_keys["E"]:
+1297:			_rotate_arm(false)
+1298-	else:
+
+--- End of CURRENT (live) ---
+
+=== ARM FUNCTION DEFINITIONS (func.*arm) ===
+--- godot_project/build_terrain.gd ---
+579:func _check_arm_pose() -> void:
+723:func _force_neutral_arms() -> void:
+868:func _rotate_arm(left: bool) -> void:
+2383:func _check_arm_pose_safe() -> void:
+2808:func _arm_capture_rest() -> void:
+2827:func _arm_anim_pos() -> float:
+2844:func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+2928:func _apply_arm_bone_overrides() -> void:
+2970:func _arm_find_bone(base: String) -> int:
+2978:func _arm_axis_use(side: String) -> Vector3:
+2984:func _arm_axis_probe() -> void:
+3135:func _arm_solve_elbow() -> void:
+--- godot_project/build_terrain.gd ---
+621:func _check_arm_pose() -> void:
+766:func _force_neutral_arms() -> void:
+911:func _rotate_arm(left: bool) -> void:
+2496:func _check_arm_pose_safe() -> void:
+3013:func _arm_capture_rest() -> void:
+3032:func _arm_anim_pos() -> float:
+3049:func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+3152:func _apply_arm_bone_overrides() -> void:
+3194:func _arm_find_bone(base: String) -> int:
+3202:func _arm_axis_use(side: String) -> Vector3:
+3208:func _arm_axis_probe() -> void:
+3359:func _arm_solve_elbow() -> void:
+--- godot_project/build_terrain.gd ---
+577:func _check_arm_pose() -> void:
+721:func _force_neutral_arms() -> void:
+866:func _rotate_arm(left: bool) -> void:
+2379:func _check_arm_pose_safe() -> void:
+2804:func _arm_capture_rest() -> void:
+2823:func _arm_anim_pos() -> float:
+2840:func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+2924:func _apply_arm_bone_overrides() -> void:
+2966:func _arm_find_bone(base: String) -> int:
+2974:func _arm_axis_use(side: String) -> Vector3:
+2980:func _arm_axis_probe() -> void:
+3131:func _arm_solve_elbow() -> void:
+
+=== ARM VARIABLES (left_arm_bone, right_arm_bone, etc.) ===
+left_arm_bone: 
+right_arm_bone: 
+left_arm_rest: 
+right_arm_rest: 
+arm_pose: godot_project/build_terrain.gd godot_project/build_terrain.gd godot_project/build_terrain.gd 
+arm_animation: 
+
+=== DIFF: Key ARM lines (grep for AXISSOLVE, ELBOWSOLVE) ===
+These are the solve functions that drive arm movement.
+2992:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+3004:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3009:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3056:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3057:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+---
+3216:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+3228:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3233:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3280:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3281:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+---
+2988:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+3000:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3005:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3052:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3053:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+=== END AUDIT ===
