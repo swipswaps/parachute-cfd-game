@@ -1,0 +1,85 @@
+=== Database & Code Audit Report ===
+Timestamp: 2026-08-06T07:59:40.487412
+Primary database: ./forensics.db
+
+=== DATABASE SCHEMA ===
+Table: events
+  Columns: id, content_hash, run_id, ts, source_db, source_table, kind, file_path, detail
+Table: sqlite_sequence
+  Columns: name, seq
+Table: repair_strategies
+  Columns: id, error_pattern, repair_type, repair_data, success_count, fail_count, last_used, source_db
+Table: files_to_fix
+  Columns: file_path, line_number, error_text, status, attempt_count, fixed_ts, source_db, content_hash
+Table: migration_report
+  Columns: id, migrated_at, source_db, source_table, rows_in_source, rows_inserted, rows_skipped
+Table: diagnostic_findings
+  Columns: id, run_id, file_path, line_number, error_text, context_block, engine_source, detected_ts
+Table: fix_attempts
+  Columns: id, finding_id, file_path, line_number, error_text, fix_script, diff_text, success, context_after, attempted_ts
+Table: events_hardened
+  Columns: id, ts, run_id, source_db, source_table, kind, file_path, detail, content_hash
+Table: remediation_queue
+  Columns: id, created_ts, file_path, line_number, error_text, status, attempt_count, fix_script, priority
+Table: _schema_version
+  Columns: version
+
+=== SQL TABLE REFERENCES IN GDScript ===
+  godot_project/scripts/HUDManager.gd: hud_state
+  godot_project/scripts/ResourceThrottle.gd: throttle_log
+  godot_project/scripts/auto_heal.gd: repair_rules, autohealactions
+  godot_project/scripts/build_terrain.backup_20260707-205552.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/build_terrain.backup_20260707-210153.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/build_terrain.backup_20260707-210819.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/build_terrain.backup_20260707-215820.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/build_terrain.backup_20260707-222344.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/build_terrain.backup_20260707-222819.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/game_manager.backup_20260707-212959.gd: HUD, game, labels
+  godot_project/scripts/game_manager.gd: HUD, game, labels
+  godot_project/scripts/parachute_controller.backup_20260707-212959.gd: glide, parachute
+  godot_project/scripts/parachute_controller.gd: glide, parachute
+  godot_project/scripts/PerformanceMonitor.gd: resource_contention_log
+  godot_project/scripts/SqliteDb.gd: parse_errors, screenshots, issues
+  godot_project/scripts/build_terrain.gd: startup, logarithmic, ConfigFile, camera, measurement, DB, canopy, user_preferences, rest
+  godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd: canopy, logarithmic
+  godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd: canopy, logarithmic
+  godot_project/scripts/scripts/build_terrain.backup_20260707-205552.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/scripts/build_terrain.backup_20260707-210153.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/scripts/build_terrain.backup_20260707-210819.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/scripts/build_terrain.backup_20260707-215820.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/scripts/build_terrain.backup_20260707-222344.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/scripts/build_terrain.backup_20260707-222819.gd: logarithmic, ConfigFile, camera, _poll_controls, canopy
+  godot_project/scripts/scripts/game_manager.backup_20260707-212959.gd: HUD, game, labels
+  godot_project/scripts/scripts/parachute_controller.backup_20260707-212959.gd: glide, parachute
+  godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151124.gd: canopy, logarithmic
+  godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151237.gd: canopy, logarithmic
+
+=== MISSING TABLES (in code but not in DB) ===
+  ❌ ConfigFile
+  ❌ DB
+  ❌ HUD
+  ❌ _poll_controls
+  ❌ autohealactions
+  ❌ camera
+  ❌ canopy
+  ❌ game
+  ❌ glide
+  ❌ hud_state
+  ❌ issues
+  ❌ labels
+  ❌ logarithmic
+  ❌ measurement
+  ❌ parachute
+  ❌ parse_errors
+  ❌ repair_rules
+  ❌ resource_contention_log
+  ❌ rest
+  ❌ screenshots
+  ❌ startup
+  ❌ throttle_log
+  ❌ user_preferences
+
+=== RULE #48: COMPLIANCE LOGGING ===
+✅ Compliance record inserted: ('audit_database_and_code_fixed_v2.sh', '48', 1, 'notes/audit_20260806115940.txt', '2026-08-06T07:59:40.929226')
+
+Report saved to: notes/audit_20260806115940.txt
