@@ -1,0 +1,59 @@
+=== DIAGNOSTIC: EXIT CONDITION AND PARSE ERROR ===
+Timestamp: Thu Aug  6 12:32:50 AM UTC 2026
+
+--- WORKING _0062 ---
+File: ../parachute-cfd-game_0062/godot_project/scripts/build_terrain.gd
+1546-		# reliable across _physics_process/_process frame boundary).
+1547-		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1548:		var _exit_pressed = (
+1549-			Input.is_action_just_pressed("deploy")
+1550-			or Input.is_key_pressed(KEY_J)
+
+--- WORKING _0070 ---
+File: ../parachute-cfd-game_0070/godot_project/scripts/build_terrain.gd
+1619-		# reliable across _physics_process/_process frame boundary).
+1620-		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1621:		var _exit_pressed = (
+1622-			Input.is_action_just_pressed("deploy")
+1623-			or Input.is_key_pressed(KEY_J)
+
+--- CURRENT (live) ---
+File: godot_project/scripts/build_terrain.gd
+1544-		# reliable across _physics_process/_process frame boundary).
+1545-		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1546:		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+1547-			or Input.is_key_pressed(KEY_J)
+1548-			or _headless_auto_jump
+
+--- BEST BACKUP (20260805233801) ---
+File: godot_project/scripts/build_terrain.gd.bak.20260805233801
+1619-		# reliable across _physics_process/_process frame boundary).
+1620-		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+1621:		var _exit_pressed = (
+1622-			Input.is_key_pressed(KEY_J)
+1623-			or _headless_auto_jump
+
+--- PARSE ERROR CONTEXT (CURRENT) ---
+	if _game_state == GameState.IN_PLANE:
+		# Also check headless auto-jump flag (set in _physics_process;
+		# reliable across _physics_process/_process frame boundary).
+		# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+			or Input.is_key_pressed(KEY_J)
+			or _headless_auto_jump
+		)
+		if _exit_pressed:
+			print("[DIAG] _poll_controls: exit aircraft triggered")
+			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+
+--- SIDE‑BY‑SIDE COMPARISON OF EXIT CONDITION ---
+0062:
+1548:		var _exit_pressed = (
+0070:
+1621:		var _exit_pressed = (
+CURRENT:
+1546:		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+BEST BACKUP:
+1621:		var _exit_pressed = (
+
+=== END DIAGNOSTIC ===
