@@ -1,0 +1,533 @@
+=== ARM BENDING EXTRACTION (0070 vs current) ===
+Timestamp: 2026-08-06T00:50:12.936507+00:00
+
+--- 0070 ---
+_update_arm_physics:
+3049: func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+3050: 	if not _skeleton:
+3051: 		return
+3052: 	_arm_capture_rest()
+3053: 	if not _arm_rest_ok:
+3054: 		return
+3055: 	_arm_axis_probe()
+3056: 	if delta <= 0.0:
+3057: 		return
+3058: 
+3059: 	_arm_tel_t += delta
+3060: 	if not _arm_tel_header:
+3061: 		print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t")
+3062: 		_arm_tel_header = true
+3063: 
+3064: 	var anim_pos := _arm_anim_pos()
+3065: 
+3066: 	for side in ["L", "R"]:
+3067: 		var held: bool = held_left if side == "L" else held_right
+3068: 		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3069: 		if idx == -1:
+3070: 			continue
+3071: 
+3072: 		var pull: float = _arm_pull[side]
+3073: 		var vel: float = _arm_vel[side]
+3074: 
+3075: 		# v8: ramp the pull force while held so a longer input goes deeper.
+3076: 		if held:
+3077: 			_arm_hold_t[side] = _arm_hold_t[side] + delta
+3078: 		else:
+3079: 			_arm_hold_t[side] = 0.0
+3080: 		var ramp: float = clampf(_arm_hold_t[side] / ARM_FORCE_RAMP_T, 0.0, 1.0)
+3081: 		var force: float = 0.0
+3082: 		if held:
+3083: 			force = ARM_FORCE_MIN + (ARM_FORCE_MAX - ARM_FORCE_MIN) * ramp
+3084: 		var tension: float = ARM_K_LINE * pull
+3085: 		var damping: float = ARM_C_DAMP * vel
+3086: 		var accel: float = (force - tension - damping) / ARM_INERTIA
+3087: 
+3088: 		vel += accel * delta
+3089: 		pull += vel * delta
+3090: 
+3091: 		if pull <= 0.0:
+3092: 			pull = 0.0
+3093: 			if vel < 0.0:
+3094: 				vel = 0.0
+3095: 		elif pull >= 1.0:
+3096: 			pull = 1.0
+3097: 			if vel > 0.0:
+3098: 				vel = 0.0
+3099: 
+3100: 		_arm_pull[side] = pull
+3101: 		_arm_vel[side] = vel
+3102: 
+3103: 		# Absolute pose recomputed from rest every frame - never compounding.
+3104: 		# Mirror the sweep axis so both arms move outward-down, not into the chest.
+3105: 		# Axis lifted to constants so the probe result can be applied as a
+3106: 		# one-line change. Current values are v4's, kept identical until the
+3107: 		# [AXISPROBE] measurement selects a replacement.
+3108: 		var axis: Vector3 = _arm_axis_use(side)
+3109: 		var angle: float = pull * ARM_MAX_ANGLE
+3110: 		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
+3111: 		_arm_q_stored[side] = q
+3112: 
+3113: 		# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
+3114: 		# pull keeps the arm straight and a deep pull draws the hand inward.
+3115: 		var elbow_deg := 0.0
+3116: 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+3117: 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+3118: 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+3119: 			# ARM_ELBOW_NEUTRAL: 20deg resting bend ("let it fly" posture).
+3120: 			# Negated axis: solved axis bends forward; negated bends elbow
+3121: 			# downward/rearward (USPA SIM toggle grip toward hip).
+3122: 			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
+3123: 			var e_ax: Vector3 = -_arm_elbow_axis[side]
+3124: 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+3125: 			_arm_elbow_q_stored[side] = eq
+3126: 			elbow_deg = rad_to_deg(e_ang)
+3127: 
+3128: 		# Telemetry only while the system is doing something, so idle frames
+3129: 		# stay quiet and a pull/release cycle produces a dense readable curve.
+3130: 		if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+3131: 			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+3132: 				",", force, ",", tension, ",", damping, ",", accel,
+3133: 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+3134: 				",", elbow_deg, ",", _arm_hold_t[side])
+3135: 
+3136: 	# Apply computed quaternions to skeleton bones every physics frame.
+3137: 	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
+3138: 	# computed above but were never written to the skeleton — root cause
+3139: 	# of arms not pulling down despite spring-damper running correctly.
+3140: 	_apply_arm_bone_overrides()
+3141: 	# Stop the looping Mixamo AnimationPlayer when arm pull is active so
+3142: 	# it cannot overwrite the bone poses we just set. Resume when at rest.
+3143: 	# Root cause of regression ffdd7d6: AnimationPlayer.play(mixamo_com)
+3144: 	# runs every frame and overwrites set_bone_pose_rotation every frame.
+3145: 	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
+3146: 	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+3147: 		if any_pull and _the_anim_player.is_playing():
+3148: 			_the_anim_player.stop()
+3149: 		elif not any_pull and not _the_anim_player.is_playing():
+3150: 			_the_anim_player.play("mixamo_com")
+3151: 
+_arm_solve_elbow:
+3359: func _arm_solve_elbow() -> void:
+3360: 	if not _skeleton:
+3361: 		return
+3362: 	for side in ["L", "R"]:
+3363: 		var fname: String = "LeftForeArm" if side == "L" else "RightForeArm"
+3364: 		var hname: String = "LeftHand" if side == "L" else "RightHand"
+3365: 		var f_idx := _arm_find_bone(fname)
+3366: 		var h_idx := _arm_find_bone(hname)
+3367: 		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3368: 		if f_idx == -1 or h_idx == -1 or a_idx == -1:
+3369: 			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+3370: 				" hand=", h_idx, " arm=", a_idx)
+3371: 			continue
+3372: 
+3373: 		_arm_fore_idx[side] = f_idx
+3374: 		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+3375: 
+3376: 		var p_f: Vector3 = _skeleton.get_bone_global_pose(f_idx).origin
+3377: 		var p_h: Vector3 = _skeleton.get_bone_global_pose(h_idx).origin
+3378: 		var p_a: Vector3 = _skeleton.get_bone_global_pose(a_idx).origin
+3379: 
+3380: 		var r_lever: Vector3 = p_h - p_f
+3381: 		if r_lever.length() < 0.000001:
+3382: 			print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm lever")
+3383: 			continue
+3384: 
+3385: 		# v9: primary reference is the anatomical pull direction solved for
+3386: 		# the shoulder (forward+down). v8 used the shoulder-ward vector, which
+3387: 		# is parallel to the forearm when the arm is straight - the exact pose
+3388: 		# this rig rests in - so it collapsed to zero and the solve bailed
+3389: 		# (elbow_v8.txt reported the bail on both sides at rest).
+3390: 		var d_want := Vector3.ZERO
+3391: 		var src := ""
+3392: 		var cands := [
+3393: 			["pull_dir", _arm_d_want],
+3394: 			["shoulderward", p_a - p_h],
+3395: 			["body_up", -_arm_body_up],
+3396: 		]
+3397: 		for c in cands:
+3398: 			var v: Vector3 = c[1]
+3399: 			if v.length() < 0.000001:
+3400: 				continue
+3401: 			var rej: Vector3 = v - r_lever * (v.dot(r_lever) / r_lever.length_squared())
+3402: 			if rej.length() > 0.001:
+3403: 				d_want = rej.normalized()
+3404: 				src = c[0]
+3405: 				break
+3406: 		if d_want == Vector3.ZERO:
+3407: 			print("[ELBOWSOLVE] ", side,
+3408: 				" DEGENERATE: no usable reference. lever=", r_lever,
+3409: 				" pull_dir=", _arm_d_want, " up=", _arm_body_up)
+3410: 			continue
+3411: 		print("[ELBOWSOLVE] ", side, " reference=", src)
+3412: 
+3413: 		var w_global: Vector3 = r_lever.cross(d_want).normalized()
+3414: 		var f_basis: Basis = _skeleton.get_bone_global_pose(f_idx).basis
+3415: 		var w_local: Vector3 = (f_basis.inverse() * w_global).normalized()
+3416: 		_arm_elbow_axis[side] = w_local
+3417: 		_arm_elbow_ok[side] = true
+3418: 
+3419: 		print("[ELBOWSOLVE] ", side, " fore_idx=", f_idx,
+3420: 			" lever=", r_lever, " len=", r_lever.length(),
+3421: 			" d_want=", d_want, " ELBOW_AXIS_LOCAL=", w_local)
+3422: 
+3423: 		# verify: hand-to-shoulder distance must shrink under flexion
+3424: 		var rest_f: Quaternion = _arm_fore_rest_q[side]
+3425: 		var d0: float = (p_h - p_a).length()
+3426: 		print("[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive")
+3427: 		for ang_deg in [30.0, 75.0]:
+3428: 			_skeleton.set_bone_pose_rotation(f_idx,
+3429: 				rest_f * Quaternion(w_local, deg_to_rad(ang_deg)))
+3430: 			_skeleton.force_update_all_bone_transforms()
+3431: 			var p1: Vector3 = _skeleton.get_bone_global_pose(h_idx).origin
+3432: 			var d1: float = (p1 - p_a).length()
+3433: 			var along: float = (p1 - p_h).dot(_arm_d_want)
+3434: 			print("[ELBOWSOLVE],", side, ",", ang_deg, ",", d0, ",", d1,
+3435: 				",", d1 - d0, ",", along)
+3436: 			_skeleton.set_bone_pose_rotation(f_idx, rest_f)
+3437: 			_skeleton.force_update_all_bone_transforms()
+3438: 
+3439: # v9: anatomical pull direction and body up, published by
+3440: # _arm_axis_probe() so _arm_solve_elbow() can reuse them.
+3441: var _arm_d_want := Vector3.ZERO
+3442: var _arm_body_up := Vector3.UP
+3443: 
+3444: # ===========================================================================
+3445: # MAIN CANOPY VISIBILITY  (fix_canopy_visibility_v10)
+3446: #
+3447: # _main_canopy_node is instantiated in _setup_pip_overlay and parented to the
+3448: # character, but the audit found ZERO .visible writes for it anywhere in the
+3449: # project - so it was on from startup, through freefall, regardless of
+3450: # _canopy_deployed. _canopy_instance by contrast has six .visible writes and
+3451: # is correctly hidden at line 522.
+3452: #
+3453: # Rather than patch each of those six sites, the unmanaged node simply
+3454: # follows the managed one. Deploy, cutaway, reserve and any future
+3455: # transition are then all covered. Logged only on change.
+3456: #
+3457: # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+3458: #      (general knowledge - not retrieved this session)
+3459: # ===========================================================================
+3460: 
+3461: var _canopy_sync_last := -1
+3462: 
+3463: 
+_apply_arm_bone_overrides:
+3152: func _apply_arm_bone_overrides() -> void:
+3153: 	if not _skeleton:
+3154: 		return
+3155: 	for side in ["L", "R"]:
+3156: 		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3157: 		if idx != -1:
+3158: 			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+3159: 		var f_idx: int = _arm_fore_idx.get(side, -1)
+3160: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+3161: 			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+3162: 
+3163: 
+3164: # ===========================================================================
+3165: # ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+3166: #
+3167: # v6 could not run: it looked up "mixamorig:Hips" and friends, but Godot's
+3168: # FBX importer stores the separator as '_', so every lookup returned -1
+3169: # (0716.txt: six MISSING BONE lines, then ABORT). build_terrain.gd L649
+3170: # already hedged by testing both forms - that is why bone indices 8 and 32
+3171: # resolved while v6's did not. _arm_find_bone() below tries both.
+3172: #
+3173: # v6 also only PRINTED the answer for manual transcription. It is now
+3174: # applied directly: the solve runs at startup, is stored, and is read by
+3175: # _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+3176: # only as fallbacks should the solve fail.
+3177: #
+3178: # Refs (general knowledge - not retrieved this session):
+3179: #   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+3180: #   https://docs.godotengine.org/en/stable/classes/class_vector3.html
+3181: # ===========================================================================
+3182: 
+3183: const ARM_AXIS_L := Vector3(0, 0, -1)
+3184: const ARM_AXIS_R := Vector3(0, 0, 1)
+3185: 
+3186: var _arm_probe_done := false
+3187: var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+3188: var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+3189: var _arm_axis_solved := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+3190: var _arm_axis_ok := {"L": false, "R": false}
+3191: var _arm_solve_tries := 0
+3192: 
+3193: 
+
+--- current ---
+_update_arm_physics:
+2840: func _update_arm_physics(delta: float, held_left: bool, held_right: bool) -> void:
+2841: 	if not _skeleton:
+2842: 		return
+2843: 	_arm_capture_rest()
+2844: 	if not _arm_rest_ok:
+2845: 		return
+2846: 	_arm_axis_probe()
+2847: 	if delta <= 0.0:
+2848: 		return
+2849: 
+2850: 	_arm_tel_t += delta
+2851: 	if not _arm_tel_header:
+2852: 		print("[ARMTEL_HDR] t,side,held,dt,force,tension,damping,accel,vel,pull,deg,anim_pos,elbow_deg,hold_t")
+2853: 		_arm_tel_header = true
+2854: 
+2855: 	var anim_pos := _arm_anim_pos()
+2856: 
+2857: 	for side in ["L", "R"]:
+2858: 		var held: bool = held_left if side == "L" else held_right
+2859: 		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+2860: 		if idx == -1:
+2861: 			continue
+2862: 
+2863: 		var pull: float = _arm_pull[side]
+2864: 		var vel: float = _arm_vel[side]
+2865: 
+2866: 		# v8: ramp the pull force while held so a longer input goes deeper.
+2867: 		if held:
+2868: 			_arm_hold_t[side] = _arm_hold_t[side] + delta
+2869: 		else:
+2870: 			_arm_hold_t[side] = 0.0
+2871: 		var ramp: float = clampf(_arm_hold_t[side] / ARM_FORCE_RAMP_T, 0.0, 1.0)
+2872: 		var force: float = 0.0
+2873: 		if held:
+2874: 			force = ARM_FORCE_MIN + (ARM_FORCE_MAX - ARM_FORCE_MIN) * ramp
+2875: 		var tension: float = ARM_K_LINE * pull
+2876: 		var damping: float = ARM_C_DAMP * vel
+2877: 		var accel: float = (force - tension - damping) / ARM_INERTIA
+2878: 
+2879: 		vel += accel * delta
+2880: 		pull += vel * delta
+2881: 
+2882: 		if pull <= 0.0:
+2883: 			pull = 0.0
+2884: 			if vel < 0.0:
+2885: 				vel = 0.0
+2886: 		elif pull >= 1.0:
+2887: 			pull = 1.0
+2888: 			if vel > 0.0:
+2889: 				vel = 0.0
+2890: 
+2891: 		_arm_pull[side] = pull
+2892: 		_arm_vel[side] = vel
+2893: 
+2894: 		# Absolute pose recomputed from rest every frame - never compounding.
+2895: 		# Mirror the sweep axis so both arms move outward-down, not into the chest.
+2896: 		# Axis lifted to constants so the probe result can be applied as a
+2897: 		# one-line change. Current values are v4's, kept identical until the
+2898: 		# [AXISPROBE] measurement selects a replacement.
+2899: 		var axis: Vector3 = _arm_axis_use(side)
+2900: 		var angle: float = pull * ARM_MAX_ANGLE
+2901: 		var q: Quaternion = _arm_rest_q[side] * Quaternion(axis, angle)
+2902: 		_arm_q_stored[side] = q
+2903: 
+2904: 		# v8: elbow flexion, engaging only past ARM_ELBOW_START so a shallow
+2905: 		# pull keeps the arm straight and a deep pull draws the hand inward.
+2906: 		var elbow_deg := 0.0
+2907: 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+2908: 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+2909: 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+2910: 			var e_ang: float = e_t * ARM_ELBOW_MAX
+2911: 			var e_ax: Vector3 = _arm_elbow_axis[side]
+2912: 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+2913: 			_arm_elbow_q_stored[side] = eq
+2914: 			elbow_deg = rad_to_deg(e_ang)
+2915: 
+2916: 		# Telemetry only while the system is doing something, so idle frames
+2917: 		# stay quiet and a pull/release cycle produces a dense readable curve.
+2918: 		if held or absf(pull) > ARM_EPS or absf(vel) > ARM_EPS:
+2919: 			print("[ARMTEL],", _arm_tel_t, ",", side, ",", held, ",", delta,
+2920: 				",", force, ",", tension, ",", damping, ",", accel,
+2921: 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+2922: 				",", elbow_deg, ",", _arm_hold_t[side])
+2923: 
+_arm_solve_elbow:
+3131: func _arm_solve_elbow() -> void:
+3132: 	if not _skeleton:
+3133: 		return
+3134: 	for side in ["L", "R"]:
+3135: 		var fname: String = "LeftForeArm" if side == "L" else "RightForeArm"
+3136: 		var hname: String = "LeftHand" if side == "L" else "RightHand"
+3137: 		var f_idx := _arm_find_bone(fname)
+3138: 		var h_idx := _arm_find_bone(hname)
+3139: 		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3140: 		if f_idx == -1 or h_idx == -1 or a_idx == -1:
+3141: 			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+3142: 				" hand=", h_idx, " arm=", a_idx)
+3143: 			continue
+3144: 
+3145: 		_arm_fore_idx[side] = f_idx
+3146: 		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+3147: 
+3148: 		var p_f: Vector3 = _skeleton.get_bone_global_pose(f_idx).origin
+3149: 		var p_h: Vector3 = _skeleton.get_bone_global_pose(h_idx).origin
+3150: 		var p_a: Vector3 = _skeleton.get_bone_global_pose(a_idx).origin
+3151: 
+3152: 		var r_lever: Vector3 = p_h - p_f
+3153: 		if r_lever.length() < 0.000001:
+3154: 			print("[ELBOWSOLVE] ", side, " DEGENERATE: zero forearm lever")
+3155: 			continue
+3156: 
+3157: 		# v9: primary reference is the anatomical pull direction solved for
+3158: 		# the shoulder (forward+down). v8 used the shoulder-ward vector, which
+3159: 		# is parallel to the forearm when the arm is straight - the exact pose
+3160: 		# this rig rests in - so it collapsed to zero and the solve bailed
+3161: 		# (elbow_v8.txt reported the bail on both sides at rest).
+3162: 		var d_want := Vector3.ZERO
+3163: 		var src := ""
+3164: 		var cands := [
+3165: 			["pull_dir", _arm_d_want],
+3166: 			["shoulderward", p_a - p_h],
+3167: 			["body_up", -_arm_body_up],
+3168: 		]
+3169: 		for c in cands:
+3170: 			var v: Vector3 = c[1]
+3171: 			if v.length() < 0.000001:
+3172: 				continue
+3173: 			var rej: Vector3 = v - r_lever * (v.dot(r_lever) / r_lever.length_squared())
+3174: 			if rej.length() > 0.001:
+3175: 				d_want = rej.normalized()
+3176: 				src = c[0]
+3177: 				break
+3178: 		if d_want == Vector3.ZERO:
+3179: 			print("[ELBOWSOLVE] ", side,
+3180: 				" DEGENERATE: no usable reference. lever=", r_lever,
+3181: 				" pull_dir=", _arm_d_want, " up=", _arm_body_up)
+3182: 			continue
+3183: 		print("[ELBOWSOLVE] ", side, " reference=", src)
+3184: 
+3185: 		var w_global: Vector3 = r_lever.cross(d_want).normalized()
+3186: 		var f_basis: Basis = _skeleton.get_bone_global_pose(f_idx).basis
+3187: 		var w_local: Vector3 = (f_basis.inverse() * w_global).normalized()
+3188: 		_arm_elbow_axis[side] = w_local
+3189: 		_arm_elbow_ok[side] = true
+3190: 
+3191: 		print("[ELBOWSOLVE] ", side, " fore_idx=", f_idx,
+3192: 			" lever=", r_lever, " len=", r_lever.length(),
+3193: 			" d_want=", d_want, " ELBOW_AXIS_LOCAL=", w_local)
+3194: 
+3195: 		# verify: hand-to-shoulder distance must shrink under flexion
+3196: 		var rest_f: Quaternion = _arm_fore_rest_q[side]
+3197: 		var d0: float = (p_h - p_a).length()
+3198: 		print("[ELBOWSOLVE_HDR] side,angle_deg,dist_before,dist_after,delta_want_negative,along_pulldir_want_positive")
+3199: 		for ang_deg in [30.0, 75.0]:
+3200: 			_skeleton.set_bone_pose_rotation(f_idx,
+3201: 				rest_f * Quaternion(w_local, deg_to_rad(ang_deg)))
+3202: 			_skeleton.force_update_all_bone_transforms()
+3203: 			var p1: Vector3 = _skeleton.get_bone_global_pose(h_idx).origin
+3204: 			var d1: float = (p1 - p_a).length()
+3205: 			var along: float = (p1 - p_h).dot(_arm_d_want)
+3206: 			print("[ELBOWSOLVE],", side, ",", ang_deg, ",", d0, ",", d1,
+3207: 				",", d1 - d0, ",", along)
+3208: 			_skeleton.set_bone_pose_rotation(f_idx, rest_f)
+3209: 			_skeleton.force_update_all_bone_transforms()
+3210: 
+3211: # v9: anatomical pull direction and body up, published by
+3212: # _arm_axis_probe() so _arm_solve_elbow() can reuse them.
+3213: var _arm_d_want := Vector3.ZERO
+3214: var _arm_body_up := Vector3.UP
+3215: 
+3216: # ===========================================================================
+3217: # MAIN CANOPY VISIBILITY  (fix_canopy_visibility_v10)
+3218: #
+3219: # _main_canopy_node is instantiated in _setup_pip_overlay and parented to the
+3220: # character, but the audit found ZERO .visible writes for it anywhere in the
+3221: # project - so it was on from startup, through freefall, regardless of
+3222: # _canopy_deployed. _canopy_instance by contrast has six .visible writes and
+3223: # is correctly hidden at line 522.
+3224: #
+3225: # Rather than patch each of those six sites, the unmanaged node simply
+3226: # follows the managed one. Deploy, cutaway, reserve and any future
+3227: # transition are then all covered. Logged only on change.
+3228: #
+3229: # Ref: https://docs.godotengine.org/en/stable/classes/class_node3d.html
+3230: #      (general knowledge - not retrieved this session)
+3231: # ===========================================================================
+3232: 
+3233: var _canopy_sync_last := -1
+3234: 
+3235: 
+_apply_arm_bone_overrides:
+2924: func _apply_arm_bone_overrides() -> void:
+2925: 	if not _skeleton:
+2926: 		return
+2927: 	for side in ["L", "R"]:
+2928: 		var idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+2929: 		if idx != -1:
+2930: 			_skeleton.set_bone_pose_rotation(idx, _arm_q_stored[side])
+2931: 		var f_idx: int = _arm_fore_idx.get(side, -1)
+2932: 		if f_idx != -1 and _arm_elbow_ok.get(side, false):
+2933: 			_skeleton.set_bone_pose_rotation(f_idx, _arm_elbow_q_stored[side])
+2934: 
+2935: 
+2936: # ===========================================================================
+2937: # ARM SWEEP AXIS — SOLVED FROM THE RIG AND APPLIED  (fix_arm_axis_v7)
+2938: #
+2939: # v6 could not run: it looked up "mixamorig:Hips" and friends, but Godot's
+2940: # FBX importer stores the separator as '_', so every lookup returned -1
+2941: # (0716.txt: six MISSING BONE lines, then ABORT). build_terrain.gd L649
+2942: # already hedged by testing both forms - that is why bone indices 8 and 32
+2943: # resolved while v6's did not. _arm_find_bone() below tries both.
+2944: #
+2945: # v6 also only PRINTED the answer for manual transcription. It is now
+2946: # applied directly: the solve runs at startup, is stored, and is read by
+2947: # _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+2948: # only as fallbacks should the solve fail.
+2949: #
+2950: # Refs (general knowledge - not retrieved this session):
+2951: #   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+2952: #   https://docs.godotengine.org/en/stable/classes/class_vector3.html
+2953: # ===========================================================================
+2954: 
+2955: const ARM_AXIS_L := Vector3(0, 0, -1)
+2956: const ARM_AXIS_R := Vector3(0, 0, 1)
+2957: 
+2958: var _arm_probe_done := false
+2959: var _arm_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+2960: var _arm_elbow_q_stored := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+2961: var _arm_axis_solved := {"L": Vector3.ZERO, "R": Vector3.ZERO}
+2962: var _arm_axis_ok := {"L": false, "R": false}
+2963: var _arm_solve_tries := 0
+2964: 
+2965: 
+
+=== DIFF: _update_arm_physics (0070 vs current) ===
+--- _0070+++ current@@ -68,11 +68,8 @@ 		if _arm_elbow_ok[side] and _arm_fore_idx[side] != -1:
+ 			var span: float = maxf(1.0 - ARM_ELBOW_START, 0.0001)
+ 			var e_t: float = clampf((pull - ARM_ELBOW_START) / span, 0.0, 1.0)
+-			# ARM_ELBOW_NEUTRAL: 20deg resting bend ("let it fly" posture).
+-			# Negated axis: solved axis bends forward; negated bends elbow
+-			# downward/rearward (USPA SIM toggle grip toward hip).
+-			var e_ang: float = ARM_ELBOW_NEUTRAL + e_t * ARM_ELBOW_MAX
+-			var e_ax: Vector3 = -_arm_elbow_axis[side]
++			var e_ang: float = e_t * ARM_ELBOW_MAX
++			var e_ax: Vector3 = _arm_elbow_axis[side]
+ 			var eq: Quaternion = _arm_fore_rest_q[side] * Quaternion(e_ax, e_ang)
+ 			_arm_elbow_q_stored[side] = eq
+ 			elbow_deg = rad_to_deg(e_ang)
+@@ -85,19 +82,3 @@ 				",", vel, ",", pull, ",", rad_to_deg(angle), ",", anim_pos,
+ 				",", elbow_deg, ",", _arm_hold_t[side])
+ 
+-	# Apply computed quaternions to skeleton bones every physics frame.
+-	# _arm_q_stored (upper arm) and _arm_elbow_q_stored (forearm) are
+-	# computed above but were never written to the skeleton — root cause
+-	# of arms not pulling down despite spring-damper running correctly.
+-	_apply_arm_bone_overrides()
+-	# Stop the looping Mixamo AnimationPlayer when arm pull is active so
+-	# it cannot overwrite the bone poses we just set. Resume when at rest.
+-	# Root cause of regression ffdd7d6: AnimationPlayer.play(mixamo_com)
+-	# runs every frame and overwrites set_bone_pose_rotation every frame.
+-	var any_pull: bool = (_arm_pull["L"] > ARM_EPS or _arm_pull["R"] > ARM_EPS)
+-	if _the_anim_player != null and is_instance_valid(_the_anim_player):
+-		if any_pull and _the_anim_player.is_playing():
+-			_the_anim_player.stop()
+-		elif not any_pull and not _the_anim_player.is_playing():
+-			_the_anim_player.play("mixamo_com")
+-
+
+=== DIFF: _arm_solve_elbow (0070 vs current) ===
+
+=== DIFF: _apply_arm_bone_overrides (0070 vs current) ===
+
+=== END ===
