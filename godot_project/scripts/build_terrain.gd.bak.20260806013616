@@ -549,8 +549,15 @@ func _ready() -> void:
 	print("[VERBATIM] Initial malfunction: ", _malfunction_name())
 	print("[VERBATIM] Game ready – press SPACE at ~4000 ft to deploy")
 	# Headless auto‑start: simulate SPACE press
+	if OS.get_environment("GODOT_HEADLESS") == "1":
+		Input.action_press("ui_accept")
+		Input.action_release("ui_accept")
+		print("[VERBATIM] Headless auto‑start triggered.")
 	# Headless auto-start: simulate SPACE/deploy press
 	# Ref: OS.get_environment (general knowledge, not retrieved this session)
+	if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+		# Input.action_release("deploy") removed — flag-based now
+		print("[VERBATIM] Headless auto‑start triggered.")
 	_check_arm_pose_safe()
 
 	# p2: one-shot orphan-Label diagnostic (see _dump_all_labels).
@@ -572,6 +579,15 @@ func _ready() -> void:
 	# autostall's 30 s stall detector cannot trip on it.
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
 	# (general knowledge - not retrieved this session)
+	if OS.get_environment("GODOT_HEADLESS") == "1" \
+			or "--headless" in OS.get_cmdline_args():
+		var _pause_timer := Timer.new()
+		_pause_timer.wait_time = 8.0
+		_pause_timer.one_shot = true
+		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
+		add_child(_pause_timer)
+		_pause_timer.timeout.connect(_p3_pause_selftest)
+		_pause_timer.start()
 
 	print("[VERBATIM] ... EXIT _ready ok=true")
 	print("[DIAG] _ready: EXIT")
@@ -1814,6 +1830,13 @@ func _physics_process(delta) -> void:
 			# Headless auto-start: fire SPACE on first IN_PLANE frame
 			# (Rule #1 grounded: this is the first rendered frame, confirmed
 			#  by _0283.txt showing plane position update before stall)
+			if OS.get_environment("GODOT_HEADLESS") == "1" or "--headless" in OS.get_cmdline_args():  # was: GODOT_HEADLESS env var — set by autostall in ALL runs. Now requires actual --headless CLI flag (not set by autostall). Restores _0036 behavior: user sees plane, presses SPACE/J manually. Ref: https://docs.godotengine.org/en/stable/classes/class_os.html
+				if not ProjectSettings.has_setting("_headless_space_fired"):
+					ProjectSettings.set_setting("_headless_space_fired", true)
+					Input.action_press("deploy")
+					Input.action_release("deploy")
+					_headless_auto_deploy = true
+					print("[VERBATIM] Headless auto-start triggered (IN_PLANE frame 1).")
 			print("[DIAG] _physics_process: plane position updated to ", _plane_node.position)
 		else:
 			print("[DIAG] _physics_process: plane_node is NULL")
