@@ -564,8 +564,8 @@ func _ready() -> void:
 	# Deferred ~2 s so every autoload and CanvasLayer has finished building.
 	# Ref: https://docs.godotengine.org/en/stable/classes/class_timer.html
 	# (general knowledge - not retrieved this session)
-# REMOVED TIMEOUT: 	var _lbl_timer := Timer.new()
-# REMOVED TIMEOUT: 	_lbl_timer.wait_time = 2.0
+	var _lbl_timer := Timer.new()
+	_lbl_timer.wait_time = 2.0
 	_lbl_timer.one_shot = true
 	_lbl_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_lbl_timer)
@@ -581,8 +581,8 @@ func _ready() -> void:
 	# (general knowledge - not retrieved this session)
 	if OS.get_environment("GODOT_HEADLESS") == "1" \
 			or "--headless" in OS.get_cmdline_args():
-# REMOVED TIMEOUT: 		var _pause_timer := Timer.new()
-# REMOVED TIMEOUT: 		_pause_timer.wait_time = 8.0
+		var _pause_timer := Timer.new()
+		_pause_timer.wait_time = 8.0
 		_pause_timer.one_shot = true
 		_pause_timer.process_mode = Node.PROCESS_MODE_ALWAYS
 		add_child(_pause_timer)
@@ -596,8 +596,8 @@ func _ready() -> void:
 	var args = OS.get_cmdline_args()
 	if "--run-tests" in args:
 		print("[VERBATIM] Running self-tests (timer-based)...")
-# REMOVED TIMEOUT: 		var timer := Timer.new()
-# REMOVED TIMEOUT: 		timer.wait_time = 1.5
+		var timer := Timer.new()
+		timer.wait_time = 1.5
 		timer.one_shot = true
 		add_child(timer)
 		timer.timeout.connect(_run_self_tests)
@@ -2151,8 +2151,8 @@ func _setup_pip_overlay() -> void:
 	_wind_label.position = Vector2(20, 260)
 	_wind_label.add_theme_color_override("font_color", Color(1, 1, 0))
 	_pip_layer.add_child(_wind_label)
-# REMOVED TIMEOUT: 	var timer := Timer.new()
-# REMOVED TIMEOUT: 	timer.wait_time = 1.0
+	var timer := Timer.new()
+	timer.wait_time = 1.0
 	timer.autostart = true
 	timer.timeout.connect(_update_wind_display)
 	_pip_layer.add_child(timer)
@@ -2556,7 +2556,7 @@ func _run_self_tests() -> void:
 	else:
 		print("[TEST] EXIT: FAIL (not in IN_PLANE)")
 	print("[VERBATIM] Self-tests complete. Quitting...")
-# REMOVED TIMEOUT: 	OS.delay_msec(100)  # Allow output flush
+	OS.delay_msec(100)  # Allow output flush
 	get_tree().quit()
 
 
