@@ -1,0 +1,39 @@
+=== DIAGNOSTIC – EXIT AND DEPLOY LOGIC ===
+
+--- 1. Where is _headless_auto_jump defined/set? ---
+
+--- 2. Where is the exit condition checked? (KEY_J, auto‑jump) ---
+1527-	print("[VERBATIM] POLL: _poll_controls() entered, game_state=", _game_state)
+1528-
+1529-	if _game_state == GameState.IN_PLANE:
+1530:		var _exit_pressed = Input.is_action_just_pressed("deploy") or Input.is_key_pressed(KEY_J)
+1531-		if _exit_pressed:
+1532-			print("[DIAG] _poll_controls: exit aircraft triggered")
+1533-			print("[VERBATIM] EXIT AIRCRAFT - transitioning FREEFALL")
+1534-			_game_state = GameState.FREEFALL
+1535-			_cam_distance = 5.0
+
+--- 3. Where is [CTRL] pressed=deploy printed? ---
+
+--- 4. Is _deploy_canopy() called from that handler? ---
+810:func _deploy_canopy() -> void:
+811:	print("[VERBATIM] ENTER _deploy_canopy gate=none")
+813:		print("[VERBATIM] EXIT _deploy_canopy early=already_deployed_or_no_canopy")
+825:	print("[VERBATIM] EXIT _deploy_canopy ok=true")
+1350:				_deploy_canopy()
+1563:		print("[VERBATIM] POLL: deploy pressed - calling _deploy_canopy")
+1564:		_deploy_canopy()
+1587:		_deploy_canopy()
+1618:			_deploy_canopy()
+
+--- 5. How is GODOT_HEADLESS detected? ---
+535:	if OS.get_environment("GODOT_HEADLESS") == "1":
+
+--- 6. What is the game state transition to FREEFALL? ---
+1417:	if _game_state == GameState.FREEFALL:
+1534:			_game_state = GameState.FREEFALL
+1617:		elif _game_state == GameState.FREEFALL and not _canopy_deployed:
+1962:	if _game_state == GameState.FREEFALL:
+2567:		_game_state = GameState.FREEFALL
+
+=== END DIAGNOSTIC ===
