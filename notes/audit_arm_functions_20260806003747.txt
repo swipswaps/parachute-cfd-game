@@ -1,0 +1,296 @@
+=== Function: _rotate_arm ===
+--- 0062 ---
+
+--- 0070 ---
+
+--- current ---
+
+--- END OF _rotate_arm ---
+
+=== Function: _arm_solve_elbow ===
+--- 0062 ---
+
+--- 0070 ---
+
+--- current ---
+
+--- END OF _arm_solve_elbow ---
+
+=== Function: _apply_arm_bone_overrides ===
+--- 0062 ---
+
+--- 0070 ---
+
+--- current ---
+
+--- END OF _apply_arm_bone_overrides ---
+
+=== Function: _arm_axis_use ===
+--- 0062 ---
+
+--- 0070 ---
+
+--- current ---
+
+--- END OF _arm_axis_use ---
+
+=== Function: _arm_axis_probe ===
+--- 0062 ---
+
+--- 0070 ---
+
+--- current ---
+
+--- END OF _arm_axis_probe ---
+
+=== AXISSOLVE and ELBOWSOLVE loops ===
+--- 0062 ---
+2990-	if _arm_solve_tries > 120:
+2991-		_arm_probe_done = true
+2992:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+2993-		return
+2994-
+2995-	var b_hips := _arm_find_bone("Hips")
+2996-	var b_head := _arm_find_bone("Head")
+2997-	var b_foot := _arm_find_bone("LeftFoot")
+--
+3002-			or b_hl == -1 or b_hr == -1:
+3003-		if _arm_solve_tries == 1:
+3004:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3005-				" foot=", b_foot, " toe=", b_toe, " hl=", b_hl, " hr=", b_hr)
+3006-		return
+3007-
+3008-	_arm_probe_done = true
+3009:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3010-		"  hips=", b_hips, " head=", b_head, " foot=", b_foot,
+3011-		" toe=", b_toe, " handL=", b_hl, " handR=", b_hr)
+3012-
+3013-	# ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then
+3014-	#      0716.txt showed it cleared entirely - the clip does not loop) -----
+--
+3054-	_arm_body_up = up
+3055-
+3056:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3057:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+3058-		" (want ~0); desired hand dir (fwd+down)=", d_want)
+3059-
+3060:	print("[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,d_right")
+3061-
+3062-	for side in ["L", "R"]:
+3063-		var arm_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3064-		var hand_idx: int = b_hl if side == "L" else b_hr
+3065-		var rest: Quaternion = _arm_rest_q[side]
+--
+3071-		var w_global: Vector3 = r_lever.cross(d_want)
+3072-		if w_global.length() < 0.000001:
+3073:			print("[AXISSOLVE] ", side, " DEGENERATE lever - keeping fallback")
+3074-			continue
+3075-		w_global = w_global.normalized()
+3076-		var w_local: Vector3 = (arm_pose.basis.inverse() * w_global).normalized()
+3077-		_arm_axis_solved[side] = w_local
+3078-		_arm_axis_ok[side] = true
+3079-
+3080:		print("[AXISSOLVE] ", side, " lever=", r_lever, " len=", r_lever.length(),
+3081-			" axis_global=", w_global, " AXIS_LOCAL_APPLIED=", w_local)
+3082-
+3083-		# ---- verify the solve, and log the six primaries for comparison ---
+3084-		var tests := [
+3085-			["SOLVED", w_local],
+--
+3096-				_skeleton.force_update_all_bone_transforms()
+3097-				var d: Vector3 = _skeleton.get_bone_global_pose(hand_idx).origin - p_hand0
+3098:				print("[AXISSOLVE],", side, ",", label, ",", ang_deg,
+3099-					",", d.dot(fwd), ",", d.dot(up), ",", d.dot(right))
+3100-				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+3101-				_skeleton.force_update_all_bone_transforms()
+3102-
+3103-	_arm_solve_elbow()
+--
+3106-	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+3107-	_skeleton.force_update_all_bone_transforms()
+3108:	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+3109-		" - axes now APPLIED live, pose restored")
+3110-
+3111-# ===========================================================================
+3112-# ELBOW FLEXION  (fix_arm_deep_elbow_v8)
+3113-#
+--
+3143-		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3144-		if f_idx == -1 or h_idx == -1 or a_idx == -1:
+3145:			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+3146-				" hand=", h_idx, " arm=", a_idx)
+3147-			continue
+3148-
+3149-		_arm_fore_idx[side] = f_idx
+3150-		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+--
+3156-		var r_lever: Vector3 = p_h - p_f
+
+--- 0070 ---
+3214-	if _arm_solve_tries > 120:
+3215-		_arm_probe_done = true
+3216:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+3217-		return
+3218-
+3219-	var b_hips := _arm_find_bone("Hips")
+3220-	var b_head := _arm_find_bone("Head")
+3221-	var b_foot := _arm_find_bone("LeftFoot")
+--
+3226-			or b_hl == -1 or b_hr == -1:
+3227-		if _arm_solve_tries == 1:
+3228:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3229-				" foot=", b_foot, " toe=", b_toe, " hl=", b_hl, " hr=", b_hr)
+3230-		return
+3231-
+3232-	_arm_probe_done = true
+3233:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3234-		"  hips=", b_hips, " head=", b_head, " foot=", b_foot,
+3235-		" toe=", b_toe, " handL=", b_hl, " handR=", b_hr)
+3236-
+3237-	# ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then
+3238-	#      0716.txt showed it cleared entirely - the clip does not loop) -----
+--
+3278-	_arm_body_up = up
+3279-
+3280:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3281:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+3282-		" (want ~0); desired hand dir (fwd+down)=", d_want)
+3283-
+3284:	print("[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,d_right")
+3285-
+3286-	for side in ["L", "R"]:
+3287-		var arm_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3288-		var hand_idx: int = b_hl if side == "L" else b_hr
+3289-		var rest: Quaternion = _arm_rest_q[side]
+--
+3295-		var w_global: Vector3 = r_lever.cross(d_want)
+3296-		if w_global.length() < 0.000001:
+3297:			print("[AXISSOLVE] ", side, " DEGENERATE lever - keeping fallback")
+3298-			continue
+3299-		w_global = w_global.normalized()
+3300-		var w_local: Vector3 = (arm_pose.basis.inverse() * w_global).normalized()
+3301-		_arm_axis_solved[side] = w_local
+3302-		_arm_axis_ok[side] = true
+3303-
+3304:		print("[AXISSOLVE] ", side, " lever=", r_lever, " len=", r_lever.length(),
+3305-			" axis_global=", w_global, " AXIS_LOCAL_APPLIED=", w_local)
+3306-
+3307-		# ---- verify the solve, and log the six primaries for comparison ---
+3308-		var tests := [
+3309-			["SOLVED", w_local],
+--
+3320-				_skeleton.force_update_all_bone_transforms()
+3321-				var d: Vector3 = _skeleton.get_bone_global_pose(hand_idx).origin - p_hand0
+3322:				print("[AXISSOLVE],", side, ",", label, ",", ang_deg,
+3323-					",", d.dot(fwd), ",", d.dot(up), ",", d.dot(right))
+3324-				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+3325-				_skeleton.force_update_all_bone_transforms()
+3326-
+3327-	_arm_solve_elbow()
+--
+3330-	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+3331-	_skeleton.force_update_all_bone_transforms()
+3332:	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+3333-		" - axes now APPLIED live, pose restored")
+3334-
+3335-# ===========================================================================
+3336-# ELBOW FLEXION  (fix_arm_deep_elbow_v8)
+3337-#
+--
+3367-		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3368-		if f_idx == -1 or h_idx == -1 or a_idx == -1:
+3369:			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+3370-				" hand=", h_idx, " arm=", a_idx)
+3371-			continue
+3372-
+3373-		_arm_fore_idx[side] = f_idx
+3374-		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+--
+3380-		var r_lever: Vector3 = p_h - p_f
+
+--- current ---
+2986-	if _arm_solve_tries > 120:
+2987-		_arm_probe_done = true
+2988:		print("[AXISSOLVE] giving up after 120 attempts - using fallback axes")
+2989-		return
+2990-
+2991-	var b_hips := _arm_find_bone("Hips")
+2992-	var b_head := _arm_find_bone("Head")
+2993-	var b_foot := _arm_find_bone("LeftFoot")
+--
+2998-			or b_hl == -1 or b_hr == -1:
+2999-		if _arm_solve_tries == 1:
+3000:			print("[AXISSOLVE] bones not ready: hips=", b_hips, " head=", b_head,
+3001-				" foot=", b_foot, " toe=", b_toe, " hl=", b_hl, " hr=", b_hr)
+3002-		return
+3003-
+3004-	_arm_probe_done = true
+3005:	print("[AXISSOLVE] bones OK on attempt ", _arm_solve_tries,
+3006-		"  hips=", b_hips, " head=", b_head, " foot=", b_foot,
+3007-		" toe=", b_toe, " handL=", b_hl, " handR=", b_hr)
+3008-
+3009-	# ---- AnimationPlayer state (arm_curve.txt showed anim_pos pinned, then
+3010-	#      0716.txt showed it cleared entirely - the clip does not loop) -----
+--
+3050-	_arm_body_up = up
+3051-
+3052:	print("[AXISSOLVE] up=", up, " forward=", fwd, " right=", right)
+3053:	print("[AXISSOLVE] orthogonality up.dot(fwd)=", up.dot(fwd),
+3054-		" (want ~0); desired hand dir (fwd+down)=", d_want)
+3055-
+3056:	print("[AXISSOLVE_HDR] side,label,angle_deg,d_forward,d_up,d_right")
+3057-
+3058-	for side in ["L", "R"]:
+3059-		var arm_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3060-		var hand_idx: int = b_hl if side == "L" else b_hr
+3061-		var rest: Quaternion = _arm_rest_q[side]
+--
+3067-		var w_global: Vector3 = r_lever.cross(d_want)
+3068-		if w_global.length() < 0.000001:
+3069:			print("[AXISSOLVE] ", side, " DEGENERATE lever - keeping fallback")
+3070-			continue
+3071-		w_global = w_global.normalized()
+3072-		var w_local: Vector3 = (arm_pose.basis.inverse() * w_global).normalized()
+3073-		_arm_axis_solved[side] = w_local
+3074-		_arm_axis_ok[side] = true
+3075-
+3076:		print("[AXISSOLVE] ", side, " lever=", r_lever, " len=", r_lever.length(),
+3077-			" axis_global=", w_global, " AXIS_LOCAL_APPLIED=", w_local)
+3078-
+3079-		# ---- verify the solve, and log the six primaries for comparison ---
+3080-		var tests := [
+3081-			["SOLVED", w_local],
+--
+3092-				_skeleton.force_update_all_bone_transforms()
+3093-				var d: Vector3 = _skeleton.get_bone_global_pose(hand_idx).origin - p_hand0
+3094:				print("[AXISSOLVE],", side, ",", label, ",", ang_deg,
+3095-					",", d.dot(fwd), ",", d.dot(up), ",", d.dot(right))
+3096-				_skeleton.set_bone_pose_rotation(arm_idx, rest)
+3097-				_skeleton.force_update_all_bone_transforms()
+3098-
+3099-	_arm_solve_elbow()
+--
+3102-	_skeleton.set_bone_pose_rotation(_right_arm_idx, saved_r)
+3103-	_skeleton.force_update_all_bone_transforms()
+3104:	print("[AXISSOLVE] solved L=", _arm_axis_ok["L"], " R=", _arm_axis_ok["R"],
+3105-		" - axes now APPLIED live, pose restored")
+3106-
+3107-# ===========================================================================
+3108-# ELBOW FLEXION  (fix_arm_deep_elbow_v8)
+3109-#
+--
+3139-		var a_idx: int = _left_arm_idx if side == "L" else _right_arm_idx
+3140-		if f_idx == -1 or h_idx == -1 or a_idx == -1:
+3141:			print("[ELBOWSOLVE] ", side, " MISSING fore=", f_idx,
+3142-				" hand=", h_idx, " arm=", a_idx)
+3143-			continue
+3144-
+3145-		_arm_fore_idx[side] = f_idx
+3146-		_arm_fore_rest_q[side] = _skeleton.get_bone_rest(f_idx).basis.get_rotation_quaternion()
+--
+3152-		var r_lever: Vector3 = p_h - p_f
+
+=== DIFFS: _0062 vs _0070 ===
+
+=== DIFFS: _0070 vs current ===
+
