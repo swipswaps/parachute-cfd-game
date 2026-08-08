@@ -1,0 +1,243 @@
+=== DASHBOARD LINKS AUDIT — 2026-08-08T12:58:45Z UTC ===
+
+
+=== 1. PORT 5001 REFERENCES ===
+./audit_and_link_dashboard.sh:106:     curl -X POST http://localhost:5001/api/diagnostics \\
+./audit_and_link_dashboard.sh:115:     http.request("http://localhost:5001/api/diagnostics", ["Content-Type: application/json"], HTTPClient.METHOD_POST, json_string)
+./integrate.sh:20:if ! curl -s http://localhost:5001/api/health >/dev/null 2>&1; then
+./integrate.sh:29:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./integrate.sh:60:DASHBOARD_URL="http://localhost:5001"
+./integrate.sh:111:echo "Backend:   http://localhost:5001/api/health"
+./stream_game_logs.sh:8:DASHBOARD_URL="http://localhost:5001"
+./audit_real.sh:132:echo "   - Example: var http = HTTPRequest.new(); http.request('http://localhost:5001/api/diagnostics', ...)" | tee -a "$REPORT"
+./audit_and_fix.sh:129:DASHBOARD_URL="http://localhost:5001"
+./stream_any_log.sh:8:DASHBOARD_URL="http://localhost:5001"
+./start_dashboard_and_import.sh:20:echo "Starting dashboard backend on port 5001..."
+./start_dashboard_and_import.sh:28:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./start_dashboard_and_import.sh:81:echo "✅ Backend:  http://localhost:5001/api/health"
+./start_dashboard_and_import_fixed.sh:29:echo "Starting dashboard backend on port 5001..."
+./start_dashboard_and_import_fixed.sh:37:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./start_dashboard_and_import_fixed.sh:105:echo "✅ Backend:  http://localhost:5001/api/health"
+./next_steps.sh:23:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./next_steps.sh:24:    echo "✅ Backend is running (http://localhost:5001/api/health)"
+./next_steps.sh:95:echo "Dashboard backend:  http://localhost:5001/api/health"
+./import_game_logs.sh:74:echo "Backend:   http://localhost:5001/api/health"
+./debug_import.sh:201:echo "Backend:   http://localhost:5001/api/health"
+./init_db_and_import.sh:125:echo "Backend:   http://localhost:5001/api/health"
+./audit_dashboard_links.sh:14:# 1. References to port 5001 (dashboard backend)
+./audit_dashboard_links.sh:16:printf '\n=== 1. PORT 5001 REFERENCES ===\n'
+./audit_dashboard_links.sh:17:grep -r -n --include="*.py" --include="*.gd" --include="*.sh" --include="*.js" --include="*.ts" --include="*.tsx" "5001" . 2>/dev/null | head -40
+./audit_dashboard_links.sh:46:    grep -r -n --include="*.js" --include="*.ts" --include="*.tsx" --include="*.html" "5001" ../diagnostic-dashboard-1786040134/frontend/ 2>/dev/null | head -20
+./audit_dashboard_links.sh:68:echo "The diagnostic dashboard (port 5001) currently serves:"
+
+=== 2. DASHBOARD API ENDPOINTS ===
+
+-- /api/health --
+./integrate.sh:20:if ! curl -s http://localhost:5001/api/health >/dev/null 2>&1; then
+./integrate.sh:29:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./integrate.sh:111:echo "Backend:   http://localhost:5001/api/health"
+./start_dashboard_and_import.sh:28:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./start_dashboard_and_import.sh:81:echo "✅ Backend:  http://localhost:5001/api/health"
+./start_dashboard_and_import_fixed.sh:37:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./start_dashboard_and_import_fixed.sh:105:echo "✅ Backend:  http://localhost:5001/api/health"
+./next_steps.sh:23:if curl -s http://localhost:5001/api/health | grep -q "healthy"; then
+./next_steps.sh:24:    echo "✅ Backend is running (http://localhost:5001/api/health)"
+./next_steps.sh:95:echo "Dashboard backend:  http://localhost:5001/api/health"
+./import_game_logs.sh:74:echo "Backend:   http://localhost:5001/api/health"
+./debug_import.sh:201:echo "Backend:   http://localhost:5001/api/health"
+./init_db_and_import.sh:125:echo "Backend:   http://localhost:5001/api/health"
+./inspect_db_and_hub.sh:40:    for endpoint in / /api/patterns /api/diagnostics /api/health /api/status /api/db; do
+./audit_dashboard_links.sh:23:for endpoint in "/api/health" "/api/diagnostics" "/logs" "/api/logs" "/api/debug"; do
+./audit_dashboard_links.sh:69:echo "  - /api/health: backend health check"
+
+-- /api/diagnostics --
+./forensic_hub_patched.py:3:forensic_hub_patched.py – Forensic Hub with /api/diagnostics for the game HUD.
+./forensic_hub_patched.py:447:@app.route('/api/diagnostics')
+./forensic_hub_patched.py:522:  <a href="/api/diagnostics" style="color:#58a6ff;">View raw diagnostics JSON</a>
+./forensic_hub_verbose_all.py:440:@app.route('/api/diagnostics')
+./forensic_hub_verbose_all.py:513:  <a href="/api/diagnostics" style="color:#58a6ff;">View raw diagnostics JSON</a>
+./audit_and_link_dashboard.sh:106:     curl -X POST http://localhost:5001/api/diagnostics \\
+./audit_and_link_dashboard.sh:115:     http.request("http://localhost:5001/api/diagnostics", ["Content-Type: application/json"], HTTPClient.METHOD_POST, json_string)
+./integrate.sh:72:        curl -s -X POST "$DASHBOARD_URL/api/diagnostics" \
+./stream_game_logs.sh:20:        curl -s -X POST "$DASHBOARD_URL/api/diagnostics" \
+./audit_real.sh:132:echo "   - Example: var http = HTTPRequest.new(); http.request('http://localhost:5001/api/diagnostics', ...)" | tee -a "$REPORT"
+./audit_and_fix.sh:148:    curl -s -X POST "$DASHBOARD_URL/api/diagnostics" \
+./stream_any_log.sh:27:    curl -s -X POST "$DASHBOARD_URL/api/diagnostics" \
+./inspect_db_and_hub.sh:40:    for endpoint in / /api/patterns /api/diagnostics /api/health /api/status /api/db; do
+./audit_dashboard_links.sh:23:for endpoint in "/api/health" "/api/diagnostics" "/logs" "/api/logs" "/api/debug"; do
+./audit_dashboard_links.sh:70:echo "  - /api/diagnostics: reads from diagnostics.db (stall reports)"
+
+-- /logs --
+./patch_project_godot.py:9:#       JSON-lines to user://logs/godot_logs.jsonl and routes to Sentry.
+./patch_project_godot.py:17:#       StructuredLogger._ready() opens user://logs/godot_logs.jsonl and
+./generate_fix_0240.py:14:#                 of "user://logs/" — fixes persistent WARN in headless mode.
+./generate_fix_0240.py:631:            # Without this, StructuredLogger._ready() cannot open user://logs/godot_logs.jsonl
+./generate_fix_0240.py:634:            #   "[StructuredLogger] WARN: could not open user://logs/godot_logs.jsonl"
+./generate_fix_0274.py:16:#                 Landing Pattern v314/logs/" but DirAccess.make_dir_recursive_absolute()
+./generate_fix_0274.py:637:            #   /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/
+./generate_fix_0275.py:85:        Path to the log directory (e.g., ~/.local/share/godot/app_userdata/.../logs)
+./generate_fix_0277.py:100:    var logs_dir = user_data_dir + "/logs"
+./generate_fix_0278.py:192:    godot_log_path = Path.home() / ".local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl"
+./generate_fix_0279.py:184:    godot_log_path = Path.home() / ".local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl"
+./generate_fix_0281.py:160:    var logs_dir = user_data_dir + "/logs"
+./generate_fix_0283.py:129:    godot_log_path = Path.home() / ".local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl"
+./backups/20260621_113920/StructuredLogger.gd:10:#       "user://logs/") which fails in headless mode because "user://" virtual
+./backups/20260621_113920/StructuredLogger.gd:13:#         "[StructuredLogger] WARN: could not open user://logs/godot_logs.jsonl"
+./backups/20260621_113920/StructuredLogger.gd:18:# MENTAL MODEL BEFORE: "user://logs/" fails because the virtual filesystem
+./backups/20260621_113920/StructuredLogger.gd:30:#   ls -la audit_logs/godot_userdata/logs/godot_logs.jsonl
+./backups/20260621_113920/StructuredLogger.gd:86: # FIX (0240): use OS.get_user_data_dir() instead of "user://logs/"
+./backups/20260621_113920/StructuredLogger.gd:95:var log_dir := user_data_dir + "/logs"
+./fix_two_remaining.py:60:        #   6:   var log_dir := user_data_dir + "/logs"$                           <- 2 spaces, must be 1
+
+-- /api/logs --
+./audit_dashboard_links.sh:23:for endpoint in "/api/health" "/api/diagnostics" "/logs" "/api/logs" "/api/debug"; do
+./audit_dashboard_links.sh:72:echo "  - /api/logs/stream: SSE stream (tailing /tmp/godot_run.log)"
+
+-- /api/debug --
+./audit_dashboard_links.sh:23:for endpoint in "/api/health" "/api/diagnostics" "/logs" "/api/logs" "/api/debug"; do
+
+=== 3. DASHBOARD-RELEVANT DB TABLES ===
+
+-- Table: diagnostics --
+./scripts/diagnose_game_state_enum.py:25:        CREATE TABLE IF NOT EXISTS diagnostics (
+./scripts/diagnose_game_state_enum.py:91:        INSERT INTO diagnostics (file_path, diagnostic_text)
+./scripts/init_database.py:83:    # 6. diagnostics – from diagnose_game_state_enum.py.
+./scripts/init_database.py:85:        CREATE TABLE IF NOT EXISTS diagnostics (
+./scripts/generate_summary_report.py:77:    diag = query("diagnostics", "timestamp, diagnostic_text", limit=3)
+./scripts/generate_summary_report.py:83:        log("  No diagnostics.")
+./audit_logs/apply_fixlist_0179.sh:346:# WHY:  Audit trail for all fixes applied. Future diagnostics can query this to
+./audit_logs/apply_fixlist_0182.sh:53:# WHY:  Stale logs would confuse diagnostics; script truncation was a failure mode
+./audit_logs/apply_fixlist_0183.sh:54:# WHY:  Stale logs would confuse diagnostics
+./audit_logs/apply_fixlist_0249.sh:25:#                database shows all operations + diagnostics
+./audit_logs/apply_fixlist_0249.sh:48:CREATE TABLE IF NOT EXISTS v249_diagnostics (
+./audit_logs/apply_fixlist_0249.sh:57:DELETE FROM v249_diagnostics;
+./audit_logs/apply_fixlist_0249.sh:70:    sqlite3 .cfd_healdb "INSERT INTO v249_diagnostics (attempt, component, check_performed, result) VALUES ($attempt, '$c_esc', '$ch_esc', '$r_esc');"
+./audit_logs/apply_fixlist_0249.sh:84:    sqlite3 .cfd_healdb "SELECT component || '.' || check_performed || ': ' || result FROM v249_diagnostics;" > audit_logs/v249_diagnostics.txt 2>&1 || true
+./audit_logs/apply_fixlist_0249.sh:308:        c.execute("INSERT INTO v249_diagnostics VALUES (NULL, $attempt, 'screenshot', 'color', 'GREEN_VISIBLE', datetime('now'))")
+
+-- Table: ab_test_runs --
+./generate_fix_0223.py:242:CREATE TABLE IF NOT EXISTS ab_test_runs (
+./generate_fix_0223.py:819:          wait for _ready ok=true or timeout, record outcome in ab_test_runs.
+./generate_fix_0223.py:821:          all three are logged atomically in the same ab_test_runs row.
+./generate_fix_0223.py:824:    VERIFIES WITH: SELECT outcome_code FROM ab_test_runs WHERE session_id=?
+./generate_fix_0223.py:831:        INSERT INTO ab_test_runs
+./generate_fix_0223.py:847:    conn.execute("UPDATE ab_test_runs SET godot_pid=? WHERE run_id=?",
+./generate_fix_0223.py:909:        UPDATE ab_test_runs
+./generate_fix_0224.py:707:    #             outcome_code=READY_OK in ab_test_runs
+./generate_fix_0225.py:455:    VERIFIES WITH: outcome_code=READY_OK AND signal_connected=1 in ab_test_runs.
+./generate_fix_0225.py:464:    # Ensure ab_test_runs has signal_connected column (add if missing)
+./generate_fix_0225.py:465:    cols = [r[1] for r in conn.execute("PRAGMA table_info(ab_test_runs)").fetchall()]
+./generate_fix_0225.py:469:                "ALTER TABLE ab_test_runs ADD COLUMN signal_connected INTEGER DEFAULT 0"
+./generate_fix_0225.py:476:        INSERT INTO ab_test_runs
+./generate_fix_0225.py:488:    conn.execute("UPDATE ab_test_runs SET godot_pid=? WHERE run_id=?",
+./generate_fix_0225.py:557:        UPDATE ab_test_runs
+
+-- Table: godot_state_events --
+./generate_fix_0282.py:66:        # New table: godot_state_events
+./generate_fix_0282.py:68:            CREATE TABLE IF NOT EXISTS godot_state_events (
+./generate_fix_0282.py:79:        cur.execute("CREATE INDEX IF NOT EXISTS idx_state_events_run ON godot_state_events(run_id)")
+./generate_fix_0282.py:80:        cur.execute("CREATE INDEX IF NOT EXISTS idx_state_events_type ON godot_state_events(event_type)")
+./generate_fix_0282.py:124:    Fetch godot_log_entries for the given run, parse each, and insert into godot_state_events.
+./generate_fix_0282.py:130:        cur.execute("DELETE FROM godot_state_events WHERE run_id = ?", (run_id,))
+./generate_fix_0282.py:142:                INSERT INTO godot_state_events
+./generate_fix_0283.py:66:            CREATE TABLE IF NOT EXISTS godot_state_events (
+./generate_fix_0283.py:77:        cur.execute("CREATE INDEX IF NOT EXISTS idx_state_events_run ON godot_state_events(run_id)")
+./generate_fix_0283.py:78:        cur.execute("CREATE INDEX IF NOT EXISTS idx_state_events_type ON godot_state_events(event_type)")
+./generate_fix_0283.py:106:        cur.execute("DELETE FROM godot_state_events WHERE run_id = ?", (run_id,))
+./generate_fix_0283.py:117:                INSERT INTO godot_state_events
+./generate_fix_0284.py:48:        FROM godot_state_events
+./dashboard.py:33:        FROM godot_state_events
+./generate_fix_0285.py:50:            CREATE TABLE IF NOT EXISTS godot_state_events (
+
+-- Table: auto_heal_actions --
+./generate_fix_0290.py:30:            CREATE TABLE IF NOT EXISTS auto_heal_actions (
+./generate_fix_0290.py:161:            INSERT INTO auto_heal_actions
+./generate_fix_0290.py:207:        cur.execute("SELECT 1 FROM auto_heal_actions WHERE run_id = ?", (args.run_id,))
+./generate_fix_0292.py:25:            CREATE TABLE IF NOT EXISTS auto_heal_actions (
+./generate_fix_0292.py:120:            INSERT INTO auto_heal_actions
+./generate_fix_0292.py:161:        cur.execute("SELECT 1 FROM auto_heal_actions WHERE run_id = ?", (args.run_id,))
+./generate_fix_0293.py:25:            CREATE TABLE IF NOT EXISTS auto_heal_actions (
+./generate_fix_0293.py:130:            INSERT INTO auto_heal_actions
+./generate_fix_0293.py:171:        cur.execute("SELECT 1 FROM auto_heal_actions WHERE run_id = ?", (args.run_id,))
+./generate_fix_0294.py:25:            CREATE TABLE IF NOT EXISTS auto_heal_actions (
+./generate_fix_0294.py:116:            INSERT INTO auto_heal_actions
+./generate_fix_0294.py:157:        cur.execute("SELECT 1 FROM auto_heal_actions WHERE run_id = ?", (args.run_id,))
+./generate_fix_0295.py:27:            CREATE TABLE IF NOT EXISTS auto_heal_actions (
+./generate_fix_0295.py:177:            INSERT INTO auto_heal_actions
+./generate_fix_0295.py:218:        cur.execute("SELECT 1 FROM auto_heal_actions WHERE run_id = ?", (args.run_id,))
+
+-- Table: rule_compliance --
+./fix_indent.py:103:# Ensure rule_compliance table exists
+./fix_indent.py:105:    CREATE TABLE IF NOT EXISTS rule_compliance (
+./fix_indent.py:115:    INSERT INTO rule_compliance (rule_id, script_name, passed, evidence, timestamp)
+./fix_indent.py:120:print("Logged to rule_compliance table")
+./fix_indent_final.sh:116:# Ensure rule_compliance table exists
+./fix_indent_final.sh:118:    CREATE TABLE IF NOT EXISTS rule_compliance (
+./fix_indent_final.sh:128:    INSERT INTO rule_compliance (rule_id, script_name, passed, evidence, timestamp)
+./fix_indent_final.sh:133:print("Logged to rule_compliance table")
+./fix_plane_rule_compliant.sh:6:# RULES COMPLIED WITH (logged to rule_compliance):
+./fix_plane_rule_compliant.sh:42:INSERT INTO rule_compliance (run_id, rule_id, passed, evidence)
+./fix_plane_rule_compliant.sh:82:CREATE TABLE IF NOT EXISTS rule_compliance (
+./fix_plane_rule_compliant.sh:249:# Rule #48: this script itself logs to rule_compliance
+./fix_plane_rule_compliant.sh:250:# We'll verify that rule_compliance has entries for this run
+./fix_plane_rule_compliant.sh:251:COMPLIANCE_COUNT=$(sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM rule_compliance WHERE run_id='$RUN_ID';")
+./fix_camera_and_plane.sh:43:CREATE TABLE IF NOT EXISTS rule_compliance (
+
+-- Table: godot_log_entries --
+./generate_fix_0278.py:4:# DB-ENHANCE-001: Add foreign keys, indexes, and a new godot_log_entries table.
+./generate_fix_0278.py:104:        # --- 4. New table: godot_log_entries to store structured Godot logs ---
+./generate_fix_0278.py:106:            CREATE TABLE IF NOT EXISTS godot_log_entries (
+./generate_fix_0278.py:117:        cur.execute("CREATE INDEX IF NOT EXISTS idx_log_entries_run ON godot_log_entries(run_id)")
+./generate_fix_0278.py:118:        cur.execute("CREATE INDEX IF NOT EXISTS idx_log_entries_session ON godot_log_entries(session_id)")
+./generate_fix_0278.py:191:    # Now, read the Godot log file and insert entries into godot_log_entries
+./generate_fix_0278.py:202:                                INSERT INTO godot_log_entries (run_id, session_id, timestamp, verbatim, raw_json)
+./generate_fix_0279.py:103:        # --- 4. New table: godot_log_entries to store structured Godot logs ---
+./generate_fix_0279.py:105:            CREATE TABLE IF NOT EXISTS godot_log_entries (
+./generate_fix_0279.py:116:        cur.execute("CREATE INDEX IF NOT EXISTS idx_log_entries_run ON godot_log_entries(run_id)")
+./generate_fix_0279.py:117:        cur.execute("CREATE INDEX IF NOT EXISTS idx_log_entries_session ON godot_log_entries(session_id)")
+./generate_fix_0279.py:183:    # Read Godot log file and insert entries into godot_log_entries
+./generate_fix_0279.py:194:                                INSERT INTO godot_log_entries (run_id, session_id, timestamp, verbatim, raw_json)
+./generate_fix_0280.py:41:        # In a full script we would also create resource_contention_log and godot_log_entries,
+./generate_fix_0280.py:58:        cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='godot_log_entries'")
+
+-- Table: parse_error_log --
+./run_pipeline_v6.16.88.py:11:#       5. Records every action in auto_heal_actions, tool_audit, parse_error_log, strategy_rewards.
+./run_pipeline_v6.16.88.py:134:    CREATE TABLE IF NOT EXISTS parse_error_log (
+./run_pipeline_v6.16.88.py:399:                "INSERT INTO parse_error_log (timestamp, file_path, error_class, error_line, raw_stderr) VALUES (?,?,?,?,?)",
+./run_pipeline_v6.16.88.py:406:                "SELECT COUNT(*) FROM parse_error_log WHERE file_path=? AND error_class=? AND resolved=0 ORDER BY timestamp DESC LIMIT ?",
+./run_pipeline_v6.16.88.py:451:                    "UPDATE parse_error_log SET resolved=1, strategy_tried=? WHERE file_path=? AND error_class=? AND resolved=0",
+./run_pipeline_v6.16.88.py:472:    for table in ["auto_heal_actions", "parse_error_log", "strategy_rewards"]:
+./run_pipeline_v6.16.89.py:156:    CREATE TABLE IF NOT EXISTS parse_error_log (
+./run_pipeline_v6.16.89.py:412:                "INSERT INTO parse_error_log (timestamp, file_path, error_class, error_line, raw_stderr) VALUES (?,?,?,?,?)",
+./run_pipeline_v6.16.89.py:418:                "SELECT COUNT(*) FROM parse_error_log WHERE file_path=? AND error_class=? AND resolved=0 ORDER BY timestamp DESC LIMIT ?",
+./run_pipeline_v6.16.89.py:459:                    "UPDATE parse_error_log SET resolved=1, strategy_tried=? WHERE file_path=? AND error_class=? AND resolved=0",
+./run_pipeline_v6.16.89.py:479:    for table in ["auto_heal_actions", "parse_error_log", "strategy_rewards"]:
+./run_pipeline_v6.16.90.py:144:    "parse_error_log": [
+./run_pipeline_v6.16.90.py:430:                "INSERT INTO parse_error_log (timestamp, file_path, error_class, error_line, raw_stderr) VALUES (?,?,?,?,?)",
+./run_pipeline_v6.16.90.py:436:                "SELECT COUNT(*) FROM parse_error_log WHERE file_path=? AND error_class=? AND resolved=0 ORDER BY timestamp DESC LIMIT ?",
+./run_pipeline_v6.16.90.py:477:                    "UPDATE parse_error_log SET resolved=1, strategy_tried=? WHERE file_path=? AND error_class=? AND resolved=0",
+
+=== 4. DASHBOARD FRONTEND REFERENCES ===
+
+=== 5. DASHBOARD BACKEND (app.py) DATABASE REFERENCES ===
+
+=== 6. ACTIONABLE DATA SOURCES SUMMARY ===
+From db_inspect audit, the following databases contain event/error/fix data:
+  - ./audit_logs/ab_test.db: ab_test_runs, godot_state_events, auto_heal_actions, fix_patterns, rule_compliance, godot_log_entries
+  - ./pipeline_forensics.db: save_png_hits, snapshots, strip_tests
+  - ./pipeline_audit.db: actions, files
+  - ./parac1ute_mutations.db: auto_heal_actions, parse_error_log, rule_compliance, error_fingerprints, repair_attempts, strategy_rewards
+
+The diagnostic dashboard (port 5001) currently serves:
+  - /api/health: backend health check
+  - /api/diagnostics: reads from diagnostics.db (stall reports)
+  - /logs: frontend route (SPA)
+  - /api/logs/stream: SSE stream (tailing /tmp/godot_run.log)
+
+To make the dashboard more actionable, consider adding API endpoints for:
+  - /api/game/events: godot_state_events table
+  - /api/game/heals: auto_heal_actions table
+  - /api/game/errors: parse_error_log table
+  - /api/game/runs: ab_test_runs table
+
+=== AUDIT COMPLETE ===
