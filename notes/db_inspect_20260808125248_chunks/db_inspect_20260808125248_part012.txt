@@ -1,0 +1,1686 @@
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1       before  {"tables": {"auto_heal_actions": 15710, "autohealactions": 1488, "parse_checks": 3677, "parse_error_log": 1065, "tool_audit": 2470, "files_to_fix": 77, "issues": 38}, "recent_failing_files": ["broken_scripts_archive/backup_old_scripts/build_terrain_0004.gd", "broken_scripts_archive/backup_old_scripts/build_terrain_0003.gd", "broken_scripts_archive/backup_old_scripts/build_terrain_0002.gd", "broken_scripts_archive/backup_old_scripts/build_terrain_0001.gd", "backups/20260621_113920/validate_scene.gd", "backups/20260621_113920/parachute_controller.gd", "backups/20260621_113920/game_manager.gd", "backups/20260621_113920/build_terrain.gd", "backups/20260621_113920/StructuredLogger.gd", "backups/20260621_113920/InputManager.gd", "audit_logs/build_terrain.gd", "SqliteWatchdog_0002.gd", "SqliteDb_0002.gd", "PerformanceMonitor_0002.gd", "GameIntegrity_0002.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/drag_influencer/aero_drag_influencer.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_thruster_3d/aero_thruster_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/aero_surface_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_mover_3d/aero_propeller_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_mover_3d/aero_mover_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_mover_3d/aero_cyclic_propeller_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_influencer_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_sphere_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_mesh_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_buoyancy_3d/aero_buoyancy_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_body_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_atmosphere_3d/aero_water_atmosphere_3d/aero_water_atmosphere_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_atmosphere_3d/aero_atmosphere_3d.gd", "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics/demo/misc_demo_assets/ball_launcher.gd", "external_backups/addons_backup_20260629_075234/godot-sqlite/godot-sqlite.gd", "external_backups/addons_backup_20260629_075234/gd_repair/validate_scene.gd", "external_backups/addons_backup_20260629_075234/gd_repair/plugin.gd", "external_backups/addons_backup_20260629_075234/gd_repair/debug_components_editor.gd", "debug_components_0002.gd", "check_inputmap.gd", "broken_scripts_archive/build_terrain_2606132139.gd", "broken_scripts_archive/build_terrain_2606131801.gd"], "recent_parse_errors": [{"id": 1065, "timestamp": "2026-07-02 14:31:15", "file_path": "broken_scripts_archive/backup_old_scripts/build_terrain_0004.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpr9mpxujy.gd:\n\n\tconst SCALE_XZ = 4000.0:\n                               ^\n\nUnexpected token Token('COLON', ':') at line 90, column 25.\nExpected one of: \n\t* _NL\n\t* _DEDENT\n\n"}, {"id": 1064, "timestamp": "2026-07-02 14:31:11", "file_path": "broken_scripts_archive/backup_old_scripts/build_terrain_0003.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmp8d33pdiz.gd:\n\norward_vec = target_dir * _forward_speed:\n                                        ^\n\nUnexpected token Token('COLON', ':') at line 35, column 48.\nExpected one of: \n\t* _DEDENT\n\t* _NL\n\n"}, {"id": 1063, "timestamp": "2026-07-02 14:31:07", "file_path": "broken_scripts_archive/backup_old_scripts/build_terrain_0002.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpvu3z74lm.gd:\n\nres://assets/characters/parachutist.fbx\"\n                                        ^\n\nUnexpected token Token('_INDENT', '\\t\\t') at line 24, column 58.\nExpected one of: \n\t* BREAKPOINT\n\t* FOR\n\t* LONG_STRING\n\t* PERCENT\n\t* AWAIT\n\t* BIN\n\t* VAR\n\t* DOLLAR\n\t* NAME\n\t* WHILE\n\t* LONG_RSTRIN"}, {"id": 1062, "timestamp": "2026-07-02 14:31:05", "file_path": "broken_scripts_archive/backup_old_scripts/build_terrain_0001.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpwvv3f9kw.gd:\n\nments = {\"first_jump\": \"perfect_landing\": \"malfunction_ace\": \"rapid_ep\": false}\n                                        ^\n\nUnexpected token Token('COLON', ':') at line 108, column 53.\nExpected one of: \n\t* COMMA\n\t* RBRACE\n\n"}, {"id": 1061, "timestamp": "2026-07-02 14:31:02", "file_path": "backups/20260621_113920/validate_scene.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "Traceback (most recent call last):\n  File \"/home/owner/.local/bin/gdparse\", line 8, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"/home/owner/.local/lib/python3.14/site-packages/gdtoolkit/parser/__main__.py\", line 43, in main\n    success &= _parse_file(file_path, arguments)\n          "}, {"id": 1060, "timestamp": "2026-07-02 14:31:00", "file_path": "backups/20260621_113920/parachute_controller.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpa2y9qq_0.gd:\n\nsignal landed(safe: bool):\n                         ^\n\nUnexpected token Token('COLON', ':') at line 7, column 26.\nExpected one of: \n\t* SEMICOLON\n\t* $END\n\t* _NL\nPrevious tokens: [Token('RPAR', ')')]\n\n"}, {"id": 1059, "timestamp": "2026-07-02 14:30:58", "file_path": "backups/20260621_113920/game_manager.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpkac3l9o9.gd:\n\n else:\n ^\n\nUnexpected token Token('ELSE', 'else') at line 23, column 2.\nExpected one of: \n\t* TILDE\n\t* FOR\n\t* MINUS\n\t* HEX\n\t* VAR\n\t* REGULAR_RSTRING\n\t* LONG_STRING\n\t* SET\n\t* NUMBER\n\t* LPAR\n\t* CIRCUMFLEX\n\t* LSQB\n\t* AMPERSAND\n\t* PERCENT\n\t* IF\n\t* PASS\n\t* LBRACE\n\t* PLUS\n\t* NOT\n\t* GE"}, {"id": 1058, "timestamp": "2026-07-02 14:30:56", "file_path": "backups/20260621_113920/build_terrain.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpe8aoo97u.gd:\n\nments = {\"first_jump\": \"perfect_landing\": \"malfunction_ace\": \"rapid_ep\"}\n                                        ^\n\nUnexpected token Token('COLON', ':') at line 81, column 53.\nExpected one of: \n\t* COMMA\n\t* RBRACE\n\n"}, {"id": 1057, "timestamp": "2026-07-02 14:30:54", "file_path": "backups/20260621_113920/StructuredLogger.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpi90jq677.gd:\n\n else:\n ^\n\nUnexpected token Token('ELSE', 'else') at line 106, column 2.\nExpected one of: \n\t* SET\n\t* GET\nPrevious tokens: [Token('_NL', '\\n # make_dir_recursive_absolute requires an absolute path \u2014 satisfied here.\\n # Source (Tier 2): https://docs.godotengine.org/en/stable/clas"}, {"id": 1056, "timestamp": "2026-07-02 14:30:52", "file_path": "backups/20260621_113920/InputManager.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpbtpph8cw.gd:\n\nUnexpected token Token('$END', '') at line 36, column None.\nExpected one of: \n\t* COLON\n"}, {"id": 1055, "timestamp": "2026-07-02 14:30:50", "file_path": "audit_logs/build_terrain.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpdo3nrnl3.gd:\n\nreturn:\n^\n\nUnexpected token Token('RETURN', 'return') at line 11, column 1.\nExpected one of: \n\t* AT\n\t* VAR\n\t* ENUM\n\t* LONG_STRING\n\t* $END\n\t* CLASS\n\t* CLASS_NAME\n\t* STATIC\n\t* _NL\n\t* REGULAR_STRING\n\t* FUNC\n\t* CONST\n\t* SIGNAL\n\t* EXTENDS\n\t* _INDENT\n\t* PASS\n\n"}, {"id": 1054, "timestamp": "2026-07-02 14:30:47", "file_path": "SqliteWatchdog_0002.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmp1mtcratu.gd:\n\ncreenshots table.:\n^\n\nUnexpected token Token('TYPE_HINT', 'creenshots') at line 6, column 1.\nExpected one of: \n\t* VAR\n\t* _INDENT\n\t* AT\n\t* CLASS_NAME\n\t* EXTENDS\n\t* STATIC\n\t* SIGNAL\n\t* _NL\n\t* ENUM\n\t* CLASS\n\t* CONST\n\t* $END\n\t* FUNC\n\t* LONG_STRING\n\t* REGULAR_STRING\n\t* PASS\nPrevious"}, {"id": 1053, "timestamp": "2026-07-02 14:30:45", "file_path": "SqliteDb_0002.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpuqcrmlwl.gd:\n\nreturn:\n^\n\nUnexpected token Token('RETURN', 'return') at line 29, column 1.\nExpected one of: \n\t* PASS\n\t* SIGNAL\n\t* STATIC\n\t* LONG_STRING\n\t* REGULAR_STRING\n\t* VAR\n\t* CLASS\n\t* CLASS_NAME\n\t* ENUM\n\t* FUNC\n\t* _NL\n\t* CONST\n\t* $END\n\t* _INDENT\n\t* AT\n\t* EXTENDS\n\n"}, {"id": 1052, "timestamp": "2026-07-02 14:30:43", "file_path": "PerformanceMonitor_0002.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpc5kr23kx.gd:\n\nows via SqliteDb every 1 s.:\n^\n\nUnexpected token Token('TYPE_HINT', 'ows') at line 6, column 1.\nExpected one of: \n\t* STATIC\n\t* _INDENT\n\t* LONG_STRING\n\t* $END\n\t* VAR\n\t* CONST\n\t* PASS\n\t* FUNC\n\t* SIGNAL\n\t* REGULAR_STRING\n\t* CLASS_NAME\n\t* AT\n\t* _NL\n\t* EXTENDS\n\t* CLASS\n\t* ENUM\nPrevi"}, {"id": 1051, "timestamp": "2026-07-02 14:30:41", "file_path": "GameIntegrity_0002.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpahejjnsm.gd:\n\n):\tif not ClassDB.class_exists(\"SQLite\");\n                                             ^\n\nUnexpected token Token('SEMICOLON', ';') at line 21, column 63.\nExpected one of: \n\t* COLON\n\n"}, {"id": 1050, "timestamp": "2026-07-02 14:15:29", "file_path": "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/drag_influencer/aero_drag_influencer.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpq_md3tma.gd:\n\ntep_delta  = 0.0) -> PackedVector3Array force_and_torque = super._calculate_forc\n                                        ^\n\nUnexpected token Token('TYPE_HINT', 'force_and_torque') at line 10, column 68.\nExpected one of: \n\t* SIGNAL\n\t* VAR\n\t* CONST\n\t* PASS\n\t* LONG_STRING\n\t* AT\n\t*"}, {"id": 1049, "timestamp": "2026-07-02 14:15:28", "file_path": "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_thruster_3d/aero_thruster_3d.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpt978m52m.gd:\n\ntep_delta  = 0.0) -> PackedVector3Array force_and_torque: PackedVector3Array = s\n                                        ^\n\nUnexpected token Token('TYPE_HINT', 'force_and_torque') at line 28, column 68.\nExpected one of: \n\t* SIGNAL\n\t* CONST\n\t* LONG_STRING\n\t* $END\n\t* REGULAR_STRI"}, {"id": 1048, "timestamp": "2026-07-02 14:15:27", "file_path": "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_config.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpxwdn2lon.gd:\n\n)\n^\n\nUnexpected token Token('RPAR', ')') at line 31, column 1.\nExpected one of: \n\t* CONST\n\t* CLASS\n\t* AT\n\t* CLASS_NAME\n\t* SIGNAL\n\t* _INDENT\n\t* ENUM\n\t* VAR\n\t* STATIC\n\t* LONG_STRING\n\t* PASS\n\t* _NL\n\t* REGULAR_STRING\n\t* $END\n\t* FUNC\n\t* EXTENDS\nPrevious tokens: [Token('_NL', '\\n##Mu"}, {"id": 1047, "timestamp": "2026-07-02 14:15:26", "file_path": "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/manual_aero_surface_3d/manual_aero_surface_3d.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpsiseqr3d.gd:\n\n\t)\n        ^\n\nUnexpected token Token('RPAR', ')') at line 16, column 2.\nExpected one of: \n\t* LSQB\n\t* REGULAR_RSTRING\n\t* GET\n\t* NOT\n\t* NUMBER\n\t* BANG\n\t* HEX\n\t* BIN\n\t* NAME\n\t* FUNC\n\t* AWAIT\n\t* REGULAR_STRING\n\t* TILDE\n\t* SET\n\t* PLUS\n\t* CIRCUMFLEX\n\t* LPAR\n\t* PERCENT\n\t* LBRACE\n\t* DO"}, {"id": 1046, "timestamp": "2026-07-02 14:15:24", "file_path": "external_backups/addons_backup_20260629_075234/godot_aerodynamic_physics.OFF/core/aero_influencer_3d/aero_surface_3d/aero_surface_config.gd", "error_class": "REPAIR_ATTEMPT", "error_line": 0, "stderr": "/tmp/tmpur1oor8o.gd:\n\nvar chord: float   = 1.0(value) = abs(value)\n                        ^\n\nUnexpected token Token('LPAR', '(') at line 10, column 25.\nExpected one of: \n\t* IN\n\t* OR\n\t* SLASH\n\t* LESSTHAN\n\t* EQUAL\n\t* PERCENT\n\t* _NL\n\t* STAR\n\t* \"*=\"\n\t* \"^=\"\n\t* \"**\"\n\t* VBAR\n\t* CIRCUMFLEX\n\t* AS\n\t* \">>=\"\n"}]}
+
+Schema for git_evidence:
+CREATE TABLE git_evidence(
+    run_id INTEGER, file_path TEXT,
+    log_stdout TEXT, log_stderr TEXT, log_exit INTEGER,
+    blame_stdout TEXT, blame_stderr TEXT, blame_exit INTEGER
+);
+Sample rows (first 3):
+run_id  file_path                                                                                                         log_stdout  log_stderr  log_exit  blame_stdout  blame_stderr                                                      blame_exit
+------  ----------------------------------------------------------------------------------------------------------------  ----------  ----------  --------  ------------  ----------------------------------------------------------------  ----------
+1       /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/add_input_actions.gd                          0                       fatal: no such path 'godot_project/add_input_actions.gd' in HEAD  128       
+
+Schema for runs:
+CREATE TABLE runs(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    started_at TEXT, ended_at TEXT,
+    source_db TEXT, project_root TEXT,
+    files_targeted INTEGER,
+    tools_installed INTEGER, tools_missing INTEGER
+);
+Sample rows (first 3):
+id  started_at           ended_at  source_db                                                                                             project_root                                                                                 files_targeted  tools_installed  tools_missing
+--  -------------------  --------  ----------------------------------------------------------------------------------------------------  -------------------------------------------------------------------------------------------  --------------  ---------------  -------------
+1   2026-07-11 15:53:58            /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project                                                
+
+
+-- ./diagnostics.db --
+Tables:
+diagnosis_log      diagnostics        repair_strategies  rule_compliance  
+Schema for diagnosis_log:
+CREATE TABLE diagnosis_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            checked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            check_name TEXT,
+            result TEXT,
+            evidence TEXT
+        );
+Sample rows (first 3):
+id  checked_at           check_name                       result                         evidence                                                     
+--  -------------------  -------------------------------  -----------------------------  -------------------------------------------------------------
+1   2026-07-15 18:42:29  autoload_order                   found                          1. SqliteDb                                                  
+                                                                                         2. DatabaseGuard                                             
+                                                                                         3. ResourceThrottle                                          
+                                                                                         4. PerformanceMonitor                                        
+                                                                                         5. aero_units                                                
+                                                                                         6. InputManager                                              
+                                                                                         7. GameIntegrity                                             
+                                                                                         8. ForensicHUD                                               
+                                                                                         9. Audit                                                     
+                                                                                         10. ErrorLogger                                              
+                                                                                         11. CursorManager                                            
+                                                                                         12. Gamification                                             
+                                                                                         13. ErrorBus                                                 
+
+2   2026-07-15 18:42:29  hud_vs_inputmanager_order        InputManager=6, ForensicHUD=8  InputManager runs before ForensicHUD in autoload/_input order
+
+3   2026-07-15 18:42:29  set_input_as_handled_call_sites  20 call site(s)                altimeter_hud.gd: get_viewport().set_input_as_handled()      
+                                                                                         altimeter_hud.gd: get_viewport().set_input_as_handled()      
+                                                                                         altimeter_hud.gd: get_viewport().set_input_as_handled()      
+                                                                                         forensic_hud.gd: #     swallowed by set_input_as_handled()   
+                                                                                         forensic_hud.gd: get_viewport().set_input_as_handled()       
+                                                                                         forensic_hud.gd: get_viewport().set_input_as_handled()       
+                                                                                         forensic_hud.gd: get_viewport().set_input_as_handled()       
+                                                                                         forensic_hud.gd: get_viewport().set_input_as_handled()       
+                                                                                         forensic_hud_0001.gd: get_viewport().set_input_as_handled()  
+                                                                                         forensic_hud_0001.gd: get_viewport().set_input_as_handled()  
+                                                                                         forensic_hud_0001.gd: get_viewport().set_input_as_handled()  
+                                                                                         pip_draggable.gd.gd: get_viewport().set_input_as_handled()   
+                                                                                         pip_draggable.gd.gd: get_viewport().set_input_as_handled()   
+                                                                                         pip_draggable.gd.gd: get_viewport().set_input_as_handled()   
+                                                                                         pip_draggable_v2.gd: get_viewport().set_input_as_handled()   
+                                                                                         pip_draggable_v2.gd: get_viewport().set_input_as_handled()   
+                                                                                         pip_draggable_v2.gd: get_viewport().set_input_as_handled()   
+                                                                                         pip_draggable_v2.gd.gd: get_viewport().set_input_as_handled()
+                                                                                         pip_draggable_v2.gd.gd: get_viewport().set_input_as_handled()
+                                                                                         pip_draggable_v2.gd.gd: get_viewport().set_input_as_handled()
+
+Schema for diagnostics:
+CREATE TABLE diagnostics (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_id TEXT,
+        component TEXT,
+        status TEXT,
+        line_number INTEGER,
+        line_text TEXT,
+        logged_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+Sample rows (first 3):
+id  run_id         component  status  line_number  line_text                                                                                              logged_at          
+--  -------------  ---------  ------  -----------  -----------------------------------------------------------------------------------------------------  -------------------
+1   game-20260807  generic    info    1            Godot Engine v4.6.2.stable.official.71f334935 - https://godotengine.org                                2026-08-07 10:17:16
+2   game-20260807  godot      error   3            ERROR: Cannot open file 'res://.godot/imported/earth_mesh.obj-2e4479bbcd13b1541a8572743c34c3fb.mesh'.  2026-08-07 10:17:16
+3   game-20260807  stack      trace   4               at: load (core/io/resource_format_binary.cpp:1220)                                                  2026-08-07 10:17:16
+
+Schema for repair_strategies:
+CREATE TABLE repair_strategies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            pattern TEXT,
+            repair_data TEXT,
+            verification_command TEXT,
+            last_verified TIMESTAMP
+        );
+Sample rows (first 3):
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:31.652903
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:31.653122
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:31.653180
+
+
+-- ./validation_tools/parachute_mutations.db --
+Tables:
+control_info  files_to_fix
+Schema for control_info:
+CREATE TABLE control_info (
+    id INTEGER PRIMARY KEY,
+    node_path TEXT, class_name TEXT, position_x REAL, position_y REAL,
+    size_x REAL, size_y REAL, global_position_x REAL, global_position_y REAL,
+    mouse_filter INTEGER, visible INTEGER, z_index INTEGER,
+    modulate_r REAL, modulate_g REAL, modulate_b REAL, timestamp TEXT,
+    key TEXT, value TEXT, updated_at DATETIME
+);
+Sample rows (first 3):
+
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+            file_path TEXT,
+            line_number INTEGER,
+            error_text TEXT,
+            status TEXT,
+            attempt_count INTEGER DEFAULT 0,
+            fixed_ts TEXT,
+            PRIMARY KEY (file_path, line_number)
+        );
+Sample rows (first 3):
+file_path                              line_number  error_text                                                                                                              status  attempt_count  fixed_ts           
+-------------------------------------  -----------  ----------------------------------------------------------------------------------------------------------------------  ------  -------------  -------------------
+<verify_game_vVGS1>                    0            verification run: altimeter+drag+DG alive check [vBOLSTER2: normalized from verified, original_ts=2026-07-21 10:02:24]  fixed   2              2026-07-22 13:51:26
+godot_project/scenes/forensic_hud.gd   57           vFIX2: deferred _confirm_drag_attached added [vBOLSTER2: normalized from verified, original_ts=2026-07-21 16:08:20]     fixed   3              2026-07-22 13:51:26
+godot_project/scripts/forensic_hud.gd  0            vFDS1: set_script before add_child; correct guard; deferred confirm                                                     fixed   2              2026-07-21 20:58:29
+
+
+-- ./forensics.db --
+Tables:
+_schema_version      files_to_fix         repair_strategies  
+diagnostic_findings  fix_attempts         rule_compliance    
+events               migration_report   
+events_hardened      remediation_queue  
+Schema for _schema_version:
+CREATE TABLE _schema_version (version INTEGER PRIMARY KEY);
+Sample rows (first 3):
+version
+-------
+1      
+2      
+3      
+
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+            file_path     TEXT,
+            line_number   INTEGER,
+            error_text    TEXT,
+            status        TEXT,
+            attempt_count INTEGER DEFAULT 0,
+            fixed_ts      TEXT,
+            source_db     TEXT,
+            content_hash  TEXT UNIQUE,
+            PRIMARY KEY (file_path, line_number)
+        );
+Sample rows (first 3):
+file_path                                                                                                                        line_number  error_text                                        status   attempt_count  fixed_ts                    source_db               content_hash                                                    
+-------------------------------------------------------------------------------------------------------------------------------  -----------  ------------------------------------------------  -------  -------------  --------------------------  ----------------------  ----------------------------------------------------------------
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd  20           Assignment = used where == required in condition  fixed    0              2026-06-25T12:44:50.927077  parachute_mutations.db  0411f524594c2f4b02c67ab261843e32f7fa7eb4bfe57f1c71c52f9fe8551068
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd              24           Assignment = used where == required in condition  skipped  0              2026-06-25T12:44:51.032272  parachute_mutations.db  557ca256e3a979e1e13e42af571142e4ae1a30b30851c671da8bfd0a01aeb6e2
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/SqliteDb.gd                  19           Assignment = used where == required in condition  fixed    0              2026-06-25T12:44:51.146400  parachute_mutations.db  2771f25b7124320a47c959af83ce12ab3f56b524c4d33043dfdd9d413f2bec5b
+
+Schema for repair_strategies:
+CREATE TABLE repair_strategies (
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            error_pattern TEXT UNIQUE,
+            repair_type   TEXT,
+            repair_data   TEXT,
+            success_count INTEGER DEFAULT 0,
+            fail_count    INTEGER DEFAULT 0,
+            last_used     TEXT
+        , source_db TEXT);
+Sample rows (first 3):
+
+Schema for diagnostic_findings:
+CREATE TABLE diagnostic_findings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id TEXT,
+            file_path TEXT NOT NULL,
+            line_number INTEGER,
+            error_text TEXT NOT NULL,
+            context_block TEXT,
+            engine_source INTEGER DEFAULT 0,
+            detected_ts TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+        );
+Sample rows (first 3):
+id  run_id                 file_path                    line_number  error_text                                                                                           context_block                                                                                                                                       engine_source  detected_ts             
+--  ---------------------  ---------------------------  -----------  ---------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------------------------------------  -------------  ------------------------
+1   scan-20260718T155426Z  core/io/resource_uid.cpp     212          Unrecognized UID: "uid://5vah4ayrdxci".                                                              (engine-internal or unavailable source file -- path='core/io/resource_uid.cpp', not part of this project's own files, cannot display +-3 lines)     1              2026-07-18T15:54:27.164Z
+2   scan-20260718T155426Z  core/io/resource_uid.cpp     212          Unrecognized UID: "uid://5vah4ayrdxci".                                                              (engine-internal or unavailable source file -- path='core/io/resource_uid.cpp', not part of this project's own files, cannot display +-3 lines)     1              2026-07-18T15:54:27.203Z
+3   scan-20260718T155426Z  core/variant/dictionary.cpp  136          Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.  (engine-internal or unavailable source file -- path='core/variant/dictionary.cpp', not part of this project's own files, cannot display +-3 lines)  1              2026-07-18T15:54:27.237Z
+
+Schema for fix_attempts:
+CREATE TABLE fix_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            finding_id INTEGER,
+            file_path TEXT NOT NULL,
+            line_number INTEGER,
+            error_text TEXT NOT NULL,
+            fix_script TEXT,
+            diff_text TEXT,
+            success INTEGER NOT NULL,
+            context_after TEXT,
+            attempted_ts TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+        );
+Sample rows (first 3):
+id  finding_id  file_path                    line_number  error_text                                                                                           fix_script  diff_text  success  context_after                   attempted_ts            
+--  ----------  ---------------------------  -----------  ---------------------------------------------------------------------------------------------------  ----------  ---------  -------  ------------------------------  ------------------------
+1   1           core/io/resource_uid.cpp     212          Unrecognized UID: "uid://5vah4ayrdxci".                                                                                     0        no_fix_known -- left untouched  2026-07-18T15:54:30.026Z
+2   2           core/io/resource_uid.cpp     212          Unrecognized UID: "uid://5vah4ayrdxci".                                                                                     0        no_fix_known -- left untouched  2026-07-18T15:54:30.071Z
+3   3           core/variant/dictionary.cpp  136          Bug: Dictionary::operator[] used when there was no value for the given key "events". Please report.                         0        no_fix_known -- left untouched  2026-07-18T15:54:30.104Z
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    script_name TEXT,
+    rule_id TEXT,
+    passed INTEGER,
+    evidence TEXT,
+    logged_at TEXT
+);
+Sample rows (first 3):
+id  script_name                          rule_id  passed  evidence                        logged_at                 
+--  -----------------------------------  -------  ------  ------------------------------  --------------------------
+1   audit_database_and_code_fixed_v2.sh  1        1       notes/audit_20260806115940.txt  2026-08-06T07:59:40.928777
+2   audit_database_and_code_fixed_v2.sh  17       1       notes/audit_20260806115940.txt  2026-08-06T07:59:40.929024
+3   audit_database_and_code_fixed_v2.sh  27       1       notes/audit_20260806115940.txt  2026-08-06T07:59:40.929092
+
+Schema for events:
+CREATE TABLE events (
+            id           INTEGER PRIMARY KEY AUTOINCREMENT,
+            content_hash TEXT UNIQUE,
+            run_id       TEXT,
+            ts           TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+            source_db    TEXT NOT NULL,
+            source_table TEXT NOT NULL,
+            kind         TEXT NOT NULL,
+            file_path    TEXT,
+            detail       TEXT
+        );
+CREATE INDEX idx_events_run  ON events(run_id);
+CREATE INDEX idx_events_kind ON events(kind, ts);
+CREATE INDEX idx_events_hash ON events(content_hash);
+Sample rows (first 3):
+id  content_hash                                                      run_id  ts                   source_db              source_table  kind                file_path  detail                                                     
+--  ----------------------------------------------------------------  ------  -------------------  ---------------------  ------------  ------------------  ---------  -----------------------------------------------------------
+1   8d9af012e53f8cab8f8b1c3aa08d5753f33a8270e5e42d59263b0ed5241ccbe0          2026-06-20 12:49:57  audit_logs/ab_test.db  ab_test_runs  other:ab_test_runs             (1, 31, None, None, None, 'SUCCESS', '2026-06-20 12:49:57')
+2   724fad7a85f759ae2b84bddda343931b8d3b52c6533e2ffe41b6f328234f696d          2026-06-20 12:54:33  audit_logs/ab_test.db  ab_test_runs  other:ab_test_runs             (2, 32, None, None, None, 'SUCCESS', '2026-06-20 12:54:33')
+3   ee93fb1656f863ce0736e729549f87e95e9015cd39c30e9252b004799acd2e7c          2026-06-20 12:59:03  audit_logs/ab_test.db  ab_test_runs  other:ab_test_runs             (3, 33, None, None, None, 'SUCCESS', '2026-06-20 12:59:03')
+
+Schema for migration_report:
+CREATE TABLE migration_report (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            migrated_at    TEXT DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+            source_db      TEXT,
+            source_table   TEXT,
+            rows_in_source INTEGER,
+            rows_inserted  INTEGER,
+            rows_skipped   INTEGER
+        );
+Sample rows (first 3):
+id  migrated_at               source_db              source_table                 rows_in_source  rows_inserted  rows_skipped
+--  ------------------------  ---------------------  ---------------------------  --------------  -------------  ------------
+1   2026-07-17T12:40:07.712Z  audit_logs/ab_test.db  ab_test_runs                 64              64             0           
+2   2026-07-17T12:40:07.890Z  audit_logs/ab_test.db  resource_contention_log_old  0               0              0           
+3   2026-07-17T12:40:08.524Z  audit_logs/ab_test.db  resource_contention_log      0               0              0           
+
+Schema for events_hardened:
+CREATE TABLE events_hardened (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+                run_id TEXT, source_db TEXT, source_table TEXT,
+                kind TEXT, file_path TEXT, detail TEXT, content_hash TEXT
+            );
+Sample rows (first 3):
+
+Schema for remediation_queue:
+CREATE TABLE remediation_queue (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                created_ts TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+                file_path TEXT, line_number INTEGER, error_text TEXT,
+                status TEXT DEFAULT 'pending', attempt_count INTEGER DEFAULT 0,
+                fix_script TEXT, priority INTEGER DEFAULT 5
+            );
+Sample rows (first 3):
+
+
+-- ./db_audit_20260720_130002/fixture_good.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:27.811772
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:27.812545
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:27.812627
+
+
+-- ./db_audit_20260720_130002/fixture_corrupt.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:27.302176
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:27.302455
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:27.302479
+
+
+-- ./db_audit_20260720_135030/fixture_good.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:28.619888
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:28.620621
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:28.620701
+
+
+-- ./db_audit_20260720_135030/fixture_corrupt.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:28.221424
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:28.222051
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:28.222127
+
+
+-- ./db_audit_20260720_135430/fixture_good.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.383752
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.384460
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.384551
+
+
+-- ./db_audit_20260720_135430/fixture_corrupt.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.018513
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.019114
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.019189
+
+
+-- ./db_audit_20260720_140210/fixture_good.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.180659
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.181114
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.181153
+
+
+-- ./db_audit_20260720_140210/fixture_corrupt.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.848806
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.849506
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:29.849573
+
+
+-- ./db_audit_20260720_140829/fixture_good.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+file_path  line_number  error_text  status  attempt_count  fixed_ts           
+---------  -----------  ----------  ------  -------------  -------------------
+a.gd       1            e           fixed   1              2026-01-01 00:00:00
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.977853
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.978605
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.978686
+
+
+-- ./db_audit_20260720_140829/fixture_corrupt.db --
+Tables:
+files_to_fix     rule_compliance
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+    file_path TEXT, line_number INTEGER, error_text TEXT, status TEXT,
+    attempt_count INTEGER DEFAULT 0, fixed_ts TEXT,
+    PRIMARY KEY (file_path, line_number));
+Sample rows (first 3):
+
+Schema for rule_compliance:
+CREATE TABLE rule_compliance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        script_name TEXT,
+        rule_id TEXT,
+        passed INTEGER,
+        evidence TEXT,
+        logged_at TEXT
+    );
+Sample rows (first 3):
+id  script_name                            rule_id  passed  evidence                            logged_at                 
+--  -------------------------------------  -------  ------  ----------------------------------  --------------------------
+1   audit_all_databases_and_code_fixed.sh  1        1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.623652
+2   audit_all_databases_and_code_fixed.sh  17       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.624333
+3   audit_all_databases_and_code_fixed.sh  27       1       notes/audit_all_20260806120225.txt  2026-08-06T08:02:30.624417
+
+
+-- ./db_audit_20260720_140829/ab_test.db.snapshot.20260720_140829.db --
+Tables:
+ab_test_runs                 godot_log_entries          
+alerts_sent                  godot_state_events         
+auto_heal_actions            resource_contention_log    
+fix_patterns                 resource_contention_log_old
+Schema for ab_test_runs:
+CREATE TABLE ab_test_runs (
+                run_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER NOT NULL,
+                ready_time_ms INTEGER,
+                vol_cs INTEGER,
+                nvol_cs INTEGER,
+                outcome TEXT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+CREATE INDEX idx_ab_test_runs_session ON ab_test_runs(session_id);
+CREATE INDEX idx_ab_test_runs_timestamp ON ab_test_runs(timestamp);
+Sample rows (first 3):
+run_id  session_id  ready_time_ms  vol_cs  nvol_cs  outcome  timestamp          
+------  ----------  -------------  ------  -------  -------  -------------------
+1       31                                          SUCCESS  2026-06-20 12:49:57
+2       32                                          SUCCESS  2026-06-20 12:54:33
+3       33                                          SUCCESS  2026-06-20 12:59:03
+
+Schema for godot_log_entries:
+CREATE TABLE godot_log_entries (
+                entry_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id INTEGER NOT NULL,
+                session_id INTEGER NOT NULL,
+                timestamp TEXT,
+                verbatim TEXT,
+                raw_json TEXT,
+                FOREIGN KEY (run_id) REFERENCES ab_test_runs(run_id),
+                FOREIGN KEY (session_id) REFERENCES ab_test_runs(session_id)
+            );
+CREATE INDEX idx_log_entries_run ON godot_log_entries(run_id);
+CREATE INDEX idx_log_entries_session ON godot_log_entries(session_id);
+Sample rows (first 3):
+entry_id  run_id  session_id  timestamp            verbatim                                         raw_json                                                                                                                   
+--------  ------  ----------  -------------------  -----------------------------------------------  ---------------------------------------------------------------------------------------------------------------------------
+1         3       32          2026-06-20T08:54:33  StructuredLogger ready; session_id=32, run_id=2  {"run_id":2,"session_id":32,"timestamp":"2026-06-20T08:54:33","verbatim":"StructuredLogger ready; session_id=32, run_id=2"}
+2         3       33          2026-06-20T08:59:03  StructuredLogger ready; session_id=33, run_id=3  {"run_id":3,"session_id":33,"timestamp":"2026-06-20T08:59:03","verbatim":"StructuredLogger ready; session_id=33, run_id=3"}
+3         6       32          2026-06-20T08:54:33  StructuredLogger ready; session_id=32, run_id=2  {"run_id":2,"session_id":32,"timestamp":"2026-06-20T08:54:33","verbatim":"StructuredLogger ready; session_id=32, run_id=2"}
+
+Schema for alerts_sent:
+CREATE TABLE alerts_sent (
+                run_id INTEGER PRIMARY KEY,
+                alert_type TEXT,
+                sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (run_id) REFERENCES ab_test_runs(run_id)
+            );
+Sample rows (first 3):
+
+Schema for godot_state_events:
+CREATE TABLE godot_state_events (
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id INTEGER NOT NULL,
+                session_id INTEGER NOT NULL,
+                timestamp TEXT,
+                event_type TEXT,   -- e.g., 'ENTER', 'EXIT', 'STATE', 'ERROR', 'INFO'
+                event_name TEXT,   -- e.g., '_load_character', 'LINE OVER'
+                raw_message TEXT,
+                FOREIGN KEY (run_id) REFERENCES ab_test_runs(run_id)
+            );
+CREATE INDEX idx_state_events_run ON godot_state_events(run_id);
+CREATE INDEX idx_state_events_type ON godot_state_events(event_type);
+Sample rows (first 3):
+event_id  run_id  session_id  timestamp            event_type  event_name                                       raw_message                                    
+--------  ------  ----------  -------------------  ----------  -----------------------------------------------  -----------------------------------------------
+1         6       32          2026-06-20T08:54:33  INFO        StructuredLogger ready; session_id=32, run_id=2  StructuredLogger ready; session_id=32, run_id=2
+2         6       33          2026-06-20T08:59:03  INFO        StructuredLogger ready; session_id=33, run_id=3  StructuredLogger ready; session_id=33, run_id=3
+3         6       34          2026-06-20T09:09:25  INFO        StructuredLogger ready; session_id=34, run_id=4  StructuredLogger ready; session_id=34, run_id=4
+
+Schema for auto_heal_actions:
+CREATE TABLE auto_heal_actions (
+                action_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id INTEGER NOT NULL,
+                error_pattern TEXT,
+                file_path TEXT,
+                line_number INTEGER,
+                patch_applied TEXT,
+                status TEXT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (run_id) REFERENCES ab_test_runs(run_id)
+            );
+Sample rows (first 3):
+action_id  run_id  error_pattern                          file_path                       line_number  patch_applied                       status   timestamp          
+---------  ------  -------------------------------------  ------------------------------  -----------  ----------------------------------  -------  -------------------
+1          9       Parameter "t" is null.                 res://scripts/build_terrain.gd  1958             if screenshot_texture == null:  applied  2026-06-20 13:53:34
+                                                                                                               return                                                  
+
+2          10      Indentation mismatch (spaces vs tabs)  res://scripts/build_terrain.gd  1957         indent_fix                          applied  2026-06-20 13:56:44
+
+3          11      Expected indented block after 'if'     res://scripts/build_terrain.gd  1958         indent_fix                          applied  2026-06-20 13:59:18
+
+Schema for resource_contention_log:
+CREATE TABLE resource_contention_log (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        session_id INTEGER NOT NULL,
+                        godot_pid INTEGER NOT NULL,
+                        ts INTEGER,
+                        io_wait INTEGER,
+                        vol_cs INTEGER,
+                        nvol_cs INTEGER,
+                        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (session_id) REFERENCES ab_test_runs(session_id)
+                    );
+CREATE INDEX idx_contention_session ON resource_contention_log(session_id);
+CREATE INDEX idx_contention_ts ON resource_contention_log(ts);
+Sample rows (first 3):
+
+Schema for fix_patterns:
+CREATE TABLE fix_patterns (
+                pattern_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                error_keyword TEXT,         -- e.g., 'null', 'indented block', 'undefined'
+                fix_template TEXT,           -- e.g., 'add_null_check', 'fix_indentation', 'declare_variable'
+                file_glob TEXT,              -- optional: only apply to certain files
+                success_count INTEGER DEFAULT 0,
+                last_used DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+Sample rows (first 3):
+pattern_id  error_keyword   fix_template      file_glob  success_count  last_used          
+----------  --------------  ----------------  ---------  -------------  -------------------
+1           null            add_null_check               0              2026-06-20 14:27:25
+2           indented block  fix_indentation              5              2026-06-20 16:20:45
+3           undefined       declare_variable             0              2026-06-20 14:27:25
+
+Schema for resource_contention_log_old:
+CREATE TABLE IF NOT EXISTS "resource_contention_log_old" (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id INTEGER NOT NULL,
+                godot_pid INTEGER NOT NULL,
+                ts INTEGER,
+                io_wait INTEGER,
+                vol_cs INTEGER,
+                nvol_cs INTEGER,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+Sample rows (first 3):
+
+
+-- ./db_audit_20260720_140829/dependencies.db.snapshot.20260720_140829.db --
+Tables:
+discovered_scripts
+Schema for discovered_scripts:
+CREATE TABLE discovered_scripts (
+    script_path TEXT PRIMARY KEY,
+    discovered_from TEXT NOT NULL,
+    discovered_at TEXT NOT NULL,
+    hash TEXT NOT NULL
+);
+CREATE INDEX idx_discovered_from ON discovered_scripts(discovered_from);
+Sample rows (first 3):
+script_path                                                                                                                                                           discovered_from            discovered_at                     hash                                                            
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------  -------------------------  --------------------------------  ----------------------------------------------------------------
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/aero_body_3d.gd                     scene:demo_plane.tscn      2026-06-25T22:11:00.519970+00:00  811f9bc82225771e544c6de4aeaba80eb93ec558facdb8e171aed32cd1930aeb
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/utils/node_utils.gd                      preload:wind_indicator.gd  2026-06-25T22:11:00.520811+00:00  067b60e68b3a57865d903db54ca498f13e7dabf7d1f679dee63a169a5641b24b
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/godot_aerodynamic_physics/core/controls/aero_control_component.gd  scene:demo_plane.tscn      2026-06-25T22:11:00.520985+00:00  a67e64644ead142fa472c82dc6950df3ee72125c06f2ce7925ee23c1b813b1db
+
+
+-- ./db_audit_20260720_140829/parachute_mutations.db.snapshot.20260720_140829.db --
+Tables:
+files_to_fix
+Schema for files_to_fix:
+CREATE TABLE files_to_fix (
+            file_path TEXT,
+            line_number INTEGER,
+            error_text TEXT,
+            status TEXT,
+            attempt_count INTEGER DEFAULT 0,
+            fixed_ts TEXT,
+            PRIMARY KEY (file_path, line_number)
+        );
+Sample rows (first 3):
+
+
+-- ./db_audit_20260720_140829/default.db.snapshot.20260720_140829.db --
+Tables:
+issues        parse_errors  screenshots 
+Schema for issues:
+CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0);
+Sample rows (first 3):
+
+Schema for parse_errors:
+CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending');
+Sample rows (first 3):
+
+Schema for screenshots:
+CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL);
+Sample rows (first 3):
+
+
+-- ./db_audit_20260720_140829/recovery_engine.db.snapshot.20260720_140829.db --
+Tables:
+auto_heal_actions  dependency_graph   fix_log            tool_registry    
+component_health   error_log          fix_strategies   
+dependencies       errors             runtime_logs     
+Schema for auto_heal_actions:
+CREATE TABLE auto_heal_actions (
+        id INTEGER PRIMARY KEY,
+        timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+        action TEXT,
+        file TEXT,
+        status TEXT,
+        details TEXT
+    );
+Sample rows (first 3):
+id  timestamp            action                 file                                    status   details                                          
+--  -------------------  ---------------------  --------------------------------------  -------  -------------------------------------------------
+1   2026-06-26 15:44:07  patch                  godot_project/scripts/DatabaseGuard.gd  fail     Hardened _schedule_retry with exponential backoff
+2   2026-06-26 15:48:31  harden_schedule_retry  godot_project/scripts/DatabaseGuard.gd  success  Replaced with exponential backoff                
+3   2026-06-26 15:53:27  harden_schedule_retry  godot_project/scripts/DatabaseGuard.gd  success  Replaced with exponential backoff                
+
+Schema for dependency_graph:
+CREATE TABLE dependency_graph (
+            id INTEGER PRIMARY KEY,
+            child_file TEXT,
+            base_class TEXT,
+            base_file TEXT,
+            resolved INTEGER DEFAULT 0,
+            timestamp TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+id  child_file                                     base_class       base_file                                 resolved  timestamp          
+--  ---------------------------------------------  ---------------  ----------------------------------------  --------  -------------------
+1   godot_project/scripts/parachute_controller.gd  CharacterBody3D  godot_project/scripts/CharacterBody3D.gd  0         2026-06-26 23:51:30
+2   godot_project/scripts/test_runner.gd           SceneTree        godot_project/scripts/SceneTree.gd        0         2026-06-26 23:51:30
+3   godot_project/scripts/parachute_controller.gd  CharacterBody3D  godot_project/scripts/CharacterBody3D.gd  0         2026-06-26 23:55:36
+
+Schema for fix_log:
+CREATE TABLE fix_log (
+            id INTEGER PRIMARY KEY,
+            file_path TEXT,
+            line_num INTEGER,
+            before_text TEXT,
+            after_text TEXT,
+            timestamp TEXT DEFAULT CURRENT_TIMESTAMP
+        , details TEXT);
+Sample rows (first 3):
+id  file_path                                        line_num  before_text                                          after_text                                                           timestamp            details                    
+--  -----------------------------------------------  --------  ---------------------------------------------------  -------------------------------------------------------------------  -------------------  ---------------------------
+1   godot_project/scripts/DatabaseGuard.gd           233       func _execute_with_retry(sql: String, args: Array):                  func _execute_with_retry(sql: String, args: Array):  2026-06-26 13:05:19                             
+2   godot_project/scripts/build_terrain_part_001.gd            manual fix                                           applied                                                              2026-06-26 17:42:10  Split variable declaration 
+3   godot_project/scripts/build_terrain_part_002.gd            manual fix                                           applied                                                              2026-06-26 17:42:11  Removed stray closing brace
+
+Schema for tool_registry:
+CREATE TABLE tool_registry (
+            id INTEGER PRIMARY KEY,
+            name TEXT UNIQUE,
+            path TEXT,
+            version TEXT,
+            status TEXT DEFAULT 'unknown',
+            last_checked TEXT,
+            install_command TEXT,
+            error TEXT,
+            retries INTEGER DEFAULT 0
+        );
+Sample rows (first 3):
+
+Schema for component_health:
+CREATE TABLE component_health (
+            id INTEGER PRIMARY KEY,
+            timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+            component TEXT,
+            health_data TEXT
+        );
+Sample rows (first 3):
+
+Schema for error_log:
+CREATE TABLE error_log (
+            id INTEGER PRIMARY KEY,
+            file_path TEXT,
+            line_num INTEGER,
+            error_text TEXT,
+            offending_line TEXT,
+            hash TEXT UNIQUE,
+            first_seen TEXT DEFAULT CURRENT_TIMESTAMP,
+            last_seen TEXT DEFAULT CURRENT_TIMESTAMP,
+            occurrences INTEGER DEFAULT 1,
+            fixed INTEGER DEFAULT 0,
+            strategy_id INTEGER
+        , run_id TEXT, error_class TEXT);
+Sample rows (first 3):
+id  file_path                            line_num  error_text                                                        offending_line                                 hash                              first_seen           last_seen            occurrences  fixed  strategy_id  run_id  error_class
+--  -----------------------------------  --------  ----------------------------------------------------------------  ---------------------------------------------  --------------------------------  -------------------  -------------------  -----------  -----  -----------  ------  -----------
+1   scripts/GameIntegrity.gd             55        Unexpected token Token('STATIC', 'static') at line 55, column 2.          static func save_flight_screenshot():  142b21417f05f754ab50384c0fc6e614  2026-06-26 19:30:19  2026-06-26 21:34:31  14           0                                      
+2   scripts/GameIntegrity_2606150714.gd  31        Unexpected token Token('STATIC', 'static') at line 31, column 2.          static func save_flight_screenshot():  6c8935708f6675b20ad5e4fd49871af1  2026-06-26 19:30:20  2026-06-26 21:34:31  14           0                                      
+3   scripts/InputManager.gd              71        Unexpected token Token('STATIC', 'static') at line 71, column 2.          static func save_flight_screenshot():  d8a3b38b3277b85f69b32be2663b2719  2026-06-26 19:30:20  2026-06-26 21:34:32  14           0                                      
+
+Schema for fix_strategies:
+CREATE TABLE fix_strategies (
+            id INTEGER PRIMARY KEY,
+            pattern TEXT,
+            replacement TEXT,
+            description TEXT,
+            is_regex INTEGER DEFAULT 1,
+            priority INTEGER DEFAULT 0,
+            last_applied TEXT
+        , success_count INTEGER DEFAULT 0, fail_count INTEGER DEFAULT 0, last_used TEXT);
+Sample rows (first 3):
+id  pattern                                                                 replacement                                                              description                          is_regex  priority  last_applied  success_count  fail_count  last_used
+--  ----------------------------------------------------------------------  -----------------------------------------------------------------------  -----------------------------------  --------  --------  ------------  -------------  ----------  ---------
+1   ^func _execute_with_retry\(sql: String, args: Array\):$                                                                                          Remove duplicate function signature  1         10                      0              0                    
+2   if _failure_count >= _failure_threshold and _circuit_state = "CLOSED":  if _failure_count >= _failure_threshold and _circuit_state == "CLOSED":  Fix assignment in if condition       1         20                      0              0                    
+3   ^(func \w+\([^)]*\))\s*$                                                \1:                                                                      Add missing colon to function        1         30                      0              0                    
+
+Schema for dependencies:
+CREATE TABLE dependencies (
+        name TEXT PRIMARY KEY,
+        version TEXT,
+        installed INTEGER DEFAULT 0,
+        last_check TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+Sample rows (first 3):
+name      version  installed  last_check         
+--------  -------  ---------  -------------------
+gdparse   4.5.0    1          2026-06-26 15:44:05
+gdlint    4.5.0    1          2026-06-26 15:44:06
+gdformat  4.5.0    1          2026-06-26 15:44:06
+
+Schema for errors:
+CREATE TABLE errors (
+            id INTEGER PRIMARY KEY,
+            file_path TEXT,
+            line_num INTEGER,
+            error_text TEXT,
+            offending_line TEXT,
+            hash TEXT UNIQUE,
+            fixed INTEGER DEFAULT 0
+        );
+Sample rows (first 3):
+
+Schema for runtime_logs:
+CREATE TABLE runtime_logs (
+            id INTEGER PRIMARY KEY,
+            log_line TEXT,
+            source_file TEXT,
+            source_line INTEGER,
+            code TEXT,
+            timestamp TEXT DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+id  log_line                                                  source_file               source_line  code                                                               timestamp          
+--  --------------------------------------------------------  ------------------------  -----------  -----------------------------------------------------------------  -------------------
+1   [VERBATIM] DatabaseGuard.gd _ready() called               scripts/DatabaseGuard.gd  52           print("[VERBATIM] DatabaseGuard.gd _ready() called")               2026-06-26 14:53:17
+2   [VERBATIM] DatabaseGuard: SqliteDb not found, will retry  scripts/DatabaseGuard.gd  59           print("[VERBATIM] DatabaseGuard: SqliteDb not found, will retry")  2026-06-26 14:53:17
+3   [VERBATIM] DatabaseGuard: _ready ok=true                  scripts/DatabaseGuard.gd  61           print("[VERBATIM] DatabaseGuard: _ready ok=true")                  2026-06-26 14:53:17
+
+
+-- ./db_audit_20260720_140829/pipeline_forensics.db.snapshot.20260720_140829.db --
+Tables:
+save_png_hits  snapshots      strip_tests  
+Schema for save_png_hits:
+CREATE TABLE save_png_hits(
+    id INTEGER PRIMARY KEY,
+    file_path TEXT NOT NULL,
+    line_no INTEGER NOT NULL,
+    line_text TEXT NOT NULL,
+    created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+Sample rows (first 3):
+
+Schema for snapshots:
+CREATE TABLE snapshots(
+    id INTEGER PRIMARY KEY,
+    file_path TEXT NOT NULL,
+    sha256 TEXT NOT NULL,
+    line_count INTEGER NOT NULL,
+    save_png_count INTEGER NOT NULL,
+    created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+Sample rows (first 3):
+id  file_path                               sha256                                                            line_count  save_png_count  created_ts         
+--  --------------------------------------  ----------------------------------------------------------------  ----------  --------------  -------------------
+1   godot_project/scripts/build_terrain.gd  5fa4f2ed396d82d94f744a9b785bd660c8a5aadd0618249e8a6ae316082ee29f  2194        0               2026-06-24 16:50:08
+
+Schema for strip_tests:
+CREATE TABLE strip_tests(
+    id INTEGER PRIMARY KEY,
+    before_sha TEXT,
+    after_sha TEXT,
+    before_lines INTEGER,
+    after_lines INTEGER,
+    removed_lines INTEGER,
+    created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+Sample rows (first 3):
+id  before_sha                                                        after_sha                                                         before_lines  after_lines  removed_lines  created_ts         
+--  ----------------------------------------------------------------  ----------------------------------------------------------------  ------------  -----------  -------------  -------------------
+1   5fa4f2ed396d82d94f744a9b785bd660c8a5aadd0618249e8a6ae316082ee29f  5fa4f2ed396d82d94f744a9b785bd660c8a5aadd0618249e8a6ae316082ee29f  2194          2194         0              2026-06-24 16:50:22
+
+
+-- ./db_audit_20260720_140829/pipeline_audit.db.snapshot.20260720_140829.db --
+Tables:
+actions  files  
+Schema for actions:
+CREATE TABLE actions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_id INTEGER REFERENCES files(id),
+            action TEXT NOT NULL,        -- 'parse', 'format', 'style', 'regex_patch'
+            timestamp TIMESTAMP,
+            success BOOLEAN,
+            output TEXT,
+            iteration INTEGER
+        );
+Sample rows (first 3):
+id  file_id  action  timestamp                   success  output                                                                                                                                                                  iteration
+--  -------  ------  --------------------------  -------  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------  ---------
+1   1        parse   2026-06-27T15:14:43.526864  1                                                                                                                                                                                0        
+
+2   2        parse   2026-06-27T15:14:43.970542  1                                                                                                                                                                                0        
+
+3   3        parse   2026-06-27T15:14:44.264857  0        /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/GameIntegrity_0002.gd:                                                                    0        
+                                                                                                                                                                                                                                           
+                                                          and scene state on every launch                                                                                                                                                  
+                                                          ^                                                                                                                                                                                
+                                                                                                                                                                                                                                           
+                                                          Unexpected token Token('AND', 'and') at line 4, column 1.                                                                                                                        
+                                                          Expected one of:                                                                                                                                                                 
+                                                                  * ENUM                                                                                                                                                                   
+                                                                  * VAR                                                                                                                                                                    
+                                                                  * CLASS                                                                                                                                                                  
+                                                                  * CLASS_NAME                                                                                                                                                             
+                                                                  * $END                                                                                                                                                                   
+                                                                  * LONG_STRING                                                                                                                                                            
+                                                                  * AT                                                                                                                                                                     
+                                                                  * REGULAR_STRING                                                                                                                                                         
+                                                                  * _INDENT                                                                                                                                                                
+                                                                  * PASS                                                                                                                                                                   
+                                                                  * FUNC                                                                                                                                                                   
+                                                                  * STATIC                                                                                                                                                                 
+                                                                  * CONST                                                                                                                                                                  
+                                                                  * EXTENDS                                                                                                                                                                
+                                                                  * _NL                                                                                                                                                                    
+                                                                  * SIGNAL                                                                                                                                                                 
+                                                          Previous tokens: [Token('_NL', '# PATH: godot_project/scripts/GameIntegrity.gd\n# WHAT: Runtime integrity checks — verifies GDExtension load, DB connectivity,\n#\n')]           
+                                                                                                                                                                                                                                           
+
+Schema for files:
+CREATE TABLE files (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            path TEXT UNIQUE NOT NULL,
+            status TEXT NOT NULL,        -- 'valid', 'healed', 'failed', 'manual'
+            last_checked TIMESTAMP,
+            heal_attempts INTEGER DEFAULT 0
+        );
+Sample rows (first 3):
+id  path                                                                                                 status  last_checked                      heal_attempts
+--  ---------------------------------------------------------------------------------------------------  ------  --------------------------------  -------------
+1   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/build_terrain_0123.gd  valid   2026-06-27T15:30:51.909428+00:00  0            
+2   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/StructuredLogger.gd    valid   2026-06-27T15:30:52.351651+00:00  0            
+3   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/GameIntegrity_0002.gd  failed  2026-06-27T15:14:47.114146        0            
+
+
+-- ./db_audit_20260720_140829/parac1ute_mutations.db.snapshot.20260720_140829.db --
+Tables:
+auto_heal_actions   known_repairs       repair_attempts     strategy_rewards  
+error_fingerprints  parse_error_log     repair_rules        tool_audit        
+Schema for auto_heal_actions:
+CREATE TABLE auto_heal_actions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp INTEGER NOT NULL,
+                file_path TEXT NOT NULL,
+                tool TEXT NOT NULL,
+                exit_code INTEGER NOT NULL DEFAULT -1,
+                stdout TEXT NOT NULL DEFAULT '',
+                stderr TEXT NOT NULL DEFAULT '',
+                fix_applied TEXT NOT NULL DEFAULT '',
+                success INTEGER NOT NULL DEFAULT 0
+            );
+Sample rows (first 3):
+id  timestamp            file_path                                                                                                                  tool     exit_code  stdout  stderr  fix_applied  success
+--  -------------------  -------------------------------------------------------------------------------------------------------------------------  -------  ---------  ------  ------  -----------  -------
+1   1782641359221053659  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/AirplaneController.gd  gdparse  0                          PASS         1      
+2   1782641359676871290  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/CanopyReplay.gd        gdparse  0                          PASS         1      
+3   1782641360084716198  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/ComponentRegistry.gd   gdparse  0                          PASS         1      
+
+Schema for known_repairs:
+CREATE TABLE known_repairs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                error_class TEXT NOT NULL,
+                strategy_name TEXT NOT NULL,
+                pattern_old TEXT NOT NULL DEFAULT '',
+                pattern_new TEXT NOT NULL DEFAULT '',
+                description TEXT NOT NULL DEFAULT '',
+                created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000),
+                UNIQUE(error_class, strategy_name)
+            );
+Sample rows (first 3):
+id  error_class       strategy_name                pattern_old       pattern_new  description                                           created_at         
+--  ----------------  ---------------------------  ----------------  -----------  ----------------------------------------------------  -------------------
+1   UNEXPECTED_TOKEN  fix_all_unbalanced_braces                                   Uncomment/insert all missing closing braces globally  1782641358000000000
+2   UNEXPECTED_TOKEN  fix_not_var                  \bnot\b\s*                     Remove stray 'not' token                              1782641358000000000
+3   UNEXPECTED_TOKEN  fix_commented_closing_brace  ^(\s*)#\s*\}\s*$  \1}          Uncomment single commented brace (legacy)             1782641358000000000
+
+Schema for repair_attempts:
+CREATE TABLE repair_attempts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                rule_id INTEGER,
+                file_path TEXT,
+                error_class TEXT,
+                success BOOLEAN,
+                timestamp INTEGER DEFAULT (strftime('%s','now')),
+                FOREIGN KEY (rule_id) REFERENCES repair_rules(id)
+            );
+Sample rows (first 3):
+
+Schema for strategy_rewards:
+CREATE TABLE strategy_rewards (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                error_class TEXT NOT NULL,
+                strategy_name TEXT NOT NULL,
+                wins INTEGER NOT NULL DEFAULT 0,
+                total_trials INTEGER NOT NULL DEFAULT 0,
+                last_updated INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000),
+                UNIQUE(error_class, strategy_name)
+            );
+Sample rows (first 3):
+id  error_class       strategy_name              wins  total_trials  last_updated       
+--  ----------------  -------------------------  ----  ------------  -------------------
+1   UNEXPECTED_TOKEN  fix_all_unbalanced_braces  0     1             1782641723194313831
+2   UNEXPECTED_TOKEN  fix_unbalanced_parens      0     0             1782641714000000000
+3   UNEXPECTED_TOKEN  fix_unclosed_string        0     0             1782641714000000000
+
+Schema for error_fingerprints:
+CREATE TABLE error_fingerprints (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                error_class TEXT NOT NULL,
+                pattern TEXT NOT NULL UNIQUE,
+                description TEXT NOT NULL DEFAULT '',
+                created_at INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000000000)
+            );
+Sample rows (first 3):
+
+Schema for parse_error_log:
+CREATE TABLE parse_error_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp INTEGER NOT NULL,
+                file_path TEXT NOT NULL,
+                error_class TEXT NOT NULL DEFAULT 'UNKNOWN',
+                error_line INTEGER NOT NULL DEFAULT 0,
+                error_col INTEGER NOT NULL DEFAULT 0,
+                raw_stderr TEXT NOT NULL DEFAULT '',
+                strategy_tried TEXT NOT NULL DEFAULT '',
+                resolved INTEGER NOT NULL DEFAULT 0
+            );
+Sample rows (first 3):
+id  timestamp            file_path                                                                                                                           error_class       error_line  error_col  raw_stderr                                                                                                                           strategy_tried  resolved
+--  -------------------  ----------------------------------------------------------------------------------------------------------------------------------  ----------------  ----------  ---------  -----------------------------------------------------------------------------------------------------------------------------------  --------------  --------
+1   1782641367135074821  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd  UNEXPECTED_TOKEN  149         0          /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_001.gd:                  0       
+                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                       var controller_input_map = {                                                                                                                                
+                                                                                                                                                                                                       ^                                                                                                                                                           
+                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                      Unexpected token Token('VAR', 'var') at line 149, column 2.                                                                                                  
+                                                                                                                                                                                                      Expected one of:                                                                                                                                             
+                                                                                                                                                                                                              * GET                                                                                                                                                
+                                                                                                                                                                                                              * SET                                                                                                                                                
+                                                                                                                                                                                                      Previous tokens: [Token('_NL', '\n\n ')]                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                   
+
+2   1782641367532849477  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd  UNEXPECTED_TOKEN  411         0          /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_0100_part_002.gd:                  0       
+                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                      var fbx_path = "res://assets/characters/para                                                                                                                 
+                                                                                                                                                                                                          ^                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                      Unexpected token Token('TYPE_HINT', 'fbx_path') at line 411, column 5.                                                                                       
+                                                                                                                                                                                                      Expected one of:                                                                                                                                             
+                                                                                                                                                                                                              * COLON                                                                                                                                              
+                                                                                                                                                                                                              * EQUAL                                                                                                                                              
+                                                                                                                                                                                                              * RPAR                                                                                                                                               
+                                                                                                                                                                                                              * COMMA                                                                                                                                              
+                                                                                                                                                                                                      Previous tokens: [Token('NAME', 'var')]                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                   
+
+3   1782641368823418320  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd       UNEXPECTED_TOKEN  460         0          /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd:                       0       
+                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                      var fbx_path = "res://assets/characters/para                                                                                                                 
+                                                                                                                                                                                                          ^                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                   
+                                                                                                                                                                                                      Unexpected token Token('TYPE_HINT', 'fbx_path') at line 460, column 5.                                                                                       
+                                                                                                                                                                                                      Expected one of:                                                                                                                                             
+                                                                                                                                                                                                              * COLON                                                                                                                                              
+                                                                                                                                                                                                              * RPAR                                                                                                                                               
+                                                                                                                                                                                                              * EQUAL                                                                                                                                              
+                                                                                                                                                                                                              * COMMA                                                                                                                                              
+                                                                                                                                                                                                      Previous tokens: [Token('NAME', 'var')]                                                                                                                      
+                                                                                                                                                                                                                                                                                                                                                                   
+
+Schema for repair_rules:
+CREATE TABLE repair_rules (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                error_class TEXT NOT NULL,
+                error_pattern TEXT,
+                fix_type TEXT NOT NULL,
+                pattern_old TEXT,
+                pattern_new TEXT,
+                description TEXT,
+                wins INTEGER DEFAULT 0,
+                trials INTEGER DEFAULT 0,
+                last_used INTEGER DEFAULT 0,
+                created_at INTEGER DEFAULT (strftime('%s','now'))
+            );
+Sample rows (first 3):
+id  error_class       error_pattern               fix_type   pattern_old       pattern_new  description                                wins  trials  last_used  created_at
+--  ----------------  --------------------------  ---------  ----------------  -----------  -----------------------------------------  ----  ------  ---------  ----------
+1   UNEXPECTED_TOKEN  Expected one of:.*GET.*SET  uncomment  ^(\s*)#\s*\)\s*$  \1)          Uncomment a commented closing parenthesis  0     0       0          1782642583
+2   UNEXPECTED_TOKEN  Expected one of:.*GET.*SET  uncomment  ^(\s*)#\s*\]\s*$  \1]          Uncomment a commented closing bracket      0     0       0          1782642583
+3   UNEXPECTED_TOKEN  Expected one of:.*IN        uncomment  ^(\s*)#\s*\}\s*$  \1}          Uncomment a commented closing brace        0     0       0          1782642583
+
+Schema for tool_audit:
+CREATE TABLE tool_audit (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp INTEGER NOT NULL,
+                file_path TEXT NOT NULL,
+                tool TEXT NOT NULL,
+                exit_code INTEGER NOT NULL DEFAULT -1,
+                stdout TEXT NOT NULL DEFAULT '',
+                stderr TEXT NOT NULL DEFAULT '',
+                duration_ms INTEGER NOT NULL DEFAULT 0
+            );
+Sample rows (first 3):
+
+
+-- ./db_audit_20260720_140829/indent_if_scan.db.snapshot.20260720_140829.db --
+Tables:
+errors
+Schema for errors:
+CREATE TABLE errors (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT,
+            line_number INTEGER,
+            error_type TEXT,
+            error_message TEXT,
+            scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+
+
+-- ./db_audit_20260720_140829/syntax_errors.db.snapshot.20260720_140829.db --
+Tables:
+backup_audit       errors             fix_log            project_diffs    
+cache_clear_log    file_diffs         fixes              repair_strategies
+Schema for backup_audit:
+CREATE TABLE backup_audit (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    backup_path TEXT,
+    sha TEXT,
+    verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    verification_result TEXT,
+    used_for_fix BOOLEAN DEFAULT 0
+);
+Sample rows (first 3):
+id  backup_path                                                                                              sha                                                               verified_at          verification_result  used_for_fix
+--  -------------------------------------------------------------------------------------------------------  ----------------------------------------------------------------  -------------------  -------------------  ------------
+1   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0033/godot_project/.godot  b643d233ba5bef05b4b2c9d8a1df0696c1ec988d0e417cb4b14fa166cad47753  2026-07-15 17:54:11  success              1           
+
+Schema for errors:
+CREATE TABLE errors (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT,
+            line_number INTEGER,
+            error_type TEXT,
+            error_message TEXT,
+            scanned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+id  file_path                                                                                                                                         line_number  error_type  error_message                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       scanned_at         
+--  ------------------------------------------------------------------------------------------------------------------------------------------------  -----------  ----------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -------------------
+61  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/archived_fragments/build_terrain_part_002.gd  691                      Unexpected token Token('FUNC', 'func') at line 691, column 1.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       2026-06-29 19:16:32
+                                                                                                                                                                               Expected one of:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                                                                                                                                                                                       * RPAR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                                                                                                                                                                       * EQUAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                       * COMMA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                       * COLON                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                               Previous tokens: [Token('_NL', '\n# \tprint("[VERBATIM] ENTER _create_procedural_canopy gate=none")\n# _canopy_instance = MeshInstance3D.new()\n# \tvar sphere_mesh = SphereMesh.new()\n# \tsphere_mesh.radius = 0.6\n# \tsphere_mesh.height = 1.0\n# \tsphere_mesh.radial_segments = 32\n# \tsphere_mesh.rings = 16\n# \t# _canopy_instance.mesh = sphere_mesh\n# \t# _canopy_instance.scale = Vector3(0.18, 0.12, 0.18)\n# \t# _character.add_child(_canopy_instance)\n# \t# _canopy_instance.position = Vector3(0, 3.2, 0)\n# \t# _canopy_material = StandardMaterial3D.new()\n# \t# _canopy_material.albedo_color = Color(0.0, 0.6, 1.0)\n# \t# _canopy_instance.material_override = _canopy_material\n# \t# _canopy_instance.visible = false\n# \tprint("[VERBATIM] Procedural dome canopy created")\n# print("[VERBATIM] EXIT _create_procedural_canopy ok=true")\n#\n#\n# ------------------------------------------------------------------\n# Arm animation (pull down) – gated with skeleton and bone index checks\n# Ref: https://docs.godotengine.org/en/stable/classes/class_quaternion.html()\n# Ref: https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html#class-skeleton3d-method-set-bone-pose-rotation\n# ------------------------------------------------------------------\n')]                     
+
+Schema for fix_log:
+CREATE TABLE fix_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            error_id INTEGER,
+            strategy_id INTEGER,
+            applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+id  error_id  strategy_id  applied_at         
+--  --------  -----------  -------------------
+1   58        1            2026-06-29 19:12:21
+2   60        2            2026-06-29 19:16:29
+
+Schema for project_diffs:
+CREATE TABLE project_diffs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        diff_text TEXT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+Sample rows (first 3):
+id  diff_text  timestamp          
+--  ---------  -------------------
+1              2026-07-15 17:32:07
+
+Schema for cache_clear_log:
+CREATE TABLE cache_clear_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        run_label TEXT,
+        log_text TEXT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+Sample rows (first 3):
+id  run_label           log_text                                                                                                             timestamp          
+--  ------------------  -------------------------------------------------------------------------------------------------------------------  -------------------
+1   before_cache_clear  ERROR: Resource file not found: res:// (expected type: unknown)                                                      2026-07-15 17:27:18
+                           at: _load (core/io/resource_loader.cpp:351)                                                                                          
+                        ERROR: Failed to instantiate an autoload, can't load from path: .                                                                       
+                           at: start (main/main.cpp:4434)                                                                                                       
+                        ERROR: Cannot open file 'res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn'.                                   
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _load_character (res://scripts/build_terrain.gd:616)                                                                         
+                               [1] _ready (res://scripts/build_terrain.gd:352)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn.                             
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _load_character (res://scripts/build_terrain.gd:616)                                                                         
+                               [1] _ready (res://scripts/build_terrain.gd:352)                                                                                  
+                        ERROR: Failed loading resource: res://assets/characters/parachutist.fbx.                                                                
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _load_character (res://scripts/build_terrain.gd:616)                                                                         
+                               [1] _ready (res://scripts/build_terrain.gd:352)                                                                                  
+                        ERROR: Cannot open file 'res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn'.                                
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _create_plane (res://scripts/build_terrain.gd:2456)                                                                          
+                               [1] _ready (res://scripts/build_terrain.gd:358)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn.                          
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _create_plane (res://scripts/build_terrain.gd:2456)                                                                          
+                               [1] _ready (res://scripts/build_terrain.gd:358)                                                                                  
+                        ERROR: Failed loading resource: res://assets/aircraft/cesna_airplane.glb.                                                               
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _create_plane (res://scripts/build_terrain.gd:2456)                                                                          
+                               [1] _ready (res://scripts/build_terrain.gd:358)                                                                                  
+                        ERROR: Cannot open file 'res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn'.                           
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2140)                                                                     
+                               [1] _ready (res://scripts/build_terrain.gd:489)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn.                     
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2140)                                                                     
+                               [1] _ready (res://scripts/build_terrain.gd:489)                                                                                  
+                        ERROR: Failed loading resource: res://assets/canopy/parachute_sanitized.glb.                                                            
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2140)                                                                     
+                               [1] _ready (res://scripts/build_terrain.gd:489)                                                                                  
+                        ERROR: Cannot open file 'res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn'.                           
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _ready (res://scripts/build_terrain.gd:506)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn.                     
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _ready (res://scripts/build_terrain.gd:506)                                                                                  
+                        ERROR: Failed loading resource: res://assets/canopy/parachute_sanitized.glb.                                                            
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _ready (res://scripts/build_terrain.gd:506)                                                                                  
+
+2   after_cache_clear   ERROR: Resource file not found: res:// (expected type: unknown)                                                      2026-07-15 17:27:29
+                           at: _load (core/io/resource_loader.cpp:351)                                                                                          
+                        ERROR: Failed to instantiate an autoload, can't load from path: .                                                                       
+                           at: start (main/main.cpp:4434)                                                                                                       
+                        ERROR: Cannot open file 'res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn'.                                   
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _load_character (res://scripts/build_terrain.gd:616)                                                                         
+                               [1] _ready (res://scripts/build_terrain.gd:352)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn.                             
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _load_character (res://scripts/build_terrain.gd:616)                                                                         
+                               [1] _ready (res://scripts/build_terrain.gd:352)                                                                                  
+                        ERROR: Failed loading resource: res://assets/characters/parachutist.fbx.                                                                
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _load_character (res://scripts/build_terrain.gd:616)                                                                         
+                               [1] _ready (res://scripts/build_terrain.gd:352)                                                                                  
+                        ERROR: Cannot open file 'res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn'.                                
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _create_plane (res://scripts/build_terrain.gd:2456)                                                                          
+                               [1] _ready (res://scripts/build_terrain.gd:358)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/cesna_airplane.glb-0df84a10403a8c08167e1e07258c4378.scn.                          
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _create_plane (res://scripts/build_terrain.gd:2456)                                                                          
+                               [1] _ready (res://scripts/build_terrain.gd:358)                                                                                  
+                        ERROR: Failed loading resource: res://assets/aircraft/cesna_airplane.glb.                                                               
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _create_plane (res://scripts/build_terrain.gd:2456)                                                                          
+                               [1] _ready (res://scripts/build_terrain.gd:358)                                                                                  
+                        ERROR: Cannot open file 'res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn'.                           
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2140)                                                                     
+                               [1] _ready (res://scripts/build_terrain.gd:489)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn.                     
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2140)                                                                     
+                               [1] _ready (res://scripts/build_terrain.gd:489)                                                                                  
+                        ERROR: Failed loading resource: res://assets/canopy/parachute_sanitized.glb.                                                            
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _setup_pip_overlay (res://scripts/build_terrain.gd:2140)                                                                     
+                               [1] _ready (res://scripts/build_terrain.gd:489)                                                                                  
+                        ERROR: Cannot open file 'res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn'.                           
+                           at: load (core/io/resource_format_binary.cpp:1220)                                                                                   
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _ready (res://scripts/build_terrain.gd:506)                                                                                  
+                        ERROR: Failed loading resource: res://.godot/imported/parachute_sanitized.glb-5999240e51474abb946895cc5af216d6.scn.                     
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _ready (res://scripts/build_terrain.gd:506)                                                                                  
+                        ERROR: Failed loading resource: res://assets/canopy/parachute_sanitized.glb.                                                            
+                           at: _load (core/io/resource_loader.cpp:343)                                                                                          
+                           GDScript backtrace (most recent call first):                                                                                         
+                               [0] _ready (res://scripts/build_terrain.gd:506)                                                                                  
+
+Schema for file_diffs:
+CREATE TABLE file_diffs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        file_path TEXT,
+        diff_text TEXT,
+        compared_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+Sample rows (first 3):
+id  file_path        diff_text  compared_at        
+--  ---------------  ---------  -------------------
+1   forensic_hud.gd             2026-07-15 18:04:41
+
+Schema for fixes:
+CREATE TABLE fixes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            error_id INTEGER,
+            file_path TEXT,
+            line_number INTEGER,
+            fix_description TEXT,
+            applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+id  error_id  file_path                                                                                                                      line_number  fix_description         applied_at         
+--  --------  -----------------------------------------------------------------------------------------------------------------------------  -----------  ----------------------  -------------------
+1   51        /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd  486          gdformat + comment out  2026-06-29 19:00:19
+2   52        /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd  547          gdformat + comment out  2026-06-29 19:00:22
+3   53        /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain_part_002.gd  572          gdformat + comment out  2026-06-29 19:00:26
+
+Schema for repair_strategies:
+CREATE TABLE repair_strategies (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            error_pattern TEXT UNIQUE,
+            repair_type TEXT,
+            repair_data TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+Sample rows (first 3):
+id  error_pattern                                                                            repair_type  repair_data                                                                                      created_at         
+--  ---------------------------------------------------------------------------------------  -----------  -----------------------------------------------------------------------------------------------  -------------------
+1   Unexpected token Token('TYPE_HINT', '_create_procedural_canopy') at line 665, column 6.  insert_pass                                                                                                   2026-06-29 19:12:21
+    Expected one of:                                                                                                                                                                                                          
+            * COLON                                                                                                                                                                                                           
+            * EQUAL                                                                                                                                                                                                           
+            * COMMA                                                                                                                                                                                                           
+            * RPAR                                                                                                                                                                                                            
+    Previous tokens: [Token('NAME', 'func')]                                                                                                                                                                                  
+
+2   Unexpected token Token('TYPE_HINT', '_create_procedural_canopy') at line 665, column 6.  comment_out                                                                                                   2026-06-29 19:16:29
+    Expected one of:                                                                                                                                                                                                          
+            * RPAR                                                                                                                                                                                                            
+            * EQUAL                                                                                                                                                                                                           
+            * COMMA                                                                                                                                                                                                           
+            * COLON                                                                                                                                                                                                           
+    Previous tokens: [Token('NAME', 'func')]                                                                                                                                                                                  
+
+3   Error parsing .*project.godot at line .*: Expected value                                 file_edit    {"script": "add_quotes_to_autoload", "description": "Enclose autoload values in double quotes"}  2026-07-15 16:25:30
+
+
+-- ./db_audit_20260720_140829/fixes.db.snapshot.20260720_140829.db --
+Tables:
+errors  fixes 
+Schema for errors:
+CREATE TABLE errors (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        file_path TEXT,
+        line_number INTEGER,
+        error_type TEXT,
+        error_message TEXT,
+        suggested_fix TEXT,
+        fixed INTEGER DEFAULT 0,
+        original_line TEXT
+    );
+Sample rows (first 3):
+
+Schema for fixes:
+CREATE TABLE fixes (
+				id INTEGER PRIMARY KEY AUTOINCREMENT,
+				timestamp TEXT NOT NULL,
+				fix_name TEXT NOT NULL,
+				file_path TEXT NOT NULL,
+				original_hash TEXT,
+				new_hash TEXT,
+				status TEXT,
+				dry_run INTEGER DEFAULT 0,
+				error_context TEXT
+			, attempt_count INTEGER DEFAULT 0);
+Sample rows (first 3):
+id  timestamp                         fix_name           file_path                                                                                                             original_hash                                                     new_hash                                                          status                  dry_run  error_context                                      attempt_count
+--  --------------------------------  -----------------  --------------------------------------------------------------------------------------------------------------------  ----------------------------------------------------------------  ----------------------------------------------------------------  ----------------------  -------  -------------------------------------------------  -------------
+1   2026-07-19T17:49:46.139411+00:00  pip_fix            /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/project.godot             69b62b5b276cc163cc2673401631dd59363b2be7b6af7f6ba159f9797f133e53  1c5da4962bf0a8e7e04e1f8ac5a4a732e58b5ecd38a95713ecdfb3eecabc5b82  applied                 1        PiP missing from project.godot                     0            
+2   2026-07-19T17:49:46.312187+00:00  drag_fix           /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/project.godot                                                                                                                                                 skipped_symptom_absent  1        Symptom not reproduced before fix or file missing  0            
+3   2026-07-19T17:49:46.475172+00:00  build_terrain_fix  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd  091a64688e5b8b7884ef001a705ceadd272ee9f2c0b44fdf19920b7ade991d8c  e7bc58823be6ee8efcb16429b9fd61560bba0e1174f4ff5e227393606a65aa37  applied                 1        Added build_chunk stub                             0            
+
+
+-- ./db_audit_20260720_140829/repair.db.snapshot.20260720_140829.db --
+Tables:
+errors        fix_patterns  repair_log  
+Schema for errors:
+CREATE TABLE errors (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file TEXT NOT NULL,
+                line INTEGER NOT NULL,
+                message TEXT,
+                severity TEXT,
+                rule TEXT,
+                content_hash TEXT,
+                fixed INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+Sample rows (first 3):
+id      file                                                                                                              line  message                                                                                                    severity  rule                        content_hash  fixed  created_at         
+------  ----------------------------------------------------------------------------------------------------------------  ----  ---------------------------------------------------------------------------------------------------------  --------  --------------------------  ------------  -----  -------------------
+125492  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/add_input_actions.gd  9     add space after ':'                                                                                        warning   format/colon-spacing                      0      2026-06-29 20:47:43
+125493  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/add_input_actions.gd  11    trailing whitespace                                                                                        warning   format/trailing-whitespace                0      2026-06-29 20:47:43
+125494  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/add_input_actions.gd  12    variable declaration should appear before virtual/override method (see GDScript style guide for ordering)  warning   order/class-member-order                  0      2026-06-29 20:47:43
+
+Schema for fix_patterns:
+CREATE TABLE fix_patterns (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                rule TEXT NOT NULL,
+                error_message TEXT NOT NULL,
+                original_line TEXT NOT NULL,
+                fixed_line TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(rule, error_message, original_line)
+            );
+Sample rows (first 3):
+id  rule                  error_message        original_line                                        fixed_line                                         created_at         
+--  --------------------  -------------------  ---------------------------------------------------  -------------------------------------------------  -------------------
+1   format/colon-spacing  add space after ':'          if not InputMap.has_action("deploy")::               if not InputMap.has_action("deploy"):      2026-06-29 21:31:54
+2   format/colon-spacing  no space before ':'          if not InputMap.has_action("turn_left"): :           if not InputMap.has_action("turn_left"):   2026-06-29 21:31:55
+3   format/colon-spacing  no space before ':'          if not InputMap.has_action("turn_right"): :          if not InputMap.has_action("turn_right"):  2026-06-29 21:31:55
+
+Schema for repair_log:
+CREATE TABLE repair_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                error_id INTEGER,
+                action TEXT,
+                details TEXT,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+Sample rows (first 3):
+id  error_id  action    details              timestamp          
+--  --------  --------  -------------------  -------------------
+1   104990    auto-fix  applied via gdstyle  2026-06-29 20:47:42
+
+
+-- ./db_audit_20260720_140829/gd_patterns.db.snapshot.20260720_140829.db --
+Tables:
+fix_log       fix_patterns
+Schema for fix_log:
+CREATE TABLE fix_log (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                file        TEXT, line INTEGER, token TEXT, context TEXT,
+                transform   TEXT, before_hash TEXT, after_hash TEXT,
+                gate        TEXT, ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+Sample rows (first 3):
+id  file                                                                                                                                                                                       line  token  context  transform            before_hash                                                       after_hash                                                        gate                 ts                 
+--  -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  ----  -----  -------  -------------------  ----------------------------------------------------------------  ----------------------------------------------------------------  -------------------  -------------------
+1   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/old_copies/godot_aerodynamic_physics.OFF/utils/transform_utils.gd                       9     COLON  var      delete_token_at_col  ad1d38e0ee09c6892ab79c12339bd07c2e50dea368cf8ce6b341ea86622615bc  0f69e0bf217a94467d27d8feb45488a6e493af7745303fa0f3130c6d5b773c23  written+readback-ok  2026-06-29 22:01:17
+2   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/old_copies/godot_aerodynamic_physics.disabled/utils/transform_utils.gd                  9     COLON  var      delete_token_at_col  ad1d38e0ee09c6892ab79c12339bd07c2e50dea368cf8ce6b341ea86622615bc  0f69e0bf217a94467d27d8feb45488a6e493af7745303fa0f3130c6d5b773c23  written+readback-ok  2026-06-29 22:01:41
+3   /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/addons/old_copies/godot_aerodynamic_physics.pre_final/demo/misc_demo_assets/wind_indicator.gd  15    COLON  if       delete_token_at_col  3747ab9f667eb8a5ae2c99725c8bd6f973a9aa2a1cf98b68fc4e7e7125e9a756  689eed42ca4e5b6857cbfc57c1fecc8afa0eac48fc650507efd000bd0f67ac55  written+readback-ok  2026-06-29 22:02:22
+
+Schema for fix_patterns:
+CREATE TABLE fix_patterns (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                token         TEXT NOT NULL,
+                context       TEXT NOT NULL,
+                transform     TEXT NOT NULL,
+                sample_before TEXT,
+                sample_after  TEXT,
+                confidence    INTEGER DEFAULT 0,
+                applications  INTEGER DEFAULT 0,
+                created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                last_used_at  TIMESTAMP,
+                UNIQUE(token, context, transform)
+            );
+Sample rows (first 3):
+id  token  context  transform            sample_before                                         sample_after                                         confidence  applications  created_at           last_used_at       
+--  -----  -------  -------------------  ----------------------------------------------------  ---------------------------------------------------  ----------  ------------  -------------------  -------------------
+1   COLON  var      delete_token_at_col          var angle = 2.0 * acos(quat.w):                       var angle = 2.0 * acos(quat.w)               3           3             2026-06-29 22:01:17  2026-06-29 22:02:31
+3   COLON  if       delete_token_at_col          if not is_equal_approx(wind.length(), 0.0)::          if not is_equal_approx(wind.length(), 0.0):  1           1             2026-06-29 22:02:23  2026-06-29 22:02:23
+4   COLON  func     delete_token_at_col  func _init(:                                          func _init(                                          1           1             2026-06-29 22:02:28  2026-06-29 22:02:28
+
+
+-- ./db_audit_20260720_140829/gd_backup_index.db.snapshot.20260720_140829.db --
+Tables:
+files  refs 
+Schema for files:
+CREATE TABLE files (
+                path TEXT PRIMARY KEY, root TEXT, name TEXT, logical TEXT,
+                ext TEXT, is_gd INTEGER, sha256 TEXT, size INTEGER, mtime REAL,
+                parses INTEGER, referenced INTEGER DEFAULT 0, mask_flag TEXT
+            );
+Sample rows (first 3):
+path                                                                                                                                                                                                                  root  name                                                                                                        logical                                                                                                     ext   is_gd  sha256                                                            size  mtime             parses  referenced  mask_flag
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  ----  ----------------------------------------------------------------------------------------------------------  ----------------------------------------------------------------------------------------------------------  ----  -----  ----------------------------------------------------------------  ----  ----------------  ------  ----------  ---------
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/.gdlintrc                                                                                                                 live  .gdlintrc                                                                                                   .gdlintrc                                                                                                         0      23d7499f87aaaccd1111cf2ea79d0b7740cfb5db69c2c64a792d25c1484cd256  2372  1781720176.91376          0                    
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/.godot/.gdignore                                                                                                          live  .gdignore                                                                                                   .gdignore                                                                                                         0      01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  1     1782851777.92343          0                    
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/.godot/editor/Buoyancy mesh ball.blend-3b6d994270e1182222265b61910aca12.scn-folding-b43fdd4b44c45e4d18775980c157f9af.cfg  live  Buoyancy mesh ball.blend-3b6d994270e1182222265b61910aca12.scn-folding-b43fdd4b44c45e4d18775980c157f9af.cfg  Buoyancy mesh ball.blend-3b6d994270e1182222265b61910aca12.scn-folding-b43fdd4b44c45e4d18775980c157f9af.cfg  .cfg  0      fa44dfbae9b3b64980c44d9922acdad9b34ea46c85cce8a917708577229c27f6  49    1782851961.91291          0                    
+
+Schema for refs:
+CREATE TABLE refs (res_path TEXT PRIMARY KEY, logical TEXT);
+Sample rows (first 3):
+res_path                                                                       logical               
+-----------------------------------------------------------------------------  ----------------------
+scripts/minimal.gd                                                             minimal.gd            
+addons/godot_aerodynamic_physics/demo/aircraft_examples/catalina/catalina.glb  catalina.glb          
+addons/godot_aerodynamic_physics/core/resources/pids/direction_yaw_pid.tres    direction_yaw_pid.tres
+
+
+-- ./db_audit_20260720_140829/fix_state.db.snapshot.20260720_140829.db --
+Tables:
+fixes    history
+Schema for fixes:
+CREATE TABLE fixes (
+            id TEXT PRIMARY KEY,
+            applied INTEGER DEFAULT 0,
+            timestamp TEXT,
+            backup_path TEXT
+        );
+Sample rows (first 3):
+id        applied  timestamp                   backup_path                                               
+--------  -------  --------------------------  ----------------------------------------------------------
+altitude  1        2026-07-01T14:36:28.249221  godot_project/backups/build_terrain.gd.bak_20260701_143628
+camera    1        2026-07-01 22:32:27         godot_project/scripts/build_terrain.gd.backup             
+hud       1        2026-07-01T14:36:28.737682  godot_project/backups/build_terrain.gd.bak_20260701_143628
+
+Schema for history:
+CREATE TABLE history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT,
+            fix_id TEXT,
+            event TEXT,
+            details TEXT
+        );
+Sample rows (first 3):
