@@ -1,0 +1,425 @@
+=== audit_backups.sh — 20260811224606 UTC ===
+
+### Backup directories (parachute-cfd-game_*) ###
+Found 20 directories.
+
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0070
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0003
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0004
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0016
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0015
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0034
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0036
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0072
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0068
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0067
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0069
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0061
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0059
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0055
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0033
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0049
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0041
+  /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0040
+
+### Current build_terrain.gd state ###
+Current build_terrain.gd size: 153345 bytes
+_do_cutaway found. Contains freefall transition: False
+  First 5 lines:
+    func _do_cutaway() -> void:
+    	# Guard removed: is_action_just_pressed fires false by the time _do_cutaway
+    	# is called from _poll_controls which already verified the press.
+    	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+    	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+_physics_process found. Contains 'cutaway'? False
+
+### Backup script inspection ###
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0070 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0003 ---
+  _do_cutaway exists: False, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0004 ---
+  build_terrain.gd missing
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0016 ---
+  _do_cutaway exists: False, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0015 ---
+  _do_cutaway exists: False, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0034 ---
+  _do_cutaway exists: False, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0036 ---
+  _do_cutaway exists: False, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0072 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0068 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0067 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0069 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0061 ---
+  _do_cutaway exists: True, freefall transition: False
+
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0059 ---
+  _do_cutaway exists: True, freefall transition: False
+... (limit reached, stopping at 15)
+
+### Git history of build_terrain.gd ###
+a7e6ac6 Evidence from run 20260806131841 (interrupt handled)
+cd01298 fix: disable auto-start (only) (20260806030541)
+f7e25a6 fix: auto-start using GDScript 'false' (correct syntax) (20260806025311)
+ffdce9e restore known-good files + test --no-timeout (20260806014446)
+92ef04e remove all timeouts, full test (20260806014241)
+2e18ef0 final fix: restore backup + deploy call (20260806013916)
+551ee88 remove all headless auto-logic (20260806013616)
+ca08a7f fix stray parenthesis (20260806013053)
+a51b63e restore_best_backup_fix_
+4838b27 restore_clean_0062_with_arms_
+ca9d841 restore_0062_with_0070_arms_
+f8c2094 restore_and_fix_deploy (20260806001317)
+ab56298 fix_deploy_and_exit (20260806000548)
+8a79115 restore_and_fix (20260805235507)
+665ec42 fix_poll_controls_v2 (20260805233801)
+f12316a Fix remaining if block indentations (20260805185302)
+fa75bfb Final fix: indent and split line 2069 (20260805184053)
+27e8de7 Fix build_terrain.gd line 1980 syntax (20260805175249)
+fdfd42e Fix indentation in build_terrain.gd line 1981 (20260805174807)
+eb5c9f5 final_v4: fix all malformed if blocks in build_terrain.gd (20260805150520)
+
+--- Recent commits diff to current (build_terrain.gd) ---
+
+Diff: current vs a7e6ac6
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index 7eb8744..9456fc5 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -243,101 +243,6 @@ var _last_frame_keys := {
+ }
+ 
+ 
+-# ------------------------------------------------------------------
+-# _ready() – initialises terrain, character, camera, HUD, canopy, and environment
+-# Ref: https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-private-method-ready
+-# ------------------------------------------------------------------
+-ification_label: Label
+-
+-# ------------------------------------------------------------------
+-# Controller support
+-# Ref: https://docs.godotengine.org/en/stable/tutorials/inputs/controllers_gamepads_joysticks.html
+-# ------------------------------------------------------------------
+-var _controller_connected: bool = false
+-var _controller_input_map := {
+-	"turn_left": false,
+-	"turn_right": false,
+-	"flightcheck": false,
+-	"cutaway": false,
+-	"reserve": false,
+-	"flare": false,
+-	"reset": false,
+-}
+-
+-# ------------------------------------------------------------------
+
+Diff: current vs cd01298
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index 8846e6d..9456fc5 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -125,6 +125,7 @@ const DESCENT_RATE_GOOD: float = 0.22
+ var _canopy_instance: Node3D
+ var _canopy_material: StandardMaterial3D
+ var _canopy_deployed: bool = false
++var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+ var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+ var _deployment_timer
+ var _screenshot_save_timer: float = 0.0
+@@ -263,14 +264,14 @@ func _ready() -> void:
+ 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 	# --------------------------------------------------------------
+-	var file = FileAccess.open("res://assets/terrain/heightmap_1024.raw", FileAccess.READ)
++	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+ 	if file:
+ 		# --- Heightmap exists: generate detailed terrain ---
+ 		var data = file.get_buffer(file.get_length())
+ 		file.close()
+ 
+ 		var _baked := PackedByteArray()
+-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
++		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 		if _bf:
+ 			_baked = _bf.get_buffer(_bf.get_length())
+ 			_bf.close()
+@@ -278,12 +279,12 @@ func _ready() -> void:
+
+Diff: current vs f7e25a6
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index 98c550f..9456fc5 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -125,6 +125,7 @@ const DESCENT_RATE_GOOD: float = 0.22
+ var _canopy_instance: Node3D
+ var _canopy_material: StandardMaterial3D
+ var _canopy_deployed: bool = false
++var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+ var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+ var _deployment_timer
+ var _screenshot_save_timer: float = 0.0
+@@ -263,14 +264,14 @@ func _ready() -> void:
+ 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 	# --------------------------------------------------------------
+-	var file = FileAccess.open("res://assets/terrain/heightmap_1024.raw", FileAccess.READ)
++	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+ 	if file:
+ 		# --- Heightmap exists: generate detailed terrain ---
+ 		var data = file.get_buffer(file.get_length())
+ 		file.close()
+ 
+ 		var _baked := PackedByteArray()
+-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
++		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 		if _bf:
+ 			_baked = _bf.get_buffer(_bf.get_length())
+ 			_bf.close()
+@@ -278,12 +279,12 @@ func _ready() -> void:
+
+Diff: current vs ffdce9e
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index 95a3aec..9456fc5 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -125,6 +125,7 @@ const DESCENT_RATE_GOOD: float = 0.22
+ var _canopy_instance: Node3D
+ var _canopy_material: StandardMaterial3D
+ var _canopy_deployed: bool = false
++var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+ var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+ var _deployment_timer
+ var _screenshot_save_timer: float = 0.0
+@@ -263,14 +264,14 @@ func _ready() -> void:
+ 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 	# --------------------------------------------------------------
+-	var file = FileAccess.open("res://assets/terrain/heightmap_1024.raw", FileAccess.READ)
++	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+ 	if file:
+ 		# --- Heightmap exists: generate detailed terrain ---
+ 		var data = file.get_buffer(file.get_length())
+ 		file.close()
+ 
+ 		var _baked := PackedByteArray()
+-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
++		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 		if _bf:
+ 			_baked = _bf.get_buffer(_bf.get_length())
+ 			_bf.close()
+@@ -278,12 +279,12 @@ func _ready() -> void:
+
+Diff: current vs 92ef04e
+diff --git a/godot_project/scripts/build_terrain.gd b/godot_project/scripts/build_terrain.gd
+index b1505de..9456fc5 100644
+--- a/godot_project/scripts/build_terrain.gd
++++ b/godot_project/scripts/build_terrain.gd
+@@ -125,6 +125,7 @@ const DESCENT_RATE_GOOD: float = 0.22
+ var _canopy_instance: Node3D
+ var _canopy_material: StandardMaterial3D
+ var _canopy_deployed: bool = false
++var _headless_auto_jump: bool = false  # set by IN_PLANE headless patch; consumed in _poll_controls
+ var _headless_auto_deploy: bool = false  # set when headless jump fires; consumed in FREEFALL _poll_controls
+ var _deployment_timer
+ var _screenshot_save_timer: float = 0.0
+@@ -263,14 +264,14 @@ func _ready() -> void:
+ 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+ 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+ 	# --------------------------------------------------------------
+-	var file = FileAccess.open("res://assets/terrain/heightmap_1024.raw", FileAccess.READ)
++	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+ 	if file:
+ 		# --- Heightmap exists: generate detailed terrain ---
+ 		var data = file.get_buffer(file.get_length())
+ 		file.close()
+ 
+ 		var _baked := PackedByteArray()
+-		var _bf = FileAccess.open("res://assets/terrain/baked_colours_1024.bin", FileAccess.READ)
++		var _bf = FileAccess.open("res://assets/terrain/baked_colours_4096.bin", FileAccess.READ)
+ 		if _bf:
+ 			_baked = _bf.get_buffer(_bf.get_length())
+ 			_bf.close()
+@@ -278,12 +279,12 @@ func _ready() -> void:
+
+### Database inspection (parachute_mutations.db) ###
+Current database schema:
+CREATE TABLE source_snapshots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE source_mutations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            mutation_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE parse_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            parser TEXT NOT NULL,
+            return_code INTEGER NOT NULL,
+            output TEXT,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL);
+CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending');
+CREATE TABLE game_state_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id INTEGER,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            game_state INTEGER,
+            altitude REAL,
+            is_deployed BOOLEAN,
+            error TEXT
+        );
+CREATE TABLE omissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            omission_id TEXT NOT NULL UNIQUE,
+            file TEXT NOT NULL,
+            symptom TEXT NOT NULL,
+            root_cause TEXT NOT NULL,
+            fix_applied TEXT NOT NULL,
+            fix_status TEXT NOT NULL DEFAULT 'pending',
+            verified INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE resource_contention_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+
+Table arm_physics_baseline:
+
+Table project_config:
+indentation|tabs
+
+Table game_state_log:
+1|16|2026-06-24 20:41:25|0|0.0|0|extracted from stdout POLL lines
+2|17|2026-06-24 20:55:48|0|0.0|0|states seen: [0]
+3|18|2026-06-24 21:07:03|0|0.0|0|InputManager=True ss_errors=False states=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+4|19|2026-06-24 21:16:17|0|0.0|0|pm=True im=True ss_err=False parse_err=False
+5|38|2026-06-25 12:00:34|-1|0.0|0|plane=False camera=False
+
+Table hud_state:
+state|{"ForensicHUD": {"visible": true, "collapsed": false, "position": {"x": 10, "y": 10}, "size": {"width": 320, "height": 240}}}|2026-07-15 21:46:44
+
+--- Database in recent backups (first 3) ---
+
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0070:
+CREATE TABLE source_snapshots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE source_mutations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            mutation_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE parse_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062:
+CREATE TABLE source_snapshots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE source_mutations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            mutation_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE parse_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+
+/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074:
+CREATE TABLE source_snapshots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE source_mutations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            mutation_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE parse_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+
+=== SUMMARY: Cutaway freefall transition ===
+Current build_terrain.gd: BROKEN (no freefall transition)
+
+Backup summaries (newest first, limited to 15):
+  parachute-cfd-game_0070 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0062 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0074 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0003 : ❌ BROKEN (no freefall) (has_func=False)
+  parachute-cfd-game_0016 : ❌ BROKEN (no freefall) (has_func=False)
+  parachute-cfd-game_0015 : ❌ BROKEN (no freefall) (has_func=False)
+  parachute-cfd-game_0034 : ❌ BROKEN (no freefall) (has_func=False)
+  parachute-cfd-game_0036 : ❌ BROKEN (no freefall) (has_func=False)
+  parachute-cfd-game_0072 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0068 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0067 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0069 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0061 : ❌ BROKEN (no freefall) (has_func=True)
+  parachute-cfd-game_0059 : ❌ BROKEN (no freefall) (has_func=True)
+
+=== END REPORT ===
