@@ -1,0 +1,256 @@
+=== audit_three_versions_v2.sh — 20260812105519 UTC ===
+
+Directories:
+  CURRENT: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+  0074:    /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+  0062:    /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062
+
+=== CURRENT ===
+
+--- constants ---
+const LegLabel = "LEG"
+const _PLANE_ORBIT_RADIUS: float = 800.0
+const _PLANE_ORBIT_SPEED: float = 0.18
+const _PLANE_ALTITUDE: float = 1853.8  # 6000 ft AGL in metres + 25 m ground (was 6025 m)
+const DESCENT_RATE_NORMAL: float = 0.44
+const DESCENT_RATE_BAGLOCK: float = 0.98
+const DESCENT_RATE_GOOD: float = 0.22
+const DEPLOY_TIME: float = 1.2
+const MAX_LEADERBOARD_ENTRIES: int = 10
+		const W = 1024
+		const H = 1024
+		const HM_SRC = 4096
+		const MAX_ELEV = 20.0
+		const SCALE_XZ = 4000.0
+		const COLOUR_BOX = 4
+	const CLIP := "mixamo_com"
+const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below
+const ARM_K_LINE       := 8.0
+const ARM_C_DAMP       := 3.5
+const ARM_INERTIA      := 1.0
+const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+const ARM_EPS          := 0.0005
+const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap
+const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
+const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
+const ARM_ELBOW_START  := 0.35              # pull below this -> only neutral bend
+const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
+const ARM_AXIS_L := Vector3(0, 0, -1)
+const ARM_AXIS_R := Vector3(0, 0, 1)
+const GLIDE_FULL_SPEED := 11.0     # m/s forward, brakes off (typical 9-cell)
+const GLIDE_MIN_SPEED  := 2.5      # m/s at full brakes, before stall
+const GLIDE_BRAKE_SLOW := 0.72     # fraction of speed removed at full brake
+const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+const GLIDE_TARGET_RATIO := 2.6    # reference glide ratio, for the log only
+const GLIDE_RATIO_BEST       := 2.6    # full flight, brakes off
+const GLIDE_RATIO_BRAKE_LOSS := 1.4    # ratio lost at full brake (-> 1.2)
+const GLIDE_STALL_SINK       := 3.0    # m/s extra sink approaching stall
+const CONTROL_KEYS := {
+
+--- arrays ---
+
+--- colour_loop ---
+		for i in range(verts.size()):
+
+--- do_cutaway ---
+func _do_cutaway() -> void:
+
+--- physics_process ---
+func _physics_process(delta) -> void:
+
+--- poll_controls ---
+func _poll_controls() -> void:
+
+--- end CURRENT ---
+
+
+=== 0074 ===
+
+--- constants ---
+const LegLabel = "LEG"
+const _PLANE_ORBIT_RADIUS: float = 800.0
+const _PLANE_ORBIT_SPEED: float = 0.18
+const _PLANE_ALTITUDE: float = 1853.8  # 6000 ft AGL in metres + 25 m ground (was 6025 m)
+const DESCENT_RATE_NORMAL: float = 0.44
+const DESCENT_RATE_BAGLOCK: float = 0.98
+const DESCENT_RATE_GOOD: float = 0.22
+const DEPLOY_TIME: float = 1.2
+const MAX_LEADERBOARD_ENTRIES: int = 10
+		const W = 1024
+		const H = 1024
+		const HM_SRC = 4096
+		const MAX_ELEV = 20.0
+		const SCALE_XZ = 4000.0
+	const CLIP := "mixamo_com"
+const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below
+const ARM_K_LINE       := 8.0
+const ARM_C_DAMP       := 3.5
+const ARM_INERTIA      := 1.0
+const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+const ARM_EPS          := 0.0005
+const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap
+const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
+const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
+const ARM_ELBOW_START  := 0.35              # pull below this -> only neutral bend
+const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
+const ARM_AXIS_L := Vector3(0, 0, -1)
+const ARM_AXIS_R := Vector3(0, 0, 1)
+const GLIDE_FULL_SPEED := 11.0     # m/s forward, brakes off (typical 9-cell)
+const GLIDE_MIN_SPEED  := 2.5      # m/s at full brakes, before stall
+const GLIDE_BRAKE_SLOW := 0.72     # fraction of speed removed at full brake
+const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+const GLIDE_TARGET_RATIO := 2.6    # reference glide ratio, for the log only
+const GLIDE_RATIO_BEST       := 2.6    # full flight, brakes off
+const GLIDE_RATIO_BRAKE_LOSS := 1.4    # ratio lost at full brake (-> 1.2)
+const GLIDE_STALL_SINK       := 3.0    # m/s extra sink approaching stall
+const CONTROL_KEYS := {
+
+--- arrays ---
+
+--- colour_loop ---
+		for i in range(verts.size()):
+
+--- do_cutaway ---
+func _do_cutaway() -> void:
+
+--- physics_process ---
+func _physics_process(delta) -> void:
+
+--- poll_controls ---
+func _poll_controls() -> void:
+
+--- end 0074 ---
+
+
+=== 0062 ===
+
+--- constants ---
+const LegLabel = "LEG"
+const _PLANE_ORBIT_RADIUS: float = 800.0
+const _PLANE_ORBIT_SPEED: float = 0.18
+const _PLANE_ALTITUDE: float = 1853.8  # 6000 ft AGL in metres + 25 m ground (was 6025 m)
+const DESCENT_RATE_NORMAL: float = 0.44
+const DESCENT_RATE_BAGLOCK: float = 0.98
+const DESCENT_RATE_GOOD: float = 0.22
+const DEPLOY_TIME: float = 1.2
+const MAX_LEADERBOARD_ENTRIES: int = 10
+		const W = 1024
+		const H = 1024
+		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
+		const SCALE_XZ = 4000.0
+	const CLIP := "mixamo_com"
+const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below
+const ARM_K_LINE       := 8.0
+const ARM_C_DAMP       := 3.5
+const ARM_INERTIA      := 1.0
+const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+const ARM_EPS          := 0.0005
+const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap
+const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
+const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
+const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+const ARM_AXIS_L := Vector3(0, 0, -1)
+const ARM_AXIS_R := Vector3(0, 0, 1)
+const GLIDE_FULL_SPEED := 11.0     # m/s forward, brakes off (typical 9-cell)
+const GLIDE_MIN_SPEED  := 2.5      # m/s at full brakes, before stall
+const GLIDE_BRAKE_SLOW := 0.72     # fraction of speed removed at full brake
+const GLIDE_TURN_RATE  := 1.15     # rad/s at full differential brake
+const GLIDE_TURN_SIGN  := -1.0     # flip this one number to reverse turns
+const GLIDE_TARGET_RATIO := 2.6    # reference glide ratio, for the log only
+const GLIDE_RATIO_BEST       := 2.6    # full flight, brakes off
+const GLIDE_RATIO_BRAKE_LOSS := 1.4    # ratio lost at full brake (-> 1.2)
+const GLIDE_STALL_SINK       := 3.0    # m/s extra sink approaching stall
+const CONTROL_KEYS := {
+
+--- arrays ---
+
+--- colour_loop ---
+		for i in range(verts.size()):
+
+--- do_cutaway ---
+func _do_cutaway() -> void:
+
+--- physics_process ---
+func _physics_process(delta) -> void:
+
+--- poll_controls ---
+func _poll_controls() -> void:
+
+--- end 0062 ---
+
+
+=== DIFF SUMMARIES ===
+
+--- Colour loop: current vs 0074 ---
+-=== CURRENT ===
++=== 0074 ===
+-		const COLOUR_BOX = 4
+
+--- Colour loop: current vs 0062 ---
+-=== CURRENT ===
++=== 0062 ===
+-		const HM_SRC = 4096
+-		const MAX_ELEV = 20.0
++		const MAX_ELEV = 20.0  # exaggerated: FL real max ~30m; 20 makes ridges visible
+-		const COLOUR_BOX = 4
+-const ARM_ELBOW_START  := 0.35              # pull below this -> only neutral bend
++const ARM_ELBOW_START  := 0.35              # pull below this -> straight
+-const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
+
+--- Poll controls: current vs 0074 (focus on cutaway/freefall) ---
+
+--- Physics process: current vs 0074 (focus on freefall) ---
+
+=== SUMMARY OF KEY DIFFERENCES ===
+1. Terrain colour generation:
+   CURRENT: uses COLOUR_BOX averaging
+   0074: simple indexing (no COLOUR_BOX)
+   0062: simple indexing (no COLOUR_BOX)
+
+2. Cutaway function (_do_cutaway):
+   CURRENT: has function
+   0074: has function
+   0062: has function
+
+3. Presence of freefall state assignment in _poll_controls:
+   CURRENT: NO FREEFALL transition
+   0074: NO FREEFALL transition
+   0062: NO FREEFALL transition
+
+4. Array types used (packed vs untyped):
+   CURRENT: packed=0
+0, untyped=0
+0
+   0074: packed=0
+0, untyped=0
+0
+   0062: packed=0
+0, untyped=0
+0
+
+5. Resolution constants (W, H):
+   CURRENT: not found
+   0074: not found
+   0062: not found
+
+=== RECOMMENDATION ===
+Based on the analysis:
+./audit_three_versions_v2.sh: line 208: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+./audit_three_versions_v2.sh: line 209: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+./audit_three_versions_v2.sh: line 210: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+./audit_three_versions_v2.sh: line 211: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+To fix:
+1. Replace the colour loop in current with the one from 0062.
+2. Merge the FREEFALL state transition and physics branch from 0074 into current.
+3. Keep the packed arrays and resolution from current.
+
+=== END REPORT ===
