@@ -1,0 +1,347 @@
+=== verify_reserve_runtime.sh - 20260812165330 UTC ===
+Phase 1: extract the reserve input wiring from the live project.
+
+=== PHASE 1a: _do_reserve CALL SITES ===
+  line  1006  CALL in _update_canopy_visuals() [defined line 1005]
+             # Skip when reserve is deployed — reserve appearance is set in _do_reserve.
+  line  1312  CALL in _process_controller_input() [defined line 1285]
+             _do_reserve()
+  line  1364  CALL in _process_replay() [defined line 1348]
+             _do_reserve()
+  line  1667  CALL in _poll_controls() [defined line 1548]
+             _do_reserve()
+  line  1698  CALL in _poll_controls() [defined line 1548]
+             print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+  line  1699  CALL in _poll_controls() [defined line 1548]
+             _do_reserve()
+  line  3724  DEFINITION  func _do_reserve() -> void:
+  line  3729  CALL in _do_reserve() [defined line 3724]
+             print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+  line  3732  CALL in _do_reserve() [defined line 3724]
+             print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+  line  3734  CALL in _do_reserve() [defined line 3724]
+             print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+  line  3739  CALL in _do_reserve() [defined line 3724]
+             # Called from _do_reserve(). Its absence caused:
+
+=== PHASE 1b: CALL SITE CONTEXT (+/- 12 lines) ===
+  --- around line 1006 (in _update_canopy_visuals) ---
+        994: [TAB][TAB]MalfunctionType.PILOT_IN_TOW:
+        995: [TAB][TAB][TAB]return "PILOT IN TOW"
+        996: [TAB]return "UNKNOWN"
+        997: 
+        998: 
+        999: # ------------------------------------------------------------------
+       1000: # Update canopy colour, scale, rotation based on malfunction
+       1001: # Ref: https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html
+       1002: # ------------------------------------------------------------------
+       1003: 
+       1004: 
+       1005: func _update_canopy_visuals() -> void:
+  >>>  1006: [TAB]# Skip when reserve is deployed — reserve appearance is set in _do_reserve.
+       1007: [TAB]if _reserve_done:
+       1008: [TAB][TAB]return
+       1009: [TAB]if not _canopy_material:
+       1010: [TAB][TAB]return
+       1011: [TAB]var mesh_child = _find_first_mesh(_canopy_instance) if _canopy_instance else null
+       1012: [TAB]match _malfunction:
+       1013: [TAB][TAB]MalfunctionType.GOOD:
+       1014: [TAB][TAB][TAB]_canopy_material.albedo_color = Color(0.2, 0.8, 0.2)
+       1015: [TAB][TAB][TAB]if _canopy_instance:
+       1016: [TAB][TAB][TAB][TAB]_canopy_instance.scale = Vector3(0.18, 0.12, 0.18)
+       1017: [TAB][TAB][TAB][TAB]_canopy_instance.rotation_degrees = Vector3.ZERO
+       1018: [TAB][TAB]MalfunctionType.LINE_TWISTS:
+
+  --- around line 1312 (in _process_controller_input) ---
+       1300: [TAB]elif _controller_input_map["turn_right"]:
+       1301: [TAB][TAB]_turn_input = 1.0
+       1302: [TAB][TAB]if not _last_frame_keys["E"]:
+       1303: [TAB][TAB][TAB]_rotate_arm(false)
+       1304: [TAB]else:
+       1305: [TAB][TAB]pass
+       1306: 
+       1307: [TAB]if _controller_input_map["flightcheck"]:
+       1308: [TAB][TAB]_flight_control_check()
+       1309: [TAB]if _controller_input_map["cutaway"]:
+       1310: [TAB][TAB]_do_cutaway()
+       1311: [TAB]if _controller_input_map["reserve"]:
+  >>>  1312: [TAB][TAB]_do_reserve()
+       1313: [TAB]if _controller_input_map["flare"]:
+       1314: [TAB][TAB]_do_flare()
+       1315: [TAB]if _controller_input_map["reset"]:
+       1316: [TAB][TAB]_reset_game()
+       1317: 
+       1318: 
+       1319: # ------------------------------------------------------------------
+       1320: # Replay system
+       1321: # ------------------------------------------------------------------
+       1322: func _start_recording() -> void:
+       1323: [TAB]_replay_recording.clear()
+       1324: [TAB]_replay_recording.append({"action": "start", "time": Time.get_ticks_msec()})
+
+  --- around line 1364 (in _process_replay) ---
+       1352: [TAB][TAB]_replay_playing = false
+       1353: [TAB][TAB]print("[VERBATIM] Replay finished")
+       1354: [TAB][TAB]return
+       1355: [TAB]var current_time = Time.get_ticks_msec()
+       1356: [TAB]var event = _replay_recording[_replay_index]
+       1357: [TAB]if current_time >= event["time"]:
+       1358: [TAB][TAB]match event["action"]:
+       1359: [TAB][TAB][TAB]"deploy":
+       1360: [TAB][TAB][TAB][TAB]_deploy_canopy()
+       1361: [TAB][TAB][TAB]"cutaway":
+       1362: [TAB][TAB][TAB][TAB]_do_cutaway()
+       1363: [TAB][TAB][TAB]"reserve":
+  >>>  1364: [TAB][TAB][TAB][TAB]_do_reserve()
+       1365: [TAB][TAB][TAB]"flare":
+       1366: [TAB][TAB][TAB][TAB]_do_flare()
+       1367: [TAB][TAB]_replay_index += 1
+       1368: 
+       1369: 
+       1370: # ------------------------------------------------------------------
+       1371: # Sentry error reporting
+       1372: # Ref: https://docs.sentry.io/platforms/godot/
+       1373: # ------------------------------------------------------------------
+       1374: func _init_sentry() -> void:
+       1375: [TAB]print("[VERBATIM] ENTER _init_sentry gate=none")
+       1376: [TAB]var sentry_dsn = ProjectSettings.get_setting("sentry/dsn", "")
+
+  --- around line 1667 (in _poll_controls) ---
+       1655: [TAB][TAB]if _turn_input == 0.0:
+       1656: [TAB][TAB][TAB]pass
+       1657: [TAB]# Flight control check (C)
+       1658: [TAB]if Input.is_key_pressed(KEY_C) and not _last_frame_keys.get("C", false):
+       1659: [TAB][TAB]_flight_control_check()
+       1660: [TAB]_last_frame_keys["C"] = Input.is_key_pressed(KEY_C)
+       1661: [TAB]# Cutaway (X)
+       1662: [TAB]if Input.is_key_pressed(KEY_X) and not _last_frame_keys.get("X", false):
+       1663: [TAB][TAB]_do_cutaway()
+       1664: [TAB]_last_frame_keys["X"] = Input.is_key_pressed(KEY_X)
+       1665: [TAB]# Reserve (V)
+       1666: [TAB]if Input.is_key_pressed(KEY_V) and not _last_frame_keys.get("V", false):
+  >>>  1667: [TAB][TAB]_do_reserve()
+       1668: [TAB]_last_frame_keys["V"] = Input.is_key_pressed(KEY_V)
+       1669: [TAB]# Flare (F)
+       1670: [TAB]if Input.is_key_pressed(KEY_F) and not _last_frame_keys.get("F", false):
+       1671: [TAB][TAB]_do_flare()
+       1672: [TAB]_last_frame_keys["F"] = Input.is_key_pressed(KEY_F)
+       1673: [TAB]# Toggle HUD (H) — action handler is canonical; direct KEY_H removed
+       1674: [TAB]# (was double-firing: HUD toggled on then immediately off).
+       1675: [TAB]_last_frame_keys["H"] = Input.is_key_pressed(KEY_H)
+       1676: [TAB]# Save camera settings (S)
+       1677: [TAB]if Input.is_key_pressed(KEY_S) and not _last_frame_keys.get("S", false):
+       1678: [TAB][TAB]_save_camera_settings()
+       1679: [TAB][TAB]print("[CAMERA] Settings saved manually (from _poll_controls)")
+
+  --- around line 1698 (in _poll_controls) ---
+       1686: [TAB][TAB]print("[VERBATIM] POLL: togglehud pressed - toggling HUD")
+       1687: [TAB][TAB]_toggle_hud()
+       1688: 
+       1689: [TAB]if Input.is_action_just_pressed("flightcheck"):
+       1690: [TAB][TAB]print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
+       1691: [TAB][TAB]_flight_control_check()
+       1692: 
+       1693: [TAB]if Input.is_action_just_pressed("cutaway"):
+       1694: [TAB][TAB]print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+       1695: [TAB][TAB]_do_cutaway()
+       1696: 
+       1697: [TAB]if Input.is_action_just_pressed("reserve"):
+  >>>  1698: [TAB][TAB]print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+       1699: [TAB][TAB]_do_reserve()
+       1700: 
+       1701: [TAB]if Input.is_action_just_pressed("flare"):
+       1702: [TAB][TAB]print("[VERBATIM] POLL: flare pressed - calling _do_flare")
+       1703: [TAB][TAB]_do_flare()
+       1704: 
+       1705: [TAB]_process_controller_input()
+       1706: 
+       1707: [TAB]var cam_move = Vector3.ZERO
+       1708: [TAB]if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+       1709: [TAB][TAB]cam_move.z -= 1.0
+       1710: [TAB]if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+
+  --- around line 1699 (in _poll_controls) ---
+       1687: [TAB][TAB]_toggle_hud()
+       1688: 
+       1689: [TAB]if Input.is_action_just_pressed("flightcheck"):
+       1690: [TAB][TAB]print("[VERBATIM] POLL: flightcheck pressed - calling _flight_control_check")
+       1691: [TAB][TAB]_flight_control_check()
+       1692: 
+       1693: [TAB]if Input.is_action_just_pressed("cutaway"):
+       1694: [TAB][TAB]print("[VERBATIM] POLL: cutaway pressed - calling _do_cutaway")
+       1695: [TAB][TAB]_do_cutaway()
+       1696: 
+       1697: [TAB]if Input.is_action_just_pressed("reserve"):
+       1698: [TAB][TAB]print("[VERBATIM] POLL: reserve pressed - calling _do_reserve")
+  >>>  1699: [TAB][TAB]_do_reserve()
+       1700: 
+       1701: [TAB]if Input.is_action_just_pressed("flare"):
+       1702: [TAB][TAB]print("[VERBATIM] POLL: flare pressed - calling _do_flare")
+       1703: [TAB][TAB]_do_flare()
+       1704: 
+       1705: [TAB]_process_controller_input()
+       1706: 
+       1707: [TAB]var cam_move = Vector3.ZERO
+       1708: [TAB]if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+       1709: [TAB][TAB]cam_move.z -= 1.0
+       1710: [TAB]if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+       1711: [TAB][TAB]cam_move.z += 1.0
+
+  --- around line 3729 (in _do_reserve) ---
+       3717: [TAB][TAB][TAB][TAB]elif _cdb.has_method('_query'): _cdb._query(_sql)
+       3718: [TAB][TAB][TAB]print("[CTRL] pressed=", action,
+       3719: [TAB][TAB][TAB][TAB]"  key=", OS.get_keycode_string(CONTROL_KEYS[action]),
+       3720: [TAB][TAB][TAB][TAB]"  state=", _game_state,
+       3721: [TAB][TAB][TAB][TAB]"  deployed=", _canopy_deployed,
+       3722: [TAB][TAB][TAB][TAB]"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+       3723: 
+       3724: func _do_reserve() -> void:
+       3725: [TAB]# MODIFIED: reserve can be deployed in FREEFALL, DIAGNOSIS, or OPENING_ANIM
+       3726: [TAB]# but only if main canopy is not deployed.
+       3727: [TAB]if not _canopy_deployed:
+       3728: [TAB][TAB]if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+  >>>  3729: [TAB][TAB][TAB]print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+       3730: [TAB][TAB][TAB]_deploy_reserve()
+       3731: [TAB][TAB]else:
+       3732: [TAB][TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+       3733: [TAB]else:
+       3734: [TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+       3735: 
+       3736: 
+       3737: # ==========================================================================
+       3738: # _deploy_reserve - added by fix_deploy_reserve.sh
+       3739: # Called from _do_reserve(). Its absence caused:
+       3740: #   Parse Error: Function "_deploy_reserve()" not found in base self.
+       3741: # Ref (GDScript parse-time method resolution; tab indentation required):
+
+  --- around line 3732 (in _do_reserve) ---
+       3720: [TAB][TAB][TAB][TAB]"  state=", _game_state,
+       3721: [TAB][TAB][TAB][TAB]"  deployed=", _canopy_deployed,
+       3722: [TAB][TAB][TAB][TAB]"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+       3723: 
+       3724: func _do_reserve() -> void:
+       3725: [TAB]# MODIFIED: reserve can be deployed in FREEFALL, DIAGNOSIS, or OPENING_ANIM
+       3726: [TAB]# but only if main canopy is not deployed.
+       3727: [TAB]if not _canopy_deployed:
+       3728: [TAB][TAB]if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+       3729: [TAB][TAB][TAB]print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+       3730: [TAB][TAB][TAB]_deploy_reserve()
+       3731: [TAB][TAB]else:
+  >>>  3732: [TAB][TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+       3733: [TAB]else:
+       3734: [TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+       3735: 
+       3736: 
+       3737: # ==========================================================================
+       3738: # _deploy_reserve - added by fix_deploy_reserve.sh
+       3739: # Called from _do_reserve(). Its absence caused:
+       3740: #   Parse Error: Function "_deploy_reserve()" not found in base self.
+       3741: # Ref (GDScript parse-time method resolution; tab indentation required):
+       3742: #   https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+       3743: #   (general knowledge - not retrieved this session)
+       3744: # Ref (Node3D.visible, used to hide the cut-away canopy):
+
+  --- around line 3734 (in _do_reserve) ---
+       3722: [TAB][TAB][TAB][TAB]"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+       3723: 
+       3724: func _do_reserve() -> void:
+       3725: [TAB]# MODIFIED: reserve can be deployed in FREEFALL, DIAGNOSIS, or OPENING_ANIM
+       3726: [TAB]# but only if main canopy is not deployed.
+       3727: [TAB]if not _canopy_deployed:
+       3728: [TAB][TAB]if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+       3729: [TAB][TAB][TAB]print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+       3730: [TAB][TAB][TAB]_deploy_reserve()
+       3731: [TAB][TAB]else:
+       3732: [TAB][TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+       3733: [TAB]else:
+  >>>  3734: [TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+       3735: 
+       3736: 
+       3737: # ==========================================================================
+       3738: # _deploy_reserve - added by fix_deploy_reserve.sh
+       3739: # Called from _do_reserve(). Its absence caused:
+       3740: #   Parse Error: Function "_deploy_reserve()" not found in base self.
+       3741: # Ref (GDScript parse-time method resolution; tab indentation required):
+       3742: #   https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+       3743: #   (general knowledge - not retrieved this session)
+       3744: # Ref (Node3D.visible, used to hide the cut-away canopy):
+       3745: #   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+       3746: #   (general knowledge - not retrieved this session)
+
+  --- around line 3739 (in _do_reserve) ---
+       3727: [TAB]if not _canopy_deployed:
+       3728: [TAB][TAB]if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+       3729: [TAB][TAB][TAB]print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+       3730: [TAB][TAB][TAB]_deploy_reserve()
+       3731: [TAB][TAB]else:
+       3732: [TAB][TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+       3733: [TAB]else:
+       3734: [TAB][TAB]print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+       3735: 
+       3736: 
+       3737: # ==========================================================================
+       3738: # _deploy_reserve - added by fix_deploy_reserve.sh
+  >>>  3739: # Called from _do_reserve(). Its absence caused:
+       3740: #   Parse Error: Function "_deploy_reserve()" not found in base self.
+       3741: # Ref (GDScript parse-time method resolution; tab indentation required):
+       3742: #   https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+       3743: #   (general knowledge - not retrieved this session)
+       3744: # Ref (Node3D.visible, used to hide the cut-away canopy):
+       3745: #   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+       3746: #   (general knowledge - not retrieved this session)
+       3747: # ==========================================================================
+       3748: func _deploy_reserve() -> void:
+       3749: [TAB]# Cut away the main canopy first if it is currently out.
+       3750: [TAB]if _canopy_deployed:
+       3751: [TAB][TAB]_canopy_deployed = false
+
+=== PHASE 1c: DETECTED INPUT BINDINGS ===
+  input actions near call sites: ['cutaway', 'flare', 'flightcheck', 'reserve']
+  KEY_* constants near call sites: ['C', 'DOWN', 'F', 'H', 'S', 'UP', 'V', 'W', 'X']
+
+=== PHASE 1d: project.godot INPUT MAP ===
+  cutaway                  : (no keycode entries)
+  flare                    : (no keycode entries)
+  flightcheck              : (no keycode entries)
+  reserve                  : (no keycode entries)
+
+=== PHASE 1e: EXPECTED TELEMETRY (Rule #29 exact strings) ===
+  ENTER        in source: True   |  [VERBATIM] ENTER _do_reserve
+  DEPLOYED     in source: True   |  [VERBATIM] _deploy_reserve: reserve deployed
+  CUTAWAY      in source: True   |  [VERBATIM] _deploy_reserve: main canopy cut away
+  EXIT_STATE   in source: True   |  [VERBATIM] EXIT _do_reserve early=not_in_allowed_state
+  EXIT_CANOPY  in source: True   |  [VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed
+
+=== PHASE 1f: WHAT TO DO DURING THE TIMED RUN ===
+  Press: C, DOWN, F, H, S, UP, V, W, X
+  IMPORTANT: _do_reserve guards on game state. Reach FREEFALL (or
+  DIAGNOSIS / OPENING_ANIM) first, then press the reserve control.
+  Do NOT press Ctrl+C - the window closes itself.
+
+
+=== PHASE 3: TELEMETRY GATE (Rule #33) ===
+  game exit code: 0  (124 = timed out as designed; not a gate)
+  log: notes/game_stdout_20260812165330.log (1144657 bytes, 16010 lines)
+
+  --- exact marker search ---
+  CUTAWAY      count=0   lines=[]
+  DEPLOYED     count=1   lines=[5868]
+  ENTER        count=1   lines=[5867]
+  EXIT_CANOPY  count=1   lines=[5870]
+  EXIT_STATE   count=0   lines=[]
+
+  --- every [VERBATIM] reserve line, verbatim (Rule #8) ---
+    | [VERBATIM] ENTER _do_reserve gate=_game_state=1
+    | [VERBATIM] _deploy_reserve: reserve deployed
+    | [VERBATIM] POLL: reserve pressed - calling _do_reserve
+    | [VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed
+
+  --- engine errors during the run ---
+    (none)
+
+  ============================================
+  VERDICT: PASS
+  the exact deploy marker was emitted 1 time(s) by the running game
+  ============================================
+
+=== END REPORT ===
