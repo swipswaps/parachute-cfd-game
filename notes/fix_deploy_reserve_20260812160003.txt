@@ -1,0 +1,126 @@
+=== fix_deploy_reserve.sh - 20260812160003 UTC ===
+Scope: append the single missing function _deploy_reserve().
+Not touched: _do_reserve, indentation, any other function.
+
+=== STEP 1: TARGET IDENTITY ===
+target: godot_project/scripts/build_terrain.gd
+size_bytes: 149605
+line_count: 3735
+sha256_before: 498f856d9f5c390b9737fbdf63dbfde61a76b8d4d9e249d9f744fce0fa875c4b
+
+=== STEP 2: PRECONDITIONS (extracted live, nothing assumed) ===
+  func _deploy_reserve definitions: 0 (expected 0)
+  func _do_reserve      definitions: 1 (expected 1)
+  var _canopy_deployed     : line 127  |  var _canopy_deployed: bool = false
+  var _canopy_instance     : line 125  |  var _canopy_instance: Node3D
+  func _show_notification    : line 1396  |  params='text: String'
+  _show_notification required params: 1
+  -> will call _show_notification("RESERVE DEPLOYED")
+
+=== STEP 3: SYMPTOM REPRODUCTION BEFORE FIX ===
+  godot exit_code: 0  (NOT used as the gate - see Rule #40)
+  error lines mentioning build_terrain.gd:
+    | SCRIPT ERROR: Parse Error: Function "_deploy_reserve()" not found in base self.
+    | ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+  exact original error present: True
+    looking for: Function "_deploy_reserve()" not found in base self.
+
+=== STEP 4: NEW FUNCTION (tabs only, pure ASCII) ===
+  generated 26 lines, pure ASCII, tab-indented
+  ---- preview (tabs shown as [TAB]) ----
+  | 
+  | 
+  | # ==========================================================================
+  | # _deploy_reserve - added by fix_deploy_reserve.sh
+  | # Called from _do_reserve(). Its absence caused:
+  | #   Parse Error: Function "_deploy_reserve()" not found in base self.
+  | # Ref (GDScript parse-time method resolution; tab indentation required):
+  | #   https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+  | #   (general knowledge - not retrieved this session)
+  | # Ref (Node3D.visible, used to hide the cut-away canopy):
+  | #   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  | #   (general knowledge - not retrieved this session)
+  | # ==========================================================================
+  | func _deploy_reserve() -> void:
+  | [TAB]# Cut away the main canopy first if it is currently out.
+  | [TAB]if _canopy_deployed:
+  | [TAB][TAB]_canopy_deployed = false
+  | [TAB][TAB]if _canopy_instance:
+  | [TAB][TAB][TAB]_canopy_instance.visible = false
+  | [TAB][TAB]print("[VERBATIM] _deploy_reserve: main canopy cut away")
+  | [TAB]# Bring the reserve out.
+  | [TAB]_canopy_deployed = true
+  | [TAB]if _canopy_instance:
+  | [TAB][TAB]_canopy_instance.visible = true
+  | [TAB]print("[VERBATIM] _deploy_reserve: reserve deployed")
+  | [TAB]_show_notification("RESERVE DEPLOYED")
+  ---- end preview ----
+
+=== STEP 5: BACKUP (Rule #21) ===
+  backup: godot_project/scripts/build_terrain.gd.bak.20260812160003 (149605 bytes)
+
+=== STEP 6: WRITE AND VERIFY (Rules #9, #56) ===
+  read-after-write: bytes match
+  _deploy_reserve definitions after: 1 (expected 1)
+  _do_reserve      definitions after: 1 (expected 1)
+  sha256_after: 864f296ae4486446a3a4001408a8087748b498b3141fb3767799fd796698b75d
+
+=== STEP 7: INDENTATION GATE (Rule #31) ===
+  leading_space_lines: 0
+  mixed_indent_lines:  0
+
+=== STEP 8: SYMPTOM VERIFICATION AFTER FIX ===
+  godot exit_code: 0  (again, NOT the gate)
+  error lines mentioning build_terrain.gd:
+    (none)
+  exact original error still present: False
+
+=== STEP 9: DIFF (backup -> patched) ===
+  --- godot_project/scripts/build_terrain.gd.bak.20260812160003	2026-08-12 09:46:02.855956243 -0400
+  +++ godot_project/scripts/build_terrain.gd	2026-08-12 12:00:06.873577819 -0400
+  @@ -3732,3 +3732,29 @@
+   			print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+   	else:
+   		print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+  +
+  +
+  +# ==========================================================================
+  +# _deploy_reserve - added by fix_deploy_reserve.sh
+  +# Called from _do_reserve(). Its absence caused:
+  +#   Parse Error: Function "_deploy_reserve()" not found in base self.
+  +# Ref (GDScript parse-time method resolution; tab indentation required):
+  +#   https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+  +#   (general knowledge - not retrieved this session)
+  +# Ref (Node3D.visible, used to hide the cut-away canopy):
+  +#   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+  +#   (general knowledge - not retrieved this session)
+  +# ==========================================================================
+  +func _deploy_reserve() -> void:
+  +	# Cut away the main canopy first if it is currently out.
+  +	if _canopy_deployed:
+  +		_canopy_deployed = false
+  +		if _canopy_instance:
+  +			_canopy_instance.visible = false
+  +		print("[VERBATIM] _deploy_reserve: main canopy cut away")
+  +	# Bring the reserve out.
+  +	_canopy_deployed = true
+  +	if _canopy_instance:
+  +		_canopy_instance.visible = true
+  +	print("[VERBATIM] _deploy_reserve: reserve deployed")
+  +	_show_notification("RESERVE DEPLOYED")
+  
+
+=== STEP 10: HARD GATE (Rule #30) ===
+  diff_shown_before_apply          True
+  error_context_shown              True
+  full_output_shown                True
+  no_orphaned_content              True
+  restore_available_on_failure     True
+  verification_run                 True
+  fix_applied                      True
+  symptom_reproduced_after_fix     False
+  symptom_reproduced_before_fix    True
+
+  HARD GATE PASSED
+
+=== END REPORT ===

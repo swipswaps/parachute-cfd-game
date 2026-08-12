@@ -3732,3 +3732,29 @@ func _do_reserve() -> void:
 			print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
 	else:
 		print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
+
+
+# ==========================================================================
+# _deploy_reserve - added by fix_deploy_reserve.sh
+# Called from _do_reserve(). Its absence caused:
+#   Parse Error: Function "_deploy_reserve()" not found in base self.
+# Ref (GDScript parse-time method resolution; tab indentation required):
+#   https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html
+#   (general knowledge - not retrieved this session)
+# Ref (Node3D.visible, used to hide the cut-away canopy):
+#   https://docs.godotengine.org/en/stable/classes/class_node3d.html
+#   (general knowledge - not retrieved this session)
+# ==========================================================================
+func _deploy_reserve() -> void:
+	# Cut away the main canopy first if it is currently out.
+	if _canopy_deployed:
+		_canopy_deployed = false
+		if _canopy_instance:
+			_canopy_instance.visible = false
+		print("[VERBATIM] _deploy_reserve: main canopy cut away")
+	# Bring the reserve out.
+	_canopy_deployed = true
+	if _canopy_instance:
+		_canopy_instance.visible = true
+	print("[VERBATIM] _deploy_reserve: reserve deployed")
+	_show_notification("RESERVE DEPLOYED")
