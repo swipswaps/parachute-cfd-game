@@ -1069,18 +1069,6 @@ func _do_cutaway() -> void:
 	_cam_distance = 5.0
 	_show_notification("Cutaway! Deploy reserve (V) or fall free.")
 	print("[VERBATIM] CUTAWAY executed – now in FREEFALL")
-func _do_reserve() -> void:
-    # MODIFIED: reserve can be deployed in FREEFALL as well.
-    # But only if main canopy is not deployed.
-    if not _canopy_deployed:
-        # Allow reserve in FREEFALL, DIAGNOSIS, OPENING_ANIM
-        if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
-            print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
-            _deploy_reserve()
-        else:
-            print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
-    else:
-        print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
 func _do_flare() -> void:
 	print("[DIAG] _do_flare: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_flare gate=_game_state=", _game_state)
@@ -3732,3 +3720,15 @@ func _log_control_presses() -> void:
 				"  state=", _game_state,
 				"  deployed=", _canopy_deployed,
 				"  alt_m=", ("%.1f" % _character.position.y) if _character else "n/a")
+
+func _do_reserve() -> void:
+	# MODIFIED: reserve can be deployed in FREEFALL, DIAGNOSIS, or OPENING_ANIM
+	# but only if main canopy is not deployed.
+	if not _canopy_deployed:
+		if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+			print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+			_deploy_reserve()
+		else:
+			print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+	else:
+		print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
