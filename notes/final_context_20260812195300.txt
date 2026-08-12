@@ -1,0 +1,27 @@
+=== FINAL CONTEXT – 20260812195300 UTC ===
+
+Lines 2370-2390 from godot_project/scripts/build_terrain.gd:
+
+2370: 	if periods.is_empty():
+2371: 		return
+2372: 	var wind_speed = periods[0].get("windSpeed", "8 mph")
+2373: 	var wind_dir = periods[0].get("windDirection", "120")
+2374: 	var speed_kts = wind_speed.to_float() * 0.868976
+2375: 	_wind_base_speed = speed_kts
+2376: 	_wind_base_direction = wind_dir.to_int()
+2377: 	if _wind_label:
+2378: 		_wind_label.text = "WIND: %.1f kts @ %s°" % [speed_kts, wind_dir]
+2379: 	else:
+2380: 		print("[VERBATIM] WARNING: _wind_label is null, skipping wind text")
+2381: else:
+2382: 	print("[VERBATIM] WARNING: _wind_label is null, skipping wind text")
+2383: 	print("[VERBATIM] Real wind loaded: ", wind_dir, " ", speed_kts, " kts")
+2384: 
+2385: 
+2386: # ------------------------------------------------------------------
+2387: # SCREENSHOT LIBRARY (added by patch_loading_screen_fixed.py)
+2388: # ------------------------------------------------------------------
+2389: var _loading_layer: CanvasLayer = null
+2390: var _loading_texture_rect: TextureRect = null
+
+=== END ===
