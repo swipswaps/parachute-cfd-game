@@ -1,0 +1,807 @@
+=== diag_reserve_state.sh - 20260812154346 UTC ===
+READ-ONLY. No file in this repository is modified by this script.
+
+=== STEP 1: TARGET FILE IDENTITY ===
+cwd: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+target: godot_project/scripts/build_terrain.gd
+size_bytes: 149605
+line_count: 3735
+sha256: 498f856d9f5c390b9737fbdf63dbfde61a76b8d4d9e249d9f744fce0fa875c4b
+has_crlf: False
+
+=== STEP 2: INDENTATION AUDIT (Rule #31) ===
+lines_with_leading_space: 0
+  line numbers (first 40): []
+lines_with_mixed_tab_space_indent: 0
+  line numbers (first 40): []
+
+=== STEP 3: FUNCTION INVENTORY (duplicate-name parse errors) ===
+total top-level func definitions: 99
+DUPLICATE function names: none
+  _deploy_reserve    defined at lines: ABSENT
+  _do_reserve        defined at lines: [3724]
+    signature: func _do_reserve() -> void:
+    first 6 body lines (tabs shown as [TAB]):
+       3725: [TAB]# MODIFIED: reserve can be deployed in FREEFALL, DIAGNOSIS, or OPENING_ANIM
+       3726: [TAB]# but only if main canopy is not deployed.
+       3727: [TAB]if not _canopy_deployed:
+       3728: [TAB][TAB]if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+       3729: [TAB][TAB][TAB]print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+       3730: [TAB][TAB][TAB]_deploy_reserve()
+
+=== STEP 4: UNDEFINED SYMBOL GATE (Rule #35) ===
+Symbols the proposed reserve functions depend on. If any is MISSING,
+applying either prior patch produces a runtime or parse error.
+  func _show_notification     : DEFINED at [1396]
+  func _deploy_reserve        : MISSING
+  ident _canopy_deployed      : 23 refs, first at [127, 882, 885]
+  ident _canopy_instance      : 42 refs, first at [125, 543, 544]
+  ident _game_state           : 55 refs, first at [35, 889, 1039]
+  enum  GameState.FREEFALL    : seen at [29, 129, 1061]
+  enum  GameState.DIAGNOSIS   : seen at [31, 1041, 1062]
+  enum  GameState.OPENING_ANIM : seen at [30, 889, 890]
+
+MISSING SYMBOLS: ['func _deploy_reserve']
+
+=== STEP 5: NON-ASCII INVENTORY (Rule #46) ===
+Any codepoint here will break a future hardcoded-old_str patch script.
+  U+2013 EN DASH                          x46   lines [2, 196, 247, 259, 264, 354, 378, 390]
+  U+2014 EM DASH                          x24   lines [317, 317, 575, 577, 837, 890, 1006, 1461]
+  U+2011 NON-BREAKING HYPHEN              x11   lines [2, 4, 225, 397, 521, 568, 572, 578]
+  U+00B0 DEGREE SIGN                      x11   lines [512, 795, 796, 796, 806, 1475, 2137, 2141]
+  U+2713 CHECK MARK                       x2    lines [1051, 1052]
+  U+2717 BALLOT X                         x2    lines [1054, 1055]
+  U+2192 RIGHTWARDS ARROW                 x2    lines [1054, 2046]
+  U+2248 ALMOST EQUAL TO                  x1    lines [2047]
+  U+1F4F8 CAMERA WITH FLASH                x1    lines [2545]
+
+=== STEP 6: GODOT PARSE CHECK (Rules #29, #37) ===
+  godot binary: /usr/bin/godot
+  exit_code: 0
+  ---- VERBATIM PARSER OUTPUT (Rule #29: exact error text) ----
+  | Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+  | 
+  | [VERBATIM] SqliteDb.gd _ready() called
+  | [VERBATIM] SqliteDb.gd _ready() called
+  | [VERBATIM] SqliteDb.gd _ready() called
+  | [VERBATIM] SqliteDb: _ready started
+  | [VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+  | [VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+  | [HealthChecker] Control hierarchy dumped to DB in 0ms
+  | [VERBATIM] DatabaseGuard.gd _ready() called
+  | [VERBATIM] DatabaseGuard: _ready ok=true
+  | [VERBATIM] ResourceThrottle.gd _ready() called
+  | [VERBATIM] ResourceThrottle: table ensured
+  | [VERBATIM] ResourceThrottle: _ready ok=true
+  | [VERBATIM] SqliteWatchdog.gd _ready() called
+  | [VERBATIM] SqliteWatchdog.gd _ready() called
+  | [VERBATIM] SqliteWatchdog.gd _ready() called
+  | [VERBATIM] Watchdog: _ready started
+  | [VERBATIM] Watchdog: started, polling user://screenshots/
+  | [VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+  | [VERBATIM] Watchdog: _ready completed
+  | [StructuredLogger] WARN: could not open /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl — stdout only
+  | [StructuredLogger] sentry_available=false
+  | [VERBATIM] 2026-08-12T11:43:48 GameIntegrity autoload initialized
+  | [VERBATIM] 2026-08-12T11:43:48 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+  | [ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+  | [AUDIT] _ready: ENTER
+  | [HUD_DIAG] _ready called
+  | [HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+  | [AUDIT] _resolve_hub_url: ENTER
+  | [AUDIT] _build_ui: ENTER
+  | [AUDIT] _load_saved_position: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _mklabel: ENTER
+  | [AUDIT] _poll_fast: ENTER
+  | [AUDIT] _poll_slow: ENTER
+  | Wind field loaded:
+  |   Grid: 31 x 31 x 21
+  |   Spacing: 10.0 m
+  |   Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  |   Velocities: 20181 vectors
+  | [FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+  | [FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+  | [HubManager] Hub spawn requested pid=2430958 non-blocking
+  | [FPANEL] No pip_container group found, creating one
+  | [FPANEL] Created new pip container
+  | [AUDIT] _exit_tree: ENTER
+  | [AUDIT] _save_position: ENTER
+  | [VERBATIM] DatabaseGuard: _exit_tree called
+  | [VERBATIM] DB CLOSED
+  | SCRIPT ERROR: Parse Error: Function "_deploy_reserve()" not found in base self.
+  |           at: GDScript::reload (res://scripts/build_terrain.gd:3730)
+  | ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+  |    at: load (modules/gdscript/gdscript.cpp:2907)
+  | WARNING: ObjectDB instances leaked at exit (run with --verbose for details).
+  |    at: cleanup (core/object/object.cpp:2663)
+  ---- END VERBATIM ----
+
+=== STEP 7: BACKUP INVENTORY (Rule #21) ===
+  build_terrain.gd.20260719_174946.bak                    99491 bytes  mtime=2026-07-19T16:42:01.566039+00:00
+  build_terrain.gd.FIX.txt                                  662 bytes  mtime=2026-07-07T14:53:38.989844+00:00
+  build_terrain.gd.all_fix_bak                            55711 bytes  mtime=2026-07-01T21:00:48.220058+00:00
+  build_terrain.gd.alt_after_load                         57333 bytes  mtime=2026-07-02T01:10:41.492172+00:00
+  build_terrain.gd.altitude_fix                           57333 bytes  mtime=2026-07-02T01:10:41.492172+00:00
+  build_terrain.gd.backup.20260603_162037                 10140 bytes  mtime=2026-06-25T16:01:13.596631+00:00
+  build_terrain.gd.backup.20260603_163008                 10140 bytes  mtime=2026-06-25T16:01:13.596631+00:00
+  build_terrain.gd.backup.20260607_140558                 32112 bytes  mtime=2026-06-25T16:01:13.601631+00:00
+  build_terrain.gd.backup.20260607_141103                 32121 bytes  mtime=2026-06-25T16:01:13.601631+00:00
+  build_terrain.gd.backup.20260607_155744                 64715 bytes  mtime=2026-06-25T16:01:13.602631+00:00
+  build_terrain.gd.backup.20260607_155913                 64716 bytes  mtime=2026-06-25T16:01:13.602631+00:00
+  build_terrain.gd.backup.20260607_160341                 64717 bytes  mtime=2026-06-25T16:01:13.602631+00:00
+  build_terrain.gd.backup.20260607_160528                 64718 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_160731                 64717 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_160856                 69979 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_161033                 70441 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_161343                 70291 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_164350                 70256 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_170506                 70315 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_172115                 70933 bytes  mtime=2026-06-25T16:01:13.603631+00:00
+  build_terrain.gd.backup.20260607_173559                 70993 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260607_173705                 70993 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_082649                 70993 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_090421                 69496 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_103450                 73246 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_110337                 72031 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_111711                 72541 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_112110                 72653 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_120154                 72621 bytes  mtime=2026-06-25T16:01:13.604631+00:00
+  build_terrain.gd.backup.20260608_144853                 76125 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260608_145200                 77481 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_075835                 77607 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_075927                 77607 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_080930                 77607 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_080938                 77925 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_080948                 77925 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_081645                 77955 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_082037                 78470 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_082309                 78470 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_082522                 78470 bytes  mtime=2026-06-25T16:01:13.605631+00:00
+  build_terrain.gd.backup.20260609_090142                 79474 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_090444                 79482 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_090558                 78669 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_092223                 78665 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_092423                 78632 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_093532                 78526 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_093646                 78527 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_093724                 78527 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_094407                 78817 bytes  mtime=2026-06-25T16:01:13.606631+00:00
+  build_terrain.gd.backup.20260609_095837                 78817 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260609_100044                 79068 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260609_143855                 79904 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260609_181245                 81370 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260610_122941                 79904 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260610_134557                 82266 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260610_135431                 82395 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260610_135736                 83469 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.backup.20260610_140928                 84543 bytes  mtime=2026-06-25T16:01:13.608631+00:00
+  build_terrain.gd.backup.20260610_141317                 86097 bytes  mtime=2026-06-25T16:01:13.608631+00:00
+  build_terrain.gd.backup.20260610_142109                 87969 bytes  mtime=2026-06-25T16:01:13.608631+00:00
+  build_terrain.gd.backup.20260610_145226                 90729 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260610_173806                 84892 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260610_174116                 84892 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260610_174857                 83972 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260610_182840                 83942 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260610_185214                 85731 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260610_185513                 87501 bytes  mtime=2026-06-25T16:01:13.609631+00:00
+  build_terrain.gd.backup.20260611_172638                 78350 bytes  mtime=2026-06-25T16:01:13.610631+00:00
+  build_terrain.gd.backup.20260611_172809                 78350 bytes  mtime=2026-06-25T16:01:13.611631+00:00
+  build_terrain.gd.backup.20260611_173005                 77976 bytes  mtime=2026-06-25T16:01:13.611631+00:00
+  build_terrain.gd.backup.20260611_173208                 77976 bytes  mtime=2026-06-25T16:01:13.611631+00:00
+  build_terrain.gd.backup.20260611_175726                 77850 bytes  mtime=2026-06-25T16:01:13.611631+00:00
+  build_terrain.gd.backup.20260614_130309                 20776 bytes  mtime=2026-06-25T16:01:13.621631+00:00
+  build_terrain.gd.backup.20260616_114111                 25644 bytes  mtime=2026-06-25T16:01:13.630631+00:00
+  build_terrain.gd.backup.20260616_114757                 25572 bytes  mtime=2026-06-25T16:01:13.630631+00:00
+  build_terrain.gd.backup.20260616_115117                 25741 bytes  mtime=2026-06-25T16:01:13.630631+00:00
+  build_terrain.gd.backup.20260616_120024                 25804 bytes  mtime=2026-06-25T16:01:13.631631+00:00
+  build_terrain.gd.backup.20260616_122553                 26082 bytes  mtime=2026-06-25T16:01:13.631631+00:00
+  build_terrain.gd.backup.20260616_123506                 26236 bytes  mtime=2026-06-25T16:01:13.632631+00:00
+  build_terrain.gd.backup.20260616_123710                 25804 bytes  mtime=2026-06-25T16:01:13.632631+00:00
+  build_terrain.gd.backup.20260616_130231                 25804 bytes  mtime=2026-06-25T16:01:13.632631+00:00
+  build_terrain.gd.backup.20260616_130529                 25939 bytes  mtime=2026-06-25T16:01:13.632631+00:00
+  build_terrain.gd.backup.20260616_131549                 26276 bytes  mtime=2026-06-25T16:01:13.632631+00:00
+  build_terrain.gd.backup.20260616_132045                 26565 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_132223                 26883 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_132338                 26883 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_134211                 26541 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_134544                 26541 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_134711                 26541 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_134912                 26659 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_135831                 27122 bytes  mtime=2026-06-25T16:01:13.633631+00:00
+  build_terrain.gd.backup.20260616_140649                 28242 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_141709                 28987 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_141754                 28967 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_143918                 28967 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_144044                 28268 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_144150                 28172 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_144308                 28171 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_144532                 28171 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_144630                 28171 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_144958                 27619 bytes  mtime=2026-06-25T16:01:13.634631+00:00
+  build_terrain.gd.backup.20260616_145414                 27258 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_153828                 27440 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_160544                 27470 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_160847                 27440 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_161204                 27528 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_173452                 86165 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_173812                 86164 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_174015                 86164 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_174929                 76362 bytes  mtime=2026-06-25T16:01:13.635631+00:00
+  build_terrain.gd.backup.20260616_175713                 76362 bytes  mtime=2026-06-25T16:01:13.636631+00:00
+  build_terrain.gd.backup.20260616_183744                 73845 bytes  mtime=2026-06-25T16:01:13.636631+00:00
+  build_terrain.gd.backup.20260625_092008                 83396 bytes  mtime=2026-06-25T16:01:13.648631+00:00
+  build_terrain.gd.backup.20260625_092825                 83396 bytes  mtime=2026-06-25T16:01:13.648631+00:00
+  build_terrain.gd.backup.gdlint.20260611_180344          76675 bytes  mtime=2026-06-25T16:01:13.611631+00:00
+  build_terrain.gd.backup_0039_stubs                      24121 bytes  mtime=2026-06-25T16:01:13.622631+00:00
+  build_terrain.gd.backup_0045                            24399 bytes  mtime=2026-06-25T16:01:13.625631+00:00
+  build_terrain.gd.backup_0048                            24399 bytes  mtime=2026-06-25T16:01:13.627631+00:00
+  build_terrain.gd.backup_0061                            24399 bytes  mtime=2026-06-25T16:01:13.628631+00:00
+  build_terrain.gd.backup_0062                            24344 bytes  mtime=2026-06-25T16:01:13.628631+00:00
+  build_terrain.gd.backup_0063                            24393 bytes  mtime=2026-06-25T16:01:13.628631+00:00
+  build_terrain.gd.backup_0064                            24657 bytes  mtime=2026-06-25T16:01:13.628631+00:00
+  build_terrain.gd.backup_0065                            24657 bytes  mtime=2026-06-25T16:01:13.628631+00:00
+  build_terrain.gd.backup_0068_bt                         24681 bytes  mtime=2026-06-25T16:01:13.628631+00:00
+  build_terrain.gd.backup_0070                            24805 bytes  mtime=2026-06-25T16:01:13.629631+00:00
+  build_terrain.gd.backup_0071                            25062 bytes  mtime=2026-06-25T16:01:13.629631+00:00
+  build_terrain.gd.backup_0072                            25062 bytes  mtime=2026-06-25T16:01:13.629631+00:00
+  build_terrain.gd.backup_0075_bt                         24843 bytes  mtime=2026-06-25T16:01:13.629631+00:00
+  build_terrain.gd.backup_0076_bt                         24843 bytes  mtime=2026-06-25T16:01:13.629631+00:00
+  build_terrain.gd.backup_20260510_203641                 10123 bytes  mtime=2026-06-25T16:01:13.596631+00:00
+  build_terrain.gd.backup_20260604_160953                 10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260604_161129                 10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260604_165943                 10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260604_173232                 10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260604_173809                 10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260604_174702                 10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260604_182600                 16212 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.backup_20260612_143645                 75681 bytes  mtime=2026-06-25T16:01:13.612631+00:00
+  build_terrain.gd.backup_20260612_144427                 75681 bytes  mtime=2026-06-25T16:01:13.612631+00:00
+  build_terrain.gd.backup_20260612_144722                 75681 bytes  mtime=2026-06-25T16:01:13.612631+00:00
+  build_terrain.gd.backup_20260612_154616                 75681 bytes  mtime=2026-06-25T16:01:13.612631+00:00
+  build_terrain.gd.backup_20260612_162216                 75681 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.backup_20260612_162717                 75681 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.backup_20260612_162839                 75681 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.backup_20260612_164933                 75681 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.backup_20260612_170147                 75112 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.backup_20260612_170233                 75681 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.backup_20260612_172444                 75113 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_174054                 75131 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_175831                 75509 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_181435                 75509 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_181928                 75663 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_183115                 75898 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_192301                 75131 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.backup_20260612_193551                 76038 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_105614                 76038 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_110629                 76038 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_113720                 76018 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_120010                 76018 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_122007                 76014 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_125206                 76013 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_133609                 76528 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_134046                 76528 bytes  mtime=2026-06-25T16:01:13.615631+00:00
+  build_terrain.gd.backup_20260613_134249                 76018 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_20260613_135657                 76013 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_20260613_135752                 77177 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_20260613_150109                 76407 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_20260614_092058                 20201 bytes  mtime=2026-06-25T16:01:13.620631+00:00
+  build_terrain.gd.backup_20260614_092306                 20349 bytes  mtime=2026-06-25T16:01:13.620631+00:00
+  build_terrain.gd.backup_20260619_120941                 75000 bytes  mtime=2026-06-25T16:01:13.636631+00:00
+  build_terrain.gd.backup_20260619_122124                 75222 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_122514                 75222 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_122841                 75219 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_123320                 75218 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_124125                 75228 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_124425                 75611 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_130107                 75612 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_130749                 75676 bytes  mtime=2026-06-25T16:01:13.639631+00:00
+  build_terrain.gd.backup_20260619_133221                 75908 bytes  mtime=2026-06-25T16:01:13.642631+00:00
+  build_terrain.gd.backup_20260619_133730                 75234 bytes  mtime=2026-06-25T16:01:13.642631+00:00
+  build_terrain.gd.backup_20260619_134159                 74195 bytes  mtime=2026-06-25T16:01:13.642631+00:00
+  build_terrain.gd.backup_20260619_135314                 74294 bytes  mtime=2026-06-25T16:01:13.642631+00:00
+  build_terrain.gd.backup_20260706_052747                 56707 bytes  mtime=2026-07-05T19:09:55.281152+00:00
+  build_terrain.gd.backup_20260706_053145                 56712 bytes  mtime=2026-07-06T09:27:47.206013+00:00
+  build_terrain.gd.backup_20260706_055109                 56762 bytes  mtime=2026-07-06T09:31:45.217072+00:00
+  build_terrain.gd.backup_20260706_055311                 57629 bytes  mtime=2026-07-06T09:51:09.901747+00:00
+  build_terrain.gd.backup_20260708-051613                 99341 bytes  mtime=2026-07-08T02:28:19.278847+00:00
+  build_terrain.gd.backup_20260708-054328                 99341 bytes  mtime=2026-07-08T09:18:12.044991+00:00
+  build_terrain.gd.backup_20260708-054800                 99341 bytes  mtime=2026-07-08T09:45:32.783942+00:00
+  build_terrain.gd.backup_20260708-060957                 99332 bytes  mtime=2026-07-08T10:09:57.502104+00:00
+  build_terrain.gd.backup_20260708-062122                 99341 bytes  mtime=2026-07-08T10:14:59.876890+00:00
+  build_terrain.gd.backup_20260708-064956                 98948 bytes  mtime=2026-07-08T10:21:22.899001+00:00
+  build_terrain.gd.backup_20260708-065919                 98948 bytes  mtime=2026-07-08T10:55:45.093818+00:00
+  build_terrain.gd.backup_20260708-071453                 98948 bytes  mtime=2026-07-08T11:01:40.272807+00:00
+  build_terrain.gd.backup_20260708-071707                 98226 bytes  mtime=2026-07-08T11:14:53.140688+00:00
+  build_terrain.gd.backup_20260708-071711                 98252 bytes  mtime=2026-07-08T11:17:07.290872+00:00
+  build_terrain.gd.backup_20260708-073638                 98948 bytes  mtime=2026-07-08T11:24:40.447767+00:00
+  build_terrain.gd.backup_20260708-074743                 98207 bytes  mtime=2026-07-08T11:36:38.108101+00:00
+  build_terrain.gd.backup_20260708-075059                 98207 bytes  mtime=2026-07-08T11:48:47.850724+00:00
+  build_terrain.gd.backup_20260708-080509                 98369 bytes  mtime=2026-07-08T12:05:09.299334+00:00
+  build_terrain.gd.backup_20260708-081510                 99194 bytes  mtime=2026-07-08T12:15:10.208596+00:00
+  build_terrain.gd.backup_20260708-085148                 99194 bytes  mtime=2026-07-08T12:15:10.343230+00:00
+  build_terrain.gd.backup_20260708-085156                 99299 bytes  mtime=2026-07-08T12:51:48.482011+00:00
+  build_terrain.gd.backup_20260708-091543                 99299 bytes  mtime=2026-07-08T12:51:56.753612+00:00
+  build_terrain.gd.backup_20260708-091550                 99368 bytes  mtime=2026-07-08T13:15:43.513262+00:00
+  build_terrain.gd.backup_20260708-093231                 99437 bytes  mtime=2026-07-08T13:15:50.669842+00:00
+  build_terrain.gd.backup_20260708-093725                 99301 bytes  mtime=2026-07-08T13:32:31.836636+00:00
+  build_terrain.gd.backup_20260708-094328                 99301 bytes  mtime=2026-07-08T13:32:31.836636+00:00
+  build_terrain.gd.backup_20260708-094912                 99302 bytes  mtime=2026-07-08T13:43:28.457552+00:00
+  build_terrain.gd.backup_20260708-094922                 99268 bytes  mtime=2026-07-08T13:49:12.116711+00:00
+  build_terrain.gd.backup_20260708-101940                 98906 bytes  mtime=2026-07-08T14:19:40.229290+00:00
+  build_terrain.gd.backup_20260709_231255                 99214 bytes  mtime=2026-07-10T03:04:12.180548+00:00
+  build_terrain.gd.backup_20260709_231530                 99418 bytes  mtime=2026-07-10T03:12:57.051533+00:00
+  build_terrain.gd.backup_auto                            76407 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_before_plane                    23731 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_final                           17605 bytes  mtime=2026-06-25T16:01:13.618631+00:00
+  build_terrain.gd.backup_final_actual                    24843 bytes  mtime=2026-06-25T16:01:13.629631+00:00
+  build_terrain.gd.backup_fix                             24127 bytes  mtime=2026-06-25T16:01:13.622631+00:00
+  build_terrain.gd.backup_indent_20260619_121505          75246 bytes  mtime=2026-06-25T16:01:13.638631+00:00
+  build_terrain.gd.backup_plane_add                       23731 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_player_fix                      23731 bytes  mtime=2026-06-25T16:01:13.616631+00:00
+  build_terrain.gd.backup_spawn_fix                       24398 bytes  mtime=2026-06-25T16:01:13.623631+00:00
+  build_terrain.gd.backup_velocity                        24135 bytes  mtime=2026-06-25T16:01:13.622631+00:00
+  build_terrain.gd.bak.20260718141333                     99315 bytes  mtime=2026-07-16T17:49:24.944687+00:00
+  build_terrain.gd.bak.20260718141803                     99315 bytes  mtime=2026-07-18T18:17:31.097986+00:00
+  build_terrain.gd.bak.20260718162836                     99342 bytes  mtime=2026-07-18T18:18:03.079126+00:00
+  build_terrain.gd.bak.20260720041743                     99547 bytes  mtime=2026-07-19T17:49:46.471790+00:00
+  build_terrain.gd.bak.20260720042511                     99547 bytes  mtime=2026-07-19T17:49:46.471790+00:00
+  build_terrain.gd.bak.20260720091744                     99547 bytes  mtime=2026-07-19T17:49:46.471790+00:00
+  build_terrain.gd.bak.20260722203347                     99668 bytes  mtime=2026-07-20T09:17:44.946630+00:00
+  build_terrain.gd.bak.20260723095811                    100191 bytes  mtime=2026-07-23T00:33:47.249408+00:00
+  build_terrain.gd.bak.20260723100530                    100191 bytes  mtime=2026-07-23T00:33:47.249408+00:00
+  build_terrain.gd.bak.20260723101430                    100179 bytes  mtime=2026-07-23T14:05:30.174560+00:00
+  build_terrain.gd.bak.20260723102552                    100553 bytes  mtime=2026-07-23T14:14:30.452738+00:00
+  build_terrain.gd.bak.20260723111748                    100638 bytes  mtime=2026-07-23T14:25:52.751346+00:00
+  build_terrain.gd.bak.20260723114647                    100783 bytes  mtime=2026-07-23T15:17:48.471966+00:00
+  build_terrain.gd.bak.20260723203503                    101297 bytes  mtime=2026-07-23T15:46:47.551049+00:00
+  build_terrain.gd.bak.20260724124148359987              101607 bytes  mtime=2026-07-23T20:35:03.227651+00:00
+  build_terrain.gd.bak.20260724124900324562              101607 bytes  mtime=2026-07-24T16:41:48.361547+00:00
+  build_terrain.gd.bak.20260724130454791646              101657 bytes  mtime=2026-07-24T16:49:00.325421+00:00
+  build_terrain.gd.bak.20260724131753266426              101702 bytes  mtime=2026-07-24T17:04:54.792551+00:00
+  build_terrain.gd.bak.20260725163513148483              101756 bytes  mtime=2026-07-24T17:17:53.267414+00:00
+  build_terrain.gd.bak.20260726120627                    101773 bytes  mtime=2026-07-25T20:35:14.766390+00:00
+  build_terrain.gd.bak.20260726121327                    101773 bytes  mtime=2026-07-25T20:35:14.766390+00:00
+  build_terrain.gd.bak.20260726122535                    101773 bytes  mtime=2026-07-25T20:35:14.766390+00:00
+  build_terrain.gd.bak.20260726125122                    101499 bytes  mtime=2026-07-26T12:25:35.839893+00:00
+  build_terrain.gd.bak.20260726142423                    101791 bytes  mtime=2026-07-26T14:24:23.145397+00:00
+  build_terrain.gd.bak.20260727115140                    101959 bytes  mtime=2026-07-26T14:40:26.408006+00:00
+  build_terrain.gd.bak.20260727115256                    102111 bytes  mtime=2026-07-27T11:52:56.145481+00:00
+  build_terrain.gd.bak.20260727152133                    102699 bytes  mtime=2026-07-27T11:52:56.587714+00:00
+  build_terrain.gd.bak.20260729013912                    102696 bytes  mtime=2026-07-27T16:18:49.074736+00:00
+  build_terrain.gd.bak.20260729014632                    102696 bytes  mtime=2026-07-27T16:18:49.074736+00:00
+  build_terrain.gd.bak.20260729130249                    103994 bytes  mtime=2026-07-29T01:46:32.203614+00:00
+  build_terrain.gd.bak.20260729135040                    104675 bytes  mtime=2026-07-29T13:02:49.928734+00:00
+  build_terrain.gd.bak.20260729141016                    109724 bytes  mtime=2026-07-29T13:50:40.713949+00:00
+  build_terrain.gd.bak.20260729141726                    114343 bytes  mtime=2026-07-29T14:10:16.365151+00:00
+  build_terrain.gd.bak.20260729141915                    116651 bytes  mtime=2026-07-29T14:17:26.342851+00:00
+  build_terrain.gd.bak.20260729142819                    116651 bytes  mtime=2026-07-29T14:17:26.342851+00:00
+  build_terrain.gd.bak.20260729144519                    117047 bytes  mtime=2026-07-29T14:28:19.570811+00:00
+  build_terrain.gd.bak.20260729150217                    122302 bytes  mtime=2026-07-29T14:45:19.188084+00:00
+  build_terrain.gd.bak.20260729191024                    122302 bytes  mtime=2026-07-29T14:45:19.188084+00:00
+  build_terrain.gd.bak.20260729191156                    123535 bytes  mtime=2026-07-29T19:10:24.473079+00:00
+  build_terrain.gd.bak.20260729192116                    125412 bytes  mtime=2026-07-29T19:11:56.656840+00:00
+  build_terrain.gd.bak.20260729192542                    125412 bytes  mtime=2026-07-29T19:11:56.656840+00:00
+  build_terrain.gd.bak.20260729193332                    125412 bytes  mtime=2026-07-29T19:11:56.656840+00:00
+  build_terrain.gd.bak.20260729194535                    129674 bytes  mtime=2026-07-29T19:33:32.671688+00:00
+  build_terrain.gd.bak.20260729195031                    133697 bytes  mtime=2026-07-29T19:50:31.868625+00:00
+  build_terrain.gd.bak.20260729204959                    136963 bytes  mtime=2026-07-29T19:50:31.942666+00:00
+  build_terrain.gd.bak.20260729205524                    136975 bytes  mtime=2026-07-29T20:49:59.438407+00:00
+  build_terrain.gd.bak.20260729205620                    136975 bytes  mtime=2026-07-29T20:49:59.438407+00:00
+  build_terrain.gd.bak.20260730123216                    136975 bytes  mtime=2026-07-29T20:49:59.438407+00:00
+  build_terrain.gd.bak.20260730125028                    137759 bytes  mtime=2026-07-30T12:32:16.540939+00:00
+  build_terrain.gd.bak.20260730164901                    138554 bytes  mtime=2026-07-30T12:50:28.061872+00:00
+  build_terrain.gd.bak.20260730165932                    138554 bytes  mtime=2026-07-30T12:50:28.061872+00:00
+  build_terrain.gd.bak.20260730170438                    138554 bytes  mtime=2026-07-30T12:50:28.061872+00:00
+  build_terrain.gd.bak.20260730233326                    139140 bytes  mtime=2026-07-30T17:04:38.567576+00:00
+  build_terrain.gd.bak.20260731001411                    139509 bytes  mtime=2026-07-30T23:33:26.688507+00:00
+  build_terrain.gd.bak.20260731003707                    139517 bytes  mtime=2026-07-31T00:14:11.115204+00:00
+  build_terrain.gd.bak.20260731004756                    139523 bytes  mtime=2026-07-31T00:37:07.866795+00:00
+  build_terrain.gd.bak.20260731131248                    139578 bytes  mtime=2026-07-31T00:47:56.197232+00:00
+  build_terrain.gd.bak.20260731132644                    139769 bytes  mtime=2026-07-31T13:12:51.778993+00:00
+  build_terrain.gd.bak.20260731133047                    138665 bytes  mtime=2026-07-31T13:26:44.234956+00:00
+  build_terrain.gd.bak.20260801142925                    138665 bytes  mtime=2026-07-31T13:26:44.234956+00:00
+  build_terrain.gd.bak.20260801202543                    139082 bytes  mtime=2026-08-01T14:29:25.382697+00:00
+  build_terrain.gd.bak.20260801204134                    139168 bytes  mtime=2026-08-01T20:25:43.659758+00:00
+  build_terrain.gd.bak.20260801205254                    140050 bytes  mtime=2026-08-01T20:41:34.218542+00:00
+  build_terrain.gd.bak.20260801205603                    140437 bytes  mtime=2026-08-01T20:52:54.341030+00:00
+  build_terrain.gd.bak.20260801210504                    140635 bytes  mtime=2026-08-01T20:56:03.159488+00:00
+  build_terrain.gd.bak.20260801211000                    140942 bytes  mtime=2026-08-01T21:05:04.212455+00:00
+  build_terrain.gd.bak.20260802005936                    141062 bytes  mtime=2026-08-01T21:10:00.451437+00:00
+  build_terrain.gd.bak.20260802011150                    141810 bytes  mtime=2026-08-02T00:59:36.943592+00:00
+  build_terrain.gd.bak.20260802011712                    141810 bytes  mtime=2026-08-02T00:59:36.943592+00:00
+  build_terrain.gd.bak.20260802090153665563              142232 bytes  mtime=2026-08-02T13:01:39.186935+00:00
+  build_terrain.gd.bak.20260802110730                    142107 bytes  mtime=2026-08-02T01:17:12.508780+00:00
+  build_terrain.gd.bak.20260802112204                    142107 bytes  mtime=2026-08-02T11:07:30.858356+00:00
+  build_terrain.gd.bak.20260802112524                    142107 bytes  mtime=2026-08-02T11:07:30.858356+00:00
+  build_terrain.gd.bak.20260802123500                    142295 bytes  mtime=2026-08-02T11:25:24.650162+00:00
+  build_terrain.gd.bak.20260802125429                    142099 bytes  mtime=2026-08-02T12:35:01.669895+00:00
+  build_terrain.gd.bak.20260802130139                    142058 bytes  mtime=2026-08-02T12:54:37.193259+00:00
+  build_terrain.gd.bak.20260802152226                    142453 bytes  mtime=2026-08-02T13:01:53.666935+00:00
+  build_terrain.gd.bak.20260802160516                    143150 bytes  mtime=2026-08-02T15:22:27.124418+00:00
+  build_terrain.gd.bak.20260802161550                    147725 bytes  mtime=2026-08-02T16:05:16.136104+00:00
+  build_terrain.gd.bak.20260803232319                    150472 bytes  mtime=2026-08-03T22:31:45.830454+00:00
+  build_terrain.gd.bak.20260803232424                    150472 bytes  mtime=2026-08-03T22:31:45.830454+00:00
+  build_terrain.gd.bak.20260804002229                    151176 bytes  mtime=2026-08-04T00:22:29.856747+00:00
+  build_terrain.gd.bak.20260804104916                    151176 bytes  mtime=2026-08-04T00:22:29.856747+00:00
+  build_terrain.gd.bak.20260804173410                    151166 bytes  mtime=2026-08-04T10:49:16.756825+00:00
+  build_terrain.gd.bak.20260804184153                    152201 bytes  mtime=2026-08-04T17:34:10.356910+00:00
+  build_terrain.gd.bak.20260804193845                    153014 bytes  mtime=2026-08-04T18:41:53.025086+00:00
+  build_terrain.gd.bak.20260804194643                    153533 bytes  mtime=2026-08-04T19:38:45.583747+00:00
+  build_terrain.gd.bak.20260804194830                    153533 bytes  mtime=2026-08-04T19:38:45.583747+00:00
+  build_terrain.gd.bak.20260804195226                    153476 bytes  mtime=2026-08-04T19:48:30.639841+00:00
+  build_terrain.gd.bak.20260804195342                    153476 bytes  mtime=2026-08-04T19:52:26.008861+00:00
+  build_terrain.gd.bak.20260804202042                    153476 bytes  mtime=2026-08-04T20:20:42.867723+00:00
+  build_terrain.gd.bak.20260804202338                    153476 bytes  mtime=2026-08-04T20:23:38.772712+00:00
+  build_terrain.gd.bak.20260804202613                    153476 bytes  mtime=2026-08-04T20:26:13.388803+00:00
+  build_terrain.gd.bak.20260804211933                    140191 bytes  mtime=2026-08-04T21:19:33.506506+00:00
+  build_terrain.gd.bak.20260804214002                    140467 bytes  mtime=2026-08-04T21:40:02.880431+00:00
+  build_terrain.gd.bak.20260804214043                    140467 bytes  mtime=2026-08-04T21:40:43.542428+00:00
+  build_terrain.gd.bak.20260804214419                    140467 bytes  mtime=2026-08-04T21:44:19.122415+00:00
+  build_terrain.gd.bak.20260804214652                    140467 bytes  mtime=2026-08-04T21:46:52.130406+00:00
+  build_terrain.gd.bak.20260804214926                    140468 bytes  mtime=2026-08-04T21:49:26.243396+00:00
+  build_terrain.gd.bak.20260804215645                    140468 bytes  mtime=2026-08-04T21:56:45.576369+00:00
+  build_terrain.gd.bak.20260804215805                    140468 bytes  mtime=2026-08-04T21:58:05.747365+00:00
+  build_terrain.gd.bak.20260804215921                    140295 bytes  mtime=2026-08-04T21:59:21.225360+00:00
+  build_terrain.gd.bak.20260804220004                    140295 bytes  mtime=2026-08-04T22:00:04.520357+00:00
+  build_terrain.gd.bak.20260804220201                    140333 bytes  mtime=2026-08-04T22:02:01.747350+00:00
+  build_terrain.gd.bak.20260804220604                    140443 bytes  mtime=2026-08-04T22:06:04.635335+00:00
+  build_terrain.gd.bak.20260804220950                    140443 bytes  mtime=2026-08-04T22:08:30.071948+00:00
+  build_terrain.gd.bak.20260804221154                    140395 bytes  mtime=2026-08-04T22:09:50.522321+00:00
+  build_terrain.gd.bak.20260804222608                    140310 bytes  mtime=2026-08-04T22:16:39.927115+00:00
+  build_terrain.gd.bak.20260804222953                    140416 bytes  mtime=2026-08-04T22:26:08.055261+00:00
+  build_terrain.gd.bak.20260804225210                    140476 bytes  mtime=2026-08-04T22:29:53.228247+00:00
+  build_terrain.gd.bak.20260804225310                    140670 bytes  mtime=2026-08-04T22:52:10.977894+00:00
+  build_terrain.gd.bak.20260804225412                    140670 bytes  mtime=2026-08-04T22:53:10.527091+00:00
+  build_terrain.gd.bak.20260804230453                    140597 bytes  mtime=2026-08-04T22:59:30.329139+00:00
+  build_terrain.gd.bak.20260804230802                    140546 bytes  mtime=2026-08-04T23:04:53.468119+00:00
+  build_terrain.gd.bak.20260804230949                    141385 bytes  mtime=2026-08-04T23:08:02.629247+00:00
+  build_terrain.gd.bak.20260804232641                    140546 bytes  mtime=2026-08-04T23:11:14.867095+00:00
+  build_terrain.gd.bak.20260804232736                    140567 bytes  mtime=2026-08-04T23:26:41.319038+00:00
+  build_terrain.gd.bak.20260804233430                    140571 bytes  mtime=2026-08-04T23:27:36.766035+00:00
+  build_terrain.gd.bak.20260804233720                    140747 bytes  mtime=2026-08-04T23:34:30.595010+00:00
+  build_terrain.gd.bak.20260804234834                    141099 bytes  mtime=2026-08-04T23:37:20.554947+00:00
+  build_terrain.gd.bak.20260804235450                    140747 bytes  mtime=2026-08-04T23:50:59.557949+00:00
+  build_terrain.gd.bak.20260805002352                    141089 bytes  mtime=2026-08-04T23:54:50.445935+00:00
+  build_terrain.gd.bak.20260805003821                    140957 bytes  mtime=2026-08-05T00:23:52.225963+00:00
+  build_terrain.gd.bak.20260805005703                    140615 bytes  mtime=2026-08-05T00:38:21.823775+00:00
+  build_terrain.gd.bak.20260805014359                    140616 bytes  mtime=2026-08-05T00:57:03.472706+00:00
+  build_terrain.gd.bak.20260805014717                    140616 bytes  mtime=2026-08-05T00:57:03.472706+00:00
+  build_terrain.gd.bak.20260805104745                    140712 bytes  mtime=2026-08-05T01:47:17.292521+00:00
+  build_terrain.gd.bak.20260805105542                    141292 bytes  mtime=2026-08-05T10:47:45.713812+00:00
+  build_terrain.gd.bak.20260805110331                    141441 bytes  mtime=2026-08-05T10:55:42.099503+00:00
+  build_terrain.gd.bak.20260805112023                    141806 bytes  mtime=2026-08-05T11:03:31.118612+00:00
+  build_terrain.gd.bak.20260805113335                    141806 bytes  mtime=2026-08-05T11:33:35.683364+00:00
+  build_terrain.gd.bak.20260805113407                    141806 bytes  mtime=2026-08-05T11:34:07.646362+00:00
+  build_terrain.gd.bak.20260805113659                    141806 bytes  mtime=2026-08-05T11:36:59.239351+00:00
+  build_terrain.gd.bak.20260805115249                    141818 bytes  mtime=2026-08-05T11:52:49.439293+00:00
+  build_terrain.gd.bak.20260805160703                    142049 bytes  mtime=2026-08-05T15:58:41.217388+00:00
+  build_terrain.gd.bak.20260805161326                    142049 bytes  mtime=2026-08-05T16:07:03.706104+00:00
+  build_terrain.gd.bak.20260805161923                    142049 bytes  mtime=2026-08-05T16:07:03.706104+00:00
+  build_terrain.gd.bak.20260805163539                    142049 bytes  mtime=2026-08-05T16:07:03.706104+00:00
+  build_terrain.gd.bak.20260805164950                    142049 bytes  mtime=2026-08-05T16:07:03.706104+00:00
+  build_terrain.gd.bak.20260805174807                    142059 bytes  mtime=2026-08-05T17:10:11.432125+00:00
+  build_terrain.gd.bak.20260805175249                    142055 bytes  mtime=2026-08-05T17:48:07.374986+00:00
+  build_terrain.gd.bak.20260805180005                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805180421                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805180651                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805181035                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805182239                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805182524                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805182645                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805183444                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805183921                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805184054                    142218 bytes  mtime=2026-08-05T17:52:49.522968+00:00
+  build_terrain.gd.bak.20260805185302                    142239 bytes  mtime=2026-08-05T18:40:54.043792+00:00
+  build_terrain.gd.bak.20260805195526                    142240 bytes  mtime=2026-08-05T18:53:02.756747+00:00
+  build_terrain.gd.bak.20260805195907                    142690 bytes  mtime=2026-08-05T19:55:26.729934+00:00
+  build_terrain.gd.bak.20260805201328                    143140 bytes  mtime=2026-08-05T20:07:02.125474+00:00
+  build_terrain.gd.bak.20260805213608                    142236 bytes  mtime=2026-08-05T21:36:08.570147+00:00
+  build_terrain.gd.bak.20260805213855                    150460 bytes  mtime=2026-08-05T21:38:55.725136+00:00
+  build_terrain.gd.bak.20260805214005                    150460 bytes  mtime=2026-08-05T21:40:05.868132+00:00
+  build_terrain.gd.bak.20260805214525                    150460 bytes  mtime=2026-08-05T21:36:10.885209+00:00
+  build_terrain.gd.bak.20260805214612                    150403 bytes  mtime=2026-08-05T21:45:25.995112+00:00
+  build_terrain.gd.bak.20260805214833                    150352 bytes  mtime=2026-08-05T21:46:12.289864+00:00
+  build_terrain.gd.bak.20260805214849                    142631 bytes  mtime=2026-08-06T01:44:46.608232+00:00
+  build_terrain.gd.bak.20260805214939                    142732 bytes  mtime=2026-08-05T21:48:33.724060+00:00
+  build_terrain.gd.bak.20260805215020                    142631 bytes  mtime=2026-08-06T01:44:46.608232+00:00
+  build_terrain.gd.bak.20260805215757                    142746 bytes  mtime=2026-08-05T21:49:39.531034+00:00
+  build_terrain.gd.bak.20260805215951                    142748 bytes  mtime=2026-08-05T21:57:57.790066+00:00
+  build_terrain.gd.bak.20260805220521                    142743 bytes  mtime=2026-08-05T21:59:51.668260+00:00
+  build_terrain.gd.bak.20260805220632                    142768 bytes  mtime=2026-08-05T22:05:21.567786+00:00
+  build_terrain.gd.bak.20260805223514                    142743 bytes  mtime=2026-08-05T22:06:32.945035+00:00
+  build_terrain.gd.bak.20260805223818                    142743 bytes  mtime=2026-08-05T22:35:14.499115+00:00
+  build_terrain.gd.bak.20260805224914                    142743 bytes  mtime=2026-08-05T22:38:18.304918+00:00
+  build_terrain.gd.bak.20260805230413                    142744 bytes  mtime=2026-08-05T22:49:14.397010+00:00
+  build_terrain.gd.bak.20260805230904                    142735 bytes  mtime=2026-08-05T23:04:13.585084+00:00
+  build_terrain.gd.bak.20260805233109                    142811 bytes  mtime=2026-08-05T23:31:09.887723+00:00
+  build_terrain.gd.bak.20260805233442                    142811 bytes  mtime=2026-08-05T23:34:42.402710+00:00
+  build_terrain.gd.bak.20260805233801                    142811 bytes  mtime=2026-08-05T23:38:01.740698+00:00
+  build_terrain.gd.bak.20260805234119                    143104 bytes  mtime=2026-08-05T23:41:19.830686+00:00
+  build_terrain.gd.bak.20260805234744                    143104 bytes  mtime=2026-08-05T23:47:44.169662+00:00
+  build_terrain.gd.bak.20260805234941                    143104 bytes  mtime=2026-08-05T23:49:41.176655+00:00
+  build_terrain.gd.bak.20260805235103                    143104 bytes  mtime=2026-08-05T23:51:03.375650+00:00
+  build_terrain.gd.bak.20260806005443                    138454 bytes  mtime=2026-08-06T00:54:43.251416+00:00
+  build_terrain.gd.bak.20260806005606                    138454 bytes  mtime=2026-08-06T00:56:06.146411+00:00
+  build_terrain.gd.bak.20260806005917                    142811 bytes  mtime=2026-08-06T00:59:17.030399+00:00
+  build_terrain.gd.bak.20260806010132                    138665 bytes  mtime=2026-08-06T01:01:32.899391+00:00
+  build_terrain.gd.bak.20260806010704                    138289 bytes  mtime=2026-08-06T01:07:04.700371+00:00
+  build_terrain.gd.bak.20260806010807                    138289 bytes  mtime=2026-08-06T01:08:07.103367+00:00
+  build_terrain.gd.bak.20260806010938                    138289 bytes  mtime=2026-08-06T01:09:38.651361+00:00
+  build_terrain.gd.bak.20260806012239                    142811 bytes  mtime=2026-08-06T01:22:39.853313+00:00
+  build_terrain.gd.bak.20260806012518                    142749 bytes  mtime=2026-08-06T01:25:18.922303+00:00
+  build_terrain.gd.bak.20260806012717                    142749 bytes  mtime=2026-08-06T01:27:17.260296+00:00
+  build_terrain.gd.bak.20260806013053                    142635 bytes  mtime=2026-08-06T01:30:53.858283+00:00
+  build_terrain.gd.bak.20260806013616                    142631 bytes  mtime=2026-08-06T01:36:16.529263+00:00
+  build_terrain.gd.bak.20260806013800                    140978 bytes  mtime=2026-08-06T01:38:00.024257+00:00
+  build_terrain.gd.bak.20260806014241                    142631 bytes  mtime=2026-08-06T01:42:42.141239+00:00
+  build_terrain.gd.bak.20260806023823                    142631 bytes  mtime=2026-08-06T02:34:03.268050+00:00
+  build_terrain.gd.bak.20260806024335                    142327 bytes  mtime=2026-08-06T02:38:23.046035+00:00
+  build_terrain.gd.bak.20260806024641                     99867 bytes  mtime=2026-08-06T02:45:51.452007+00:00
+  build_terrain.gd.bak.20260806025311                    142631 bytes  mtime=2026-08-06T02:53:11.334980+00:00
+  build_terrain.gd.bak.20260810184006                    150464 bytes  mtime=2026-08-06T14:31:39.115410+00:00
+  build_terrain.gd.bak.20260810230413                    151570 bytes  mtime=2026-08-10T18:40:06.976307+00:00
+  build_terrain.gd.bak.20260812110623                    153557 bytes  mtime=2026-08-11T22:26:00.539597+00:00
+  build_terrain.gd.bak.20260812110855                    153557 bytes  mtime=2026-08-11T22:26:00.539597+00:00
+  build_terrain.gd.bak.20260812112930                    153557 bytes  mtime=2026-08-11T22:26:00.539597+00:00
+  build_terrain.gd.bak.20260812115139                    151677 bytes  mtime=2026-08-12T11:51:40.002026+00:00
+  build_terrain.gd.bak.20260812115430                    151605 bytes  mtime=2026-08-12T11:54:30.757974+00:00
+  build_terrain.gd.bak.20260812124842                    151276 bytes  mtime=2026-08-12T11:54:30.847972+00:00
+  build_terrain.gd.bak.keys.20260805204027               143243 bytes  mtime=2026-08-05T20:18:21.533689+00:00
+  build_terrain.gd.bak.tabs_fix.20260805213203           142240 bytes  mtime=2026-08-05T21:32:03.859162+00:00
+  build_terrain.gd.bak.telemetry.20260805200331          143140 bytes  mtime=2026-08-05T19:59:07.734696+00:00
+  build_terrain.gd.bak_0314                                8575 bytes  mtime=2026-06-25T16:01:13.596631+00:00
+  build_terrain.gd.bak_20260706-144724                    84930 bytes  mtime=2026-07-06T18:47:24.465024+00:00
+  build_terrain.gd.bak_20260706-150526                    66188 bytes  mtime=2026-07-06T19:02:59.309714+00:00
+  build_terrain.gd.bak_20260706-150709                    66188 bytes  mtime=2026-07-06T19:02:59.309714+00:00
+  build_terrain.gd.bak_20260707_173928                    95042 bytes  mtime=2026-07-07T21:39:28.188468+00:00
+  build_terrain.gd.bak_20260707_181426                    96379 bytes  mtime=2026-07-07T22:14:26.041504+00:00
+  build_terrain.gd.bak_20260707_183634                    97997 bytes  mtime=2026-07-07T22:36:34.077768+00:00
+  build_terrain.gd.bak_20260707_193643                    98492 bytes  mtime=2026-07-07T23:36:43.098007+00:00
+  build_terrain.gd.bak_20260709_214645                    98762 bytes  mtime=2026-07-10T01:29:20.722688+00:00
+  build_terrain.gd.bak_20260709_215923                    98800 bytes  mtime=2026-07-10T01:46:45.544042+00:00
+  build_terrain.gd.bak_20260709_222207                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_222653                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_223046                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_223251                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_223347                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_225015                    99214 bytes  mtime=2026-07-10T02:39:28.087592+00:00
+  build_terrain.gd.bak_20260709_225239                    99210 bytes  mtime=2026-07-10T02:50:15.710901+00:00
+  build_terrain.gd.bak_20260709_225316                    99210 bytes  mtime=2026-07-10T02:50:15.710901+00:00
+  build_terrain.gd.bak_20260709_225334                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_225402                    99007 bytes  mtime=2026-07-10T02:11:22.506874+00:00
+  build_terrain.gd.bak_20260709_225600                    99007 bytes  mtime=2026-07-10T02:55:52.836563+00:00
+  build_terrain.gd.bak_20260711_024216                    13150 bytes  mtime=2026-07-11T06:42:17.092635+00:00
+  build_terrain.gd.bak_20260711_025213                    99325 bytes  mtime=2026-07-11T06:52:13.866598+00:00
+  build_terrain.gd.bak_20260805233130                    142045 bytes  mtime=2026-08-06T03:31:30.981839+00:00
+  build_terrain.gd.bak_20260805233319                    150464 bytes  mtime=2026-08-06T03:33:19.945832+00:00
+  build_terrain.gd.bak_20260805233428                    150464 bytes  mtime=2026-08-06T03:34:28.699828+00:00
+  build_terrain.gd.bak_20260805233754                    139495 bytes  mtime=2026-08-06T03:37:54.527815+00:00
+  build_terrain.gd.bak_20260805233957                    139495 bytes  mtime=2026-08-06T03:39:57.570808+00:00
+  build_terrain.gd.bak_20260805234346                    139495 bytes  mtime=2026-08-06T03:43:46.484794+00:00
+  build_terrain.gd.bak_20260805234546                    139495 bytes  mtime=2026-08-06T03:45:46.697787+00:00
+  build_terrain.gd.bak_20260805234750                    139495 bytes  mtime=2026-08-06T03:47:50.493779+00:00
+  build_terrain.gd.bak_arm_only                          139359 bytes  mtime=2026-08-06T04:08:28.177103+00:00
+  build_terrain.gd.bak_attach2                            57178 bytes  mtime=2026-07-03T22:30:25.870401+00:00
+  build_terrain.gd.bak_attach_fc                          56825 bytes  mtime=2026-07-02T01:54:53.567094+00:00
+  build_terrain.gd.bak_auto                              143100 bytes  mtime=2026-08-06T03:59:08.909562+00:00
+  build_terrain.gd.bak_before_fix                         84782 bytes  mtime=2026-07-06T14:46:03.643600+00:00
+  build_terrain.gd.bak_before_restore_20260706-150945     66188 bytes  mtime=2026-07-06T19:02:59.309714+00:00
+  build_terrain.gd.bak_cam_pos_20260706_195949            85873 bytes  mtime=2026-07-06T23:34:54.938610+00:00
+  build_terrain.gd.bak_camera_fix                         96543 bytes  mtime=2026-07-07T20:32:04.996415+00:00
+  build_terrain.gd.bak_camera_save_both                   94850 bytes  mtime=2026-07-07T21:09:35.849924+00:00
+  build_terrain.gd.bak_final_20260706-150018              66154 bytes  mtime=2026-07-06T19:00:18.758743+00:00
+  build_terrain.gd.bak_fix_20260706-145212                66162 bytes  mtime=2026-07-06T18:52:12.445606+00:00
+  build_terrain.gd.bak_fix_20260706-145233                66154 bytes  mtime=2026-07-06T18:52:33.832945+00:00
+  build_terrain.gd.bak_fix_20260706_181416                85804 bytes  mtime=2026-07-06T19:48:32.014979+00:00
+  build_terrain.gd.bak_fix_duplicate                      95407 bytes  mtime=2026-07-07T21:15:40.179613+00:00
+  build_terrain.gd.bak_fix_plane                          84679 bytes  mtime=2026-07-06T13:42:46.912173+00:00
+  build_terrain.gd.bak_fix_setup_plane                    84760 bytes  mtime=2026-07-06T14:37:38.943530+00:00
+  build_terrain.gd.bak_fixed                             139495 bytes  mtime=2026-08-06T04:01:00.933825+00:00
+  build_terrain.gd.bak_frustum_full_20260706_203238       86190 bytes  mtime=2026-07-07T00:26:54.450485+00:00
+  build_terrain.gd.bak_full_merge                        150464 bytes  mtime=2026-08-06T14:31:38.873805+00:00
+  build_terrain.gd.bak_full_merge.final_backup_20260806131757   146751 bytes  mtime=2026-08-06T13:17:57.424681+00:00
+  build_terrain.gd.bak_full_merge.fix_backup             142279 bytes  mtime=2026-08-06T13:33:10.949625+00:00
+  build_terrain.gd.bak_full_merge.pre_20260806142742     150464 bytes  mtime=2026-08-06T14:27:42.186424+00:00
+  build_terrain.gd.bak_full_merge.pre_20260806142857     150464 bytes  mtime=2026-08-06T14:28:57.914420+00:00
+  build_terrain.gd.bak_full_merge.pre_20260806143138     150464 bytes  mtime=2026-08-06T14:31:38.814410+00:00
+  build_terrain.gd.bak_full_merge.pre_merge_20260806141927   142777 bytes  mtime=2026-08-06T14:19:27.175455+00:00
+  build_terrain.gd.bak_full_merge.pre_merge_20260806142055   150464 bytes  mtime=2026-08-06T14:20:55.669449+00:00
+  build_terrain.gd.bak_full_merge.pre_merge_20260806142146   150464 bytes  mtime=2026-08-06T14:21:46.132446+00:00
+  build_terrain.gd.bak_full_merge.restore_before         146276 bytes  mtime=2026-08-06T12:22:15.006886+00:00
+  build_terrain.gd.bak_full_merge.vis_backup             142279 bytes  mtime=2026-08-06T13:28:15.591643+00:00
+  build_terrain.gd.bak_indent_fix                         84785 bytes  mtime=2026-07-06T14:43:12.460752+00:00
+  build_terrain.gd.bak_indent_fix_20260706_200624         86009 bytes  mtime=2026-07-06T23:59:49.639533+00:00
+  build_terrain.gd.bak_input_debug                        95886 bytes  mtime=2026-07-07T20:23:34.827811+00:00
+  build_terrain.gd.bak_input_debug2                       96496 bytes  mtime=2026-07-07T20:27:37.565411+00:00
+  build_terrain.gd.bak_input_fix                          94751 bytes  mtime=2026-07-07T20:48:41.928215+00:00
+  build_terrain.gd.bak_iterative_29_20260706_202654       86009 bytes  mtime=2026-07-07T00:06:24.264618+00:00
+  build_terrain.gd.bak_look_at_character                  84667 bytes  mtime=2026-07-06T15:46:17.767024+00:00
+  build_terrain.gd.bak_lookat_20260706_195303             85873 bytes  mtime=2026-07-06T23:34:54.938610+00:00
+  build_terrain.gd.bak_merge_poll                        143471 bytes  mtime=2026-08-06T04:05:22.392886+00:00
+  build_terrain.gd.bak_nullcheck                          76659 bytes  mtime=2026-06-25T16:01:13.645631+00:00
+  build_terrain.gd.bak_orbit_v2_20260706_192123           85804 bytes  mtime=2026-07-06T19:48:32.014979+00:00
+  build_terrain.gd.bak_orbit_v3_20260706_192607           85883 bytes  mtime=2026-07-06T23:21:23.637928+00:00
+  build_terrain.gd.bak_orbit_v5_20260706_193055           85883 bytes  mtime=2026-07-06T23:21:23.637928+00:00
+  build_terrain.gd.bak_orbit_v6_20260706_193454           85883 bytes  mtime=2026-07-06T23:21:23.637928+00:00
+  build_terrain.gd.bak_patched_20260805234750            150464 bytes  mtime=2026-08-06T03:47:50.522779+00:00
+  build_terrain.gd.bak_paused_camera                      92578 bytes  mtime=2026-07-07T20:44:25.930517+00:00
+  build_terrain.gd.bak_paused_start                       94445 bytes  mtime=2026-07-07T19:55:48.224017+00:00
+  build_terrain.gd.bak_planesave                          93923 bytes  mtime=2026-07-07T18:30:46.843995+00:00
+  build_terrain.gd.bak_precommit                          92428 bytes  mtime=2026-07-07T17:37:48.100514+00:00
+  build_terrain.gd.bak_remove                             56360 bytes  mtime=2026-07-01T15:25:22.973613+00:00
+  build_terrain.gd.bak_replace                           143100 bytes  mtime=2026-08-06T03:59:29.129943+00:00
+  build_terrain.gd.bak_save_load                          92578 bytes  mtime=2026-07-07T18:27:08.128570+00:00
+  build_terrain.gd.bak_tree_fix                           95868 bytes  mtime=2026-07-07T20:04:55.003014+00:00
+  build_terrain.gd.bak_tree_fix2                          95880 bytes  mtime=2026-07-07T20:11:22.608705+00:00
+  build_terrain.gd.before_resolution_fix                  10187 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.before_restore_20260612_184520         76019 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.before_restore_20260612_185743         75898 bytes  mtime=2026-06-25T16:01:13.614631+00:00
+  build_terrain.gd.before_rollback                        99268 bytes  mtime=2026-07-08T13:49:12.116711+00:00
+  build_terrain.gd.broken.20260609_145753                 81773 bytes  mtime=2026-06-25T16:01:13.607631+00:00
+  build_terrain.gd.broken_20260617                        19266 bytes  mtime=2026-06-25T16:01:13.636631+00:00
+  build_terrain.gd.broken_20260617_115515                 75349 bytes  mtime=2026-06-25T16:01:13.636631+00:00
+  build_terrain.gd.broken_20260629_132515                 75222 bytes  mtime=2026-06-29T17:25:15.838103+00:00
+  build_terrain.gd.broken_20260629_135931                 12638 bytes  mtime=2026-06-29T17:38:18.976963+00:00
+  build_terrain.gd.broken_20260629_140605                 83396 bytes  mtime=2026-06-25T16:01:13.648631+00:00
+  build_terrain.gd.broken_20260629_140825                 83396 bytes  mtime=2026-06-25T16:01:13.648631+00:00
+  build_terrain.gd.broken_20260629_140950                 83396 bytes  mtime=2026-06-25T16:01:13.648631+00:00
+  build_terrain.gd.broken_20260629_142518                 83396 bytes  mtime=2026-06-25T16:01:13.648631+00:00
+  build_terrain.gd.broken_20260711_013859                103842 bytes  mtime=2026-07-11T05:38:59.090868+00:00
+  build_terrain.gd.broken_20260711_014529                106167 bytes  mtime=2026-07-11T05:45:29.275844+00:00
+  build_terrain.gd.broken_20260711_014733                106167 bytes  mtime=2026-07-11T05:47:33.065836+00:00
+  build_terrain.gd.camera_definitive                      58057 bytes  mtime=2026-07-02T01:33:12.866589+00:00
+  build_terrain.gd.camera_follow                          57608 bytes  mtime=2026-07-02T01:25:32.622108+00:00
+  build_terrain.gd.clean_pip_20260603_173044              10187 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.comment_cleanup                        56302 bytes  mtime=2026-07-01T22:27:03.501956+00:00
+  build_terrain.gd.comp_diag_backup                      146394 bytes  mtime=2026-08-06T12:57:29.100756+00:00
+  build_terrain.gd.debug_prints                           57450 bytes  mtime=2026-07-02T01:22:52.358837+00:00
+  build_terrain.gd.delete_dup                             56570 bytes  mtime=2026-07-01T19:03:57.875502+00:00
+  build_terrain.gd.delta_fix                              55612 bytes  mtime=2026-07-01T19:08:25.040164+00:00
+  build_terrain.gd.delta_fix_safe                         55612 bytes  mtime=2026-07-01T19:08:25.040164+00:00
+  build_terrain.gd.diag_backup                           139909 bytes  mtime=2026-08-06T11:52:09.760997+00:00
+  build_terrain.gd.diag_live_backup                      139909 bytes  mtime=2026-08-06T12:15:14.076912+00:00
+  build_terrain.gd.diag_pos                               56417 bytes  mtime=2026-07-02T01:46:54.517108+00:00
+  build_terrain.gd.diagnostic_backup_20260612_162038      75681 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.exact_bak                              56224 bytes  mtime=2026-07-01T21:07:45.922603+00:00
+  build_terrain.gd.failed                                 76710 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.final_bak                              55080 bytes  mtime=2026-07-01T20:06:47.824711+00:00
+  build_terrain.gd.final_combined                         58009 bytes  mtime=2026-07-02T01:19:44.136097+00:00
+  build_terrain.gd.final_fix                              57806 bytes  mtime=2026-07-01T19:00:12.643220+00:00
+  build_terrain.gd.final_gate_backup_20260603_175436      13123 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.final_restore_backup                   55080 bytes  mtime=2026-07-01T19:45:02.035749+00:00
+  build_terrain.gd.fix_altitude                           58009 bytes  mtime=2026-07-02T01:19:44.136097+00:00
+  build_terrain.gd.fix_backup                             55080 bytes  mtime=2026-07-01T20:06:47.824711+00:00
+  build_terrain.gd.fix_backup_20260603_170938             10140 bytes  mtime=2026-06-25T16:01:13.596631+00:00
+  build_terrain.gd.fix_bak                                56053 bytes  mtime=2026-07-01T21:06:13.311634+00:00
+  build_terrain.gd.fixed                                  13156 bytes  mtime=2026-07-11T06:02:52.575682+00:00
+  build_terrain.gd.full_fix_backup                       139909 bytes  mtime=2026-08-06T11:56:14.886982+00:00
+  build_terrain.gd.fully_transparent                      57306 bytes  mtime=2026-07-02T01:08:03.030085+00:00
+  build_terrain.gd.gd.bak_orbit_20260706_182008           80545 bytes  mtime=2026-07-04T14:50:32.001613+00:00
+  build_terrain.gd.gd.before_fallback_20260612_145436     75440 bytes  mtime=2026-06-25T16:01:13.612631+00:00
+  build_terrain.gd.gd.before_fallback_20260612_150915     75440 bytes  mtime=2026-06-25T16:01:13.612631+00:00
+  build_terrain.gd.indent_complete_fix                    57284 bytes  mtime=2026-07-01T18:56:13.378860+00:00
+  build_terrain.gd.indent_final_fix                       57272 bytes  mtime=2026-07-01T18:54:36.871839+00:00
+  build_terrain.gd.indent_fix                             57295 bytes  mtime=2026-07-01T18:51:48.350121+00:00
+  build_terrain.gd.intermediate                           81925 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.iterative_fix                          57806 bytes  mtime=2026-07-01T18:59:22.632986+00:00
+  build_terrain.gd.line_1508_fix                          55799 bytes  mtime=2026-07-01T19:04:03.620043+00:00
+  build_terrain.gd.lookat_fix                             54740 bytes  mtime=2026-07-01T19:15:35.883801+00:00
+  build_terrain.gd.manual_backup                          57806 bytes  mtime=2026-07-01T19:03:35.033823+00:00
+  build_terrain.gd.manual_pip_20260603_173219             10187 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.orbit_clean                            56227 bytes  mtime=2026-07-02T00:53:25.709203+00:00
+  build_terrain.gd.orbit_correct                          56227 bytes  mtime=2026-07-02T00:57:21.307195+00:00
+  build_terrain.gd.orbit_vis                              56272 bytes  mtime=2026-07-02T00:48:08.114212+00:00
+  build_terrain.gd.parse_camera_fix                       58840 bytes  mtime=2026-07-02T01:36:31.012992+00:00
+  build_terrain.gd.parse_fix                              55080 bytes  mtime=2026-07-01T19:45:02.035749+00:00
+  build_terrain.gd.pip_backup_20260603_165316             10146 bytes  mtime=2026-06-25T16:01:13.596631+00:00
+  build_terrain.gd.pip_backup_20260603_172745             10190 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.pip_backup_tabs_20260603_172850        10190 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.plane_orbit_fix                        57279 bytes  mtime=2026-07-02T00:59:13.808192+00:00
+  build_terrain.gd.plane_visible                          56227 bytes  mtime=2026-07-01T22:27:14.708462+00:00
+  build_terrain.gd.pre_141                                76114 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_142                                77500 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_145                                78686 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_147                                80165 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_149                                80302 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_151                                80460 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_152                                80796 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_154                                80796 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_155                                80960 bytes  mtime=2026-06-25T16:01:13.646631+00:00
+  build_terrain.gd.pre_altitude_fix                       56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_camera_final                       56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_camera_fix                         56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_deterministic_fix                  56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_final_backup                       13123 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.pre_final_camera_fix                   56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_final_fix                          56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_final_restore                      56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_fix_tabs                           56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_restore                            55080 bytes  mtime=2026-07-01T19:45:02.035749+00:00
+  build_terrain.gd.pre_restore_20260624_111716            80024 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_safe_camera                        56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_safe_fix                           56467 bytes  mtime=2026-07-01T17:26:45.640994+00:00
+  build_terrain.gd.pre_screenshot_capture                 80960 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_screenshot_patch_155               80960 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_screenshot_patch_v157              80960 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_screenshot_patch_v158              80960 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_screenshot_patch_v159              81439 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_simple_fix                         56467 bytes  mtime=2026-07-01T17:28:16.630992+00:00
+  build_terrain.gd.pre_strip                              80960 bytes  mtime=2026-06-25T16:01:13.647631+00:00
+  build_terrain.gd.pre_visibility_fix                     56467 bytes  mtime=2026-07-01T16:50:27.527059+00:00
+  build_terrain.gd.remove_delta_safe                      55612 bytes  mtime=2026-07-01T19:08:25.040164+00:00
+  build_terrain.gd.rollback_20260603_175936               14196 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.rollback_20260603_180219               14196 bytes  mtime=2026-06-25T16:01:13.597631+00:00
+  build_terrain.gd.rollback_20260603_180442               14196 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260603_182047               10660 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260603_182752               10834 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260603_192809               10601 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260603_193237               10601 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260603_194611               10601 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260603_195153               10601 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260604_123240               10692 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260604_133500               10692 bytes  mtime=2026-06-25T16:01:13.598631+00:00
+  build_terrain.gd.rollback_20260604_155755               10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.rollback_20260604_160121               10692 bytes  mtime=2026-06-25T16:01:13.599631+00:00
+  build_terrain.gd.runtime_diag                           57608 bytes  mtime=2026-07-02T01:25:32.622108+00:00
+  build_terrain.gd.safe_fix                               58840 bytes  mtime=2026-07-02T01:36:31.012992+00:00
+  build_terrain.gd.safe_orbit                             56227 bytes  mtime=2026-07-02T00:55:01.116200+00:00
+  build_terrain.gd.scene_diag                             57333 bytes  mtime=2026-07-02T01:10:41.492172+00:00
+  build_terrain.gd.tabs_fix                               55799 bytes  mtime=2026-07-01T19:05:57.936821+00:00
+  build_terrain.gd.temp                                   75233 bytes  mtime=2026-06-25T16:01:13.613631+00:00
+  build_terrain.gd.three_fixes                            55860 bytes  mtime=2026-07-02T01:43:56.063113+00:00
+  build_terrain.gd.transparent_fix                        56227 bytes  mtime=2026-07-01T22:27:14.708462+00:00
+  build_terrain.gd.uid                                       19 bytes  mtime=2026-07-15T09:09:16.677620+00:00
+  build_terrain.gd.unpause_bak                            55711 bytes  mtime=2026-07-01T21:00:48.220058+00:00
+  build_terrain.gd.unpause_indent_fix                     57295 bytes  mtime=2026-07-01T18:53:14.024841+00:00
+  build_terrain.gd.vis_bak                                56563 bytes  mtime=2026-07-02T01:48:43.828104+00:00
+  build_terrain.gd.visibility_fix                         56179 bytes  mtime=2026-07-02T01:44:46.318111+00:00
+  build_terrain.gdclear                                   97857 bytes  mtime=2026-07-08T01:17:52.971842+00:00
+
+=== STEP 8: GIT HISTORY FOR TARGET (H1 vs H2 discriminator) ===
+  (git log exit=0)
+  working-tree status for target: ''
+
+=== STEP 9: HYPOTHESIS RESOLUTION ===
+  VERDICT: H5 - HALF APPLIED: exactly one of the two functions exists (deploy=False do=True).
+  BLOCKER: 1 symbol(s) the reserve code depends on are MISSING.
+           Any patch applied now would fail at parse or run time.
+
+=== STEP 10: MACHINE-READABLE FINDINGS ===
+{
+  "backup_count": 639,
+  "duplicate_funcs": {},
+  "git_dirty": false,
+  "godot_check": "PASS",
+  "godot_error_text": "Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org\n\n[VERBATIM] SqliteDb.gd _ready() called\n[VERBATIM] SqliteDb.gd _ready() called\n[VERBATIM] SqliteDb.gd _ready() called\n[VERBATIM] SqliteDb: _ready started\n[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db\n[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db\n[HealthChecker] Control hierarchy dumped to DB in 0ms\n[VERBATIM] DatabaseGuard.gd _ready() called\n[VERBATIM] DatabaseGuard: _ready ok=true\n[VERBATIM] ResourceThrottle.gd _ready() called\n[VERBATIM] ResourceThrottle: table ensured\n[VERBATIM] ResourceThrottle: _ready ok=true\n[VERBATIM] SqliteWatchdog.gd _ready() called\n[VERBATIM] SqliteWatchdog.gd _ready() called\n[VERBATIM] SqliteWatchdog.gd _ready() called\n[VERBATIM] Watchdog: _ready started\n[VERBATIM] Watchdog: started, polling user://screenshots/\n[VERBATIM] Watchdog: scan disabled \u2014 single-launch screenshot mode\n[VERBATIM] Watchdog: _ready completed\n[StructuredLogger] WARN: could not open /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl \u2014 stdout only\n[StructuredLogger] sentry_available=false\n[VERBATIM] 2026-08-12T11:43:48 GameIntegrity autoload initialized\n[VERBATIM] 2026-08-12T11:43:48 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log\n[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true\n[AUDIT] _ready: ENTER\n[HUD_DIAG] _ready called\n[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0\n[AUDIT] _resolve_hub_url: ENTER\n[AUDIT] _build_ui: ENTER\n[AUDIT] _load_saved_position: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDIT] _mklabel: ENTER\n[AUDI",
+  "has_deploy_reserve": false,
+  "has_do_reserve": true,
+  "leading_space_lines": 0,
+  "missing_symbols": [
+    "func _deploy_reserve"
+  ],
+  "mixed_indent_lines": 0,
+  "nonascii_codepoints": [
+    "U+2013",
+    "U+2011",
+    "U+2014",
+    "U+00B0",
+    "U+2713",
+    "U+2717",
+    "U+2192",
+    "U+2248",
+    "U+1F4F8"
+  ],
+  "sha256": "498f856d9f5c390b9737fbdf63dbfde61a76b8d4d9e249d9f744fce0fa875c4b",
+  "size_bytes": 149605,
+  "verdict": "H5 - HALF APPLIED: exactly one of the two functions exists (deploy=False do=True)."
+}
+
+=== END DIAGNOSTIC ===
