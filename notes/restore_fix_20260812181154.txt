@@ -1,0 +1,139 @@
+=== RESTORE & FIX REPORT – 20260812181154 UTC ===
+
+Using archive: notes/archive_20260812180013
+
+=== RESTORING ASSETS ===
+✅ Restored: godot_project/assets/terrain/black_env.tres
+[2026-08-12T18:11:54Z] [SUCCESS] restore: godot_project/assets/terrain/black_env.tres restored
+⚠️  Source not found in archive: godot_project/assets/characters/parachutist.fbx
+[2026-08-12T18:11:54Z] [FAILURE] restore: godot_project/assets/characters/parachutist.fbx missing in archive
+⚠️  Source not found in archive: godot_project/assets/aircraft/cesna_airplane.glb
+[2026-08-12T18:11:54Z] [FAILURE] restore: godot_project/assets/aircraft/cesna_airplane.glb missing in archive
+⚠️  Source not found in archive: godot_project/assets/canopy/parachute.glb
+[2026-08-12T18:11:54Z] [FAILURE] restore: godot_project/assets/canopy/parachute.glb missing in archive
+
+=== FIXING WIND LABEL BUG ===
+✅ Wind label assignment guarded.
+[2026-08-12T18:11:54Z] [SUCCESS] fix_wind_label: patched build_terrain.gd
+
+=== HEADLESS TEST ===
+Running godot --headless --quit...
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Used space character for indentation instead of tab as used before in the file.
+          at: GDScript::reload (res://scripts/build_terrain.gd:2377)
+ERROR: Failed to load script "res://scripts/build_terrain.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:2907)
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb.gd _ready() called
+[VERBATIM] SqliteDb: _ready started
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[VERBATIM] DB OPEN OK /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+[HealthChecker] Control hierarchy dumped to DB in 1ms
+[VERBATIM] DatabaseGuard.gd _ready() called
+[VERBATIM] DatabaseGuard: _ready ok=true
+[VERBATIM] ResourceThrottle.gd _ready() called
+[VERBATIM] ResourceThrottle: table ensured
+[VERBATIM] ResourceThrottle: _ready ok=true
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] SqliteWatchdog.gd _ready() called
+[VERBATIM] Watchdog: _ready started
+[VERBATIM] Watchdog: started, polling user://screenshots/
+[VERBATIM] Watchdog: scan disabled — single-launch screenshot mode
+[VERBATIM] Watchdog: _ready completed
+[StructuredLogger] WARN: could not open /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/logs/godot_logs.jsonl — stdout only
+[StructuredLogger] sentry_available=false
+[VERBATIM] 2026-08-12T14:11:56 GameIntegrity autoload initialized
+[VERBATIM] 2026-08-12T14:11:56 Log file: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/game_integrity.log
+[ALTIMETER] ready: layer=1 visible=true panel.pos=(50.0, 200.0) panel.size=(200.0, 100.0) panel.visible=true
+[AUDIT] _ready: ENTER
+[HUD_DIAG] _ready called
+[HUD_DIAG] is_processing_input()=true is_inside_tree()=true frame=0 process_mode=0
+[AUDIT] _resolve_hub_url: ENTER
+[AUDIT] _build_ui: ENTER
+[AUDIT] _load_saved_position: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _mklabel: ENTER
+[AUDIT] _poll_fast: ENTER
+[AUDIT] _poll_slow: ENTER
+Wind field loaded:
+  Grid: 31 x 31 x 21
+  Spacing: 10.0 m
+  Bounds: (0.0, 0.0, 0.0) to (300.0, 300.0, 200.0)
+  Velocities: 20181 vectors
+[FPANEL] ready. Toggle: F3 / F9 / ` / T (polled in _process, not _input)
+[FPANEL_DIAG] is_inside_tree()=true process_mode=0 frame=0 layer=100 visible=false
+[HubManager] Hub spawn requested pid=2484836 non-blocking
+[VERBATIM] 2026-08-12T14:11:56 Starting full integrity check and repair
+[VERBATIM] 2026-08-12T14:11:58 Pre‑repair: fixed mixed indentation in res://scripts/build_terrain.gd
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_hud_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_tool_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup.20260607_151124_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup.20260607_151237_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/fix_forensic_hud_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/AirplaneController_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/CanopyReplay_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ComponentRegistry_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/DatabaseGuard_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/FlightTrack_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/GameIntegrity_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/GameIntegrity_2606150714_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HUDManager_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/HubManager_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/InputManager_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ResourceThrottle_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/SqliteWatchdog_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/StructuredLogger_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/ViewPoseController_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/audit_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/auto_heal_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:58 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-205552_2026-08-12_14-11-58.gd.backup
+[VERBATIM] 2026-08-12T14:11:59 Backup created: /home/owner/.local/share/godot/app_userdata/Parachute Landing Pattern v314/backups/build_terrain.backup_20260707-210153_2026-08-12_14-11-58.gd.backup
+./restore_and_fix.sh: line 142: 2484821 Killed                     godot --headless --quit --path "$PROJECT_ROOT/godot_project" 2>&1
+     2484822 Done                       | head -100
+⚠️  Headless test exited with code 137 – manual testing recommended.
+[2026-08-12T18:11:59Z] [FAILURE] test: headless exit 137
+
+=== DATABASE HARDENING (re-run) ===
+[2026-08-12T18:11:59Z] [SUCCESS] dependency: sqlite3 found
+[2026-08-12T18:11:59Z] [SUCCESS] db_check: Database: ./rule_compliance.db (12K)
+=== DATABASE HARDENING – 20260812181159 UTC ===
+Database: ./rule_compliance.db
+
+=== 1. INTEGRITY CHECK ===
+ok
+[2026-08-12T18:11:59Z] [SUCCESS] integrity_check: Database is clean
+
+=== 2. ENABLE WAL MODE ===
+Current journal mode: wal
+[2026-08-12T18:11:59Z] [SUCCESS] wal_enable: WAL mode already enabled
+
+=== 3. CREATE BACKUP ===
+[2026-08-12T18:11:59Z] [SUCCESS] backup: Backup created: notes/db_backups/rule_compliance_20260812181159.db (12K)
+
+=== 4. VERIFY BACKUP ===
+[2026-08-12T18:11:59Z] [SUCCESS] backup_verify: Backup integrity check passed
+
+=== 5. BACKUP HISTORY ===
+  rule_compliance_20260812180902.db (12K)
+  rule_compliance_20260812181159.db (12K)
+
+=== END ===
+[2026-08-12T18:12:00Z] [SUCCESS] harden_complete: Log: notes/db_backups/harden_20260812181159.log
+
+=== SUMMARY ===
+Backup:  notes/db_backups/rule_compliance_20260812181159.db
+Log:     notes/db_backups/harden_20260812181159.log
+To restore: sqlite3 ./rule_compliance.db ".restore notes/db_backups/rule_compliance_20260812181159.db"
+[2026-08-12T18:12:00Z] [SUCCESS] harden: re-ran harden_database.sh
+
+=== END REPORT ===
