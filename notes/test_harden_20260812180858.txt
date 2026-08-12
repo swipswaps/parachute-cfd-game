@@ -1,0 +1,43 @@
+=== TEST & HARDEN REPORT – 20260812180858 UTC ===
+
+=== 1. TESTING GAME (headless) ===
+Running godot --headless --quit...
+Godot Engine v4.6.3.stable.fedora.7d41c59c4 - https://godotengine.org
+
+✅ Game headless test passed (exit 0).
+[2026-08-12T18:09:02Z] [SUCCESS] game_test: headless exit 0
+
+=== 2. DATABASE HARDENING ===
+[2026-08-12T18:09:02Z] [SUCCESS] dependency: sqlite3 found
+[2026-08-12T18:09:02Z] [SUCCESS] db_check: Database: ./rule_compliance.db (12K)
+=== DATABASE HARDENING – 20260812180902 UTC ===
+Database: ./rule_compliance.db
+
+=== 1. INTEGRITY CHECK ===
+ok
+[2026-08-12T18:09:02Z] [SUCCESS] integrity_check: Database is clean
+
+=== 2. ENABLE WAL MODE ===
+Current journal mode: delete
+New journal mode: wal
+[2026-08-12T18:09:02Z] [SUCCESS] wal_enable: WAL mode enabled
+
+=== 3. CREATE BACKUP ===
+[2026-08-12T18:09:03Z] [SUCCESS] backup: Backup created: notes/db_backups/rule_compliance_20260812180902.db (12K)
+
+=== 4. VERIFY BACKUP ===
+[2026-08-12T18:09:03Z] [SUCCESS] backup_verify: Backup integrity check passed
+
+=== 5. BACKUP HISTORY ===
+  rule_compliance_20260812180902.db (12K)
+
+=== END ===
+[2026-08-12T18:09:03Z] [SUCCESS] harden_complete: Log: notes/db_backups/harden_20260812180902.log
+
+=== SUMMARY ===
+Backup:  notes/db_backups/rule_compliance_20260812180902.db
+Log:     notes/db_backups/harden_20260812180902.log
+To restore: sqlite3 ./rule_compliance.db ".restore notes/db_backups/rule_compliance_20260812180902.db"
+[2026-08-12T18:09:03Z] [SUCCESS] harden_run: executed harden_database.sh
+
+=== END REPORT ===
