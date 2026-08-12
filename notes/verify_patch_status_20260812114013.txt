@@ -1,0 +1,109 @@
+=== verify_patch_status.sh — 20260812114013 UTC ===
+
+./verify_patch_status.sh: line 39: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+./verify_patch_status.sh: line 40: printf: --: invalid option
+printf: usage: printf [-v var] format [arguments]
+[FAIL] Colour loop still uses COLOUR_BOX.
+[PASS] _do_cutaway transitions to FREEFALL.
+
+--- Database schema ---
+CREATE TABLE source_snapshots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            sha256 TEXT NOT NULL,
+            content TEXT NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE TABLE source_mutations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            mutation_name TEXT NOT NULL,
+            before_sha256 TEXT NOT NULL,
+            after_sha256 TEXT NOT NULL,
+            success INTEGER NOT NULL,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE parse_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT NOT NULL,
+            parser TEXT NOT NULL,
+            return_code INTEGER NOT NULL,
+            output TEXT,
+            created_ts DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+CREATE TABLE issues (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), symptom TEXT NOT NULL, root_cause TEXT NOT NULL, fix_applied TEXT NOT NULL, verified INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE screenshots (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), filename TEXT NOT NULL UNIQUE, path TEXT NOT NULL);
+CREATE TABLE parse_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL DEFAULT (datetime('now')), script TEXT NOT NULL, error_text TEXT NOT NULL, fix_script TEXT NOT NULL, fix_result TEXT NOT NULL DEFAULT 'pending');
+CREATE TABLE game_state_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            run_id INTEGER,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            game_state INTEGER,
+            altitude REAL,
+            is_deployed BOOLEAN,
+            error TEXT
+        );
+CREATE TABLE omissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL DEFAULT (datetime('now')),
+            omission_id TEXT NOT NULL UNIQUE,
+            file TEXT NOT NULL,
+            symptom TEXT NOT NULL,
+            root_cause TEXT NOT NULL,
+            fix_applied TEXT NOT NULL,
+            fix_status TEXT NOT NULL DEFAULT 'pending',
+            verified INTEGER NOT NULL DEFAULT 0);
+CREATE TABLE resource_contention_log (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+
+--- Tables with patch/status keywords ---
+
+Table: patch_history
+1|2026-07-08 22:38:13|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd|dry_run|1|Showed diff
+2|2026-07-08 22:41:17|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd|apply|1|Inserted auto‑start block in _ready()
+
+Table: component_status
+13|20260806133310|ALTIMETER|RENDERED|[2026-08-06 09:33:12]
+14|20260806133310|CHARACTER|RENDERED|[2026-08-06 09:33:12]
+15|20260806133310|ALTIMETER|RENDERED|[2026-08-06 09:33:12]
+
+Table: project_config
+indentation|tabs
+
+Table: rule_compliance
+1|run_20260804223425|1|0|Error does not mention _plane_node|2026-08-04 22:34:25|||
+2||1|1|bytes read from live file|2026-08-05 00:57:05|fix_camera_before_terrain.sh|2026-08-05T00:57:05.101932+00:00|
+3||6|1|count==1 guard on both old_str and anchor|2026-08-05 00:57:05|fix_camera_before_terrain.sh|2026-08-05T00:57:05.101932+00:00|
+4||7|1|no sed|2026-08-05 00:57:05|fix_camera_before_terrain.sh|2026-08-05T00:57:05.101932+00:00|
+5||9|1|read-after-write verified|2026-08-05 00:57:05|fix_camera_before_terrain.sh|2026-08-05T00:57:05.101932+00:00|
+
+Table: files_to_fix
+2|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/GameIntegrity_2606150714.gd|20|Assignment = used where == required in condition|1|	var sqlite_ok: bool = ClassDB.class_exists("SQLite")|\1 == \2|fixed|0|3||2026-06-25T12:44:50.927077
+3|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/InputManager.gd|24|Assignment = used where == required in condition|1|			var event = InputEventKey.new()|\1 == \2|skipped|0|3||2026-06-25T12:44:51.032272
+5|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/StructuredLogger.gd|79|Assignment = used where == required in condition|1|var log_abs_path: String = ""|\1 == \2|fixed|0|3||2026-06-25T12:44:51.345479
+6|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/altimeter_hud.gd|17|Assignment = used where == required in condition|1|	layer = 3|\1 == \2|fixed|0|3||2026-06-25T12:44:51.452631
+7|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/audit.gd|27|Assignment = used where == required in condition|1|	print("[VERBATIM] audit: parse_error script=", script, " err=", error_text.left(60))|\1 == \2|fixed|0|3||2026-06-25T12:44:51.608158
+
+Table: gd_patch_registry
+3922088c-4199-48f5-9173-2bbfe40d8771|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/StructuredLogger.gd|efdd0dfeb69205df70d0f97b129f58d9329ff5ff39ad76e9dc2ab4845937523c|f8224a0474c9c77f19d03229c9f180db3e685b0eb8685f4449cc3fa147a4235b|2026-06-25T20:26:18.714120+00:00
+12a84645-a113-479c-a9ea-c33961b2afdb|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/GameIntegrity_2606201818.gd|7215a96542869b92641169c795c189d12d9a349bf04e86e2a4e95fc3e84b3cd6|113fc3c19787dbea84143ae1d44bf85ec9a4bd34cd9c5298b399c40cc884ff59|2026-06-25T20:26:23.168046+00:00
+e4ba5ec5-d8d8-48aa-9bd8-0f89acc7b027|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/InputManager_0003.gd|0acee86f6d6f2c2a62eb2ecee95edfc8988d9f42c9d00080d0faf8560c59eea5|73a69ce05b9283a5661b078d1a9ac65eb4386d43347874f52e7a6d40d56a4194|2026-06-25T20:26:25.801788+00:00
+4751df7d-9eef-4bbe-b61a-4cd6a11f847c|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/SqliteWatchdog_0002.gd|9aa3553e5430e7bcdc6ef70c2d05cbabf166f1b2b5c699f92f464824eb908a03|f0adaafe2b73ad9ac105d57f3fd22d56ab367858c451f04c2d5b770d7514201a|2026-06-25T20:26:31.910192+00:00
+3b143760-b4b1-456f-9543-444d92d36538|/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/altimeter_hud_0002.gd|71911bbb2f5179f9cac7cc7e3d2cc748eedae83bb609fd6ec7fb09725dbc547f|2d0ea84e3d9ee043bfe1350ca2c1e77b12e87e2ce94ea8f248eb5f2bd3d890f1|2026-06-25T20:26:35.126905+00:00
+
+--- Recent backup files ---
+-rw-r--r--. 1 owner owner 153557 Aug 11 18:26 build_terrain.gd.bak.20260812110623
+-rw-r--r--. 1 owner owner 153557 Aug 11 18:26 build_terrain.gd.bak.20260812110855
+-rw-r--r--. 1 owner owner 153557 Aug 11 18:26 build_terrain.gd.bak.20260812112930
+-rw-r--r--. 1 owner owner 151570 Aug 10 14:40 build_terrain.gd.bak.20260810230413
+-rw-r--r--. 1 owner owner 150464 Aug  6 10:31 build_terrain.gd.bak.20260810184006
+
+=== VERDICT ===
+❌ Patch is NOT fully applied. Missing:
+   - Colour loop still uses COLOUR_BOX
+   You may need to reapply the patch.
+
+=== END REPORT ===
