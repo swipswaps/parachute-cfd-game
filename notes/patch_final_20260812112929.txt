@@ -1,0 +1,146 @@
+=== patch_final.sh — 20260812112929 UTC ===
+
+target: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd
+backup: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260812112930
+sha256 after patch: 782e3e6f432aa27fe62d4ee22a6e076203065431c4554037a2015703598ce2f8
+
+--- DIFF (backup -> patched) ---
+--- /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd.bak.20260812112930	2026-08-11 18:26:00.539596881 -0400
++++ /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/godot_project/scripts/build_terrain.gd	2026-08-12 07:29:30.093286731 -0400
+@@ -327,32 +327,10 @@
+ 		const COLOUR_BOX = 4
+ 		var _colour_t0 := Time.get_ticks_msec()
+ 		for i in range(verts.size()):
+-			# Recover the mesh lattice coordinates from the flat vertex index.
+-			var vx := i % W
+-			var vz := i / W
+-			# Same mapping the elevation lookup uses: mesh space -> source space.
+-			var sx0 := int(float(vx) / float(W - 1) * float(HM_SRC - 1))
+-			var sz0 := int(float(vz) / float(H - 1) * float(HM_SRC - 1))
+-			var acc_r := 0.0
+-			var acc_g := 0.0
+-			var acc_b := 0.0
+-			var n := 0
+-			for dz in range(COLOUR_BOX):
+-				for dx in range(COLOUR_BOX):
+-					# mini() clamps the footprint at the source edge.
+-					var sx := mini(sx0 + dx, HM_SRC - 1)
+-					var sz := mini(sz0 + dz, HM_SRC - 1)
+-					var ci := (sz * HM_SRC + sx) * 3
+-					if ci + 2 < _baked.size():
+-						acc_r += float(_baked[ci])
+-						acc_g += float(_baked[ci + 1])
+-						acc_b += float(_baked[ci + 2])
+-						n += 1
+-			# n == 0 only if the bake is short; 0.5 grey keeps the old behaviour.
+-			var cr := acc_r / (255.0 * float(n)) if n > 0 else 0.5
+-			var cg := acc_g / (255.0 * float(n)) if n > 0 else 0.5
+-			var cb := acc_b / (255.0 * float(n)) if n > 0 else 0.5
+-			# set_color applies to the NEXT vertex added — order matters here.
++			var ci = i * 3
++			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
++			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
++			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+ 			st.set_color(Color(cr, cg, cb, 1.0))
+ 			st.set_uv(uvs[i])
+ 			st.add_vertex(verts[i])
+@@ -1080,39 +1058,18 @@
+ 
+ 
+ func _do_cutaway() -> void:
+-	# Guard removed: is_action_just_pressed fires false by the time _do_cutaway
+-	# is called from _poll_controls which already verified the press.
+-	print("[DIAG] _do_cutaway: ENTER, state=", _game_state)
+-	print("[VERBATIM] ENTER _do_cutaway gate=_game_state=", _game_state)
+-	if not _canopy_deployed:
+-		print("[DIAG] _do_cutaway: early exit – not in DIAGNOSIS")
+-		print("[VERBATIM] EXIT _do_cutaway early=not_in_diagnosis")
+-		return
+-	if _cutaway_done:
+-		print("[DIAG] _do_cutaway: already done")
+-		print("[VERBATIM] EXIT _do_cutaway early=already_done")
++	# Rule #46/#56 fix: cutaway should transition to FREEFALL.
++	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
++	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+ 		return
+-	if _malfunction == MalfunctionType.GOOD:
+-		# USPA SIM: cutting away a good canopy is allowed but dangerous.
+-		# Warn the skydiver — do not block the action.
+-		print("[VERBATIM] WARNING: cutting away GOOD canopy — reserve must follow!")
+-		_show_notification("WARNING: Good canopy cut! Deploy reserve NOW (V)!")
+-		print("[DIAG] _do_cutaway: good canopy cutaway — proceeding with warning")
+-		# fall through to execute cutaway
+-	_cutaway_done = true
+-	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
+-	# returns to brief freefall until reserve deployed.
++	print("[VERBATIM] CUTAWAY: transitioning to FREEFALL")
++	_game_state = GameState.FREEFALL
++	_canopy_deployed = false
+ 	if _canopy_instance:
+ 		_canopy_instance.visible = false
+-	_canopy_deployed = false
+-	print("[VERBATIM] CUTAWAY executed – now deploy RESERVE (V)")
+-	_show_notification("CUTAWAY executed! Deploy reserve (V)")
+-	if not _replay_playing:
+-		_replay_recording.append({"action": "cutaway", "time": Time.get_ticks_msec()})
+-	print("[DIAG] _do_cutaway: EXIT, cutaway_done=", _cutaway_done)
+-	print("[VERBATIM] EXIT _do_cutaway ok=true")
+-
+-
++	_cam_distance = 5.0
++	_show_notification("Cutaway! Deploy reserve (V) or fall free.")
++	print("[VERBATIM] CUTAWAY executed – now in FREEFALL")
+ func _do_reserve() -> void:
+ 	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+ 	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+(diff not available)
+
+--- PATCHED REGION VERBATIM (colour loop and _do_cutaway) ---
+		for i in range(verts.size()):
+			var ci = i * 3
+			var cr = float(_baked[ci]) / 255.0 if ci < _baked.size() else 0.5
+			var cg = float(_baked[ci + 1]) / 255.0 if ci + 1 < _baked.size() else 0.5
+			var cb = float(_baked[ci + 2]) / 255.0 if ci + 2 < _baked.size() else 0.5
+			st.set_color(Color(cr, cg, cb, 1.0))
+			st.set_uv(uvs[i])
+			st.add_vertex(verts[i])
+		print("[VERBATIM] Terrain colour pass ms: ", Time.get_ticks_msec() - _colour_t0, " box=", COLOUR_BOX, " bake_bytes=", _baked.size())
+		for idx in indices:
+			st.add_index(idx)
+func _do_cutaway() -> void:
+	# Rule #46/#56 fix: cutaway should transition to FREEFALL.
+	# Ref: https://docs.godotengine.org/en/stable/classes/class_input.html
+	if _game_state != GameState.DIAGNOSIS and _game_state != GameState.OPENING_ANIM:
+		return
+	print("[VERBATIM] CUTAWAY: transitioning to FREEFALL")
+	_game_state = GameState.FREEFALL
+	_canopy_deployed = false
+	if _canopy_instance:
+		_canopy_instance.visible = false
+	_cam_distance = 5.0
+	_show_notification("Cutaway! Deploy reserve (V) or fall free.")
+	print("[VERBATIM] CUTAWAY executed – now in FREEFALL")
+func _do_reserve() -> void:
+	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
+	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
+	# USPA SIM: reserve is deployed after cutaway clears main canopy.
+	if not _cutaway_done and not _canopy_deployed:
+		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
+		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
+		return
+	if _reserve_done:
+		print("[DIAG] _do_reserve: already deployed")
+		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
+		return
+	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
+		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
+		_show_notification("Must cut away (X) before reserve!")
+		print("[DIAG] _do_reserve: cutaway required but not done")
+
+=== NOW RUN THE GAME TO TEST ===
+cd /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game && python3 autostall_fixed.py
+Press J to exit plane, then X to cut away – you should immediately see faster descent (freefall).
+Terrain should no longer have green ripple.
+
+=== END REPORT ===
