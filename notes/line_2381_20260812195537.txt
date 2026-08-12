@@ -1,0 +1,16 @@
+=== LINES 2375-2385 – 20260812195537 UTC ===
+
+2375: 	_wind_base_speed = speed_kts
+2376: 	_wind_base_direction = wind_dir.to_int()
+2377: 	if _wind_label:
+2378: 		_wind_label.text = "WIND: %.1f kts @ %s°" % [speed_kts, wind_dir]
+2379: 	else:
+2380: 		print("[VERBATIM] WARNING: _wind_label is null, skipping wind text")
+2381: 	else:
+2382: 		print("[VERBATIM] WARNING: _wind_label is null, skipping wind text")
+2383: else:
+2384: 	print("[VERBATIM] WARNING: _wind_label is null, skipping wind text")
+2385: 	print("[VERBATIM] Real wind loaded: ", wind_dir, " ", speed_kts, " kts")
+2386: 
+
+=== END ===
