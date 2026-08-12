@@ -1,0 +1,118 @@
+=== audit_three_versions.sh — 20260812105252 UTC ===
+
+Directories:
+  CURRENT: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game
+  0074:    /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+  0062:    /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0062
+
+✅ parachute-cfd-game exists
+✅ parachute-cfd-game_0074 exists
+✅ parachute-cfd-game_0062 exists
+
+Traceback (most recent call last):
+  File "<stdin>", line 71, in <module>
+  File "<stdin>", line 35, in extract_colour_loop
+AttributeError: 'int' object has no attribute 'lstrip'
+
+=== CURRENT ===
+
+--- constants: (empty or missing) ---
+
+--- arrays: (empty or missing) ---
+
+--- colour_loop: (empty or missing) ---
+
+--- do_cutaway: (empty or missing) ---
+
+--- physics_process: (empty or missing) ---
+
+--- poll_controls: (empty or missing) ---
+
+=== 0074 ===
+
+--- constants: (empty or missing) ---
+
+--- arrays: (empty or missing) ---
+
+--- colour_loop: (empty or missing) ---
+
+--- do_cutaway: (empty or missing) ---
+
+--- physics_process: (empty or missing) ---
+
+--- poll_controls: (empty or missing) ---
+
+=== 0062 ===
+
+--- constants: (empty or missing) ---
+
+--- arrays: (empty or missing) ---
+
+--- colour_loop: (empty or missing) ---
+
+--- do_cutaway: (empty or missing) ---
+
+--- physics_process: (empty or missing) ---
+
+--- poll_controls: (empty or missing) ---
+
+=== DIFF SUMMARIES ===
+
+--- Colour loop: current vs 0074 ---
+diff: /tmp/tmp.IafPt8xs7z/current_colour_loop.txt: No such file or directory
+diff: /tmp/tmp.IafPt8xs7z/0074_colour_loop.txt: No such file or directory
+
+--- Colour loop: current vs 0062 ---
+diff: /tmp/tmp.IafPt8xs7z/current_colour_loop.txt: No such file or directory
+diff: /tmp/tmp.IafPt8xs7z/0062_colour_loop.txt: No such file or directory
+
+--- Poll controls: current vs 0074 (focus on cutaway/freefall) ---
+diff: /tmp/tmp.IafPt8xs7z/current_poll_controls.txt: No such file or directory
+diff: /tmp/tmp.IafPt8xs7z/0074_poll_controls.txt: No such file or directory
+
+--- Physics process: current vs 0074 (focus on freefall) ---
+diff: /tmp/tmp.IafPt8xs7z/current_physics_process.txt: No such file or directory
+diff: /tmp/tmp.IafPt8xs7z/0074_physics_process.txt: No such file or directory
+
+=== SUMMARY OF KEY DIFFERENCES ===
+1. Terrain colour generation:
+   Current: grep: /tmp/tmp.IafPt8xs7z/current_constants.txt: No such file or directory
+simple indexing
+   0074:    grep: /tmp/tmp.IafPt8xs7z/0074_constants.txt: No such file or directory
+simple indexing
+   0062:    grep: /tmp/tmp.IafPt8xs7z/0062_constants.txt: No such file or directory
+simple indexing
+
+2. Cutaway function (_do_cutaway):
+   current: missing
+   0074: missing
+   0062: missing
+
+3. Presence of freefall state assignment in _poll_controls:
+   current: missing
+   0074: missing
+   0062: missing
+
+4. Array types used (packed vs untyped):
+   current: missing
+   0074: missing
+   0062: missing
+
+5. Constants (W,H etc.):
+
+=== RECOMMENDATION ===
+Based on the analysis:
+./audit_three_versions.sh: line 325: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+./audit_three_versions.sh: line 326: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+./audit_three_versions.sh: line 327: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+./audit_three_versions.sh: line 328: printf: - : invalid option
+printf: usage: printf [-v var] format [arguments]
+To fix:
+1. Replace the colour loop in current with the one from 0062.
+2. Merge the FREEFALL state transition and physics branch from 0074 into current.
+3. Keep the packed arrays and resolution from current.
+
+=== END REPORT ===
