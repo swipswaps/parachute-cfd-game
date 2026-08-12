@@ -744,16 +744,16 @@ def main():
     else:
         print(f"[PATCH] Failed: {msg} (continuing anyway)")
 
-# os.environ["GODOT_HEADLESS"] = "1"   # Still used for auto‑start trigger
+#     os.environ["GODOT_HEADLESS"] = "1"   # Still used for auto‑start trigger  # DISABLED by fix_and_audit
 
     print("[SETUP] godot binary:", GODOT_BIN)
     print("[SETUP] project dir: ", os.path.abspath(PROJECT_DIR))
-    print("[RUN] /usr/bin/godot --path godot_project --verbose")
     print("[RUN] stall threshold: {}s   timeout: {}s".format(STALL_THRESHOLD, TIMEOUT))
     print("[ENV] GODOT_HEADLESS=1 (for auto‑start detection only)")
     print("="*72)
 
     cmd = [GODOT_BIN, "--path", PROJECT_DIR, "--verbose"]
+    print("[RUN]", " ".join(cmd))
 
     proc = subprocess.Popen(
         cmd,

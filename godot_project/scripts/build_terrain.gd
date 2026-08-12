@@ -1070,64 +1070,17 @@ func _do_cutaway() -> void:
 	_show_notification("Cutaway! Deploy reserve (V) or fall free.")
 	print("[VERBATIM] CUTAWAY executed – now in FREEFALL")
 func _do_reserve() -> void:
-	print("[DIAG] _do_reserve: ENTER, state=", _game_state)
-	print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
-	# Allow reserve if cutaway was done (main gone) OR canopy is still deployed (GOOD canopy).
-	# USPA SIM: reserve is deployed after cutaway clears main canopy.
-	if not _cutaway_done and not _canopy_deployed:
-		print("[DIAG] _do_reserve: early exit – no cutaway and no canopy deployed")
-		print("[VERBATIM] EXIT _do_reserve early=not_in_diagnosis")
-		return
-	if _reserve_done:
-		print("[DIAG] _do_reserve: already deployed")
-		print("[VERBATIM] EXIT _do_reserve early=already_deployed")
-		return
-	if not _cutaway_done and _malfunction != MalfunctionType.GOOD:
-		print("[VERBATIM] Reserve not allowed – must cutaway first (X)")
-		_show_notification("Must cut away (X) before reserve!")
-		print("[DIAG] _do_reserve: cutaway required but not done")
-		print("[VERBATIM] EXIT _do_reserve early=no_cutaway")
-		return
-	_reserve_done = true
-	_safe_landing = true
-
-	# Show reserve canopy: reuse _canopy_instance mesh as reserve.
-	# USPA SIM: reserve is white, round, smaller than main ram-air.
-	if _canopy_instance:
-		_canopy_instance.visible = true
-		_canopy_instance.scale = Vector3(0.12, 0.09, 0.12)
-		_canopy_instance.rotation_degrees = Vector3.ZERO
-		if _canopy_material:
-			_canopy_material.albedo_color = Color(0.95, 0.95, 0.95)
-			var mesh_child = _find_first_mesh(_canopy_instance)
-			if mesh_child:
-				mesh_child.material_override = _canopy_material
-	# USPA SIM: reserve glides and steers until touchdown.
-	# Stay in DIAGNOSIS so _update_canopy_glide and arm-pull steering run.
-	# _canopy_deployed must be true for glide physics to engage.
-	_canopy_deployed = true
-	# R081: Force HUD recreation to avoid truncation when starting in LANDED state
-	call_deferred("_recreate_hud_if_needed")
-	# Land is deferred — player steers reserve first, then SPACE or altitude trigger landing.
-	_capture_3d_screenshot()
-
-	print("[VERBATIM] RESERVE deployed – SAFE LANDING!")
-	_show_notification("Reserve deployed – safe landing!")
-	_update_canopy_visuals()
-	_calculate_score()
-
-	if not _achievements["first_jump"]:
-		_unlock_achievement("first_jump")
-	if _reserve_done and _cutaway_done:
-		if not _achievements["malfunction_ace"]:
-			_unlock_achievement("malfunction_ace")
-
-	if not _replay_playing:
-		_replay_recording.append({"action": "reserve", "time": Time.get_ticks_msec()})
-	print("[DIAG] _do_reserve: EXIT, reserve_done=", _reserve_done)
-	print("[VERBATIM] EXIT _do_reserve ok=true")
-
-
+    # MODIFIED: reserve can be deployed in FREEFALL as well.
+    # But only if main canopy is not deployed.
+    if not _canopy_deployed:
+        # Allow reserve in FREEFALL, DIAGNOSIS, OPENING_ANIM
+        if _game_state == GameState.FREEFALL or _game_state == GameState.DIAGNOSIS or _game_state == GameState.OPENING_ANIM:
+            print("[VERBATIM] ENTER _do_reserve gate=_game_state=", _game_state)
+            _deploy_reserve()
+        else:
+            print("[VERBATIM] EXIT _do_reserve early=not_in_allowed_state")
+    else:
+        print("[VERBATIM] EXIT _do_reserve early=main_canopy_still_deployed")
 func _do_flare() -> void:
 	print("[DIAG] _do_flare: ENTER, state=", _game_state)
 	print("[VERBATIM] ENTER _do_flare gate=_game_state=", _game_state)
