@@ -1,0 +1,69 @@
+=== EXTRACT AND DIFF REPORT ===
+Timestamp: Wed Aug 12 11:01:10 AM UTC 2026
+
+--- _physics_process ---
+=== CURRENT ===
+func _physics_process(delta) -> void:
+
+=== 0074 ===
+func _physics_process(delta) -> void:
+
+=== 0062 ===
+func _physics_process(delta) -> void:
+
+--- DIFF: CURRENT vs 0074 (_physics_process) ---
+
+--- DIFF: CURRENT vs 0062 (_physics_process) ---
+
+--- DIFF: 0074 vs 0062 (_physics_process) ---
+----------------------------------------
+
+--- _do_cutaway ---
+=== CURRENT ===
+func _do_cutaway() -> void:
+
+=== 0074 ===
+func _do_cutaway() -> void:
+
+=== 0062 ===
+func _do_cutaway() -> void:
+
+--- DIFF: CURRENT vs 0074 (_do_cutaway) ---
+
+--- DIFF: CURRENT vs 0062 (_do_cutaway) ---
+
+--- DIFF: 0074 vs 0062 (_do_cutaway) ---
+----------------------------------------
+
+--- _do_reserve ---
+=== CURRENT ===
+func _do_reserve() -> void:
+
+=== 0074 ===
+func _do_reserve() -> void:
+
+=== 0062 ===
+func _do_reserve() -> void:
+
+--- DIFF: CURRENT vs 0074 (_do_reserve) ---
+
+--- DIFF: CURRENT vs 0062 (_do_reserve) ---
+
+--- DIFF: 0074 vs 0062 (_do_reserve) ---
+----------------------------------------
+
+--- terrain_gen ---
+=== CURRENT ===
+
+=== 0074 ===
+
+=== 0062 ===
+
+--- DIFF: CURRENT vs 0074 (terrain_gen) ---
+
+--- DIFF: CURRENT vs 0062 (terrain_gen) ---
+
+--- DIFF: 0074 vs 0062 (terrain_gen) ---
+----------------------------------------
+
+=== END REPORT ===
