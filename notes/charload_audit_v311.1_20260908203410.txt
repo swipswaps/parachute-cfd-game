@@ -1,0 +1,407 @@
+=== handoff_v311_charload_audit.sh [v311.1] — 20260908203410 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+dry_run      : false
+no_push      : false
+db_path      : .cfd_healdb
+owner_repo   : swipswaps/parachute-cfd-game
+
+=== PART A — ENVIRONMENT ===
+--- uname -a ---
+Linux fedora 7.1.8-100.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Aug 10 03:32:13 UTC 2026 x86_64 GNU/Linux
+--- python3 -V ---
+Python 3.14.6
+--- git --version ---
+git version 2.55.0
+--- godot binaries under ./bin ---
+./bin/Godot_v4.6.2-stable_linux.x86_64  138965552 bytes
+--- ./bin/Godot_v4.6.2-stable_linux.x86_64 --version ---
+4.6.2.stable.official.71f334935
+
+=== PART B — ASSET IMPORT-CHAIN JOIN ===
+asset_dir    : godot_project/assets/characters  (exists=True)
+imported_dir : godot_project/.godot/imported  (exists=True)
+imported_dir entry count: 166
+
+--- JOIN TABLE ---
+ASSET                             BYTES  SHA16            .import  DEST   CACHED  VERDICT
+-----------------------------------------------------------------------------------------
+parachutist.fbx                 2388064  c3c90cc734d1c849 True     1      1       CHAIN OK — runtime load() can resolve this asset
+parachutist.mtl                     429  fc9a163865feb287 False    0      0       BREAK@2 no .import — Godot never imported this file
+parachutist.obj                 4602505  27416d9b34dd0a23 True     2      2       CHAIN OK — runtime load() can resolve this asset
+    parachutist.fbx -> res://.godot/imported/parachutist.fbx-4e97eacb181e599e676b61e7205a47ee.scn  present=True
+    parachutist.obj -> res://.godot/imported/parachutist.obj-b770131b686072edee55e03834cf6ca4.mesh  present=True
+    parachutist.obj -> res://.godot/imported/parachutist.obj-b770131b686072edee55e03834cf6ca4.mesh  present=True
+
+CHAIN_STATUS=OK
+CHAIN_RESOLVABLE=parachutist.fbx,parachutist.obj
+
+=== PART C — GDSCRIPT LOAD PATH (call sites, ±3 lines) ===
+--- godot_project/scripts/build_terrain.gd: 3766 lines ---
+--- pattern: parachutist ---
+  ..... line 663 .....
+    660: # ------------------------------------------------------------------
+    661: func _load_character() -> void:
+    662: 	print("[VERBATIM] ENTER _load_character gate=none")
+    663: 	var fbx_path = "res://assets/characters/parachutist.fbx"
+    664: 	if not FileAccess.file_exists(fbx_path):
+    665: 		print("[VERBATIM] FBX not found, using capsule")
+    666: 		var capsule := MeshInstance3D.new()
+  ..... line 1065 .....
+   1062: 		print("[DIAG] _do_cutaway: good canopy cutaway — proceeding with warning")
+   1063: 		# fall through to execute cutaway
+   1064: 	_cutaway_done = true
+   1065: 	# USPA SIM: cutaway severs risers — main canopy departs, parachutist
+   1066: 	# returns to brief freefall until reserve deployed.
+   1067: 	if _canopy_instance:
+   1068: 		_canopy_instance.visible = false
+  ..... line 2260 .....
+   2257: # ------------------------------------------------------------------
+   2258: func _setup_pip_overlay() -> void:
+   2259: 	print("[VERBATIM] ENTER _setup_pip_overlay gate=none")
+   2260: 	var fbx_path = "res://assets/characters/parachutist.fbx"
+   2261: 	if not FileAccess.file_exists(fbx_path):
+   2262: 		print("[VERBATIM] WARN FBX not found — PiP will use canopy GLB only")
+   2263: 
+--- pattern: ResourceLoader ---
+  ..... line 524 .....
+    521: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_resourceloader.html
+    522: 	# --------------------------------------------------------------
+    523: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+    524: 	if ResourceLoader.exists(canopy_path):
+    525: 		var scene = load(canopy_path)
+    526: 		if scene:
+    527: 			_canopy_instance = scene.instantiate()
+  ..... line 2294 .....
+   2291: 	container.add_child(_pip_viewport)
+   2292: 
+   2293: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+   2294: 	if not ResourceLoader.exists(canopy_path):
+   2295: 		canopy_path = "res://assets/canopy/parachute_clean.glb"
+   2296: 	if not ResourceLoader.exists(canopy_path):
+   2297: 		canopy_path = "res://assets/canopy/parachute.glb"
+  ..... line 2296 .....
+   2293: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+   2294: 	if not ResourceLoader.exists(canopy_path):
+   2295: 		canopy_path = "res://assets/canopy/parachute_clean.glb"
+   2296: 	if not ResourceLoader.exists(canopy_path):
+   2297: 		canopy_path = "res://assets/canopy/parachute.glb"
+   2298: 	print("[VERBATIM] PiP canopy path=", canopy_path)
+   2299: 	var canopy_scene = load(canopy_path)
+  ..... line 2480 .....
+   2477: 		return
+   2478: 	_current_screenshot_index = (_current_screenshot_index + 1) % _screenshot_library.size()
+   2479: 	if _loading_layer and _loading_texture_rect:
+   2480: 		var tex = ResourceLoader.load(_screenshot_library[_current_screenshot_index])
+   2481: 		if tex:
+   2482: 			_loading_texture_rect.texture = tex
+   2483: 
+--- pattern: load( ---
+  ..... line 525 .....
+    522: 	# --------------------------------------------------------------
+    523: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+    524: 	if ResourceLoader.exists(canopy_path):
+    525: 		var scene = load(canopy_path)
+    526: 		if scene:
+    527: 			_canopy_instance = scene.instantiate()
+    528: 			if _canopy_instance:
+  ..... line 670 .....
+    667: 		capsule.mesh = CapsuleMesh.new()
+    668: 		_character.add_child(capsule)
+    669: 		return
+    670: 	var fbx_scene = load(fbx_path)
+    671: 	if not fbx_scene:
+    672: 		print("[VERBATIM] Failed to load FBX")
+    673: 		return
+  ..... line 2272 .....
+   2269: 	container.size = Vector2(320, 240)
+   2270: 	# Load saved position from ConfigFile (R105)
+   2271: 	var config = ConfigFile.new()
+   2272: 	if config.load("user://pip_settings.cfg") == OK:
+   2273: 		var pos_x = config.get_value("pip", "position_x", 20.0)
+   2274: 		var pos_y = config.get_value("pip", "position_y", 20.0)
+   2275: 		container.position = Vector2(pos_x, pos_y)
+  ..... line 2280 .....
+   2277: 		container.position = Vector2(20, 20)
+   2278: 	container.mouse_filter = Control.MOUSE_FILTER_STOP
+   2279: 	# Make draggable and save position on drag end
+   2280: 	container.set_script(load("res://scripts/pip_draggable.gd"))
+   2281: 	# Connect to a signal that saves position when drag ends (implemented in pip_draggable.gd)
+   2282: 	# We'll also add a direct save function here that can be called from that script.
+   2283: 	_pip_layer.add_child(container)
+  ..... line 2299 .....
+   2296: 	if not ResourceLoader.exists(canopy_path):
+   2297: 		canopy_path = "res://assets/canopy/parachute.glb"
+   2298: 	print("[VERBATIM] PiP canopy path=", canopy_path)
+   2299: 	var canopy_scene = load(canopy_path)
+   2300: 	if not canopy_scene:
+   2301: 		print("[VERBATIM] ERROR: canopy load null – no .import sidecar")
+   2302: 		# Fallback: create a simple sphere
+  ..... line 2347 .....
+   2344: 	timer.timeout.connect(_update_wind_display)
+   2345: 	_pip_layer.add_child(timer)
+   2346: 
+   2347: 	var main_canopy_scene2 = load(canopy_path)
+   2348: 	if main_canopy_scene2:
+   2349: 		_main_canopy_node = main_canopy_scene2.instantiate()
+   2350: 		_main_canopy_node.position = Vector3(0.0, 3.2, 0.0)
+  ..... line 2480 .....
+   2477: 		return
+   2478: 	_current_screenshot_index = (_current_screenshot_index + 1) % _screenshot_library.size()
+   2479: 	if _loading_layer and _loading_texture_rect:
+   2480: 		var tex = ResourceLoader.load(_screenshot_library[_current_screenshot_index])
+   2481: 		if tex:
+   2482: 			_loading_texture_rect.texture = tex
+   2483: 
+  ..... line 2573 .....
+   2570: 			print("[VERBATIM] WARNING: screenshot file missing (skipping): ", _ss_path)
+   2571: 		else:
+   2572: 			var img := Image.new()
+   2573: 			var img_err = img.load(_ss_abs)
+   2574: 			if img_err == OK:
+   2575: 				var tex = ImageTexture.create_from_image(img)
+   2576: 				if tex:
+  ..... line 2605 .....
+   2602: 	_log("[VERBATIM] Creating plane node...")
+   2603: 	var plane := CharacterBody3D.new()
+   2604: 	plane.name = "FlyingPlane"
+   2605: 	var plane_script = load("res://scripts/plane.gd")
+   2606: 	if plane_script:
+   2607: 		plane.set_script(plane_script)
+   2608: 		plane.process_mode = PROCESS_MODE_ALWAYS
+  ..... line 2621 .....
+   2618: 	plane.add_to_group("plane")
+   2619: 
+   2620: 	# Load aircraft model
+   2621: 	var plane_scene = load("res://assets/aircraft/cesna_airplane.glb")
+   2622: 	if plane_scene and plane_scene is PackedScene:
+   2623: 		var aircraft = plane_scene.instantiate()
+   2624: 		plane.add_child(aircraft)
+--- pattern: preload( ---
+  (no match)
+--- pattern: CapsuleMesh ---
+  ..... line 667 .....
+    664: 	if not FileAccess.file_exists(fbx_path):
+    665: 		print("[VERBATIM] FBX not found, using capsule")
+    666: 		var capsule := MeshInstance3D.new()
+    667: 		capsule.mesh = CapsuleMesh.new()
+    668: 		_character.add_child(capsule)
+    669: 		return
+    670: 	var fbx_scene = load(fbx_path)
+--- pattern: capsule ---
+  ..... line 665 .....
+    662: 	print("[VERBATIM] ENTER _load_character gate=none")
+    663: 	var fbx_path = "res://assets/characters/parachutist.fbx"
+    664: 	if not FileAccess.file_exists(fbx_path):
+    665: 		print("[VERBATIM] FBX not found, using capsule")
+    666: 		var capsule := MeshInstance3D.new()
+    667: 		capsule.mesh = CapsuleMesh.new()
+    668: 		_character.add_child(capsule)
+  ..... line 666 .....
+    663: 	var fbx_path = "res://assets/characters/parachutist.fbx"
+    664: 	if not FileAccess.file_exists(fbx_path):
+    665: 		print("[VERBATIM] FBX not found, using capsule")
+    666: 		var capsule := MeshInstance3D.new()
+    667: 		capsule.mesh = CapsuleMesh.new()
+    668: 		_character.add_child(capsule)
+    669: 		return
+  ..... line 667 .....
+    664: 	if not FileAccess.file_exists(fbx_path):
+    665: 		print("[VERBATIM] FBX not found, using capsule")
+    666: 		var capsule := MeshInstance3D.new()
+    667: 		capsule.mesh = CapsuleMesh.new()
+    668: 		_character.add_child(capsule)
+    669: 		return
+    670: 	var fbx_scene = load(fbx_path)
+  ..... line 668 .....
+    665: 		print("[VERBATIM] FBX not found, using capsule")
+    666: 		var capsule := MeshInstance3D.new()
+    667: 		capsule.mesh = CapsuleMesh.new()
+    668: 		_character.add_child(capsule)
+    669: 		return
+    670: 	var fbx_scene = load(fbx_path)
+    671: 	if not fbx_scene:
+--- pattern: fallback ---
+  ..... line 264 .....
+    261: 	# _show_loading_screen()      # REMOVED
+    262: 
+    263: 	# --------------------------------------------------------------
+    264: 	# Terrain generation (full – uses heightmap and baked colours) with fallback
+    265: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_fileaccess.html
+    266: 	# --------------------------------------------------------------
+    267: 	var file = FileAccess.open("res://assets/terrain/heightmap_4096.raw", FileAccess.READ)
+  ..... line 337 .....
+    334: 		add_child(terrain_inst)
+    335: 		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+    336: 	else:
+    337: 		# --- Heightmap missing: flat terrain fallback ---
+    338: 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
+    339: 		var flat_mesh := PlaneMesh.new()
+    340: 		flat_mesh.size = Vector2(8000, 8000)
+  ..... line 338 .....
+    335: 		print("[VERBATIM] Terrain: 1024 vertex-colour, colour=baked_colours_4096.bin, verts: ", verts.size())
+    336: 	else:
+    337: 		# --- Heightmap missing: flat terrain fallback ---
+    338: 		print("[VERBATIM] WARNING: heightmap_512.raw not found – using flat terrain fallback")
+    339: 		var flat_mesh := PlaneMesh.new()
+    340: 		flat_mesh.size = Vector2(8000, 8000)
+    341: 		flat_mesh.subdivide_width = 64
+  ..... line 350 .....
+    347: 		flat_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+    348: 		flat_inst.material_override = flat_mat
+    349: 		add_child(flat_inst)
+    350: 		print("[VERBATIM] Flat terrain fallback created")
+    351: 
+    352: 	# --------------------------------------------------------------
+    353: 	# Runways: placeholder positions removed (did not match KDED layout).
+  ..... line 447 .....
+    444: 	bg_panel.add_theme_stylebox_override("panel", style)
+    445: 	_hud_layer.add_child(bg_panel)
+    446: 	add_child(_hud_layer)
+    447: 	var font = ThemeDB.fallback_font
+    448: 	var label_names := ["ALT", "SPD", "HDG", "BRG", "TURN", "LEG", "MALF", "EP"]
+    449: 	for i in range(8):
+    450: 		var lbl := Label.new()
+  ..... line 493 .....
+    490: 	print("[DIAG] _ready: HUD created, _hud_labels size=", _hud_labels.size())
+    491: 
+    492: 	# --------------------------------------------------------------
+    493: 	# Initial heading (parse from HUD, fallback 120)
+    494: 	# --------------------------------------------------------------
+    495: 	var heading_text = _hud_labels[2].text
+    496: 	var parts = heading_text.split("°")
+  ..... line 520 .....
+    517: 	_init_sentry()
+    518: 
+    519: 	# --------------------------------------------------------------
+    520: 	# Load the repaired GLB – fallback to procedural dome
+    521: 	# Ref: https://docs.godotengine.org/en/stable/classes/class_resourceloader.html
+    522: 	# --------------------------------------------------------------
+    523: 	var canopy_path = "res://assets/canopy/parachute_sanitized.glb"
+  ..... line 738 .....
+    735: 		_anim_player.stop()
+    736: 		print("[VERBATIM] RESET animation played – arms at rest pose")
+    737: 	else:
+    738: 		print("[VERBATIM] RESET animation not available – using fallback")
+    739: 
+    740: 	print("[VERBATIM] EXIT _load_character ok=true")
+    741: 
+  ..... line 883 .....
+    880: 
+    881: 
+    882: # ------------------------------------------------------------------
+    883: # Procedural fallback canopy (blue dome)
+    884: # Ref: https://docs.godotengine.org/en/stable/classes/class_spheremesh.html
+    885: # ------------------------------------------------------------------
+    886: func _create_procedural_canopy() -> void:
+  ..... line 2308 .....
+   2305: 		sphere.position = Vector3(0.0, 5.0, 0.0)
+   2306: 		_pip_viewport.add_child(sphere)
+   2307: 		container.visible = true
+   2308: 		print("[VERBATIM] PiP fallback: sphere created")
+   2309: 		print("[VERBATIM] EXIT _setup_pip_overlay early=canopy_load_null")
+   2310: 		return
+   2311: 
+  ..... line 2914 .....
+   2911: # The two-frame await is required: the enclosing _load_character() continues
+   2912: # past this call into the '# Reset to rest pose (R083)' block, which resets
+   2913: # the skeleton and would override any animation started synchronously
+   2914: #   (0709.txt L211: RESET animation not available - using fallback).
+   2915: # Awaiting process_frame defers play() until that function has fully returned.
+   2916: # Ref: https://docs.godotengine.org/en/stable/classes/class_animationplayer.html
+   2917: # Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+  ..... line 3176 .....
+   3173: # v6 also only PRINTED the answer for manual transcription. It is now
+   3174: # applied directly: the solve runs at startup, is stored, and is read by
+   3175: # _update_arm_physics via _arm_axis_use(). ARM_AXIS_L / ARM_AXIS_R survive
+   3176: # only as fallbacks should the solve fail.
+   3177: #
+   3178: # Refs (general knowledge - not retrieved this session):
+   3179: #   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+
+=== PART D — LATEST RUN LOG ===
+SKIP: no /tmp/godot_run_v*.log found — no diagnostic run to read
+
+=== PART E — AUDIT DB ===
+--- tables in .cfd_healdb ---
+error_patterns
+heal_events
+prf_schema_version
+rule_compliance
+unknown_errors
+
+=== PART F — GIT STATE ===
+--- branch / HEAD ---
+main
+0e780a56a3aeda50f3d0ed1451156ceae0400c3b
+--- status (porcelain, first 40) ---
+ M .cfd_healdb
+ M .gdlintrc
+ M .github/workflows/gdscript.yml
+ M .pre-commit-config.yaml
+ M Allrun.mesh
+ M aggressive_fix.sh
+ M apply_fixlist_0002.sh
+ M apply_fixlist_0003.sh
+ M apply_fixlist_0005.sh
+ M apply_fixlist_0006.sh
+ M apply_fixlist_0007.sh
+ M apply_fixlist_0008.sh
+ M apply_fixlist_0009.sh
+ M apply_fixlist_0010.sh
+ M apply_fixlist_0011.sh
+ M apply_fixlist_0012.sh
+ M apply_fixlist_0013.sh
+ M apply_fixlist_0014.sh
+ M apply_fixlist_0015.sh
+ M apply_fixlist_0016.sh
+ M apply_fixlist_0019.sh
+ M apply_fixlist_0020.sh
+ M apply_fixlist_0021.sh
+ M apply_fixlist_0022.sh
+ M apply_fixlist_0023.sh
+ M apply_fixlist_0024.sh
+ M apply_fixlist_0025.sh
+ M apply_fixlist_0026.sh
+ M apply_fixlist_0027.sh
+ M apply_fixlist_0028.sh
+ M apply_fixlist_0029.sh
+ M apply_fixlist_0030.sh
+ M apply_fixlist_0031.sh
+ M apply_fixlist_0032.sh
+ M apply_fixlist_0033.sh
+ M apply_fixlist_0034.sh
+ M apply_fixlist_0035.sh
+ M apply_fixlist_0036.sh
+ M apply_fixlist_0037.sh
+ M apply_fixlist_0038.sh
+--- is the evidence dir ignored? ---
+IGNORED: .gitignore:145:notes/	notes/charload_audit_v311.1_20260908203410.txt
+ACTION: none — git add -f will override; .gitignore left untouched (v311.1)
+--- CI-referenced files that are gitignored (Rule #45) ---
+.github/workflows/gdscript.yml
+.venv/lib/python3.14/site-packages/_distutils_hack/__init__.py
+.venv/lib/python3.14/site-packages/_distutils_hack/override.py
+.venv/lib/python3.14/site-packages/_yaml/__init__.py
+.venv/lib/python3.14/site-packages/colorama/__init__.py
+.venv/lib/python3.14/site-packages/colorama/ansi.py
+.venv/lib/python3.14/site-packages/colorama/ansitowin32.py
+.venv/lib/python3.14/site-packages/colorama/initialise.py
+.venv/lib/python3.14/site-packages/colorama/tests/__init__.py
+.venv/lib/python3.14/site-packages/colorama/tests/ansi_test.py
+.venv/lib/python3.14/site-packages/colorama/tests/ansitowin32_test.py
+.venv/lib/python3.14/site-packages/colorama/tests/initialise_test.py
+.venv/lib/python3.14/site-packages/colorama/tests/isatty_test.py
+.venv/lib/python3.14/site-packages/colorama/tests/utils.py
+.venv/lib/python3.14/site-packages/colorama/tests/winterm_test.py
+.venv/lib/python3.14/site-packages/colorama/win32.py
+.venv/lib/python3.14/site-packages/colorama/winterm.py
+.venv/lib/python3.14/site-packages/docopt/__init__.py
+.venv/lib/python3.14/site-packages/docopt/_version.py
+.venv/lib/python3.14/site-packages/gdtoolkit/__init__.py
+.venv/lib/python3.14/site-packages/gdtoolkit/common/__init__.py
+
+=== END DIAGNOSTIC ===
+
+=== RULE COMPLIANCE ===
+ledger_db     : .cfd_healdb
+ledger_logged : true
