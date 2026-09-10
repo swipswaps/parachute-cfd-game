@@ -1,0 +1,48 @@
+=== verify_v313.py — 20260910115555 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+engine       : 4.6.2.stable.official.71f334935
+log          : /tmp/godot_run_v313_20260910115529.log (15724 bytes, 253 lines streamed)
+stop_reason  : decidable
+decidability : observed=['init'] required=['init']
+
+=== ORACLE VERDICTS ===
+ID                 KIND            VERDICT   EVIDENCE
+----------------------------------------------------------------------------------------------------
+char_enter         must_appear     PASS      log:61: [VERBATIM] ENTER _load_character gate=none
+char_instanced     must_appear     PASS      log:64: [DEBUG] FBX instance added. Node: parachutist:<Node3D#385204
+no_capsule         must_not_appear PASS      not present anywhere in the streamed log
+no_load_fail       must_not_appear PASS      not present anywhere in the streamed log
+char_exit_ok       must_appear     PASS      log:74: [VERBATIM] EXIT _load_character ok=true
+anim_present       must_not_appear FAIL      log:73: [VERBATIM] RESET animation not available – using fallback
+no_engine_error    must_not_appear PASS      not present anywhere in the streamed log
+
+=== ANIMATION CLIP ORACLE ===
+probe_completed : True
+clips exposed by the asset (2):
+    Take 001
+    mixamo_com
+clip names requested in build_terrain.gd via has_animation():
+    line 711: 'RESET'   if anim_player.has_animation("RESET"):
+    line 720: 'RESET'   if anim_player.has_animation("RESET"):
+    line 732: 'RESET'   if _anim_player and _anim_player.has_animation("RESET"):
+corroborating .play("...") call sites (may be audio, not animation):
+    line 712: 'RESET'   anim_player.play("RESET")
+    line 721: 'RESET'   anim_player.play("RESET")
+    line 733: 'RESET'   _anim_player.play("RESET")
+    line 3150: 'mixamo_com'   _the_anim_player.play("mixamo_com")
+
+clip:RESET               FAIL      build_terrain.gd:711 asks for 'RESET'; asset exposes ['Take 001', 'mixamo_com']
+clip:RESET               FAIL      build_terrain.gd:720 asks for 'RESET'; asset exposes ['Take 001', 'mixamo_com']
+clip:RESET               FAIL      build_terrain.gd:732 asks for 'RESET'; asset exposes ['Take 001', 'mixamo_com']
+
+=== WHY EACH ASSERTION EXISTS ===
+char_enter: build_terrain.gd:662 — proves the loader was reached at all
+char_instanced: proves the FBX scene instantiated into the tree
+no_capsule: build_terrain.gd:665 — the FileAccess-gate capsule exit
+no_load_fail: build_terrain.gd:672 — the load()-returned-null capsule exit
+char_exit_ok: build_terrain.gd:740 — the loader's own success oracle
+anim_present: the open defect: model loads but the clip lookup misses
+no_engine_error: any engine-level resource error during initialization
+
+=== TALLY === {'PASS': 6, 'FAIL': 4}
+=== END VERIFY ===
