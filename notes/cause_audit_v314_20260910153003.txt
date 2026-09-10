@@ -1,0 +1,111 @@
+=== cause_audit_v314.py — 20260910153003 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+v313_module  : sha b49eab2de2f3c491cfff32b10778c8552789404f03f908254e02c295649d92b3
+run_log      : /tmp/godot_run_v313_20260910115529.log
+
+=== SECTION A — THREE-WAY CLIP CORRELATION ===
+requested by source : ['RESET', 'RESET', 'RESET']
+exposed by asset    : ['Take 001', 'mixamo_com']
+held at runtime     : ['Take 001', 'mixamo_com']
+runtime evidence    : log:131: [ANIMDIAG] current='' is_playing=false speed_scale=1.0 active=true process_mode=1 list=["T
+
+=== SECTION B — CALL-SITE CONTEXT (verbatim, unedited) ===
+--- build_terrain.gd: request at line 727 (showing 715-739) ---
+      715: 				_right_arm_idx = i
+      716: 				print("[VERBATIM] Right arm bone found index ", i)
+      717: 	else:
+      718: 		print("[VERBATIM] No skeleton found")
+      719: 
+      720: 	var ap = _character.find_child("AnimationPlayer", true, false)
+      721: 	if ap:
+      722: 		_setup_anim_player(ap)
+      723: 
+      724: 	# Reset to rest pose (R083)
+      725: 	var anim_player = _character.find_child("AnimationPlayer", true, false)
+      726: 	if anim_player:
+>>>   727: 		if anim_player.has_animation("RESET"):
+      728: 			anim_player.play("RESET")
+      729: 			anim_player.advance(0)
+      730: 			anim_player.stop()
+      731: 		else:
+      732: 			var skeleton = _character.find_child("Skeleton3D", true, false)
+      733: 			if skeleton:
+      734: 				skeleton.reset_bone_poses()
+      735: 	# Reset to rest pose
+      736: 	if anim_player.has_animation("RESET"):
+      737: 		anim_player.play("RESET")
+      738: 		anim_player.advance(0)
+      739: 		anim_player.stop()
+
+--- build_terrain.gd: request at line 736 (showing 724-748) ---
+      724: 	# Reset to rest pose (R083)
+      725: 	var anim_player = _character.find_child("AnimationPlayer", true, false)
+      726: 	if anim_player:
+      727: 		if anim_player.has_animation("RESET"):
+      728: 			anim_player.play("RESET")
+      729: 			anim_player.advance(0)
+      730: 			anim_player.stop()
+      731: 		else:
+      732: 			var skeleton = _character.find_child("Skeleton3D", true, false)
+      733: 			if skeleton:
+      734: 				skeleton.reset_bone_poses()
+      735: 	# Reset to rest pose
+>>>   736: 	if anim_player.has_animation("RESET"):
+      737: 		anim_player.play("RESET")
+      738: 		anim_player.advance(0)
+      739: 		anim_player.stop()
+      740: 	else:
+      741: 		var skeleton = _character.find_child("Skeleton3D", true, false)
+      742: 		if skeleton:
+      743: 			skeleton.reset_bone_poses()
+      744: 	# _force_neutral_arms()  # disabled – using RESET animation instead
+      745: 	# Play RESET animation to force arms to rest pose (R091/R092)
+      746: 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+      747: 	_the_anim_player = _anim_player  # store for arm physics pause/resume
+      748: 	if _anim_player and _anim_player.has_animation("RESET"):
+
+--- build_terrain.gd: request at line 748 (showing 736-760) ---
+      736: 	if anim_player.has_animation("RESET"):
+      737: 		anim_player.play("RESET")
+      738: 		anim_player.advance(0)
+      739: 		anim_player.stop()
+      740: 	else:
+      741: 		var skeleton = _character.find_child("Skeleton3D", true, false)
+      742: 		if skeleton:
+      743: 			skeleton.reset_bone_poses()
+      744: 	# _force_neutral_arms()  # disabled – using RESET animation instead
+      745: 	# Play RESET animation to force arms to rest pose (R091/R092)
+      746: 	var _anim_player = _character.find_child("AnimationPlayer", true, false)
+      747: 	_the_anim_player = _anim_player  # store for arm physics pause/resume
+>>>   748: 	if _anim_player and _anim_player.has_animation("RESET"):
+      749: 		_anim_player.play("RESET")
+      750: 		await get_tree().process_frame
+      751: 		_anim_player.stop()
+      752: 		print("[VERBATIM] RESET animation played – arms at rest pose")
+      753: 	else:
+      754: 		print("[VERBATIM] RESET animation not available – using fallback")
+      755: 
+      756: 	print("[VERBATIM] EXIT _load_character ok=true")
+      757: 
+      758: 
+      759: # ------------------------------------------------------------------
+      760: # Deploy parachute (called on SPACE at correct altitude)
+
+=== SECTION C — PATH COUPLING ===
+runtime db path : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+inside project? : NO — foreign tree
+absolute path literals in .gd sources: 1
+    godot_project/scripts/SqliteDb.gd:12: /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db
+        const DB_PATH := "/home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/par
+
+=== CAUSE VERDICTS ===
+CAUSE                  VERDICT    EVIDENCE
+----------------------------------------------------------------------------------------------------
+C1_name_coupling       PROVEN     source requests ['RESET'] which exist in neither the asset ['Take 001', 'mixamo_com'] nor the runtime player ['Take 001', 'mixamo_com']
+C1a_library_prefix     REFUTED    asset keys ['Take 001', 'mixamo_com'] — none are library-qualified, so a missing prefix is not the explanation
+C2_soft_fail           PROVEN     log:73 degraded to a fallback and the run continued; no exit code or gate observed this
+C3_path_coupling       PROVEN     runtime opened /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game/parachute_mutations.db, outside project root /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+C4_no_build_gate       PROVEN     1 workflow file(s); clip/name check is NOT referenced in CI
+
+=== TALLY === {'PROVEN': 4, 'REFUTED': 1}
+=== END CAUSE AUDIT ===
