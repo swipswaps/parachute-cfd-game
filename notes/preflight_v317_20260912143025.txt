@@ -1,0 +1,156 @@
+=== preflight_v317.py — 20260912143025 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+target       : godot_project/scripts/build_terrain.gd (3761 lines)
+v313_module  : sha b49eab2de2f3c491cfff32b10778c8552789404f03f908254e02c295649d92b3
+
+=== A — DEFINITIONS OF _load_character ===
+    line 677-781
+
+=== B — AWAIT MENTIONS IN FULL CONTEXT (verbatim, unedited) ===
+--- line 2867, enclosing func _dump_all_labels (lines 2833-2875) ---
+     2837: 	print("[LABELDUMP_HDR] idx,name,parent_path,script,text")
+     2838: 	var found: int = 0
+     2839: 	var stack: Array = [get_tree().root]
+     2840: 	while stack.size() > 0:
+     2841: 		var n = stack.pop_back()
+     2842: 		if n == null:
+     2843: 			continue
+     2844: 		if n is Label:
+     2845: 			var scr: String = "none"
+     2846: 			if n.get_script() != null:
+     2847: 				scr = str(n.get_script().resource_path)
+     2848: 			var par: String = "orphan"
+     2849: 			if n.get_parent() != null:
+     2850: 				par = str(n.get_parent().get_path())
+     2851: 			print("[LABELDUMP],", found, ",", n.name, ",", par, ",", scr,
+     2852: 					",", n.text.replace(",", ";"))
+     2853: 			found += 1
+     2854: 		for c in n.get_children():
+     2855: 			stack.push_back(c)
+     2856: 	print("[LABELDUMP] total Label nodes in tree: ", found)
+     2857: 	print("[LABELDUMP] _hud_labels.size()=", _hud_labels.size())
+     2858: 
+     2859: 
+     2860: 
+     2861: # ---------------------------------------------------------------------------
+     2862: # _setup_anim_player — plays the full-body Mixamo animation.
+     2863: # Clip name 'mixamo_com' is the GODOT-imported name, proven by live telemetry
+     2864: #   0709.txt L208: _setup_anim_player: clips=["Take 001", "mixamo_com"]
+     2865: # The Blender action name 'Armature|mixamo.com|Layer0' does not survive FBX import.
+     2866: #
+>>>  2867: # The two-frame await is required: the enclosing _load_character() continues
+     2868: # past this call into the '# Reset to rest pose (R083)' block, which resets
+     2869: # the skeleton and would override any animation started synchronously
+     2870: #   (0709.txt L211: RESET animation not available - using fallback).
+     2871: # Awaiting process_frame defers play() until that function has fully returned.
+     2872: # Ref: https://docs.godotengine.org/en/stable/classes/class_animationplayer.html
+     2873: # Ref: https://docs.godotengine.org/en/stable/classes/class_scenetree.html
+     2874: #      (general knowledge — not retrieved this session)
+     2875: # ---------------------------------------------------------------------------
+     2876: func _setup_anim_player(ap) -> void:
+     2877: 	const CLIP := "mixamo_com"
+     2878: 	if ap == null:
+     2879: 		print("[VERBATIM] _setup_anim_player: ap is null")
+     2880: 		return
+     2881: 	if not ap.has_method("get_animation_list"):
+     2882: 		print("[VERBATIM] _setup_anim_player: node is not an AnimationPlayer: ", ap)
+     2883: 		return
+     2884: 	var clips = ap.get_animation_list()
+     2885: 	print("[VERBATIM] _setup_anim_player: clips=", clips)
+     2886: 	var chosen := ""
+     2887: 	if CLIP in clips:
+     2888: 		chosen = CLIP
+     2889: 	else:
+     2890: 		for c in clips:
+     2891: 			if c != "Take 001":
+     2892: 				chosen = c
+     2893: 				break
+     2894: 	if chosen == "":
+     2895: 		print("[VERBATIM] _setup_anim_player: no usable clip in ", clips)
+     2896: 		return
+     2897: 	print("[VERBATIM] _setup_anim_player: deferring play of ", chosen)
+
+=== C — EVERY _load_character REFERENCE PROJECT-WIDE ===
+FILE                                           LINE KIND          IN FUNC                      TEXT
+----------------------------------------------------------------------------------------------------------------------------------
+godot_project/addons/gd_repair/validate_scene.gd     56 comment       _run                         # WHY: character is created at runtime (add_child in _load_character).
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd    327 call          _ready                       _load_character()
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd    668 definition    _load_character              func _load_character():
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd    669 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd    702 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd    327 call          _ready                       _load_character()
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd    668 definition    _load_character              func _load_character():
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd    669 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/backups/build_terrain.backup.20260607_151237.gd    702 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.backup_20260707-205552.gd    353 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.backup_20260707-205552.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/build_terrain.backup_20260707-205552.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.backup_20260707-205552.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.backup_20260707-210153.gd    353 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.backup_20260707-210153.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/build_terrain.backup_20260707-210153.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.backup_20260707-210153.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.backup_20260707-210819.gd    353 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.backup_20260707-210819.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/build_terrain.backup_20260707-210819.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.backup_20260707-210819.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.backup_20260707-215820.gd    353 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.backup_20260707-215820.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/build_terrain.backup_20260707-215820.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.backup_20260707-215820.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.backup_20260707-222344.gd    353 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.backup_20260707-222344.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/build_terrain.backup_20260707-222344.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.backup_20260707-222344.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.backup_20260707-222819.gd    353 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.backup_20260707-222819.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/build_terrain.backup_20260707-222819.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.backup_20260707-222819.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.gd          386 call          _ready                       _load_character()
+godot_project/scripts/build_terrain.gd          677 definition    _load_character              func _load_character() -> void:
+godot_project/scripts/build_terrain.gd          678 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/build_terrain.gd          756 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/build_terrain.gd         2867 comment       _dump_all_labels             # The two-frame await is required: the enclosing _load_character() continues
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151124.gd    327 call          _ready                       _load_character()
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151124.gd    668 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151124.gd    669 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151124.gd    702 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151237.gd    327 call          _ready                       _load_character()
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151237.gd    668 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151237.gd    669 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/backups/build_terrain.backup.20260607_151237.gd    702 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/build_terrain.backup_20260707-205552.gd    353 call          _ready                       _load_character()
+godot_project/scripts/scripts/build_terrain.backup_20260707-205552.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/build_terrain.backup_20260707-205552.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/build_terrain.backup_20260707-205552.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/build_terrain.backup_20260707-210153.gd    353 call          _ready                       _load_character()
+godot_project/scripts/scripts/build_terrain.backup_20260707-210153.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/build_terrain.backup_20260707-210153.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/build_terrain.backup_20260707-210153.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/build_terrain.backup_20260707-210819.gd    353 call          _ready                       _load_character()
+godot_project/scripts/scripts/build_terrain.backup_20260707-210819.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/build_terrain.backup_20260707-210819.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/build_terrain.backup_20260707-210819.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/build_terrain.backup_20260707-215820.gd    353 call          _ready                       _load_character()
+godot_project/scripts/scripts/build_terrain.backup_20260707-215820.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/build_terrain.backup_20260707-215820.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/build_terrain.backup_20260707-215820.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/build_terrain.backup_20260707-222344.gd    353 call          _ready                       _load_character()
+godot_project/scripts/scripts/build_terrain.backup_20260707-222344.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/build_terrain.backup_20260707-222344.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/build_terrain.backup_20260707-222344.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+godot_project/scripts/scripts/build_terrain.backup_20260707-222819.gd    353 call          _ready                       _load_character()
+godot_project/scripts/scripts/build_terrain.backup_20260707-222819.gd    603 definition    _load_character              func _load_character():
+godot_project/scripts/scripts/build_terrain.backup_20260707-222819.gd    604 call          _load_character              print("[VERBATIM] ENTER _load_character gate=none")
+godot_project/scripts/scripts/build_terrain.backup_20260707-222819.gd    682 call          _load_character              print("[VERBATIM] EXIT _load_character ok=true")
+
+=== D — AWAITS INSIDE THE DEFINITION ===
+    line 750: await get_tree().process_frame
+
+=== DECISION THIS REPORT SUPPORTS ===
+If B shows the comment refers to code no longer inside
+_load_character, the comment is stale and v316 may run as-is.
+If B shows a real dependency on the coroutine shape, v315.3 must
+keep a frame boundary placed deliberately rather than as a
+side effect of a clip-name lookup taking a branch.
+=== END PREFLIGHT v317 ===
