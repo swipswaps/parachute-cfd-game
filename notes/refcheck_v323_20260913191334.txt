@@ -1,0 +1,33 @@
+=== refcheck_v323.py — 20260913191334 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+candidates   : 2029
+live files   : 846
+HELD         : 0  (PATH/UID/CODE evidence)
+proposed     : 2029 (452.0 MB)
+
+=== HAZARD CLASSES (proposed only) ===
+CLASS                    FILES         MB
+R1_compiled_backup          28        1.5
+R2_large_binary              9      363.0
+R3_nested_tree             691       29.5
+R4_inert                  1301       58.1
+
+=== HELD — WITH THE EVIDENCE THAT HELD THEM ===
+KIND   PATH / EVIDENCE
+    (none — no live file references any candidate by path, uid or code)
+
+=== DUPLICATE class_name ACROSS COMPILED FILES ===
+A name declared in two compiled .gd files is a duplicate global class
+registration. This table is what the 2026-09-12 'Identifier not found:
+ForensicHUD' error should be read against.
+    (none — no class_name is declared twice)
+
+=== ORDER OF OPERATIONS ===
+1. R1 first (compiled). Then verify_v313.py --push immediately.
+2. R2 (largest byte win, no code semantics).
+3. R3 (removes the duplicate-name source behind the B3 collisions).
+4. R4 last, or never.
+
+PLAN WRITTEN (not executed): quarantine_plan_v323_20260913191334.sh
+NOTHING WAS MOVED OR DELETED BY THIS SCRIPT.
+=== END REFCHECK v323 ===
