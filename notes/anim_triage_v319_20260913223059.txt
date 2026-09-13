@@ -1,0 +1,25 @@
+=== anim_triage_v319.py — 20260913223059 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+run_log      : /tmp/godot_run_v313_20260913134315.log (254 lines)
+v313_module  : sha 96bd498ec52308e27a9d1570b85501f221138c6e8d251707137574c2581e4eb8
+
+=== ORDERED TIMELINE (log line numbers, verbatim text) ===
+DEFERRALS:
+    log:73: [VERBATIM] _setup_anim_player: deferring play of mixamo_com
+ANIMDIAG SAMPLES:
+    log:129: is_playing=false current='' :: [ANIMDIAG] current='' is_playing=false speed_scale=1.0 active=true process_mode=1 list=["T
+RESET MARKERS:
+    log:74: [VERBATIM] rest pose applied via reset_bone_poses()
+PHYSICS TICKS: 8 (first [192, 201, 208, 215, 222]…)
+
+=== VERDICT ===
+H1_telemetry_too_early
+    evidence : nearest [ANIMDIAG] after the deferral is log:129, only ~0 physics tick(s) later (approximate); the documented deferral is two process frames
+    next step: Sample later, then re-run. The current sample cannot distinguish 'not playing' from 'not started yet'.
+
+=== HYPOTHESIS KEY ===
+H1 telemetry too early  — sample precedes play(); not an animation bug
+H2 deferral never completed — coroutine abandoned before play()
+H3 play lost            — play() should have run; something stopped it
+H0 not decidable        — insufficient markers in this log
+=== END TRIAGE v319 ===
