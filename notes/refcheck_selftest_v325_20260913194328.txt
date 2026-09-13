@@ -1,0 +1,59 @@
+=== refcheck_selftest_v325.py — 20260913194328 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+v323 module  : sha 69e354e4c31e336b98d79ab055fbe52768b6ccc2304766f1e1aa3278063ddf1c
+candidates   : 2029
+live files   : 849 (canaries included during the test)
+
+=== CANARY RESULTS — does the checker still detect a real reference? ===
+CANARY   EXPECT  GOT     TARGET / EVIDENCE
+C_PATH   PATH    PATH    godot_project/scripts/build_terrain.gd.bak_auto
+                          godot_project/_refcheck_canary/canary_path_user.gd:3: var _x = preload("res://scripts/build_terrain.gd.bak_auto")
+C_CODE   CODE    CODE    godot_project/scripts/build_terrain.gd.backup_0072
+                          godot_project/_refcheck_canary/canary_code_user.gd:3: var _n = "build_terrain.gd.backup_0072"
+C_UID    UID     UID     godot_project/scripts/backups/build_terrain.backup.20260607_151124.gd
+                          godot_project/_refcheck_canary/canary_uid_user.tscn:2: [ext_resource type="Script" uid="uid://b7dtan707k325" path="res://dummy"]
+
+=== INTERPRETATION ===
+All expected -> v323's HELD=0 is a FINDING: no live file references any
+                backup by path, uid or code. The quarantine plan is sound.
+Any mismatch -> the checker is not detecting references it should. Its
+                zero was an ARTIFACT and the plan must not be executed.
+SKIP on UID  -> no candidate carries a .uid sidecar, so uid detection was
+                not exercised. Not a pass (Rule #37): uid-referenced
+                candidates, if any exist, remain unproven.
+
+=== ForensicHUD RESOLUTION ===
+declared in 0 file(s)
+    NOWHERE. build_terrain.gd names a class that no .gd declares.
+    The 2026-09-12 compile error is then a genuine missing symbol,
+    not an artifact of running the probe with -s.
+
+=== USES OF ForensicHUD IN build_terrain.gd (verbatim) ===
+--- line 1903 ---
+     1900: 
+     1901: func _physics_process(delta) -> void:
+     1902: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+>>>  1903: 	# ForensicHUD._input()/ForensicPanel._process() automatically.
+     1904: 	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+     1905: 		ForensicHUD.poll_forensic_hud()
+     1906: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+--- line 1904 ---
+     1901: func _physics_process(delta) -> void:
+     1902: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+     1903: 	# ForensicHUD._input()/ForensicPanel._process() automatically.
+>>>  1904: 	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+     1905: 		ForensicHUD.poll_forensic_hud()
+     1906: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+     1907: 		ForensicPanel.poll_forensic_panel()
+--- line 1905 ---
+     1902: 	# ADDED (this session): explicit poll calls, since Godot never invokes
+     1903: 	# ForensicHUD._input()/ForensicPanel._process() automatically.
+     1904: 	if ForensicHUD != null and ForensicHUD.has_method("poll_forensic_hud"):
+>>>  1905: 		ForensicHUD.poll_forensic_hud()
+     1906: 	if ForensicPanel != null and ForensicPanel.has_method("poll_forensic_panel"):
+     1907: 		ForensicPanel.poll_forensic_panel()
+     1908: 	if _character and is_instance_valid(_character):
+
+canary directory removed: True
+NOTHING ELSE WAS CREATED, MOVED OR DELETED.
+=== END SELFTEST v325 ===
