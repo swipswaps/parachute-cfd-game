@@ -1,0 +1,38 @@
+=== fix_anim_telemetry_v333.py — 20260914195610 UTC ===
+target : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074/godot_project/scripts/build_terrain.gd
+backup : build_terrain.gd.bak.20260914195610
+
+=== DIFF ===
+--- before
++++ after
+@@ -1,3 +1,17 @@
+ 	ap.play(chosen)
+ 	ap.speed_scale = 1.0
+ 	print("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)
++	# v333: post-deferral ANIMDIAG.
++	# Emitted HERE because here is the only point that is provably after both
++	# process_frame awaits AND after play(). The pre-existing [ANIMDIAG] is
++	# sampled ~0 physics ticks after "deferring play of", so its is_playing
++	# value is false by construction and proves nothing (anim_triage_v319
++	# verdict H1_telemetry_too_early, 2026-09-13).
++	# Field names match what the oracle and the triage parse:
++	#   is_playing=(\w+)   current='([^']*)'
++	# is_playing() and current_animation are read-only accessors (Godot 4
++	# AnimationPlayer), so this line cannot perturb the state it reports.
++	print("[ANIMDIAG] post_deferral current='", ap.current_animation,
++			"' is_playing=", ap.is_playing(),
++			" speed_scale=", ap.speed_scale,
++			" list=", ap.get_animation_list())
+
+=== POST-CONDITIONS ===
+read_after_write : OK
+tabs_only        : OK
+parse_gate       : OK
+
+=== WHAT THIS MAKES DECIDABLE ===
+A run now emits [ANIMDIAG] strictly after both awaits and after play().
+  is_playing=true  -> anim_is_playing PASSES; the character animates.
+  is_playing=false -> anim_triage_v319 reports H3_play_lost, not H1;
+                      the sample is provably post-play(), so something
+                      stops the player after play() returns.
+=== END FIX v333 ===
