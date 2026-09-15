@@ -1,0 +1,157 @@
+=== anim_resume_check_v336.py -- 20260915172513 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+run_log      : /tmp/godot_run_v313_20260914195633.log (201 lines)
+v333 in source: yes
+
+=== MARKERS (log line numbers, verbatim) ===
+deferring play of        : 73
+    [VERBATIM] _setup_anim_player: deferring play of mixamo_com
+playing (post-await)     : ABSENT
+    
+await N returned (direct): ABSENT
+ap freed before play     : ABSENT
+    
+[ANIMDIAG] post_deferral : ABSENT
+    
+POLL decidability event  : ABSENT
+
+=== TWO CLOCKS, KEPT APART (Bug 1 fix) ===
+PROCESS frames after deferral : 1  (the clock process_frame awaits actually use; 2 required)
+PHYSICS frames after deferral : 1  (reported for context ONLY; never feeds the verdict)
+
+=== TERMINATION (Bug 2 fix: no unobserved cause) ===
+cause : STALL_BACKSTOP  @log:16
+    [VERBATIM] SqliteWatchdog.gd _ready() called
+last 5 log lines (verbatim, for the operator to judge the ending):
+    [DIAG] _physics_process: plane and camera valid, updating camera
+    [DIAG] _physics_process: camera moved from (0.0, 1917.456, -286.601) to (799.9964, 1942.456, -284.201)
+    [DIAG] _physics_process: IN_PLANE returning
+    [HubManager] Hub spawn requested pid=1318249 non-blocking
+    [VERBATIM] 2026-09-14T15:58:24 Starting full integrity check and repair
+
+=== VERDICT ===
+R_INDETERMINATE
+    evidence : no resume evidence; 1 process frame(s) after the deferral sits inside the +/-1 uncertainty band around the 2 required. This is the exact boundary artifact that made v335's R2 unsafe.
+    next step: ONE new observation ends this. Add unconditional breadcrumbs INSIDE _setup_anim_player, one line after EACH `await get_tree().process_frame`:
+        print("[ANIMDIAG] await 1 returned")   # after first await
+        print("[ANIMDIAG] await 2 returned")   # after second await
+    and one per-process-frame counter in _process:
+        print("[FPANEL] _process() alive frame=", Engine.get_process_frames())
+    then re-run with a budget that guarantees >=4 process frames past the deferral (V313_STALL_THRESHOLD=120). The next log is self-decidable with NO proxy: 'await 2 returned' present -> resumed; absent with a real termination marker -> truncated vs abandoned reads directly off the frame counter. v336 already understands 'await N returned' (AWAIT_RETURNED_RX).
+    Ground the edit first: run this tool once and read the '_setup_anim_player (verbatim)' block it prints -- that is the exact byte context the insertion must match (GROUNDED DIFF MANDATE).
+
+=== WHAT THIS VERDICT DOES NOT PROVE (Rule #37) ===
+    The frame proxy cannot resolve a boundary reading. Only a direct breadcrumb can.
+Nothing here ran the engine; every line above is read from the log and the source on disk.
+
+=== _setup_anim_player (verbatim, for grounding the next edit) ===
+    lines 2861..2967 in godot_project/scripts/build_terrain.gd
+    await get_tree().process_frame sites at source lines: [2883, 2884]
+     2861| func _setup_anim_player(ap) -> void:
+     2862| 	const CLIP := "mixamo_com"
+     2863| 	if ap == null:
+     2864| 		print("[VERBATIM] _setup_anim_player: ap is null")
+     2865| 		return
+     2866| 	if not ap.has_method("get_animation_list"):
+     2867| 		print("[VERBATIM] _setup_anim_player: node is not an AnimationPlayer: ", ap)
+     2868| 		return
+     2869| 	var clips = ap.get_animation_list()
+     2870| 	print("[VERBATIM] _setup_anim_player: clips=", clips)
+     2871| 	var chosen := ""
+     2872| 	if CLIP in clips:
+     2873| 		chosen = CLIP
+     2874| 	else:
+     2875| 		for c in clips:
+     2876| 			if c != "Take 001":
+     2877| 				chosen = c
+     2878| 				break
+     2879| 	if chosen == "":
+     2880| 		print("[VERBATIM] _setup_anim_player: no usable clip in ", clips)
+     2881| 		return
+     2882| 	print("[VERBATIM] _setup_anim_player: deferring play of ", chosen)
+     2883| 	await get_tree().process_frame
+     2884| 	await get_tree().process_frame
+     2885| 	if not is_instance_valid(ap):
+     2886| 		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
+     2887| 		return
+     2888| 	# Set loop mode on the Animation resource — must be set on the resource,
+     2889| 	# not as a play() argument. Animation.LOOP_LINEAR = 1.
+     2890| 	# Ref: https://docs.godotengine.org/en/stable/classes/class_animation.html
+     2891| 	# (general knowledge — not retrieved this session)
+     2892| 	var _anim_res = ap.get_animation(chosen)
+     2893| 	if _anim_res:
+     2894| 		_anim_res.loop_mode = Animation.LOOP_LINEAR
+     2895| 	ap.play(chosen)
+     2896| 	ap.speed_scale = 1.0
+     2897| 	print("[VERBATIM] _setup_anim_player: playing ", chosen, " pos=", ap.current_animation_position)
+     2898| 	# v333: post-deferral ANIMDIAG.
+     2899| 	# Emitted HERE because here is the only point that is provably after both
+     2900| 	# process_frame awaits AND after play(). The pre-existing [ANIMDIAG] is
+     2901| 	# sampled ~0 physics ticks after "deferring play of", so its is_playing
+     2902| 	# value is false by construction and proves nothing (anim_triage_v319
+     2903| 	# verdict H1_telemetry_too_early, 2026-09-13).
+     2904| 	# Field names match what the oracle and the triage parse:
+     2905| 	#   is_playing=(\w+)   current='([^']*)'
+     2906| 	# is_playing() and current_animation are read-only accessors (Godot 4
+     2907| 	# AnimationPlayer), so this line cannot perturb the state it reports.
+     2908| 	print("[ANIMDIAG] post_deferral current='", ap.current_animation,
+     2909| 			"' is_playing=", ap.is_playing(),
+     2910| 			" speed_scale=", ap.speed_scale,
+     2911| 			" list=", ap.get_animation_list())
+     2912| 
+     2913| # ===========================================================================
+     2914| # TOGGLE ARM SPRING-DAMPER  (fix_arm_spring_v4)
+     2915| #
+     2916| # Replaces the monotonic ratchet at the old _rotate_arm L871
+     2917| # (angle += _arm_rotation_step, clamped to PI, never decremented).
+     2918| #
+     2919| # A steering toggle hangs on lines that cascade to the canopy. Canopy tension
+     2920| # is a restoring force: it pulls the toggle back toward neutral whenever the
+     2921| # hand stops pulling. Modelled as a forced, damped spring in normalized
+     2922| # deflection `pull` in [0, 1]:
+     2923| #
+     2924| #   input_force = held ? PULL_FORCE : 0.0
+     2925| #   tension     = K_LINE * pull
+     2926| #   damping     = C_DAMP * pull_vel
+     2927| #   accel       = (input_force - tension - damping) / ARM_INERTIA
+     2928| #
+     2929| # Equilibrium while held: PULL_FORCE / K_LINE = 0.75 (75% brake).
+     2930| # Damping ratio: C_DAMP / (2*sqrt(K_LINE*ARM_INERTIA)) = 0.62 (underdamped,
+     2931| # so the toggle springs back with a small natural overshoot).
+     2932| #
+     2933| # Refs (general knowledge - not retrieved this session):
+     2934| #   https://docs.godotengine.org/en/stable/classes/class_skeleton3d.html
+     2935| #   https://docs.godotengine.org/en/stable/classes/class_quaternion.html
+     2936| #   https://docs.godotengine.org/en/stable/classes/class_animationplayer.html
+     2937| # ===========================================================================
+     2938| 
+     2939| const ARM_PULL_FORCE   := 6.0               # superseded by the ramp below
+     2940| const ARM_K_LINE       := 8.0
+     2941| const ARM_C_DAMP       := 3.5
+     2942| const ARM_INERTIA      := 1.0
+     2943| const ARM_MAX_ANGLE    := 1.658063          # deg_to_rad(95.0), was 75.0
+     2944| const ARM_EPS          := 0.0005
+     2945| 
+     2946| # v8: a constant force settles at a constant deflection (eq = F/K), so a
+     2947| # longer hold used to change nothing after ~1 s. Ramping the force while
+     2948| # held makes a sustained pull go deeper, which is what a real flare does.
+     2949| const ARM_FORCE_MIN    := 5.0               # eq pull 0.625 on a quick tap
+     2950| const ARM_FORCE_MAX    := 9.6               # eq pull 1.20 -> clamps at 1.0
+     2951| const ARM_FORCE_RAMP_T := 1.6               # seconds to reach ARM_FORCE_MAX
+     2952| 
+     2953| # v8: elbow stays straight on a shallow pull, flexes on a deep one.
+     2954| const ARM_ELBOW_START  := 0.35              # pull below this -> only neutral bend
+     2955| const ARM_ELBOW_MAX    := 1.308997          # deg_to_rad(75.0) at full pull
+     2956| const ARM_ELBOW_NEUTRAL := 0.349066         # deg_to_rad(20.0) resting bend
+     2957| 
+     2958| var _arm_pull      := {"L": 0.0, "R": 0.0}
+     2959| var _arm_vel       := {"L": 0.0, "R": 0.0}
+     2960| var _arm_rest_q    := {"L": Quaternion.IDENTITY, "R": Quaternion.IDENTITY}
+     2961| var _arm_rest_ok   := false
+     2962| var _arm_tel_header := false
+     2963| var _arm_tel_t     := 0.0
+     2964| var _arm_anim_ref  = null
+     2965| var _the_anim_player = null  # stored so arm physics can pause/resume it
+     2966| 
+     2967| 
+=== END RESUME CHECK v336 ===
