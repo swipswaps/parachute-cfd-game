@@ -1,0 +1,45 @@
+=== verify_v313.py — 20260916120038 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+engine       : 4.6.2.stable.official.71f334935
+log          : /tmp/godot_run_v313_20260916115928.log (2792 bytes, 57 lines streamed)
+stop_reason  : stall
+decidability : observed=[] required=['init']
+
+=== ORACLE VERDICTS ===
+ID                 KIND            VERDICT   EVIDENCE
+----------------------------------------------------------------------------------------------------
+char_enter         must_appear     UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+char_instanced     must_appear     UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+no_capsule         must_not_appear UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+no_load_fail       must_not_appear UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+char_exit_ok       must_appear     UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+anim_present       must_not_appear UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+no_engine_error    must_not_appear UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+anim_setup_ran     must_appear     UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+anim_is_playing    must_appear     UNPROVEN  not observed, and phase 'init' never completed — absence proves nothing
+
+=== ANIMATION CLIP ORACLE ===
+probe_completed : True
+clips exposed by the asset (2):
+    Take 001
+    mixamo_com
+clip names requested in build_terrain.gd via has_animation():
+    (no has_animation() call found)
+corroborating .play("...") call sites (may be audio, not animation):
+    line 3107: 'mixamo_com'   _the_anim_player.play("mixamo_com")
+
+clip:none                PASS      no has_animation("...") literal remains in build_terrain.gd — the name coupling (C1) is eliminated, not merely unverified. Asset exposes ['Take 001', 'mixamo_com']
+
+=== WHY EACH ASSERTION EXISTS ===
+char_enter: build_terrain.gd:662 — proves the loader was reached at all
+char_instanced: proves the FBX scene instantiated into the tree
+no_capsule: build_terrain.gd:665 — the FileAccess-gate capsule exit
+no_load_fail: build_terrain.gd:672 — the load()-returned-null capsule exit
+char_exit_ok: build_terrain.gd:740 — the loader's own success oracle
+anim_present: the open defect: model loads but the clip lookup misses
+no_engine_error: any engine-level resource error during initialization
+anim_setup_ran: build_terrain.gd:2897 — proves the setup path chose a clip and scheduled it; its absence means the AnimationPlayer was never reached
+anim_is_playing: the two-frame deferral documented at build_terrain.gd:2867 exists so play() survives the skeleton reset. If no [ANIMDIAG] ever reports is_playing=true, the deferral did not win and the model stands still. Compare the log line numbers of the deferral and the diagnostic before concluding: a diagnostic emitted BEFORE the deferral completes is a telemetry placement problem, not an animation problem
+
+=== TALLY === {'UNPROVEN': 9, 'PASS': 1}
+=== END VERIFY ===
