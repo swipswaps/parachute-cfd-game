@@ -1,0 +1,74 @@
+=== anim_breadcrumb_v338.py -- 20260916115910 UTC ===
+project_root : /home/owner/Documents/69f7bcc6-1f68-83ea-b9b2-95a4db8629ac/parachute-cfd-game_0074
+target       : godot_project/scripts/build_terrain.gd
+await lines  : [2883, 2884]
+state        : BREADCRUMBS INSERTED
+
+=== DIFF (unified) ===
+--- godot_project/scripts/build_terrain.gd (before)
++++ godot_project/scripts/build_terrain.gd (after)
+@@ -2881,7 +2881,9 @@
+ 		return
+ 	print("[VERBATIM] _setup_anim_player: deferring play of ", chosen)
+ 	await get_tree().process_frame
++	print("[ANIMDIAG] await 1 returned frame=", Engine.get_process_frames())
+ 	await get_tree().process_frame
++	print("[ANIMDIAG] await 2 returned frame=", Engine.get_process_frames())
+ 	if not is_instance_valid(ap):
+ 		print("[VERBATIM] _setup_anim_player: ap freed before deferred play")
+ 		return
+
+=== _process (verbatim, to ground the NEXT edit: frame-stamp its alive-print) ===
+    lines 1270..1306 in godot_project/scripts/build_terrain.gd
+     1270| func _process_controller_input() -> void:
+     1271| 	if not _controller_connected:
+     1272| 		return
+     1273| 	_controller_input_map["turn_left"] = Input.is_joy_button_pressed(0, JOY_BUTTON_LEFT_SHOULDER)
+     1274| 	_controller_input_map["turn_right"] = Input.is_joy_button_pressed(0, JOY_BUTTON_RIGHT_SHOULDER)
+     1275| 	_controller_input_map["flightcheck"] = Input.is_joy_button_pressed(0, JOY_BUTTON_A)
+     1276| 	_controller_input_map["cutaway"] = Input.is_joy_button_pressed(0, JOY_BUTTON_X)
+     1277| 	_controller_input_map["reserve"] = Input.is_joy_button_pressed(0, JOY_BUTTON_B)
+     1278| 	_controller_input_map["flare"] = Input.is_joy_button_pressed(0, JOY_BUTTON_Y)
+     1279| 	_controller_input_map["reset"] = Input.is_joy_button_pressed(0, JOY_BUTTON_START)
+     1280| 
+     1281| 	if _controller_input_map["turn_left"]:
+     1282| 		_turn_input = -1.0
+     1283| 		if not _last_frame_keys["Q"]:
+     1284| 			_rotate_arm(true)
+     1285| 	elif _controller_input_map["turn_right"]:
+     1286| 		_turn_input = 1.0
+     1287| 		if not _last_frame_keys["E"]:
+     1288| 			_rotate_arm(false)
+     1289| 	else:
+     1290| 		pass
+     1291| 
+     1292| 	if _controller_input_map["flightcheck"]:
+     1293| 		_flight_control_check()
+     1294| 	if _controller_input_map["cutaway"]:
+     1295| 		_do_cutaway()
+     1296| 	if _controller_input_map["reserve"]:
+     1297| 		_do_reserve()
+     1298| 	if _controller_input_map["flare"]:
+     1299| 		_do_flare()
+     1300| 	if _controller_input_map["reset"]:
+     1301| 		_reset_game()
+     1302| 
+     1303| 
+     1304| # ------------------------------------------------------------------
+     1305| # Replay system
+     1306| # ------------------------------------------------------------------
+
+=== NEXT ACTION ===
+Re-run and read the new log:
+    python3 verify_v313.py --push
+    python3 anim_resume_check_v336.py --push
+'await 2 returned frame=N' present -> RESUMED (decided, no proxy).
+
+KNOWN HARNESS LIMIT (from the 2026-09-16 run): verify_v313 stops at the
+'init' decidability event (POLL entered) which fires only a few process
+frames after the deferral. If the breadcrumbs are STILL absent after this
+edit lands, the run is stopping before the coroutine resolves -- not a
+game defect. The next grounded step is to extend verify_v313 so 'init'
+is not treated as terminal while the anim question is open (needs its
+decidability-events source to ground the edit).
+=== END BREADCRUMB v338 ===
